@@ -1,17 +1,18 @@
-% Borrow and AsRef
+% Borrow e AsRef
 
-The [`Borrow`][borrow] and [`AsRef`][asref] traits are very similar, but
-different. Here’s a quick refresher on what these two traits mean.
+I tratti [`Borrow`][borrow] e [`AsRef`][asref] sono molto simili, ma diversi.
+Ecco un rapido ripasso di quello che questi due tratti significano.
 
 [borrow]: ../std/borrow/trait.Borrow.html
 [asref]: ../std/convert/trait.AsRef.html
 
 # Borrow
 
-The `Borrow` trait is used when you’re writing a datastructure, and you want to
-use either an owned or borrowed type as synonymous for some purpose.
+Il tratto `Borrow` si usa quando si sta scrivendo una struttura dati,
+e si vuole usare un tipo o posseduto o preso in prestito come sinonimo,
+per qualche scopo.
 
-For example, [`HashMap`][hashmap] has a [`get` method][get] which uses `Borrow`:
+Per esempio, [`HashMap`][hashmap] ha un metodo [`get`][get] che usa `Borrow`:
 
 ```rust,ignore
 fn get<Q: ?Sized>(&self, k: &Q) -> Option<&V>
@@ -22,8 +23,8 @@ fn get<Q: ?Sized>(&self, k: &Q) -> Option<&V>
 [hashmap]: ../std/collections/struct.HashMap.html
 [get]: ../std/collections/struct.HashMap.html#method.get
 
-This signature is pretty complicated. The `K` parameter is what we’re interested
-in here. It refers to a parameter of the `HashMap` itself:
+Questa firma è parecchio complicata. Quello che ci interessa qui è
+il parametro `K`. Si riferisce a un parametro di `HashMap` stesso:
 
 ```rust,ignore
 struct HashMap<K, V, S = RandomState> {

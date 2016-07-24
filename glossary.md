@@ -10,7 +10,15 @@ structure=struttura
 array=schiera
 generics=costrutti generici
 lifetime=tempo di vita
-drop=caduta
+drop=distruzione
+trait=tratto
+reference-count=conteggio di riferimenti
+executable=programma
+binary=programma
+default=comportamento predefinito
+entry point=punto di ingresso
+library=libreria
+overriding=scavalcare
 
 Non tutti i Rustacei hanno un curriculum di programmazione di sistema,
 né in informatica, e quindi abbiamo aggiunto le spiegazioni dei termini

@@ -1,78 +1,55 @@
-% Lifetimes
+% Tempi di vita
 
-This is the last of three sections presenting Rust’s ownership system. This is one of
-Rust’s most distinct and compelling features, with which Rust developers should
-become quite acquainted. Ownership is how Rust achieves its largest goal,
-memory safety. There are a few distinct concepts, each with its own chapter:
+Questa è l'ultima delle tre sezioni che presentano il sistema di possesso
+di Rust. Qui si assume che siano già state lette le altre due:
+* Il [possesso][possesso], il concetto chiave
+* I [prestiti][prestiti], e le loro caratteristiche associate, i ‘riferimenti’
 
-* [ownership][ownership], the key concept
-* [borrowing][borrowing], and their associated feature ‘references’
-* lifetimes, which you’re reading now
+[possesso]: ownership.html
+[prestiti]: references-and-borrowing.html
 
-These three chapters are related, and in order. You’ll need all three to fully
-understand the ownership system.
+# I tempi di vita
 
-[ownership]: ownership.html
-[borrowing]: references-and-borrowing.html
+Prestare un riferimento a una risorsa posseduta da qualcun altro può essere
+complicato. Per esempio, immaginiamo questa sequenza di operazioni:
 
-# Meta
+1. Acquisisco un riferimento a una risorsa di qualche tipo.
+2. Ti presto un riferimento a tale risorsa.
+3. Decido di aver finito di lavorare con quella risorsa, e quindi la rilascio,
+   mentre tu hai ancora il tuo riferimento a tale risorsa.
+4. Tu decidi di usare quella risorsa.
 
-Before we get to the details, two important notes about the ownership system.
+Ahi, ahi! Il tuo riferimento sta puntando a una risorsa non valida, e tu lo
+stai usando per usare una risorsa che non esiste più. Questo difetto
+si chiama ‘puntatore penzolante‘ o ‘utilizzo dopo il rilascio’.
 
-Rust has a focus on safety and speed. It accomplishes these goals through many
-‘zero-cost abstractions’, which means that in Rust, abstractions cost as little
-as possible in order to make them work. The ownership system is a prime example
-of a zero-cost abstraction. All of the analysis we’ll talk about in this guide
-is _done at compile time_. You do not pay any run-time cost for any of these
-features.
+Per correggerlo, dobbiamo assicurarci che il passo 4 non avvenga mai dopo
+il passo 3. Il sistema di possesso in Rust lo fa tramite un concetto chiamato
+"tempo di vita" ["lifetime"], che descrive l'ambito in cui un riferimento
+è valido. Nel nostro caso, o decidiamo che il tempo di vita vale solamente
+fino al passo 3, e in tal caso il passo 4 darà errore di compilazione,
+o decidiamo che il tempo di vita vale fino al passo 4,
+e in tal caso la risorsa dovrà essere rilasciata al passo 5.
 
-However, this system does have a certain cost: learning curve. Many new users
-to Rust experience something we like to call ‘fighting with the borrow
-checker’, where the Rust compiler refuses to compile a program that the author
-thinks is valid. This often happens because the programmer’s mental model of
-how ownership should work doesn’t match the actual rules that Rust implements.
-You probably will experience similar things at first. There is good news,
-however: more experienced Rust developers report that once they work with the
-rules of the ownership system for a period of time, they fight the borrow
-checker less and less.
-
-With that in mind, let’s learn about lifetimes.
-
-# Lifetimes
-
-Lending out a reference to a resource that someone else owns can be
-complicated. For example, imagine this set of operations:
-
-1. I acquire a handle to some kind of resource.
-2. I lend you a reference to the resource.
-3. I decide I’m done with the resource, and deallocate it, while you still have
-  your reference.
-4. You decide to use the resource.
-
-Uh oh! Your reference is pointing to an invalid resource. This is called a
-dangling pointer or ‘use after free’, when the resource is memory.
-
-To fix this, we have to make sure that step four never happens after step
-three. The ownership system in Rust does this through a concept called
-lifetimes, which describe the scope that a reference is valid for.
-
-When we have a function that takes an argument by reference, we can be
-implicit or explicit about the lifetime of the reference:
+Quando abbiamo una funzione che prende un argomento per riferimento,
+possiamo essere impliciti o espliciti riguardo al tempo di vita di tale
+riferimento:
 
 ```rust
-// implicit
+// implicito
 fn foo(x: &i32) {
 }
 
-// explicit
+// esplicito
 fn bar<'a>(x: &'a i32) {
 }
 ```
 
-The `'a` reads ‘the lifetime a’. Technically, every reference has some lifetime
-associated with it, but the compiler lets you elide (i.e. omit, see
-["Lifetime Elision"][lifetime-elision] below) them in common cases.
-Before we get to that, though, let’s break the explicit example down:
+L'`'a` si legge ‘il tempo di vita a’. Tecnicamente, ogni riferimento
+ha qualche tempo di vita associato ad esso, ma il compilatore consente
+di eliderlo (cioè ometterlo, si veda la sezione ["Elisione del tempo di vita"]
+[elisione del tempo di vita] più avanti) nei casi più tipici.
+Però, prima di arrivarci, scomponiamo l'esempio esplicito:
 
 [lifetime-elision]: #lifetime-elision
 
@@ -80,44 +57,48 @@ Before we get to that, though, let’s break the explicit example down:
 fn bar<'a>(...)
 ```
 
-We previously talked a little about [function syntax][functions], but we didn’t
-discuss the `<>`s after a function’s name. A function can have ‘generic
-parameters’ between the `<>`s, of which lifetimes are one kind. We’ll discuss
-other kinds of generics [later in the book][generics], but for now, let’s
-focus on the lifetimes aspect.
+Precedentemente abbiamo parlato un po' della [sintassi delle funzioni]
+[funzioni], ma non abbiamo discusso dei `<>` dopo il nome della funzione.
+Una funzione può avere dei ‘parametri generici’ fra le `<>`, dei quali
+i tempi di vita sono un tipo. Discuteremo altri tipi di generici
+[più avanti nel libro][generici], ma per adesso, focalizziamoci sull'aspetto
+dei tempi di vita.
 
-[functions]: functions.html
-[generics]: generics.html
+[funzioni]: functions.html
+[generici]: generics.html
 
-We use `<>` to declare our lifetimes. This says that `bar` has one lifetime,
-`'a`. If we had two reference parameters, it would look like this:
+Usiamo le `<>` per dichiarare i nostri tempi di vita. Questo dice che `bar`
+ha un solo tempo di vita, `'a`. Se avessimo dei parametri riferimento,
+si presenterebbe così:
 
 
 ```rust,ignore
 fn bar<'a, 'b>(...)
 ```
 
-Then in our parameter list, we use the lifetimes we’ve named:
+Poi nel nostro elenco di argomenti, usiamo i tempi di vita che abbiamo
+nominato:
 
 ```rust,ignore
 ...(x: &'a i32)
 ```
 
-If we wanted a `&mut` reference, we’d do this:
+Se avessimo voluto un riferimento `&mut`, avremmo scritto:
 
 ```rust,ignore
 ...(x: &'a mut i32)
 ```
 
-If you compare `&mut i32` to `&'a mut i32`, they’re the same, it’s that
-the lifetime `'a` has snuck in between the `&` and the `mut i32`. We read `&mut
-i32` as ‘a mutable reference to an `i32`’ and `&'a mut i32` as ‘a mutable
-reference to an `i32` with the lifetime `'a`’.
+Confrontando `&mut i32` con `&'a mut i32`, si nota che l'unica differenza
+è che il tempo di vita `'a` si è intrufolato fra il `&` il `mut i32`.
+La clausola `&mut i32` va letta come ‘un riferimento mutabile a un `i32`’,
+mentre la clausola `&'a mut i32` va letta come ‘un riferimento mutabile
+a un `i32` con tempo di vita `'a`’.
 
-# In `struct`s
+# Nelle `struct`
 
-You’ll also need explicit lifetimes when working with [`struct`][structs]s that
-contain references:
+C'è bisogno dei tempi di vita espliciti anche quando si lavora come le
+[`struct`][struct] che contengono riferimenti:
 
 ```rust
 struct Foo<'a> {
@@ -125,16 +106,16 @@ struct Foo<'a> {
 }
 
 fn main() {
-    let y = &5; // this is the same as `let _y = 5; let y = &_y;`
+    let y = &5; // questo è lo stesso che `let _y = 5; let y = &_y;`
     let f = Foo { x: y };
-
     println!("{}", f.x);
 }
 ```
 
-[structs]: structs.html
+[struct]: structs.html
 
-As you can see, `struct`s can also have lifetimes. In a similar way to functions,
+Come si vede, anche le `struct` possono avere tempi di vita. In modo simile
+alle funzioni,
 
 ```rust
 struct Foo<'a> {
@@ -142,7 +123,7 @@ struct Foo<'a> {
 # }
 ```
 
-declares a lifetime, and
+dichiara un tempo di vita, e
 
 ```rust
 # struct Foo<'a> {
@@ -150,12 +131,13 @@ x: &'a i32,
 # }
 ```
 
-uses it. So why do we need a lifetime here? We need to ensure that any reference
-to a `Foo` cannot outlive the reference to an `i32` it contains.
+lo usa. Allora perché qui ci serve un tempo di vita? Ci serve per assicurare
+che ogni riferimento a un `Foo` non possa sopravvivere al riferimento
+a un `i32` che contiene.
 
-## `impl` blocks
+## I blocchi `impl`
 
-Let’s implement a method on `Foo`:
+Implementiamo un metodo su `Foo`:
 
 ```rust
 struct Foo<'a> {
@@ -167,55 +149,55 @@ impl<'a> Foo<'a> {
 }
 
 fn main() {
-    let y = &5; // this is the same as `let _y = 5; let y = &_y;`
+    let y = &5; // questo è lo stesso che `let _y = 5; let y = &_y;`
     let f = Foo { x: y };
-
     println!("x is: {}", f.x());
 }
 ```
 
-As you can see, we need to declare a lifetime for `Foo` in the `impl` line. We repeat
-`'a` twice, like on functions: `impl<'a>` defines a lifetime `'a`, and `Foo<'a>`
-uses it.
+Come si vede, dobbiamo dichiarare un tempo di vita per `Foo` nella riga
+di `impl`. `'a` viene ripetuto, come per le funzioni: `impl<'a>` definisce
+un tempo di vita `'a`, e `Foo<'a>` lo usa.
 
-## Multiple lifetimes
+## Tempi di vita multipli
 
-If you have multiple references, you can use the same lifetime multiple times:
+Se si hanno riferimenti multipli, si può usare lo stesso tempo di vita
+più volte:
 
 ```rust
-fn x_or_y<'a>(x: &'a str, y: &'a str) -> &'a str {
+fn x_o_y<'a>(x: &'a str, y: &'a str) -> &'a str {
 #    x
 # }
 ```
 
-This says that `x` and `y` both are alive for the same scope, and that the
-return value is also alive for that scope. If you wanted `x` and `y` to have
-different lifetimes, you can use multiple lifetime parameters:
+Questo dice che sia `x` che `y` sono vivi per lo stesso ambito, e che anche
+il valore reso è vivo per lo stesso ambito. Se si voless che `x` e `y` avessero
+tempi di vita diversi, si possono usare più parametri di tempo di vita:
 
 ```rust
-fn x_or_y<'a, 'b>(x: &'a str, y: &'b str) -> &'a str {
+fn x_o_y<'a, 'b>(x: &'a str, y: &'b str) -> &'a str {
 #    x
 # }
 ```
 
-In this example, `x` and `y` have different valid scopes, but the return value
-has the same lifetime as `x`.
+In questo esempio, `x` e `y` hanno diversi ambiti validi, ma il valore reso ha
+lo stesso tempo di vita di `x`.
 
-## Thinking in scopes
+## Pensare agli ambiti
 
-A way to think about lifetimes is to visualize the scope that a reference is
-valid for. For example:
+Un modo di pensare ai tempi di vita è visualizzare l'ambito per cui
+un riferimento rimane valido. Per esempio:
 
 ```rust
 fn main() {
-    let y = &5;     // -+ y goes into scope
-                    //  |
-    // stuff        //  |
-                    //  |
-}                   // -+ y goes out of scope
+    let y = &5;    // -+ y entra nell'ambito
+                   //  |
+    // roba        //  |
+                   //  |
+}                  // -+ y esce dall'ambito
 ```
 
-Adding in our `Foo`:
+Aggiungendo il nostro `Foo`:
 
 ```rust
 struct Foo<'a> {
@@ -223,15 +205,15 @@ struct Foo<'a> {
 }
 
 fn main() {
-    let y = &5;           // -+ y goes into scope
-    let f = Foo { x: y }; // -+ f goes into scope
-    // stuff              //  |
+    let y = &5;           // -+ y entra nell'ambito
+    let f = Foo { x: y }; // -+ f entra nell'ambito
+    // roba               //  |
                           //  |
-}                         // -+ f and y go out of scope
+}                         // -+ prima f e poi y escono dall'ambito
 ```
 
-Our `f` lives within the scope of `y`, so everything works. What if it didn’t?
-This code won’t work:
+Il nostro `f` vive entro l'ambito di `y`, perciò tutto funziona. E non fosse
+così? Questo codice non funziona:
 
 ```rust,ignore
 struct Foo<'a> {
@@ -239,123 +221,133 @@ struct Foo<'a> {
 }
 
 fn main() {
-    let x;                    // -+ x goes into scope
+    let x;                    // -+ x entra nell'ambito
                               //  |
     {                         //  |
-        let y = &5;           // ---+ y goes into scope
-        let f = Foo { x: y }; // ---+ f goes into scope
-        x = &f.x;             //  | | error here
-    }                         // ---+ f and y go out of scope
+        let y = &5;           // ---+ y entra nell'ambito
+        let f = Foo { x: y }; // ---+ f entra nell'ambito
+        x = &f.x;             //  | | errore qui
+    }                         // ---+ prima f e poi y escono dall'ambito
                               //  |
     println!("{}", x);        //  |
-}                             // -+ x goes out of scope
+}                             // -+ x esce dall'ambito
 ```
 
-Whew! As you can see here, the scopes of `f` and `y` are smaller than the scope
-of `x`. But when we do `x = &f.x`, we make `x` a reference to something that’s
-about to go out of scope.
+Whew! Come si vede, gli ambiti di `f` e `y` sono più piccoli dell'ambito
+di `x`. Ma quando facciamo `x = &f.x`, rendiamo `x` un riferimento a qualcosa
+che sta per uscire dal suo ambito.
 
-Named lifetimes are a way of giving these scopes a name. Giving something a
-name is the first step towards being able to talk about it.
+I tempi di vita con nome sono un modo di dare un nome a questi ambiti.
+Dare un nome a qualcosa è il primo passo verso l'essere capaci di parlarne.
 
 ## 'static
 
-The lifetime named ‘static’ is a special lifetime. It signals that something
-has the lifetime of the entire program. Most Rust programmers first come across
-`'static` when dealing with strings:
+Il tempo di vita chiamato ‘static’ è un tempo di vita speciale. Segnala che
+qualcosa ha il tempo di vita dell'intero programma. La maggior parte
+dei programmatori Rust si imbatto per la prima volta in `'static`
+quando trattano le stringhe:
 
 ```rust
-let x: &'static str = "Hello, world.";
+let x: &'static str = "Ciao, mondo.";
 ```
 
-String literals have the type `&'static str` because the reference is always
-alive: they are baked into the data segment of the final binary. Another
-example are globals:
+I letterali di stringa sono di tipo `&'static str` perché il riferimento è
+sempre vivo: vengono depositati nel segmento dati del file binario finale.
+Un altro esempio sono i globali:
 
 ```rust
 static FOO: i32 = 5;
 let x: &'static i32 = &FOO;
 ```
 
-This adds an `i32` to the data segment of the binary, and `x` is a reference
-to it.
+Questo aggiunge un `i32` al segmento dati del file binario, e `x` è
+un riferimento a esso.
 
-## Lifetime Elision
+## Elisione del tempo di vita
 
-Rust supports powerful local type inference in the bodies of functions but not in their item signatures. 
-It's forbidden to allow reasoning about types based on the item signature alone. 
-However, for ergonomic reasons, a very restricted secondary inference algorithm called 
-“lifetime elision” does apply when judging lifetimes. Lifetime elision is concerned solely to infer 
-lifetime parameters using three easily memorizable and unambiguous rules. This means lifetime elision 
-acts as a shorthand for writing an item signature, while not hiding
-away the actual types involved as full local inference would if applied to it.
+Rust supporta una potente inferenza di tipo locale nei corpi delle funzioni
+ma non nelle firme dei loro elementi. È vietato consentire di ragionare
+sui tipi a seconda della sola firma degli elementi.  Però, per ragioni
+di comodità, un algoritmo di inferenza secondaria molto ristretto chiamato
+“elisione del tempo di vita” si applica quando si giudicano i tempi di vita.
+L'elisione dei tempi di vita viene considerata solamente per inferire
+i parametri del tempo di vita usando tre regole facilmente memorizzabili e
+non ambigue. Ciò significa che l'elisione del tempo di vita agisce
+da abbreviazione per scrivere una firma di un elemento, mentre non nasconde
+i tipi effettivamente coinvolti, come avverrebbe se fosse applicata una
+una completa inferenza locale.
 
-When talking about lifetime elision, we use the terms *input lifetime* and
-*output lifetime*. An *input lifetime* is a lifetime associated with a parameter
-of a function, and an *output lifetime* is a lifetime associated with the return
-value of a function. For example, this function has an input lifetime:
+Quando si parla dell'elisione del tempo di vita, usiamo i termini
+*tempo di vita di input* e *tempo di vita di output*. Un *tempo di vita
+di input* è un tempo di vita associato a un argomento di una funzione, mentre
+un *tempo di vita di output* è un tempo di vita associato a un valore
+reso da una funzione. Per esempio, questa funzione ha un tempo di vita
+di input:
 
 ```rust,ignore
 fn foo<'a>(bar: &'a str)
 ```
 
-This one has an output lifetime:
+Quest'altra ha un tempo di vita di output:
 
 ```rust,ignore
 fn foo<'a>() -> &'a str
 ```
 
-This one has a lifetime in both positions:
+E questa ha un tempo di vita in entrambe le posizioni:
 
 ```rust,ignore
 fn foo<'a>(bar: &'a str) -> &'a str
 ```
 
-Here are the three rules:
+Ecco le tre regole:
 
-* Each elided lifetime in a function’s arguments becomes a distinct lifetime
-  parameter.
+* Ogni tempo di vita eliso tra gli argomenti di una funzione diventa un
+  un distinto parametro tempo di vita.
 
-* If there is exactly one input lifetime, elided or not, that lifetime is
-  assigned to all elided lifetimes in the return values of that function.
+* Se c'è esattamente un tempo di vita di input, eliso o no, quel tempo di vita
+  è assegnato a tutti i tempi di vita elisi nei valori resi di quella funzione.
 
-* If there are multiple input lifetimes, but one of them is `&self` or `&mut
-  self`, the lifetime of `self` is assigned to all elided output lifetimes.
+* Se ci sono più tempo di vita di input, ma uno di essi è `&self` o
+  `&mut self`, il tempo di vita di `self` viene assegnato a tutti i tempi
+  di vita di output elisi.
 
-Otherwise, it is an error to elide an output lifetime.
+Altrimenti, è un errore elidere un tempo di vita di output.
 
-### Examples
+### Esempi
 
-Here are some examples of functions with elided lifetimes.  We’ve paired each
-example of an elided lifetime with its expanded form.
+Ecco alcuni esempi di funzioni con tempi di vita elisi. Abbiamo accoppiato
+ogni esempio di un tempo di vita eliso con la sua forma espansa.
 
 ```rust,ignore
-fn print(s: &str); // elided
-fn print<'a>(s: &'a str); // expanded
+fn stampa(s: &str); // eliso
+fn stampa<'a>(s: &'a str); // espanso
 
-fn debug(lvl: u32, s: &str); // elided
-fn debug<'a>(lvl: u32, s: &'a str); // expanded
+fn debug(lvl: u32, s: &str); // eliso
+fn debug<'a>(lvl: u32, s: &'a str); // espanso
 ```
 
-In the preceding example, `lvl` doesn’t need a lifetime because it’s not a
-reference (`&`). Only things relating to references (such as a `struct`
-which contains a reference) need lifetimes.
+Nell'esempio precedente, `lvl` non ha bisogno di un tempo di vita, perché non è
+un riferimento (`&`). Solamente oggetti riferiti a riferimenti (come
+uno `struct` che contiene un riferimento) hanno bisogno di tempi di vita.
 
 ```rust,ignore
-fn substr(s: &str, until: u32) -> &str; // elided
-fn substr<'a>(s: &'a str, until: u32) -> &'a str; // expanded
+fn substr(s: &str, until: u32) -> &str; // eliso
+fn substr<'a>(s: &'a str, until: u32) -> &'a str; // espanso
 
-fn get_str() -> &str; // ILLEGAL, no inputs
+fn get_str() -> &str; // ILLEGALE, nessun input
 
-fn frob(s: &str, t: &str) -> &str; // ILLEGAL, two inputs
-fn frob<'a, 'b>(s: &'a str, t: &'b str) -> &str; // Expanded: Output lifetime is ambiguous
+fn frob(s: &str, t: &str) -> &str; // ILLEGALE, due input
+// espanso: il tempo di vita di output è ambiguo
+fn frob<'a, 'b>(s: &'a str, t: &'b str) -> &str;
 
-fn get_mut(&mut self) -> &mut T; // elided
-fn get_mut<'a>(&'a mut self) -> &'a mut T; // expanded
+fn get_mut(&mut self) -> &mut T; // eliso
+fn get_mut<'a>(&'a mut self) -> &'a mut T; // espanso
 
-fn args<T: ToCStr>(&mut self, args: &[T]) -> &mut Command; // elided
-fn args<'a, 'b, T: ToCStr>(&'a mut self, args: &'b [T]) -> &'a mut Command; // expanded
+fn argomenti<T: ToCStr>(&mut self, args: &[T]) -> &mut Command; // eliso
+fn argomenti<'a, 'b, T: ToCStr>(&'a mut self, args: &'b [T])
+-> &'a mut Command; // espanso
 
-fn new(buf: &mut [u8]) -> BufWriter; // elided
-fn new<'a>(buf: &'a mut [u8]) -> BufWriter<'a>; // expanded
+fn nuovo(buf: &mut [u8]) -> BufWriter; // eliso
+fn nuovo<'a>(buf: &'a mut [u8]) -> BufWriter<'a>; // espanso
 ```

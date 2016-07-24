@@ -1,6 +1,7 @@
-% Universal Function Call Syntax
+% Sintassi universale di chiamata di funzione ["Universal Function Call Syntax" o "UFCS"]
 
-Sometimes, functions can have the same names. Consider this code:
+Talvolta, più funzioni possono avere lo stesso nome. Si consideri
+questo codice:
 
 ```rust
 trait Foo {
@@ -14,17 +15,21 @@ trait Bar {
 struct Baz;
 
 impl Foo for Baz {
-    fn f(&self) { println!("Baz’s impl of Foo"); }
+    fn f(&self) {
+        println!("implementazione del tratto Foo per la struttura Baz");
+    }
 }
 
 impl Bar for Baz {
-    fn f(&self) { println!("Baz’s impl of Bar"); }
+    fn f(&self) {
+        println!("implementazione del tratto Bar per la struttura Baz");
+    }
 }
 
 let b = Baz;
 ```
 
-If we were to try to call `b.f()`, we’d get an error:
+Se provassimo a chiamare `b.f()`, otterremmo un errore:
 
 ```text
 error: multiple applicable methods in scope [E0034]
@@ -32,17 +37,17 @@ b.f();
   ^~~
 note: candidate #1 is defined in an impl of the trait `main::Foo` for the type
 `main::Baz`
-    fn f(&self) { println!("Baz’s impl of Foo"); }
+    fn f(&self) {
     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 note: candidate #2 is defined in an impl of the trait `main::Bar` for the type
 `main::Baz`
-    fn f(&self) { println!("Baz’s impl of Bar"); }
+    fn f(&self) {
     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ```
 
-We need a way to disambiguate which method we need. This feature is called
-‘universal function call syntax’, and it looks like this:
+Ci serve un modo per disambiguare quale metodo scegliere. Questa caratteristica
+è chiamata ‘sintassi universale di chiamata di funzione’, e si presenta così:
 
 ```rust
 # trait Foo {
@@ -53,59 +58,63 @@ We need a way to disambiguate which method we need. This feature is called
 # }
 # struct Baz;
 # impl Foo for Baz {
-#     fn f(&self) { println!("Baz’s impl of Foo"); }
+#     fn f(&self) {
+#         println!("implementazione del tratto Foo per la struttura Baz");
+#     }
 # }
 # impl Bar for Baz {
 #     fn f(&self) { println!("Baz’s impl of Bar"); }
+#         println!("implementazione del tratto Bar per la struttura Baz");
+#     }
 # }
 # let b = Baz;
 Foo::f(&b);
 Bar::f(&b);
 ```
 
-Let’s break it down.
+Scomponiamola.
 
 ```rust,ignore
 Foo::
 Bar::
 ```
 
-These halves of the invocation are the types of the two traits: `Foo` and
-`Bar`. This is what ends up actually doing the disambiguation between the two:
-Rust calls the one from the trait name you use.
+Queste metà dell'invocazione sono i tipi dei due tratti: `Foo` e `Bar`.
+Questo è quello che disambigua effettivamente fra le due funzioni: Rust chiama
+quella del tratto specificato.
 
 ```rust,ignore
 f(&b)
 ```
 
-When we call a method like `b.f()` using [method syntax][methodsyntax], Rust
-will automatically borrow `b` if `f()` takes `&self`. In this case, Rust will
-not, and so we need to pass an explicit `&b`.
+Quando si chiama un metodo come `b.f()` usando la [sintassi di metodo]
+[sintassi di metodo], Rust automaticamente prenderà in prestito `b` se `f()`
+prende l'argomento `&self`. In questo caso Rust non lo fa, e quindi
+dobbiamo passare un esplicito `&b`.
 
-[methodsyntax]: method-syntax.html
+[sintassi di metodo]: method-syntax.html
 
-# Angle-bracket Form
+# Forma a parentesi angolari
 
-The form of UFCS we just talked about:
-
-```rust,ignore
-Trait::method(args);
-```
-
-Is a short-hand. There’s an expanded form of this that’s needed in some
-situations:
+La forma di UFCS di cui abbiamo appena parlato:
 
 ```rust,ignore
-<Type as Trait>::method(args);
+Tratto::metodo(argomenti);
 ```
 
-The `<>::` syntax is a means of providing a type hint. The type goes inside
-the `<>`s. In this case, the type is `Type as Trait`, indicating that we want
-`Trait`’s version of `method` to be called here. The `as Trait` part is
-optional if it’s not ambiguous. Same with the angle brackets, hence the
-shorter form.
+È un'abbreviazione. Ne esiste una forma espansa che serve in alcune situazioni:
 
-Here’s an example of using the longer form.
+```rust,ignore
+<Tipo as Tratto>::metodo(argomenti);
+```
+
+La sintassi `<>::` è un mezzo di fornire un suggerimento di tipo. Il tipo va
+all'interno delle `<>`. In questo caso, il tipo è `Tipo as Tratto`, che
+indica che qui vogliamo che sia chiamata la versione di `Tratto` del `metodo`.
+La parte `as Tratto` è opzionale se non c'è ambiguità. È lo stesso con
+le parentesi angolari, da cui la forma più breve.
+
+Ecco un esempio di utilizzo della forma più lunga.
 
 ```rust
 trait Foo {
@@ -132,5 +141,5 @@ fn main() {
 }
 ```
 
-Using the angle bracket syntax lets you call the trait method instead of the
-inherent one.
+Usare la sintassi con le parentesi angolari consente di chiamate il metodo
+del tratto, invece di quello definito per la struttura.

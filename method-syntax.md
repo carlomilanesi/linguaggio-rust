@@ -1,249 +1,256 @@
-% Method Syntax
+% Sintassi dei metodi
 
-Functions are great, but if you want to call a bunch of them on some data, it
-can be awkward. Consider this code:
-
-```rust,ignore
-baz(bar(foo));
-```
-
-We would read this left-to-right, and so we see ‘baz bar foo’. But this isn’t the
-order that the functions would get called in, that’s inside-out: ‘foo bar baz’.
-Wouldn’t it be nice if we could do this instead?
+Le funzioni sono ottime, ma se si vuole chiamarne un po' su alcuni dati, può
+diventare scomodo. Si consideri questo codice:
 
 ```rust,ignore
-foo.bar().baz();
+baz(bar(foo(x)));
 ```
 
-Luckily, as you may have guessed with the leading question, you can! Rust provides
-the ability to use this ‘method call syntax’ via the `impl` keyword.
+Normalmente leggiamo questo codice da sinistra a destra, e quindi diciamo
+‘baz di bar di foo di x’. Ma questo non è l'ordine con cui le funzioni
+verrebbero chiamate; l'ordine di chiamata è invece il contrario:
+‘applica a x prima foo, poi bar, e poi baz’.
+Non sarebbe carino se potessimo scrivere il seguente codice?
 
-# Method calls
+```rust,ignore
+x.foo().bar().baz();
+```
 
-Here’s how it works:
+Fortunatamente, come si potrebbe immaginare, si può! Rust fornisce
+la capacità di usare questa ‘sintassi di chiamata di metodo’ tramite
+la parola-chiave `impl`.
+
+# Chiamate di metodo
+
+Ecco come funziona:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
+impl Cerchio {
     fn area(&self) -> f64 {
-        std::f64::consts::PI * (self.radius * self.radius)
+        std::f64::consts::PI * (self.raggio * self.raggio)
     }
 }
 
 fn main() {
-    let c = Circle { x: 0.0, y: 0.0, radius: 2.0 };
+    let c = Cerchio { x: 0.0, y: 0.0, raggio: 2.0 };
     println!("{}", c.area());
 }
 ```
 
-This will print `12.566371`.
+Questo stamperà `12.566371`.
 
-We’ve made a `struct` that represents a circle. We then write an `impl` block,
-and inside it, define a method, `area`.
+Abbiamo definito una `struct` che rappresenta un cerchio. Poi abbiamo scritto
+un blocco `impl`, e al suo interno abbiamo definito un metodo, `area`.
 
-Methods take a special first parameter, of which there are three variants:
-`self`, `&self`, and `&mut self`. You can think of this first parameter as
-being the `foo` in `foo.bar()`. The three variants correspond to the three
-kinds of things `foo` could be: `self` if it’s a value on the stack,
-`&self` if it’s a reference, and `&mut self` if it’s a mutable reference.
-Because we took the `&self` parameter to `area`, we can use it like any
-other parameter. Because we know it’s a `Circle`, we can access the `radius`
-like we would with any other `struct`.
+I metodi prendono un primo argomento speciale, di cui ci sono tre varianti:
+`self`, `&self`, e `&mut self`. Si può pensare a questo primo argomento come
+se fosse il `foo` in `foo.bar()`. Le tre varianti corrispondono ai tre tipi
+di cose che `foo` potrebbe essere: `self` se è un valore sullo stack,
+`&self` se è un riferimento, e `&mut self` se è un riferimento mutabile.
+Siccome abbiamo preso l'argomento `&self` da `area`, possiamo usarlo
+come qualunque altro argomento. Siccome sappiamo che tale argomento è di tipo
+`Cerchio`, possiamo accedere al suo membro `raggio` come faremmo con qualunque
+altra `struct`.
 
-We should default to using `&self`, as you should prefer borrowing over taking
-ownership, as well as taking immutable references over mutable ones. Here’s an
-example of all three variants:
+Di regola dovremmo usare `&self`, dato che dovremmo preferire prendere
+a prestito rispetto a prendere il possesso, e pure dovremmo preferire
+prendere un riferimenti immutabili rispetto a qulli mutabili. Ecco un esempio
+di tutte e tre le varianti:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
-    fn reference(&self) {
-       println!("taking self by reference!");
+impl Cerchio {
+    fn riferimento(&self) {
+       println!("presa di sé per riferimento!");
     }
 
-    fn mutable_reference(&mut self) {
-       println!("taking self by mutable reference!");
+    fn riferimento_mutabile(&mut self) {
+       println!("presa di sé per riferimento mutabile!");
     }
 
-    fn takes_ownership(self) {
-       println!("taking ownership of self!");
+    fn prendi_possesso(self) {
+       println!("presa di possesso di sé!");
     }
 }
 ```
 
-You can use as many `impl` blocks as you’d like. The previous example could
-have also been written like this:
+Si possono usare tanti blocchi `impl` quanti se ne vuole. L'esempio precedente
+poteva anche essere scritto così:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
-    fn reference(&self) {
-       println!("taking self by reference!");
+impl Cerchio {
+    fn riferimento(&self) {
+       println!("presa di sé per riferimento!");
     }
 }
 
-impl Circle {
-    fn mutable_reference(&mut self) {
-       println!("taking self by mutable reference!");
+impl Cerchio {
+    fn riferimento_mutabile(&mut self) {
+       println!("presa di sé per riferimento mutabile!");
     }
 }
 
-impl Circle {
-    fn takes_ownership(self) {
-       println!("taking ownership of self!");
+impl Cerchio {
+    fn prendi_possesso(self) {
+       println!("presa di possesso di sé!");
     }
 }
 ```
 
-# Chaining method calls
+# Concatenamento di chiamate di metodi
 
-So, now we know how to call a method, such as `foo.bar()`. But what about our
-original example, `foo.bar().baz()`? This is called ‘method chaining’. Let’s
-look at an example:
+Perciò, adesso sappiamo come chiamare un metodo, come `foo.bar()`. E che dire
+del nostro esempio originale, `x.foo().bar().baz()`? Questo è chiamato
+‘concatenamento di metodi’. Vediamo un esempio:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
+impl Cerchio {
     fn area(&self) -> f64 {
-        std::f64::consts::PI * (self.radius * self.radius)
+        std::f64::consts::PI * (self.raggio * self.raggio)
     }
 
-    fn grow(&self, increment: f64) -> Circle {
-        Circle { x: self.x, y: self.y, radius: self.radius + increment }
+    fn cresci(&self, incremento: f64) -> Cerchio {
+        Cerchio { x: self.x, y: self.y, raggio: self.raggio + incremento }
     }
 }
 
 fn main() {
-    let c = Circle { x: 0.0, y: 0.0, radius: 2.0 };
+    let c = Cerchio { x: 0.0, y: 0.0, raggio: 2.0 };
     println!("{}", c.area());
 
-    let d = c.grow(2.0).area();
+    let d = c.cresci(2.0).area();
     println!("{}", d);
 }
 ```
 
-Check the return type:
+Verifica il tipo di ritorno:
 
 ```rust
-# struct Circle;
-# impl Circle {
-fn grow(&self, increment: f64) -> Circle {
-# Circle } }
+# struct Cerchio;
+# impl Cerchio {
+fn grow(&self, increment: f64) -> Cerchio {
+# Cerchio } }
 ```
 
-We say we’re returning a `Circle`. With this method, we can grow a new
-`Circle` to any arbitrary size.
+Diciamo che stiamo rendendo un `Cerchio`. Con questo metodo, possiamo
+far crescere un nuovo `Cerchio` a qualunque dimensione.
 
-# Associated functions
+# Funzioni associate
 
-You can also define associated functions that do not take a `self` parameter.
-Here’s a pattern that’s very common in Rust code:
+Si possono anche definire funzioni associate che non prendono un argomento
+`self`. Ecco un pattern molto comune nel codice Rust:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
-    fn new(x: f64, y: f64, radius: f64) -> Circle {
-        Circle {
+impl Cerchio {
+    fn nuovo(x: f64, y: f64, raggio: f64) -> Cerchio {
+        Cerchio {
             x: x,
             y: y,
-            radius: radius,
+            raggio: raggio,
         }
     }
 }
 
 fn main() {
-    let c = Circle::new(0.0, 0.0, 2.0);
+    let c = Cerchio::nuovo(0.0, 0.0, 2.0);
 }
 ```
 
-This ‘associated function’ builds a new `Circle` for us. Note that associated
-functions are called with the `Struct::function()` syntax, rather than the
-`ref.method()` syntax. Some other languages call associated functions ‘static
-methods’.
+Questa ‘funzione associata’ ci costruisce un nuovo `Cerchio`. Si noti che
+le funzioni associate vengono chiamate usando la sintassi `Struct::function()`,
+invece che con la sintassi `ref.method()`. In alcuni altri linguaggi,
+le funzioni associate sono chiamate ‘funzioni membro statiche’
+o ‘metodi statici’ o ‘metodi di classe’.
 
-# Builder Pattern
+# Il pattern del costruttore
 
-Let’s say that we want our users to be able to create `Circle`s, but we will
-allow them to only set the properties they care about. Otherwise, the `x`
-and `y` attributes will be `0.0`, and the `radius` will be `1.0`. Rust doesn’t
-have method overloading, named arguments, or variable arguments. We employ
-the builder pattern instead. It looks like this:
+Diciamo che vogliamo che i nostri utenti possano creare delle istanze
+di `Cerchio`, ma permetteremo loro di impostare solamente le proprietà
+a cui sono interessati. Se non specificati, gli attributi `x` e `y` varranno
+`0.0`, e l'attributo `raggio` varrà `1.0`. Rust non ha il sovraccaricamento
+dei metodi, né gli argomenti con nome, né un numero variabile di argomenti.
+Invece si impiega il pattern del costruttore. Si presenta così:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
+impl Cerchio {
     fn area(&self) -> f64 {
-        std::f64::consts::PI * (self.radius * self.radius)
+        std::f64::consts::PI * (self.raggio * self.raggio)
     }
 }
 
-struct CircleBuilder {
+struct CostruttoreDiCerchi {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl CircleBuilder {
-    fn new() -> CircleBuilder {
-        CircleBuilder { x: 0.0, y: 0.0, radius: 1.0, }
+impl CostruttoreDiCerchi {
+    fn nuovo() -> CostruttoreDiCerchi {
+        CostruttoreDiCerchi { x: 0.0, y: 0.0, raggio: 1.0, }
     }
 
-    fn x(&mut self, coordinate: f64) -> &mut CircleBuilder {
-        self.x = coordinate;
+    fn x(&mut self, coordinata: f64) -> &mut CostruttoreDiCerchi {
+        self.x = coordinata;
         self
     }
 
-    fn y(&mut self, coordinate: f64) -> &mut CircleBuilder {
-        self.y = coordinate;
+    fn y(&mut self, coordinata: f64) -> &mut CostruttoreDiCerchi {
+        self.y = coordinata;
         self
     }
 
-    fn radius(&mut self, radius: f64) -> &mut CircleBuilder {
-        self.radius = radius;
+    fn raggio(&mut self, raggio: f64) -> &mut CostruttoreDiCerchi {
+        self.raggio = raggio;
         self
     }
 
-    fn finalize(&self) -> Circle {
-        Circle { x: self.x, y: self.y, radius: self.radius }
+    fn finalizza(&self) -> Cerchio {
+        Cerchio { x: self.x, y: self.y, raggio: self.raggio }
     }
 }
 
 fn main() {
-    let c = CircleBuilder::new()
-                .x(1.0)
-                .y(2.0)
-                .radius(2.0)
-                .finalize();
+    let c = CostruttoreDiCerchi::nuovo()
+        .x(1.0)
+        .y(2.0)
+        .raggio(2.0)
+        .finalizza();
 
     println!("area: {}", c.area());
     println!("x: {}", c.x);
@@ -251,9 +258,11 @@ fn main() {
 }
 ```
 
-What we’ve done here is make another `struct`, `CircleBuilder`. We’ve defined our
-builder methods on it. We’ve also defined our `area()` method on `Circle`. We
-also made one more method on `CircleBuilder`: `finalize()`. This method creates
-our final `Circle` from the builder. Now, we’ve used the type system to enforce
-our concerns: we can use the methods on `CircleBuilder` to constrain making
-`Circle`s in any way we choose.
+Ciò che abbiamo fatto qui è creare un'altra `struct`, `CostruttoreDiCerchi`.
+Su di essa abbiamo definito i nostri metodi di costruttore. Abbiamo anche
+definito il nostro metodo `area()` su `Cerchio`. Inoltre abbiamo creato
+un altro metodo su `CostruttoreDiCerchi`: `finalizza()`. Questo metodo crea
+il nostro `Cerchio` finale dal costruttore. Adesso, abbiamo usato il sistema
+dei tipi per imporre le nostre intenzioni: possiamo usare i metodi su
+`CostruttoreDiCerchi` per vincolare la costruzione di istanze di `Cerchio`
+in qualunque modo desideriamo.

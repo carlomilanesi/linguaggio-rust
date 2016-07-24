@@ -1,8 +1,9 @@
-% Effective Rust
+% Rust efficace
 
-So you’ve learned how to write some Rust code. But there’s a difference between
-writing *any* Rust code and writing *good* Rust code.
+Dunque abbiamo visto come scrivere un po' di codice Rust. Ma scrivere *del*
+codice Rust è diverso dallo scrivere del *buon* codice Rust.
 
-This chapter consists of relatively independent tutorials which show you how to
-take your Rust to the next level. Common patterns and standard library features
-will be introduced. Read these sections in any order of your choosing.
+Questo capitolo consiste in tutorial relativamente independenti che mostrano
+come portare la propria conoscenza di Rust al livello successivo. Verranno
+introdotti dei pattern tipici e delle caratteristiche della libreria standard.
+Queste sezioni possono essere lette nell'ordine che si desidera.

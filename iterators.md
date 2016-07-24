@@ -278,16 +278,16 @@ Avanti!
 
 Gli *adattatori degli iteratori* prendono un iteratore e lo modificano
 in qualche modo, producendo un nuovo iteratore. Quello più semplice
-si chiama `map`:
+si chiama `map` ["mappa"]:
 
 ```rust,ignore
 (1..100).map(|x| x + 1);
 ```
 
-`map` is called upon another iterator, and produces a new iterator where each
-element reference has the closure it's been given as an argument called on it.
-So this would give us the numbers from `2-100`. Well, almost! If you
-compile the example, you'll get a warning:
+`map` viene chiamato su un altro iteratore, e produce un nuovo iteratore
+che chiama su ogni elemento la chiusura ricevuta come argomento.
+Perciò il codice sopra renderebbe i numeri da `2` a `100`. Beh, quasi!
+Se si compila il programma, si ottiene un avvertenza:
 
 ```text
 warning: unused result which must be used: iterator adaptors are lazy and
@@ -296,19 +296,19 @@ warning: unused result which must be used: iterator adaptors are lazy and
  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-Laziness strikes again! That closure will never execute. This example
-doesn't print any numbers:
+La pigrizia colpisce ancora! Quella chiusura non verrà mai eseguita.
+Questo esempio non stampa nessun numero:
 
 ```rust,ignore
 (1..100).map(|x| println!("{}", x));
 ```
 
-If you are trying to execute a closure on an iterator for its side effects,
-use `for` instead.
+Se si vuole eseguire una chiusura su un iteratore perché si è interessati
+ai suoi effetti collaterali, si deve usare `for` invece.
 
-There are tons of interesting iterator adaptors. `take(n)` will return an
-iterator over the next `n` elements of the original iterator. Let's try it out
-with an infinite iterator:
+Ci sono tonnellate di interessanti adattatori di iteratore. `take(n)` rende
+un iteratore sui successivi `n` elementi dell'iteratore originale.
+Proviamolo con un iteratore infinito:
 
 ```rust
 for i in (1..).take(5) {
@@ -316,7 +316,7 @@ for i in (1..).take(5) {
 }
 ```
 
-This will print
+che stamperà
 
 ```text
 1
@@ -326,26 +326,26 @@ This will print
 5
 ```
 
-`filter()` is an adapter that takes a closure as an argument. This closure
-returns `true` or `false`. The new iterator `filter()` produces
-only the elements that the closure returns `true` for:
+`filter()` è un adattatore che prende come argomento una chiusura.
+Questa chiusura rende `true` o `false`. Il nuovo iteratore `filter()` produce
+solamente gli elementi per cui la chiusura rende `true`:
 
 ```rust
-for i in (1..100).filter(|&x| x % 2 == 0) {
+for i in (1..101).filter(|&x| x % 2 == 0) {
     println!("{}", i);
 }
 ```
 
-This will print all of the even numbers between one and a hundred.
-(Note that, unlike `map`, the closure passed to `filter` is passed a reference
-to the element instead of the element itself. The filter predicate here uses
-the `&x` pattern to extract the integer. The filter closure is passed a
-reference because it returns `true` or `false` instead of the element,
-so the `filter` implementation must retain ownership to put the elements
-into the newly constructed iterator.)
+Questo stamperà tutti i numeri pari fra uno e cento.
+(Si noti che, diversamente da `map`, la chiusura passata a `filter` riceve
+un riferimento all'elemento invece dell'elemento stesso. Il predicato di filtro
+qui usa il pattern `&x` per estrarre l'intero. La chiusura del filtro riceve
+un riferimento perché rende `true` o `false` invece dell'elemento,
+e così l'implementazione di `filter` può conservare il possesso per mettere
+gli elementi nell'iteratore da costruire.)
 
-You can chain all three things together: start with an iterator, adapt it
-a few times, and then consume the result. Check it out:
+Si può concatenare tutte e tre le cose insieme: iniziare con un iteratore,
+adattarlo alcune volte, e poi consumare il risultato. Proviamo:
 
 ```rust
 (1..)
@@ -355,11 +355,12 @@ a few times, and then consume the result. Check it out:
     .collect::<Vec<i32>>();
 ```
 
-This will give you a vector containing `6`, `12`, `18`, `24`, and `30`.
+Questo codice darà un vettore contenente `6`, `12`, `18`, `24`, e `30`.
 
-This is just a small taste of what iterators, iterator adaptors, and consumers
-can help you with. There are a number of really useful iterators, and you can
-write your own as well. Iterators provide a safe, efficient way to manipulate
-all kinds of lists. They're a little unusual at first, but if you play with
-them, you'll get hooked. For a full list of the different iterators and
-consumers, check out the [iterator module documentation](../std/iter/index.html).
+Questo è solo un assaggio di ciò a cui gli iteratori, gli adattaori
+degli iterator, e i consumatori possono servire. Ci sono vari iteratori
+realmente utili, e inoltre se ne possono scrivere di propri. Gli iteratori
+forniscono un modo sicuro ed efficiente di manipolare ogni tipo di lista.
+Dapprima sono un po' insoliti, ma se ci si gioca, ci si appassiona.
+Per una lista completa dei diversi iteratori e consumatori,
+si veda la [documentazione del modulo iteratore](../std/iter/index.html).

@@ -1,111 +1,117 @@
-% Raw Pointers
+% Puntatori grezzi
 
-Rust has a number of different smart pointer types in its standard library, but
-there are two types that are extra-special. Much of Rust’s safety comes from
-compile-time checks, but raw pointers don’t have such guarantees, and are
-[unsafe][unsafe] to use.
+Rust ha vari diversi tipi di smart pointer nella sua libreria standard, ma
+ci sono due tipi che sono molto speciali. Molto della sicurezza di Rust deriva
+dalle verifiche in fase di compilazione, ma i puntatori grezzi non hanno
+tali garanzie, e quindi sono [insicuri][unsafe] da usare.
 
-`*const T` and `*mut T` are called ‘raw pointers’ in Rust. Sometimes, when
-writing certain kinds of libraries, you’ll need to get around Rust’s safety
-guarantees for some reason. In this case, you can use raw pointers to implement
-your library, while exposing a safe interface for your users. For example, `*`
-pointers are allowed to alias, allowing them to be used to write
-shared-ownership types, and even thread-safe shared memory types (the `Rc<T>`
-and `Arc<T>` types are both implemented entirely in Rust).
+`*const T` e `*mut T` sono chiamati ‘puntatori grezzi’ ["raw pointer"] in Rust.
+Talvolta, quando si scrivono certi tipi di librerie, c'è bisogno di aggirare
+le garanzie di sicurezza di Rust, per varie ragioni. In tali casi, si possono
+usare i puntatori grezzi nell'implementazione della propria libreria, pur
+esponendo un'interfaccia sicura ai propri utenti. Per esempio, i puntatori `*`
+sono consentiti eseguire degli alias, consentendogli di essere usati
+per scrivere dei tipi di possesso condiviso, e perfino dei tipi di memoria
+condivisa thread-safe (i tipi `Rc<T>` e `Arc<T>` sono entrambi implementati
+interamente in Rust).
 
-Here are some things to remember about raw pointers that are different than
-other pointer types. They:
+Ecco alcune cose da ricordare sui puntatori grezzi, che sono diverse
+dagli altri tipi di puntatori. Tali puntatori: 
 
-- are not guaranteed to point to valid memory and are not even
-  guaranteed to be non-NULL (unlike both `Box` and `&`);
-- do not have any automatic clean-up, unlike `Box`, and so require
-  manual resource management;
-- are plain-old-data, that is, they don't move ownership, again unlike
-  `Box`, hence the Rust compiler cannot protect against bugs like
-  use-after-free;
-- lack any form of lifetimes, unlike `&`, and so the compiler cannot
-  reason about dangling pointers; and
-- have no guarantees about aliasing or mutability other than mutation
-  not being allowed directly through a `*const T`.
+- non è garantito che puntino a memoria valida, e non è nemmeno garanito
+  che non siano NULL (diversamente sia da `Box` che da `&`);
+- non fanno nessuna pulizia automatica, diversamente da `Box`, e perciò
+  richiedono una gestione manuale delle risorse;
+- sono dei POD ("plain-old-data"), cioè non spostano il possesso, ancora
+  diversamente da `Box`, e perciò il compilatore Rust non può proteggere
+  da difetti come l'uso dopo da deallocazione;
+- non hanno nessuna forma di tempo di vita, diversamente da `&`, e quindi
+  il compilatore non può rilevare i puntatori penzolanti;
+- non danno garanzie sull'aliasing né sulla mutabilità, a parte il fatto che
+  la mutazione non è consentita direttamente tramite un `*const T`.
 
-# Basics
+# Fondamenti
 
-Creating a raw pointer is perfectly safe:
+Creare un puntatore grezzo è perfettamente sicuro:
 
 ```rust
 let x = 5;
-let raw = &x as *const i32;
+let grezzo = &x as *const i32;
 
 let mut y = 10;
-let raw_mut = &mut y as *mut i32;
+let grezzo_mut = &mut y as *mut i32;
 ```
 
-However, dereferencing one is not. This won’t work:
+Però, dereferenziarne uno non lo è. Questo non funziona:
 
 ```rust,ignore
 let x = 5;
-let raw = &x as *const i32;
+let grezzo = &x as *const i32;
 
-println!("raw points at {}", *raw);
+println!("grezzo punta a {}", *grezzo);
 ```
 
-It gives this error:
+Dà quessto errore:
 
 ```text
 error: dereference of raw pointer requires unsafe function or block [E0133]
-     println!("raw points at {}", *raw);
-                                  ^~~~
+println!("grezzo punta a {}", *grezzo);
+                              ^~~~
 ```
 
-When you dereference a raw pointer, you’re taking responsibility that it’s not
-pointing somewhere that would be incorrect. As such, you need `unsafe`:
+Quando si dereferenza un puntatore grezzo, si sta assumendo la responsabilità
+che non stia puntando da qualche luogo dove non dovrebbe. Pertanto, serve
+`unsafe`:
 
 ```rust
 let x = 5;
-let raw = &x as *const i32;
+let grezzo = &x as *const i32;
 
-let points_at = unsafe { *raw };
+let punta_a = unsafe { *grezzo };
 
-println!("raw points at {}", points_at);
+println!("grezzo punta a {}", *grezzo);
 ```
 
-For more operations on raw pointers, see [their API documentation][rawapi].
+Per vedere altre operazioni sui puntatori grezzi, si veda la documentazione
+della loro [API][rawapi].
 
 [unsafe]: unsafe.html
 [rawapi]: ../std/primitive.pointer.html
 
 # FFI
 
-Raw pointers are useful for FFI: Rust’s `*const T` and `*mut T` are similar to
-C’s `const T*` and `T*`, respectively. For more about this use, consult the
-[FFI chapter][ffi].
+I puntatori grezzi sono utili per l'FFI: i `*const T` e i `*mut T` di Rust
+sono simili, rispettivamente, ai `const T*` e ai `T*` del C. Per maggiori
+informazioni su questo utilizzo, si consulti il capitolo [FFI][ffi].
 
 [ffi]: ffi.html
 
-# References and raw pointers
+# Riferimenti e puntatori grezzi
 
-At runtime, a raw pointer `*` and a reference pointing to the same piece of
-data have an identical representation. In fact, an `&T` reference will
-implicitly coerce to an `*const T` raw pointer in safe code and similarly for
-the `mut` variants (both coercions can be performed explicitly with,
-respectively, `value as *const T` and `value as *mut T`).
+In fase di esecuzione, un puntatore grezzo `*` e un riferimento che puntano
+allo stesso dato hanno un'identica rappresentazione. Di fatto, un riferimento
+`&T` sarà implicitamente forzato a un  puntatore grezzo `*const T` nel codice
+sicuro e similmente avverrà per le varianti `mut` (entrambe le forzature
+possono essere eseguite esplicitamente, rispettivamente, condivisa
+`value as *const T` e con `value as *mut T`).
 
-Going the opposite direction, from `*const` to a reference `&`, is not safe. A
-`&T` is always valid, and so, at a minimum, the raw pointer `*const T` has to
-point to a valid instance of type `T`. Furthermore, the resulting pointer must
-satisfy the aliasing and mutability laws of references. The compiler assumes
-these properties are true for any references, no matter how they are created,
-and so any conversion from raw pointers is asserting that they hold. The
-programmer *must* guarantee this.
+Invece, andare nella direzione opposta, da un `*const` a un riferimento `&`,
+non è sicuro. Un `&T` è sempre valido, e così, come minimo, il puntatore grezzo
+`*const T`deve puntare a un'istanza valida del tipo `T`. Inoltre, il puntatore
+risultante deve soddisfare le leggi di aliasing e mutabilità laws
+dei riferimenti. Il compilatore assume che queste proprietà siano vere
+per ogni riferimento, indipendentemente da come sono stati creati,
+e così ogni conversione da puntatori grezzi sta asserendo che valgano.
+Il programmatore *deve* garantirlo.
 
-The recommended method for the conversion is:
+Il metodo consigliato per questa conversione è:
 
 ```rust
-// explicit cast
+// cast esplicito
 let i: u32 = 1;
 let p_imm: *const u32 = &i as *const u32;
 
-// implicit coercion
+// forzatura implicita
 let mut m: u32 = 2;
 let p_mut: *mut u32 = &mut m;
 
@@ -115,7 +121,7 @@ unsafe {
 }
 ```
 
-The `&*x` dereferencing style is preferred to using a `transmute`. The latter
-is far more powerful than necessary, and the more restricted operation is
-harder to use incorrectly; for example, it requires that `x` is a pointer
-(unlike `transmute`).
+Lo stile di dereferenziazione `&*x` è preferibile rispetto a usare `transmute`.
+L'ultimo stile è molto più potente del necessario, e l'operazione più ristretta
+è più difficile da usare scorrettamente; per esempio, richiede che `x`
+sia un puntatore, diversamente da `transmute`.

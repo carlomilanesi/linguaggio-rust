@@ -1,43 +1,9 @@
-% References and Borrowing
+% Riferimenti e prestiti
 
-This is the second of three sections presenting Rust’s ownership system. This is one of
-Rust’s most distinct and compelling features, with which Rust developers should
-become quite acquainted. Ownership is how Rust achieves its largest goal,
-memory safety. There are a few distinct concepts, each with its own
-chapter:
+Questa è la seconda delle tre sezioni che presentano il sistema di possesso
+di Rust. Si assume che sia già stata letta la sezione sul [possesso][possesso]:
 
-* [ownership][ownership], the key concept
-* borrowing, which you’re reading now
-* [lifetimes][lifetimes], an advanced concept of borrowing
-
-These three chapters are related, and in order. You’ll need all three to fully
-understand the ownership system.
-
-[ownership]: ownership.html
-[lifetimes]: lifetimes.html
-
-# Meta
-
-Before we get to the details, two important notes about the ownership system.
-
-Rust has a focus on safety and speed. It accomplishes these goals through many
-‘zero-cost abstractions’, which means that in Rust, abstractions cost as little
-as possible in order to make them work. The ownership system is a prime example
-of a zero-cost abstraction. All of the analysis we’ll talk about in this guide
-is _done at compile time_. You do not pay any run-time cost for any of these
-features.
-
-However, this system does have a certain cost: learning curve. Many new users
-to Rust experience something we like to call ‘fighting with the borrow
-checker’, where the Rust compiler refuses to compile a program that the author
-thinks is valid. This often happens because the programmer’s mental model of
-how ownership should work doesn’t match the actual rules that Rust implements.
-You probably will experience similar things at first. There is good news,
-however: more experienced Rust developers report that once they work with the
-rules of the ownership system for a period of time, they fight the borrow
-checker less and less.
-
-With that in mind, let’s learn about borrowing.
+[possesso]: ownership.html
 
 # Borrowing
 

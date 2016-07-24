@@ -1,55 +1,58 @@
-% Concurrency
+% Concorrenza
 
-Concurrency and parallelism are incredibly important topics in computer
-science, and are also a hot topic in industry today. Computers are gaining more
-and more cores, yet many programmers aren't prepared to fully utilize them.
+La concorrenza e il parallelismo sono argomenti incredibilmente importanti
+in informatica teorica, e oggi sono anche un argomento attuale
+nella tecnologia informatica. I computer hanno sempre più core, però molti
+programmatori non sono in grado di utilizzarli pienamente.
 
-Rust's memory safety features also apply to its concurrency story too. Even
-concurrent Rust programs must be memory safe, having no data races. Rust's type
-system is up to the task, and gives you powerful ways to reason about
-concurrent code at compile time.
+La sicurezza nella gestione della memoria da parte di Rust si applica anche
+ai problemi di concorrenza. Infatti, anche i programmi concorrenti scritti
+in Rust devono garantire un accesso sicura alla memoria, evitando
+le collisioni nell'accesso ai dati ["data race"]. Il sistema dei tipi di Rust
+è all'altezza del compito, fornendo strumenti potenti per gestire il codice
+concorrente in fase di compilazione.
 
-Before we talk about the concurrency features that come with Rust, it's important
-to understand something: Rust is low-level enough that the vast majority of
-this is provided by the standard library, not by the language. This means that
-if you don't like some aspect of the way Rust handles concurrency, you can
-implement an alternative way of doing things.
-[mio](https://github.com/carllerche/mio) is a real-world example of this
-principle in action.
+Prima di parlare delle caratteristiche di concorrenza fornite da Rust, è
+importante capire qualcosa: Rust è abbastanza a basso livello che la grande
+maggioranza di cioò è fornita dalla libreria standard, non dal linguaggio.
+Ciò significa che se non piace qualche aspetto del modo in cui Rust tratta
+la concorrenza, si può implementare un altro modo di fare le cose.
+[mio](https://github.com/carllerche/mio) è un esempio del mondo reale
+di questo principio in azione.
 
-## Background: `Send` and `Sync`
+## Background: `Send` e `Sync`
 
-Concurrency is difficult to reason about. In Rust, we have a strong, static
-type system to help us reason about our code. As such, Rust gives us two traits
-to help us make sense of code that can possibly be concurrent.
+È difficile ragionare sulla concorrenza. In Rust, c'è un sistema dei tipi
+forte, statico, che aiuta a ragionare sul proprio codice. Come tale, Rust
+fornisce due tratti per aiutare a dar senso al codice che eventualmente può
+diventare concorrente.
 
 ### `Send`
 
-The first trait we're going to talk about is
-[`Send`](../std/marker/trait.Send.html). When a type `T` implements `Send`, it
-indicates that something of this type is able to have ownership transferred
-safely between threads.
+Il primo trattl di cui parleremo è [`Send`](../std/marker/trait.Send.html).
+Quando un tipo `T` implementa `Send`, indicata che qualcosa di questo tipo
+può avere la sua proprietà trasferita con sicurezza da un thread a un'altro.
 
-This is important to enforce certain restrictions. For example, if we have a
-channel connecting two threads, we would want to be able to send some data
-down the channel and to the other thread. Therefore, we'd ensure that `Send` was
-implemented for that type.
+Questo è importante per imporre certe restrizioni. Per esempio, se abbiamo
+un canale che connette due thread, vorremmo poter mandare dei dati lungo
+il canale fino all'altro thread. Perciò, ci assicureremmo che `Send`
+fosse implementato per tale tipo.
 
-In the opposite way, if we were wrapping a library with [FFI][ffi] that isn't
-threadsafe, we wouldn't want to implement `Send`, and so the compiler will help
-us enforce that it can't leave the current thread.
+All'opposto, se stessimo avvolgendo una libreria che usa una [FFI][ffi] che
+non è threadsafe, non dovremmo implementare `Send`, e quindi il compilatore
+ci aiuterà a impedire che possa uscire dal thread corrente.
 
 [ffi]: ffi.html
 
 ### `Sync`
 
-The second of these traits is called [`Sync`](../std/marker/trait.Sync.html).
-When a type `T` implements `Sync`, it indicates that something
-of this type has no possibility of introducing memory unsafety when used from
-multiple threads concurrently through shared references. This implies that
-types which don't have [interior mutability](mutability.html) are inherently
-`Sync`, which includes simple primitive types (like `u8`) and aggregate types
-containing them.
+Il secondo di questi tratti è chiamato [`Sync`](../std/marker/trait.Sync.html).
+Quando un tipo `T` implementa `Sync`, indicata che qualcosa di questo tipo
+non ha possibilità di introdurre insicurezze di memoria quando sia usato
+da più thread concorrentemente tramite riferimenti condivisi. Ciò implica che
+i tipi che non hanno la [mutabilità interna](mutability.html) sono
+inerentemente `Sync`, il che comprende i tipi primitivi semplici (come `u8`)
+e i tipi aggregati che li contengono.
 
 For sharing references across threads, Rust provides a wrapper type called
 `Arc<T>`. `Arc<T>` implements `Send` and `Sync` if and only if `T` implements

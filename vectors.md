@@ -1,44 +1,47 @@
-% Vectors
+% Vettori
 
-A ‘vector’ is a dynamic or ‘growable’ array, implemented as the standard
-library type [`Vec<T>`][vec]. The `T` means that we can have vectors
-of any type (see the chapter on [generics][generic] for more).
-Vectors always allocate their data on the heap.
-You can create them with the `vec!` macro:
+Un ‘vettore’ è un array dinamico ossia ‘estendibile’, implementato dal tipo
+[`Vec<T>`][vec] nella libreria standard. Il `T` significa che si possono avere
+vettori di ogni tipo (si veda il capitolo su [generici][generic] per avere
+maggiori informazioni).
+I vettori allocano sempre i loro dati nello heap.
+Possono essere creati con la macro `vec!`:
 
 ```rust
 let v = vec![1, 2, 3, 4, 5]; // v: Vec<i32>
 ```
 
-(Notice that unlike the `println!` macro we’ve used in the past, we use square
-brackets `[]` with `vec!` macro. Rust allows you to use either in either
-situation, this is just convention.)
+(Si noti che diversamente dalla macro `println!` che abbiamo usato in passato,
+con la macro `vec!` usiamo le parentesi quadre `[]`. Rust permette di usare
+entrambi i tipi di parentesi in entrambe le situazioni, questo uso è solo
+una convenzione.)
 
-There’s an alternate form of `vec!` for repeating an initial value:
+C'è una forma alternativa di `vec!` per ripetere un valore iniziale:
 
 ```rust
-let v = vec![0; 10]; // ten zeroes
+let v = vec![0; 10]; // dieci zeri
 ```
 
-Vectors store their contents as contiguous arrays of `T` on the heap. This means
-that they must be able to know the size of `T` at compile time (that is, how
-many bytes are needed to store a `T`?). The size of some things can't be known
-at compile time. For these you'll have to store a pointer to that thing:
-thankfully, the [`Box`][box] type works perfectly for this.
+I vettori immagazzinano il loro contenuto sullo heap come array contigui
+di `T`. Ciò significa che devono essere capaci di sapere la dimensione di `T`
+in fase di compilazione (cioè, quanti byte servono per memorizzare un `T`?).
+La dimensione di alcuni oggetti non si può sapere in fase di compilazione.
+Per tali oggetti si dovrà immagazzinare un puntatore a quell'oggetto:
+fortunatamente, il tipo [`Box`][box] funziona perfettamente a questo scopo.
 
-## Accessing elements
+## Accedere agli elementi
 
-To get the value at a particular index in the vector, we use `[]`s:
+Per ottenere il valore a un particolare indice nel vettore, si usano le `[]`:
 
 ```rust
 let v = vec![1, 2, 3, 4, 5];
 
-println!("The third element of v is {}", v[2]);
+println!("Il terzo elemento di v è {}", v[2]);
 ```
 
-The indices count from `0`, so the third element is `v[2]`.
+Gli indici contano da `0`, e perciò il terzo elemento è `v[2]`.
 
-It’s also important to note that you must index with the `usize` type:
+È anche importante notare che si deve indicizzare con il tipo `usize`:
 
 ```rust,ignore
 let v = vec![1, 2, 3, 4, 5];
@@ -46,14 +49,14 @@ let v = vec![1, 2, 3, 4, 5];
 let i: usize = 0;
 let j: i32 = 0;
 
-// works
+// funziona
 v[i];
 
-// doesn’t
+// non funziona
 v[j];
 ```
 
-Indexing with a non-`usize` type gives an error that looks like this:
+Indicizzare con un tipo diverso da `usize` dà un errore come questo:
 
 ```text
 error: the trait bound `collections::vec::Vec<_> : core::ops::Index<i32>`
@@ -64,93 +67,94 @@ note: the type `collections::vec::Vec<_>` cannot be indexed by `i32`
 error: aborting due to previous error
 ```
 
-There’s a lot of punctuation in that message, but the core of it makes sense:
-you cannot index with an `i32`.
+C'è molta punteggiatura in quel messaggio, ma il suo nucleo significa:
+non si può indicizzare con un `i32`.
 
-## Out-of-bounds Access
+## Accesso fuori dai limiti
 
-If you try to access an index that doesn’t exist:
+Se si prova ad accedere un indice che non esiste:
 
 ```rust,ignore
 let v = vec![1, 2, 3];
-println!("Item 7 is {}", v[7]);
+println!("L'elemento 7 è {}", v[7]);
 ```
 
-then the current thread will [panic] with a message like this:
+allora il thread attuale andrà in [panico] con un messaggio come questo:
 
 ```text
 thread 'main' panicked at 'index out of bounds: the len is 3 but the index is 7'
 ```
 
-If you want to handle out-of-bounds errors without panicking, you can use
-methods like [`get`][get] or [`get_mut`][get_mut] that return `None` when
-given an invalid index:
+Se si vuole gestire gli errori di accesso fuori dai limiti senza andare
+in panico, si possono usare metodi come [`get`][get] o [`get_mut`][get_mut],
+che rendono `None` quando gli viene dato un indice invalido:
 
 ```rust
 let v = vec![1, 2, 3];
 match v.get(7) {
     Some(x) => println!("Item 7 is {}", x),
-    None => println!("Sorry, this vector is too short.")
+    None => println!("Spiacente, questo vettore è troppo corto.")
 }
 ```
 
-## Iterating
+## Iterare
 
-Once you have a vector, you can iterate through its elements with `for`. There
-are three versions:
+Una volta che si ha un vettore, si può iterare sui suoi elementi usando `for`.
+Ce ne sono tre versioni:
 
 ```rust
 let mut v = vec![1, 2, 3, 4, 5];
 
 for i in &v {
-    println!("A reference to {}", i);
+    println!("Un riferimento a {}", i);
 }
 
 for i in &mut v {
-    println!("A mutable reference to {}", i);
+    println!("Un riferimento mutabile a {}", i);
 }
 
 for i in v {
-    println!("Take ownership of the vector and its element {}", i);
+    println!("Prendi il possesso del vettore e del suo elemento {}", i);
 }
 ```
 
-Note: You cannot use the vector again once you have iterated by taking ownership of the vector.
-You can iterate the vector multiple times by taking a reference to the vector whilst iterating.
-For example, the following code does not compile.
+Nota: Non si può usare ancora il vettore dopo averlo iterato prendendone
+il possesso. Invece, si può iterare il vettore più volte se quando lo si itera
+se ne prende un riferimento.
+Per esempio, il seguente codice non compila.
 
 ```rust,ignore
 let v = vec![1, 2, 3, 4, 5];
 
 for i in v {
-    println!("Take ownership of the vector and its element {}", i);
+    println!("Prendi possesso del vettore e del suo elemento {}", i);
 }
 
 for i in v {
-    println!("Take ownership of the vector and its element {}", i);
+    println!("Prendi possesso del vettore e del suo elemento {}", i);
 }
 ```
 
-Whereas the following works perfectly,
+Mentre il seguente funziona perfettamente:
 
 ```rust
 let v = vec![1, 2, 3, 4, 5];
 
 for i in &v {
-    println!("This is a reference to {}", i);
+    println!("Questo è un riferimento a {}", i);
 }
 
 for i in &v {
-    println!("This is a reference to {}", i);
+    println!("Questo è un riferimento a {}", i);
 }
 ```
 
-Vectors have many more useful methods, which you can read about in [their
-API documentation][vec].
+I vettori hanno molti altri metodi utili, di cui si può leggere nella
+[documentazione della loro API][vec].
 
 [vec]: ../std/vec/index.html
 [box]: ../std/boxed/index.html
-[generic]: generics.html
+[generici]: generics.html
 [panic]: concurrency.html#panics
 [get]: ../std/vec/struct.Vec.html#method.get
 [get_mut]: ../std/vec/struct.Vec.html#method.get_mut

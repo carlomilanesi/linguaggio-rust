@@ -1,6 +1,6 @@
-% Generics
+% Generici
 
-Sometimes, when writing a function or data type, we may want it to work for
+Talvolta, when writing a function or data type, we may want it to work for
 multiple types of arguments. In Rust, we can do this with generics.
 Generics are called ‘parametric polymorphism’ in type theory,
 which means that they are types or functions that have multiple forms (‘poly’

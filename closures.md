@@ -101,21 +101,20 @@ fn main() {
 ^
 ```
 
-A verbose yet helpful error message! As it says, we can’t take a mutable borrow
-on `num` because the closure is already borrowing it. If we let the closure go
-out of scope, we can:
+Un messaggio d'errore prolisso ma utile! Come dice, non si può prendere `num` 
+a prestito mutabile perché la chiusura la sta già tenendo a prestito.
+Se lasciamo uscire di ambito la chiusura, lo possiamo fare:
 
 ```rust
 let mut numero = 5;
 {
     let piu_numero = |x: i32| x + numero;
-
-} // piu_num goes out of scope, borrow of num ends
+} // piu_num esce di ambito, e quindi il prestito di numero finisce
 
 let y = &mut numero;
 ```
 
-If your closure requires it, however, Rust will take ownership and move
+La chiusura lo richiede, comunque, Rust prenderà la ownership and move
 the environment instead. This doesn’t work:
 
 ```rust,ignore

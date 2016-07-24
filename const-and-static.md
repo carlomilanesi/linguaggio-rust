@@ -1,56 +1,59 @@
-% `const` and `static`
+% `const` e `static`
 
-Rust has a way of defining constants with the `const` keyword:
+In Rust si possono definire costanti usando la parola-chiave `const`:
 
 ```rust
 const N: i32 = 5;
 ```
 
-Unlike [`let`][let] bindings, you must annotate the type of a `const`.
+Diversamente dai legami [`let`][let], il tipo di un `const` deve essere
+annotato.
 
 [let]: variable-bindings.html
 
-Constants live for the entire lifetime of a program. More specifically,
-constants in Rust have no fixed address in memory. This is because they’re
-effectively inlined to each place that they’re used. References to the same
-constant are not necessarily guaranteed to refer to the same memory address for
-this reason.
+Le costanti vivono per tutto il tempo di vita del programma.
+Più specificamente, le costanti in Rust non hanno indirizzi fissi in memoria.
+Questo avviene perché di fatto vengono espanse inline in ogni posto in cui
+sono usate. Per questa ragione, non è garantito che più riferimenti
+alla stessa costante si riferiscano allo stesso indirizzo di memoria.
 
 # `static`
 
-Rust provides a ‘global variable’ sort of facility in static items. They’re
-similar to constants, but static items aren’t inlined upon use. This means that
-there is only one instance for each value, and it’s at a fixed location in
-memory.
+Rust fornisce una sorta di funzionalità di ‘variabile globale’ sotto forma
+di elementi statici. Sono simili a costanti, ma gli elementi statici non sono
+espansi inline quando sono usati. Ciò significa che c'è solo un'istanza
+per ogni valore, e si trova in una posizione fissa in memoria.
 
-Here’s an example:
+Ecco un esempio:
 
 ```rust
 static N: i32 = 5;
 ```
 
-Unlike [`let`][let] bindings, you must annotate the type of a `static`.
+Diveramente dai legami [`let`][let], si deve annotare il tipo di uno `static`.
 
-Statics live for the entire lifetime of a program, and therefore any
-reference stored in a constant has a [`'static` lifetime][lifetimes]:
+Gli static vivono per tutta lo il tempo di vita del programma, e perciò
+ogni riferimento immagazzinato in una costante è un [tempo di vita `'static`]
+[lifetimes]:
 
 ```rust
-static NAME: &'static str = "Steve";
+static NAME: &'static str = "Stefano";
 ```
 
 [lifetimes]: lifetimes.html
 
-## Mutability
+## Mutabilità
 
-You can introduce mutability with the `mut` keyword:
+La mutabilità si introduce usando la parola-chiave `mut`:
 
 ```rust
 static mut N: i32 = 5;
 ```
 
-Because this is mutable, one thread could be updating `N` while another is
-reading it, causing memory unsafety. As such both accessing and mutating a
-`static mut` is [`unsafe`][unsafe], and so must be done in an `unsafe` block:
+Dato che questo è mutabile, un thread potrebbe aggiornare `N` mentre un altro
+lo sta leggendo, provocando insicurezza di memoria. Il fatto che entrambi
+accedano e mutino uno `static mut` è [insicuro [`unsafe`]][unsafe], e quindi
+tali accessi devono essere fatti in un blocco `unsafe`:
 
 ```rust
 # static mut N: i32 = 5;
@@ -64,20 +67,21 @@ unsafe {
 
 [unsafe]: unsafe.html
 
-Furthermore, any type stored in a `static` must be `Sync`, and must not have
-a [`Drop`][drop] implementation.
+Inoltre, ogni tipo immagazzinato in uno `static` deve essere `Sync`, non deve
+implementare il tratto [`Drop`][drop].
 
 [drop]: drop.html
 
-# Initializing
+# Inizializzazione
 
-Both `const` and `static` have requirements for giving them a value. They must
-be given a value that’s a constant expression. In other words, you cannot use
-the result of a function call or anything similarly complex or at runtime.
+Sia `const` che `static` hanno requisiti per dargli un valore. Devono ricevere
+un valore che sia un'espressione costante. In altre parole, non si può usare
+il risultato di una chiamata di funzione o qualcosa di similmente complesso
+eseguito in fase di esecuzione.
 
-# Which construct should I use?
+# Quale costrutto di dovrebbe usare?
 
-Almost always, if you can choose between the two, choose `const`. It’s pretty
-rare that you actually want a memory location associated with your constant,
-and using a `const` allows for optimizations like constant propagation not only
-in your crate but downstream crates.
+Quasi sempre, se si può  scegliere fra i due, si scelga `const`. È piuttosto
+raro voler effettivamente una posizione di memoria associato a tale costante,
+e usare un `const` consente ottimizzazioni come la propagazione di costanti
+non solo nel proprio crate ma anche nei crate da esso utilizzati.

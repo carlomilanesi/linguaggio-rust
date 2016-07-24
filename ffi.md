@@ -1,18 +1,19 @@
-% Foreign Function Interface
+% Interfaccia alle funzioni straniere ["Foreign Function Interface"]
 
-# Introduction
+# Introduzione
 
-This guide will use the [snappy](https://github.com/google/snappy)
-compression/decompression library as an introduction to writing bindings for
-foreign code. Rust is currently unable to call directly into a C++ library, but
-snappy includes a C interface (documented in
-[`snappy-c.h`](https://github.com/google/snappy/blob/master/snappy-c.h)).
+Questa guida userà la libreria di compressione/decompressione [Snappy]
+(https://github.com/google/snappy) come introduzione alla scrittura di legami
+per il codice straniero. Rust attualmente non è in grado di chiamare
+direttamente funzioni di una libreria C++, ma Snappy comprende una interfaccia
+per il linguaggio C (documentata in [`snappy-c.h`]
+(https://github.com/google/snappy/blob/master/snappy-c.h)).
 
-## A note about libc
+## Una nota su 'libc'
 
-Many of these examples use [the `libc` crate][libc], which provides various
-type definitions for C types, among other things. If you’re trying these
-examples yourself, you’ll need to add `libc` to your `Cargo.toml`:
+Molti di questi esempi usano [il crate `libc`][libc], il quale, tra le altre
+cose, fornisce varie definizioni di tipi del linguaggio C. Per provare questi
+esempi, si dovrà aggiungere il riferimento a `libc` nel file `Cargo.toml`:
 
 ```toml
 [dependencies]
@@ -21,12 +22,12 @@ libc = "0.2.0"
 
 [libc]: https://crates.io/crates/libc
 
-and add `extern crate libc;` to your crate root.
+e aggiungere `extern crate libc;` alla radice del proprio crate.
 
-## Calling foreign functions
+## Chiamare funzioni straniere
 
-The following is a minimal example of calling a foreign function which will
-compile if snappy is installed:
+Il seguente è un esempio minimale di come chiamare una funzione straniera
+che compilerà se Snappy è installato:
 
 ```rust,no_run
 # #![feature(libc)]
@@ -40,27 +41,29 @@ extern {
 
 fn main() {
     let x = unsafe { snappy_max_compressed_length(100) };
-    println!("max compressed length of a 100 byte buffer: {}", x);
+    println!("lunghezza massima compressa di un'area di 100: {}", x);
 }
 ```
 
-The `extern` block is a list of function signatures in a foreign library, in
-this case with the platform's C ABI. The `#[link(...)]` attribute is used to
-instruct the linker to link against the snappy library so the symbols are
-resolved.
+Il blocco `extern` è un elenco di firme di funzioni di una libreria straniera,
+che in questo caso usa l'ABI del linguaggio della piattaforma corrente.
+L'attributo `#[link(...)]` serve a istruire il linker a collegare la libreria
+Snappy in modo da risolvere i simboli.
 
-Foreign functions are assumed to be unsafe so calls to them need to be wrapped
-with `unsafe {}` as a promise to the compiler that everything contained within
-truly is safe. C libraries often expose interfaces that aren't thread-safe, and
-almost any function that takes a pointer argument isn't valid for all possible
-inputs since the pointer could be dangling, and raw pointers fall outside of
-Rust's safe memory model.
+Le funzioni straniere si presume siano insicure, e quindi le chiamate a loro
+hanno bisogno di essere avvolte da `unsafe {}` come promessa per il compilatore
+che ogni cosa contenuta entro di essa è veramente sicura. Le libreria C
+espongono spesso interacce che non sono thread-safe, e quasi ogni funzione che
+prende un argomento puntatore non è valida per tutti i possibili input
+dato che il puntatore potrebbe essere penzolante ["dangling"], e i puntatori
+grezzi cadono fuori dal modello di memoria sicuro di Rust.
 
-When declaring the argument types to a foreign function, the Rust compiler can
-not check if the declaration is correct, so specifying it correctly is part of
-keeping the binding correct at runtime.
+Quando si dichiarano i tipi degli argomenti a una funzione straniera,
+il compilatore Rust non può verificare se la dichiarazione è corretta, quindi
+specificarlo correttamente fa parte del mantenimento di un legame corretto
+in fase di esecuzione.
 
-The `extern` block can be extended to cover the entire snappy API:
+Il blocco `extern` può venire esteso così da coprire l'intera API di Snappy:
 
 ```rust,no_run
 # #![feature(libc)]
@@ -87,16 +90,20 @@ extern {
 # fn main() {}
 ```
 
-# Creating a safe interface
+# Creare un'interfaccia sicura
 
-The raw C API needs to be wrapped to provide memory safety and make use of higher-level concepts
-like vectors. A library can choose to expose only the safe, high-level interface and hide the unsafe
-internal details.
+L'API C grezza ha bisogno di essere avvolta per fornire sicurezza di memoria
+e fornire concetti di livello più alto, come i vettori. Una libreria può
+scegliere di esporre solamente l'interfaccia sicura, ad alto livello, e
+di nascondere i dettagli interni insicuri.
 
-Wrapping the functions which expect buffers involves using the `slice::raw` module to manipulate Rust
-vectors as pointers to memory. Rust's vectors are guaranteed to be a contiguous block of memory. The
-length is number of elements currently contained, and the capacity is the total size in elements of
-the allocated memory. The length is less than or equal to the capacity.
+Avvolgere le funzioni che si aspettano delle aree comporta usare il modulo
+`slice::raw` per manipolare i vettori Rust come puntatori alla memoria.
+I vettori di Rust sono garantiti essere un blocco contiguo di memoria
+(virtuale).
+La lunghezza di tale blocco è il numero di elementi attualmente contenuti, e
+la capacità è il numero totale di elementi che può essere contenuto nella
+memoria già allocata. La lunghezza è minore o uguale alla capacità.
 
 ```rust
 # #![feature(libc)]
@@ -104,24 +111,26 @@ the allocated memory. The length is less than or equal to the capacity.
 # use libc::{c_int, size_t};
 # unsafe fn snappy_validate_compressed_buffer(_: *const u8, _: size_t) -> c_int { 0 }
 # fn main() {}
-pub fn validate_compressed_buffer(src: &[u8]) -> bool {
+pub fn convalida_area_compressa(sorgente: &[u8]) -> bool {
     unsafe {
         snappy_validate_compressed_buffer(src.as_ptr(), src.len() as size_t) == 0
     }
 }
 ```
 
-The `validate_compressed_buffer` wrapper above makes use of an `unsafe` block, but it makes the
-guarantee that calling it is safe for all inputs by leaving off `unsafe` from the function
-signature.
+L'avvolgimento `convalida_area_compressa` qui sopra fa uso di un blocco
+`unsafe`, ma garantisce che chiamarlo è sicuro per tutti gli inputs
+escludendo la parola `unsafe` dalla firma della funzione.
 
-The `snappy_compress` and `snappy_uncompress` functions are more complex, since a buffer has to be
-allocated to hold the output too.
+Le funzioni `snappy_compress` e `snappy_uncompress` sono più complesse,
+dato che un'area deve anche essere allocata per tenere l'output.
 
-The `snappy_max_compressed_length` function can be used to allocate a vector with the maximum
-required capacity to hold the compressed output. The vector can then be passed to the
-`snappy_compress` function as an output parameter. An output parameter is also passed to retrieve
-the true length after compression for setting the length.
+La funzione `snappy_max_compressed_length` può essere usata per allocare
+un vettore con la capacità massima necessaria per tenere l'output compresso.
+Il vettore poi può essere passato alla funzione `snappy_compress`
+come argomento di output. Un argomento di output viene passato anche
+per recuperare la vera lunghezza dopo la compressione per impostare
+la lunghezza.
 
 ```rust
 # #![feature(libc)]
@@ -147,8 +156,10 @@ pub fn compress(src: &[u8]) -> Vec<u8> {
 }
 ```
 
-Decompression is similar, because snappy stores the uncompressed size as part of the compression
-format and `snappy_uncompressed_length` will retrieve the exact buffer size required.
+La decompressione è simile, perché Snappy immagazzina la dimensione
+non compressa come parte del formato di compressione e
+`snappy_uncompressed_length` recupererà la dimensione esatta dimensione
+necessaria per l'area.
 
 ```rust
 # #![feature(libc)]
@@ -183,7 +194,7 @@ pub fn uncompress(src: &[u8]) -> Option<Vec<u8>> {
 }
 ```
 
-Then, we can add some tests to show how to use them.
+Poi, possiamo aggiungere dei collaudi per mostrare come usare queste funzioni.
 
 ```rust
 # #![feature(libc)]
@@ -240,61 +251,64 @@ mod tests {
 }
 ```
 
-# Destructors
+# Distruttori
 
-Foreign libraries often hand off ownership of resources to the calling code.
-When this occurs, we must use Rust's destructors to provide safety and guarantee
-the release of these resources (especially in the case of panic).
+Le librerie straniere spesso cedono la proprietà delle risorse
+al codice chiamante. Quando questo accade, si devono usare i disrruttori
+di Rust per fornire sicurezza e garantire il rilascio di queste risorse
+(specialmente nel caso di panico).
 
-For more about destructors, see the [Drop trait](../std/ops/trait.Drop.html).
+Per maggiori informazioni sui distruttori, si veda il tratto [Drop]
+(../std/ops/trait.Drop.html).
 
-# Callbacks from C code to Rust functions
+# Callback da codice Ca funzioni Rust
 
-Some external libraries require the usage of callbacks to report back their
-current state or intermediate data to the caller.
-It is possible to pass functions defined in Rust to an external library.
-The requirement for this is that the callback function is marked as `extern`
-with the correct calling convention to make it callable from C code.
+Alcune librerie esterne richiedono l'utilizzo di callback per riferire
+al chiamante il loro stato attuale o dei dati intermedi.
+È possibile passare a una libreria esterna funzioni definite in Rust.
+Il requisito per poterlo fare è che la funzione callback sia marcata come
+`extern` con la corretta convenzione di chiamata così da renderla chiamabile
+da codice C.
 
-The callback function can then be sent through a registration call
-to the C library and afterwards be invoked from there.
+Le funzioni callback possono poi essere mandate attraverso una chiamata
+di registrazione alla libreria C e poi invocate dalla libreria.
 
-A basic example is:
+Un semplice esempio è:
 
-Rust code:
+Codice Rust:
 
 ```rust,no_run
-extern fn callback(a: i32) {
-    println!("I'm called from C with value {0}", a);
+extern fn la_mia_callback(a: i32) {
+    println!("Sono chiamata dal C con il valore {0}", a);
 }
 
 #[link(name = "extlib")]
 extern {
-   fn register_callback(cb: extern fn(i32)) -> i32;
-   fn trigger_callback();
+   fn registra_callback(riferimento_callback: extern fn(i32)) -> i32;
+   fn scatta_callback();
 }
 
 fn main() {
     unsafe {
-        register_callback(callback);
-        trigger_callback(); // Triggers the callback
+        registra_callback(la_mia_callback);
+        scatta_callback(); // Fa invocare la callback
     }
 }
 ```
 
-C code:
+Codice C:
 
 ```c
-typedef void (*rust_callback)(int32_t);
-rust_callback cb;
+typedef void (*callback_di_rust)(int32_t);
+callback_di_rust puntatore_cb;
 
-int32_t register_callback(rust_callback callback) {
-    cb = callback;
+int32_t registra_callback(rust_callback callback) {
+    puntatore_cb = callback;
     return 1;
 }
 
-void trigger_callback() {
-  cb(7); // Will call callback(7) in Rust
+void scatta_callback() {
+  puntatore_cb(7); // Will call callback(7) in Rust
 }
 ```
 
@@ -604,12 +618,12 @@ discussed above in "[Foreign Calling
 Conventions](ffi.html#foreign-calling-conventions)". The `no_mangle`
 attribute turns off Rust's name mangling, so that it is easier to link to.
 
-# FFI and panics
+# FFI e il panico
 
-It’s important to be mindful of `panic!`s when working with FFI. A `panic!`
-across an FFI boundary is undefined behavior. If you’re writing code that may
-panic, you should run it in another thread, so that the panic doesn’t bubble up
-to C:
+È importante riflettere sui `panic!` quando si lavora con l'FFI. Un `panic!`
+che attraversa un confine di FFI ha un comportamento indefinito. Se stiamo
+scrivendo del codice che può andare in panico, lo dovremmo eseguire in
+un altro thread, in modo che il panico non emerga fino al C:
 
 ```rust
 use std::thread;
@@ -617,7 +631,7 @@ use std::thread;
 #[no_mangle]
 pub extern fn oh_no() -> i32 {
     let h = thread::spawn(|| {
-        panic!("Oops!");
+        panic!("Ops!");
     });
 
     match h.join() {
@@ -628,18 +642,18 @@ pub extern fn oh_no() -> i32 {
 # fn main() {}
 ```
 
-# Representing opaque structs
+# Rappresentare struct opache
 
-Sometimes, a C library wants to provide a pointer to something, but not let you
-know the internal details of the thing it wants. The simplest way is to use a
-`void *` argument:
+Talvolta, una libreria C vuole fornire un puntatore a qualche oggetto, ma non
+far i dettagli interni di tale oggetto. Il modo più semplice è usare
+un argomento di tipo `void *`:
 
 ```c
 void foo(void *arg);
 void bar(void *arg);
 ```
 
-We can represent this in Rust with the `c_void` type:
+Possiamo rappresentare questo in Rust con il tipo `c_void`:
 
 ```rust
 # #![feature(libc)]
@@ -652,19 +666,22 @@ extern "C" {
 # fn main() {}
 ```
 
-This is a perfectly valid way of handling the situation. However, we can do a bit
-better. To solve this, some C libraries will instead create a `struct`, where
-the details and memory layout of the struct are private. This gives some amount
-of type safety. These structures are called ‘opaque’. Here’s an example, in C:
+Questo è un modo perfettamente valido di gestire la situazione. Tuttavia,
+possiamo fare un po' meglio. Per risolverlo, alcune librerie C creeranno invece
+una `struct`, nella quale i dettagli e la disposizione in memoria sono privati.
+Questo dà una certa dose di sicurezza di tipo. Queste strutture sono chiamate
+‘opache’. Ecco un esempio, in C:
 
 ```c
-struct Foo; /* Foo is a structure, but its contents are not part of the public interface */
+/* Foo è una struttura, ma il suo contenuto
+non fa parte dellla sua interfaccia pubblica */
+struct Foo;
 struct Bar;
 void foo(struct Foo *arg);
 void bar(struct Bar *arg);
 ```
 
-To do this in Rust, let’s create our own opaque types with `enum`:
+Per farlo in Rust, creiamo i nostri tipi opachi usando `enum`:
 
 ```rust
 pub enum Foo {}
@@ -677,7 +694,7 @@ extern "C" {
 # fn main() {}
 ```
 
-By using an `enum` with no variants, we create an opaque type that we can’t
-instantiate, as it has no variants. But because our `Foo` and `Bar` types are
-different, we’ll get type safety between the two of them, so we cannot
-accidentally pass a pointer to `Foo` to `bar()`.
+Usando un `enum` senza varianti, creiamo un tipo opaco che non possiamo
+instanziare, dato che non ha nessuna variante. Ma siccome i nostri tipi `Foo`
+e `Bar` sono  diversi, otterremo sicurezza di tipo fra loro due, perciò non
+possiamo passare accidentalmente a `bar()` un puntatore a `Foo`.

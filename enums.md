@@ -1,107 +1,113 @@
-% Enums
+% Enumerazioni ["enum"]
 
-An `enum` in Rust is a type that represents data that is one of
-several possible variants. Each variant in the `enum` can optionally
-have data associated with it:
+Una enumerazione in Rust è un tipo, dichiarato usando la parola-chiave `enum`,
+che rappresenta un dato che ha un valore scelto in un elenco di varianti.
+Ogni variante dell'enumerazione può avere dei dati associati ad essa.
+Per esempio:
 
 ```rust
 enum Message {
-    Quit,
-    ChangeColor(i32, i32, i32),
-    Move { x: i32, y: i32 },
-    Write(String),
+    Abbandona,
+    CambiaColore(i32, i32, i32),
+    Muovi { x: i32, y: i32 },
+    Scrivi(String),
 }
 ```
 
-The syntax for defining variants resembles the syntaxes used to define structs:
-you can have variants with no data (like unit-like structs), variants with named
-data, and variants with unnamed data (come le strutture ennupla). Unlike
-separate struct definitions, however, an `enum` is a single type. A
-value of the enum can match any of the variants. For this reason, an
-enum is sometimes called a ‘sum type’: the set of possible values of the
-enum is the sum of the sets of possible values for each variant.
+La sintassi per definire le varianti somiglia alle sintassi usate per definire
+le strutture: si possono avere varianti senza dati (come le strutture
+simili a unità), varianti con dati con nome, e varianti con dati senza nome
+(come le strutture ennupla). Diversamente dalle definizioni di strutture
+distinte, però, un `enum` è un singolo tipo. Un valore di un'enumerazione
+può corrispondere a una qualunque delle sue varianti. Per questa ragione,
+un'enumerazione è talvolta chiamata un ‘tipo somma’: l'insieme dei possibili
+valori dell'enumerazione è la somma degli insiemi dei possibili valori
+di ogni variante.
 
-We use the `::` syntax to use the name of each variant: they’re scoped by the name
-of the `enum` itself. This allows both of these to work:
+Usiamo la sintassi `::` per usare il nome di ogni variante: il loro nome
+può essere usato solo se qualificato dal nome dell'`enum` stesso. Ciò
+consente di avere le seguenti dichiarazioni di `x` e `y`:
 
 ```rust
-# enum Message {
-#     Move { x: i32, y: i32 },
+# enum Messaggio {
+#     Mossa { x: i32, y: i32 },
 # }
-let x: Message = Message::Move { x: 3, y: 4 };
+let x: Messaggio = Messaggio::Mossa { x: 3, y: 4 };
 
-enum BoardGameTurn {
-    Move { squares: i32 },
-    Pass,
+enum TurnoGiocoDaTavolo {
+    Mossa { quadrati: i32 },
+    Passo,
 }
 
-let y: BoardGameTurn = BoardGameTurn::Move { squares: 1 };
+let y: TurnoGiocoDaTavolo = TurnoGiocoDaTavolo::Mossa { quadrato: 1 };
 ```
 
-Both variants are named `Move`, but since they’re scoped to the name of
-the enum, they can both be used without conflict.
+Entrambe le varianti si chiamano `Mossa`, ma dato che sono qualificate dal nome
+dell'enumerazione, possono essere usate entrambe senza creare ambiguità.
 
-A value of an `enum` type contains information about which variant it is,
-in addition to any data associated with that variant. This is sometimes
-referred to as a ‘tagged union’, since the data includes a ‘tag’
-indicating what type it is. The compiler uses this information to
-enforce that you’re accessing the data in the enum safely. For instance,
-you can’t simply try to destructure a value as if it were one of the
-possible variants:
+Un valore di un tipo `enum` contiene l'informazione su quale variante è,
+oltre a ogni dato associato a quella variante. Questo fatto è talvolta
+indicato come ‘unione etichettata’ ["tagged union"], dato che i dati
+comprendono un'’etichetta’ ["tag"], che indica qual'è il tipo. Il compilatore
+usa questa informazione per garantire che si acceda in modo sicuro ai dati
+dell'enumerazione. Per esempio, non si può semplicemente provare
+a destrutturare un valore come se fosse una delle possibile varianti:
 
 ```rust,ignore
-fn process_color_change(msg: Message) {
-    let Message::ChangeColor(r, g, b) = msg; // compile-time error
+fn elabora_cambio_colore(mess: Messaggio) {
+    let Messaggio::CambiaColore(r, g, b) = mess; // errore di compilazione
 }
 ```
 
-Not supporting these operations may seem rather limiting, but it’s a limitation
-which we can overcome. There are two ways: by implementing equality ourselves,
-or by pattern matching variants with [`match`][match] expressions, which you’ll
-learn in the next section. We don’t know enough about Rust to implement
-equality yet, but we’ll find out in the [`traits`][traits] section.
+Non supportare queste operazioni può sembrare piuttosto limitativo, ma è
+una limitazione che possiamo superare. Ci sono due modi: o implementando
+l'uguaglianza noi stessi, o eseguendo un pattern matching delle varianti
+con espressioni [`match`][match], come vedremo nella prossima sezione.
+Non abbiamo ancora visto abbastanza Rust per implementare l'uguaglianza, ma
+lo vedremo nella sezione sui [`tratti`][tratti].
 
 [match]: match.html
 [traits]: traits.html
 
-# Constructors as functions
+# Costruttori come funzioni
 
-An `enum` constructor can also be used like a function. For example:
+Un costruttore di un `enum` può anche essere usato come una funzione.
+Per esempio:
 
 ```rust
-# enum Message {
-# Write(String),
+# enum Messaggio {
+# Scrivi(String),
 # }
-let m = Message::Write("Hello, world".to_string());
+let m = Messaggio::Scrivi("Ciao, mondo".to_string());
 ```
 
-is the same as
+è lo stesso che
 
 ```rust
-# enum Message {
-# Write(String),
+# enum Messaggio {
+# Scrivi(String),
 # }
-fn foo(x: String) -> Message {
-    Message::Write(x)
+fn foo(x: String) -> Messaggio {
+    Messaggio::Scrivi(x)
 }
 
-let x = foo("Hello, world".to_string());
+let x = foo("Ciao, mondo".to_string());
 ```
 
-This is not immediately useful to us, but when we get to
-[`closures`][closures], we’ll talk about passing functions as arguments to
-other functions. For example, with [`iterators`][iterators], we can do this
-to convert a vector of `String`s into a vector of `Message::Write`s:
+Questo non ci è immediatamente utile, ma quando arriveremo alle [`chiusure`]
+[chiusure], parleremo di come passare le funzioni come argomenti ad altre
+funzioni. Per esempio, con gli [`iteratori`][iteratori], possiamo fare questo
+per convertire un vettore di `String` in un vettore di `Messaggio::Scrivi`:
 
 ```rust
-# enum Message {
-# Write(String),
+# enum Messaggio {
+# Scrivi(String),
 # }
 
-let v = vec!["Hello".to_string(), "World".to_string()];
+let v = vec!["Ciao".to_string(), "Mondo".to_string()];
 
-let v1: Vec<Message> = v.into_iter().map(Message::Write).collect();
+let v1: Vec<Messaggio> = v.into_iter().map(Messaggio::Scrivi).collect();
 ```
 
-[closures]: closures.html
-[iterators]: iterators.html
+[chiusure]: closures.html
+[iteratori]: iterators.html

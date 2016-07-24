@@ -1,49 +1,54 @@
-% Ownership
+% Possesso
 
-This is the first of three sections presenting Rust’s ownership system. This is one of
-Rust’s most distinct and compelling features, with which Rust developers should
-become quite acquainted. Ownership is how Rust achieves its largest goal,
-memory safety. There are a few distinct concepts, each with its own
-chapter:
+Questa è la prima delle tre sezioni che presentano il sistema di possesso
+di Rust. Questa è una delle caratteristiche più distintive e avvincenti
+di Rust, con la quale gli sviluppatori Rust dovrebbero diventare familiari.
+Il possesso è il modo in cui Rust raggiunge il suo maggior obiettivo, la sicurezza
+di accesso alla memoria. Ci sono alcuni concetti distinti, ognuno descritto
+in una sezione distinta:
 
-* ownership, which you’re reading now
-* [borrowing][borrowing], and their associated feature ‘references’
-* [lifetimes][lifetimes], an advanced concept of borrowing
+* il possesso, che è la sezione attuale
+* i [prestiti][prestiti], e le caratteristiche a loro associate,
+  i ‘riferimenti’
+* i [tempi di vita][tempi di vita], un avanzato concetto di prestito
 
-These three chapters are related, and in order. You’ll need all three to fully
-understand the ownership system.
+Queste tre sezioni sono correlate, e seguono un ordine. Bisognerà leggerli
+tutti e tre per capire pienamente il sistema di possesso.
 
-[borrowing]: references-and-borrowing.html
-[lifetimes]: lifetimes.html
+[prestiti]: references-and-borrowing.html
+[tempi di vita]: lifetimes.html
 
 # Meta
 
-Before we get to the details, two important notes about the ownership system.
+Prima di passare ai dettagli, due appunti importanti sul sistema di possesso.
 
-Rust has a focus on safety and speed. It accomplishes these goals through many
-‘zero-cost abstractions’, which means that in Rust, abstractions cost as little
-as possible in order to make them work. The ownership system is a prime example
-of a zero-cost abstraction. All of the analysis we’ll talk about in this guide
-is _done at compile time_. You do not pay any run-time cost for any of these
-features.
+Rust ha un'attenzione particolare sulla sicurezza e sulla velocità.
+Raggiunge questi obiettivi tramite molte ‘astrazioni a costo zero’, il che
+significa che in Rust, le astrazioni costano il meno possibile
+al fine di farle funzionare. Il sistema di possesso è un esempio primario
+di astrazione a costo zero. Tutta l'analisi di cui parleremo in questa guida
+viene _fatta in fase di compilazione_. Non si paga nessun costo in fase
+di esecuzione per queste funzionalità.
 
-However, this system does have a certain cost: learning curve. Many new users
-to Rust experience something we like to call ‘fighting with the borrow
-checker’, where the Rust compiler refuses to compile a program that the author
-thinks is valid. This often happens because the programmer’s mental model of
-how ownership should work doesn’t match the actual rules that Rust implements.
-You probably will experience similar things at first. There is good news,
-however: more experienced Rust developers report that once they work with the
-rules of the ownership system for a period of time, they fight the borrow
-checker less and less.
+Però, questo sistema ha un certo costo: il tempo di apprendimento. Molti nuovi
+utenti di Rust sperimentano qualcosa che ci piace chiamare ‘combattere
+con il verificatore dei prestiti’, che è la parte del compilatore Rust che
+si rifiuta di compilare un programma che l'autore pensa essere valido. Ciò
+accade spesso perché il modello mentale del programmatore di come il possesso
+dovrebbe funzionare non combacia con le regole effettivamente implementate
+da Rust.
+Dapprima tutti sperimentano cose simili. Però, c'è una buona notizia:
+gli sviluppatori Rust più esperti riferiscono che una volta che lavorano con
+le regole del sistema di possesso per un periodo di tempo, combattono sempre
+meno con il verificatore dei prestiti.
 
-With that in mind, let’s learn about ownership.
+Con questo in mente, vediamo in cosa consiste il possesso.
 
-# Ownership
+# Possesso
 
-[Variable bindings][bindings] have a property in Rust: they ‘have ownership’
-of what they’re bound to. This means that when a binding goes out of scope,
-Rust will free the bound resources. For example:
+I [legami di variabili][legami] hanno una proprietà in Rust: ‘possiedono’
+quello a cui sono legati. Ciò significa che quando un legame esce di ambito,
+Rust libererà le risorse legate. Per esempio:
 
 ```rust
 fn foo() {
@@ -51,123 +56,121 @@ fn foo() {
 }
 ```
 
-When `v` comes into scope, a new [vector][vectors] is created on [the stack][stack],
-and it allocates space on [the heap][heap] for its elements. When `v` goes out
-of scope at the end of `foo()`, Rust will clean up everything related to the
-vector, even the heap-allocated memory. This happens deterministically, at the
-end of the scope.
+Quando `v` viene nell'ambito, viene creato un nuovo [vettore][vettori]
+sullo [stack][stack], e alloca spazio sullo [heap][heap] per i suoi elementi.
+Quando `v` esce di ambito alla fine di `foo()`, Rust ripulirà ogni cosa
+correlata al vettore, anche la memoria allocata sullo heap. Questo avviene
+deterministicamente alla fine dell'ambito.
 
-We'll cover [vectors] in detail later in this chapter; we only use them
-here as an example of a type that allocates space on the heap at runtime. They
-behave like [arrays], except their size may change by `push()`ing more
-elements onto them.
+Tratteremo i [vettori] in dettaglio più avanti in questo capitolo; li usiamo
+qui solamente come esempio di un tipo che alloca spazio sullo heap in fase
+di esecuzione. Si comportano come [array], eccetto che la loro dimensione
+può cambiare chiamando `push()` per aggiungere loro altri elementi.
 
-Vectors have a [generic type][generics] `Vec<T>`, so in this example `v` will have type
-`Vec<i32>`. We'll cover generics in detail later in this chapter.
+I vettori hanno un [tipo generico][generici] `Vec<T>`, perciò in questo esempio
+`v` sarà di tipo `Vec<i32>`. Tratteremo i generici in dettaglio più avanti
+in questo capitolo.
 
-[arrays]: primitive-types.html#arrays
-[vectors]: vectors.html
+[array]: primitive-types.html#arrays
+[vettori]: vectors.html
 [heap]: the-stack-and-the-heap.html#the-heap
 [stack]: the-stack-and-the-heap.html#the-stack
-[bindings]: variable-bindings.html
-[generics]: generics.html
+[legami]: variable-bindings.html
+[generici]: generics.html
 
-# Move semantics
+# Semantica di spostamento
 
-There’s some more subtlety here, though: Rust ensures that there is _exactly
-one_ binding to any given resource. For example, if we have a vector, we can
-assign it to another binding:
+Però qui c'è qualche altra sottigliezza: Rust assicura che ci sia _esattamente
+un_ legame a ogni data risorsa. Per esempio, se abbiamo un vettore, possiamo
+assegnarlo a un altro legame:
 
 ```rust
 let v = vec![1, 2, 3];
-
 let v2 = v;
 ```
 
-But, if we try to use `v` afterwards, we get an error:
+Ma, se dopo proviamo a usare `v`, otteniamo un  errore:
 
 ```rust,ignore
 let v = vec![1, 2, 3];
-
 let v2 = v;
-
-println!("v[0] is: {}", v[0]);
+println!("v[0] vale: {}", v[0]);
 ```
 
-It looks like this:
+L'errore si presenta così:
 
 ```text
 error: use of moved value: `v`
-println!("v[0] is: {}", v[0]);
-                        ^
+println!("v[0] vale: {}", v[0]);
+                          ^
 ```
 
-A similar thing happens if we define a function which takes ownership, and
-try to use something after we’ve passed it as an argument:
+Una cosa simile accade se definiamo una funzione che prende possesso
+dell'argomento, e proviamo a usare qualcosa dopo che l'abbiamo passato
+come argomento:
 
 ```rust,ignore
-fn take(v: Vec<i32>) {
-    // what happens here isn’t important.
+fn prendi(v: Vec<i32>) {
+    // ciò che accade qui dentro non è importante.
 }
 
 let v = vec![1, 2, 3];
-
-take(v);
-
-println!("v[0] is: {}", v[0]);
+prendi(v);
+println!("v[0] vale: {}", v[0]);
 ```
 
-Same error: ‘use of moved value’. When we transfer ownership to something else,
-we say that we’ve ‘moved’ the thing we refer to. You don’t need some sort of
-special annotation here, it’s the default thing that Rust does.
+Stesso errore: ‘use of moved value’. Quando si trasferisce il possesso
+di un oggetto da un legame a un altro, si dice che l'oggetto a cui si fa
+riferimento è stato ‘spostato’. Qui non ci vuole qualche sorta di annotazione
+speciale, è il normale comportamento di Rust.
 
-## The details
+## I dettagli
 
-The reason that we cannot use a binding after we’ve moved it is subtle, but
-important.
+La ragione per cui non si può più usare un legame dopo che l'oggetto è stato
+spostato è sottile, ma importante.
 
-When we write code like this:
+Quando scriviamo del codice come questo:
 
 ```rust
 let x = 10;
 ```
 
-Rust allocates memory for an integer [i32] on the [stack][sh], copies the bit
-pattern representing the value of 10 to the allocated memory and binds the
-variable name x to this memory region for future reference.
+Rust alloca sullo [stack][sh] della memoria per un intero [i32], copia i bit
+che rappresentano il valore 10 alla memoria allocata, e lega il nome
+della variabile x a questa regione di memoria per poterna riferire in seguito.
 
 [i32]: primitive-types.html#numeric-types
 
-Now consider the following code fragment:
+Adesso consideriamo il seguente frammento di codice:
 
 ```rust
 let v = vec![1, 2, 3];
-
 let mut v2 = v;
 ```
 
-The first line allocates memory for the vector object `v` on the stack like
-it does for `x` above. But in addition to that it also allocates some memory
-on the [heap][sh] for the actual data (`[1, 2, 3]`). Rust copies the address
-of this heap allocation to an internal pointer, which is part of the vector
-object placed on the stack (let's call it the data pointer).
+La prima riga alloca sullo stack della memoria per l'oggetto vettore `v`, come
+ha fatto per `x` precedentemente. Ma in aggiunta a ciò, alloca anche
+della memoria sullo [heap][sh] per i dati effettivi (`[1, 2, 3]`). Rust copia
+l'indirizzo di questa allocazione sullo heap al puntatore interno, che fa parte
+dell'oggetto vettore posto sullo stack (chiamiamolo "puntatore ai dati").
 
-It is worth pointing out (even at the risk of stating the obvious) that the
-vector object and its data live in separate memory regions instead of being a
-single contiguous memory allocation (due to reasons we will not go into at
-this point of time). These two parts of the vector (the one on the stack and
-one on the heap) must agree with each other at all times with regards to
-things like the length, capacity, etc.
+Vale la pena evidenziare (anche al rischio di affermare l'ovvio) che l'oggetto
+vettore e i suoi dati vivono in regioni di memoria separate, invece di essere
+un'unica allocazione di memoria contigua (a causa di ragioni che non
+approfondiremo in questo momento). Queste due parti del vettore (quella sullo
+stack e quella sullo heap) devono accordarsi l'un l'altra in ogni momento
+riguardo a cose come la lunghezza, la capacità, ecc.
 
-When we move `v` to `v2`, Rust actually does a bitwise copy of the vector
-object `v` into the stack allocation represented by `v2`. This shallow copy
-does not create a copy of the heap allocation containing the actual data.
-Which means that there would be two pointers to the contents of the vector
-both pointing to the same memory allocation on the heap. It would violate
-Rust’s safety guarantees by introducing a data race if one could access both
-`v` and `v2` at the same time.
+Quando si sposta `v` in `v2`, Rust effettivamente fa una copia bit-a-bit
+dell'oggetto vettore `v` nell'allocazione sullo stack rappresentata da `v2`.
+Questa copia superficiale non crea una copia dell'allocazione sullo heap
+contenente i dati effettivi.
+Il che significa che ci sarebbero due puntatori al contenuto del vettore
+entrambi che puntano alla stessa allocazione di memoria sullo heap.
+Se si potesse accedere sia a `v` che a `v2` nello stesso tempo, si violerebbe
+la garanzia di sicurezza di Rust, introducendo un'accesso concorrente ai dati.
 
-For example if we truncated the vector to just two elements through `v2`:
+Per esempio, se troncassimo il vettore ad appena due elementi tramite `v2`:
 
 ```rust
 # let v = vec![1, 2, 3];
@@ -175,58 +178,58 @@ For example if we truncated the vector to just two elements through `v2`:
 v2.truncate(2);
 ```
 
-and `v` were still accessible we'd end up with an invalid vector since `v`
-would not know that the heap data has been truncated. Now, the part of the
-vector `v` on the stack does not agree with the corresponding part on the
-heap. `v` still thinks there are three elements in the vector and will
-happily let us access the non existent element `v[2]` but as you might
-already know this is a recipe for disaster. Especially because it might lead
-to a segmentation fault or worse allow an unauthorized user to read from
-memory to which they don't have access.
+e `v` fosse ancora accessibile, finiremmo con un vettore non valido, dato che
+`v` non saprebbe che i dati sullo heap sono stati troncati. Adesso, la parte
+del vettore `v` sullo stack non concorda con la parte corrispondente sullo
+heap. `v` pensa ancora che ci siano tre elementi nel vettore e permetterebbe
+di accedere all'elemento non esistente `v[2]`, ma, come potremmo già sapere,
+questa è una ricetta per il disastro. Specialmente perché potrebbe condurre
+a un segmentation fault o peggio consentire a un utente non autorizzato
+di leggere da un'area di memoria a cui non dovrebbe aver accesso.
 
-This is why Rust forbids using `v` after we’ve done the move.
+Questa è la ragione per cui Rust proibisce di usare `v` dopo che l'abbiamo
+spostato.
 
 [sh]: the-stack-and-the-heap.html
 
-It’s also important to note that optimizations may remove the actual copy of
-the bytes on the stack, depending on circumstances. So it may not be as
-inefficient as it initially seems.
+È anche importante notare che le ottimizzazioni possono rimuovere la copia
+effettiva dei byte sullo stack, a seconda delle circostanza. Perciò potrebbe
+non essere così inefficiente come come sembra inizialmente.
 
-## `Copy` types
+## I tipi `Copy`
 
-We’ve established that when ownership is transferred to another binding, you
-cannot use the original binding. However, there’s a [trait][traits] that changes this
-behavior, and it’s called `Copy`. We haven’t discussed traits yet, but for now,
-you can think of them as an annotation to a particular type that adds extra
-behavior. For example:
+Abbiamo stabilito che quando il possesso viene trasferito a un altro legame,
+non si può più usare il legame originale. Però, c'è un [tratto][tratto] che
+cambia questo comportamento, e si chiama `Copy`. Non abbiamo ancora parlato
+dei tratti, ma per ora, si può pensare ad essi come annotazioni a tipi
+particolari che aggiungono ulteriori comportamenti. Per esempio:
 
 ```rust
 let v = 1;
-
 let v2 = v;
-
-println!("v is: {}", v);
+println!("v vale: {}", v);
 ```
 
-In this case, `v` is an `i32`, which implements the `Copy` trait. This means
-that, just like a move, when we assign `v` to `v2`, a copy of the data is made.
-But, unlike a move, we can still use `v` afterward. This is because an `i32`
-has no pointers to data somewhere else, copying it is a full copy.
+In questo caso, `v` è un `i32`, tipo che implementa il tratto `Copy`. Ciò
+significa che, proprio come uno spostamento, quando si assegna `v` a `v2`,
+viene fatta una copia dei dati.
+Ma, diversamente da uno spostamento, dopo, possiamo ancora usare `v`.
+Infatti un `i32` non ha puntatori che puntano a dati da qualche
+altra parte, e quindi spostandolo si fa una copia completa.
 
-All primitive types implement the `Copy` trait and their ownership is
-therefore not moved like one would assume, following the ‘ownership rules’.
-To give an example, the two following snippets of code only compile because the
-`i32` and `bool` types implement the `Copy` trait.
+Tutti i tipi primitivi implementano il tratto `Copy` e perciò il loro possesso
+non viene spostato come si potrebbe immaginare, seguendo le ‘regole
+del possesso’. Per fare un esempio, i due seguenti frammenti di codice
+compilano solamente perché i tipi `i32` e `bool` implementano il tratto `Copy`.
 
 ```rust
 fn main() {
     let a = 5;
-
-    let _y = double(a);
-    println!("{}", a);
+    let _y = raddoppia(a);
+    println!("{}", araddoppia
 }
 
-fn double(x: i32) -> i32 {
+fn raddoppia(x: i32) -> i32 {
     x * 2
 }
 ```
@@ -234,18 +237,18 @@ fn double(x: i32) -> i32 {
 ```rust
 fn main() {
     let a = true;
-
-    let _y = change_truth(a);
+    let _y = cambia_verita(a);
     println!("{}", a);
 }
 
-fn change_truth(x: bool) -> bool {
+fn cambia_verita(x: bool) -> bool {
     !x
 }
 ```
 
-If we had used types that do not implement the `Copy` trait,
-we would have gotten a compile error because we tried to use a moved value.
+Se avessimo usato dei tipi che non implementano il tratto `Copy`,
+avremmo ottenuto un errore di compilazione perché abbiamo provato a usare
+un valore spostato.
 
 ```text
 error: use of moved value: `a`
@@ -253,43 +256,44 @@ println!("{}", a);
                ^
 ```
 
-We will discuss how to make your own types `Copy` in the [traits][traits]
-section.
+Discuteremo come aggiungere il tratto `Copy` ai propri tipi nella sezione
+[tratti][tratti].
 
-[traits]: traits.html
+[tratti]: traits.html
 
-# More than ownership
+# Oltre al possesso
 
-Of course, if we had to hand ownership back with every function we wrote:
+Naturalmente, se ogni nostra funzione dovesse restituire il possesso,
+scriveremmo:
 
 ```rust
 fn foo(v: Vec<i32>) -> Vec<i32> {
-    // do stuff with v
+    // fa' qualcosa con v
 
-    // hand back ownership
+    // restituisci il possesso
     v
 }
 ```
 
-This would get very tedious. It gets worse the more things we want to take ownership of:
+Ciò diventerebbe molto noioso. E peggiora più sono gli oggetti di cui vogliamo
+prendere possesso:
 
 ```rust
 fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
-    // do stuff with v1 and v2
+    // fa' qualcosa con v1 e con v2
 
-    // hand back ownership, and the result of our function
+    // restituisci il possesso di v1 e v2, e rendi anche
+    // il risultato della nostra funzione
     (v1, v2, 42)
 }
 
 let v1 = vec![1, 2, 3];
 let v2 = vec![1, 2, 3];
-
 let (v1, v2, answer) = foo(v1, v2);
 ```
 
-Ugh! The return type, return line, and calling the function gets way more
-complicated.
+Mah! Il tipo reso, la riga finale della funzione, e la chiamata della funzione
+diventano parecchio più complicati.
 
-Luckily, Rust offers a feature which helps us solve this problem.
-It’s called borrowing and is the topic of the next section!
-
+Fortunatamente, Rust offre una caratteristica che aiuta a risolvere questo
+problema. Si chiama "prestito" ed è l'argomento della prossima sezione!
