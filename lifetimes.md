@@ -19,9 +19,8 @@ complicato. Per esempio, immaginiamo questa sequenza di operazioni:
    mentre tu hai ancora il tuo riferimento a tale risorsa.
 4. Tu decidi di usare quella risorsa.
 
-Ahi, ahi! Il tuo riferimento sta puntando a una risorsa non valida, e tu lo
-stai usando per usare una risorsa che non esiste più. Questo difetto
-si chiama ‘puntatore penzolante‘ o ‘utilizzo dopo il rilascio’.
+Ahi, ahi! Il tuo riferimento sta puntando a una risorsa non più valida.
+Questo difetto si chiama ‘puntatore penzolante‘ o ‘utilizzo dopo il rilascio’.
 
 Per correggerlo, dobbiamo assicurarci che il passo 4 non avvenga mai dopo
 il passo 3. Il sistema di possesso in Rust lo fa tramite un concetto chiamato
@@ -348,6 +347,6 @@ fn argomenti<T: ToCStr>(&mut self, args: &[T]) -> &mut Command; // eliso
 fn argomenti<'a, 'b, T: ToCStr>(&'a mut self, args: &'b [T])
 -> &'a mut Command; // espanso
 
-fn nuovo(buf: &mut [u8]) -> BufWriter; // eliso
-fn nuovo<'a>(buf: &'a mut [u8]) -> BufWriter<'a>; // espanso
+fn new(buf: &mut [u8]) -> BufWriter; // eliso
+fn new<'a>(buf: &'a mut [u8]) -> BufWriter<'a>; // espanso
 ```

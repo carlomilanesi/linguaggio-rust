@@ -1,70 +1,73 @@
-% Documentation
+% Documentazione
 
-Documentation is an important part of any software project, and it's
-first-class in Rust. Let's talk about the tooling Rust gives you to
-document your project.
+La documentazione è una parte importante di qualunque progetto software, e
+in Rust è di prima classe. Parliamo della strumentazione fornita da Rust
+per documentare i propri progetti.
 
-## About `rustdoc`
+## A proposito di `rustdoc`
 
-The Rust distribution includes a tool, `rustdoc`, that generates documentation.
-`rustdoc` is also used by Cargo through `cargo doc`.
+La distribuzione di Rust include uno strumento, `rustdoc`, che genera
+documentazione. `rustdoc` viene usato anche da Cargo con il comando
+`cargo doc`.
 
-Documentation can be generated in two ways: from source code, and from
-standalone Markdown files.
+La documentazione può essere generata in due modi: dal codice sorgente,
+e da file Markdown autonomi.
 
-## Documenting source code
+## Documentare il codice sorgente
 
-The primary way of documenting a Rust project is through annotating the source
-code. You can use documentation comments for this purpose:
+Il modo primario di documentare un progetto Rust è annotando il codice
+sorgente. A questo scopo, si possono usare i commenti di documentazione:
 
 ```rust,ignore
-/// Constructs a new `Rc<T>`.
+/// Costruisce un nuovo `Rc<T>`.
 ///
-/// # Examples
+/// # Esempi
 ///
 /// ```
 /// use std::rc::Rc;
 ///
-/// let five = Rc::new(5);
+/// let cinque = Rc::new(5);
 /// ```
 pub fn new(value: T) -> Rc<T> {
-    // implementation goes here
+    // l'implementazione va qui
 }
 ```
 
-This code generates documentation that looks [like this][rc-new]. I've left the
-implementation out, with a regular comment in its place.
+Questo codice genera della documentazione che si presenta [così][rc-new].
+Ho escluso l'implementazione, mettendo al suo posto un normale commento.
 
-The first thing to notice about this annotation is that it uses
-`///` instead of `//`. The triple slash
-indicates a documentation comment.
+La prima cosa da notare riguardo a questa annotazione è che usa
+`///` invece di `//`. La tripla barra indica un commento di documentazione.
 
-Documentation comments are written in Markdown.
+I commenti di documentazione sono scritti in Markdown.
 
-Rust keeps track of these comments, and uses them when generating
-documentation. This is important when documenting things like enums:
+Rust tiene traccia di questi commenti, e li usa quando genera
+la documentazione. Questo è importante quando si documentano cose come
+gli enums:
 
 ```rust
-/// The `Option` type. See [the module level documentation](index.html) for more.
+/// Il tipo `Option`. Si veda
+// [la documentazione a livello di modulo](index.html) per saperne di più.
 enum Option<T> {
-    /// No value
+    /// Nessun valore
     None,
-    /// Some value `T`
+    /// Qualche valore `T`
     Some(T),
 }
 ```
 
-The above works, but this does not:
+Il codice sopra funziona, ma questo sotto no:
 
 ```rust,ignore
-/// The `Option` type. See [the module level documentation](index.html) for more.
+/// Il tipo `Option`. Si veda
+// [la documentazione a livello di modulo](index.html) per saperne di più.
 enum Option<T> {
-    None, /// No value
-    Some(T), /// Some value `T`
+    None, /// Nessun valore
+    Some(T), /// Qualche valore `T`
 }
 ```
 
-You'll get an error:
+Infatti si avrà l'errore:
 
 ```text
 hello.rs:4:1: 4:2 error: expected ident, found `}`
@@ -72,96 +75,100 @@ hello.rs:4 }
            ^
 ```
 
-This [unfortunate error](https://github.com/rust-lang/rust/issues/22547) is
-correct; documentation comments apply to the thing after them, and there's
-nothing after that last comment.
+Questo [errore sfortunato](https://github.com/rust-lang/rust/issues/22547) è
+giusto; i commenti di documentazione si applicano a quello che li segue,
+e non c'è niente dopo l'ultimo commento.
 
 [rc-new]: ../std/rc/struct.Rc.html#method.new
 
-### Writing documentation comments
+### Scrivere i commenti di documentazione
 
-Anyway, let's cover each part of this comment in detail:
+Comunque, vediamo in dettaglio ogni parte di questo commento:
 
 ```rust
-/// Constructs a new `Rc<T>`.
+/// Costruisce un nuovo `Rc<T>`.
 # fn foo() {}
 ```
 
-The first line of a documentation comment should be a short summary of its
-functionality. One sentence. Just the basics. High level.
+La prima riga di un commento di documentazione dovrebbe essere un breve
+riassunto della sua funzionalità che sta descrivendo. Una sola frase.
+Solo le basi. Ad alto livello.
 
 ```rust
 ///
-/// Other details about constructing `Rc<T>`s, maybe describing complicated
-/// semantics, maybe additional options, all kinds of stuff.
+/// Altri dettagli sulla costruzione degli `Rc<T>`, eventualmente descrivendo
+/// una semantica complicata, forse anche delle opzioni aggiuntive,
+/// tutti gli aspetti
 ///
 # fn foo() {}
 ```
 
-Our original example had just a summary line, but if we had more things to say,
-we could have added more explanation in a new paragraph.
+Il nostro esempio originale aveva solo una riga riassuntiva, ma se avessimo
+avuto più cose da dire, avremmo potuto aggiungere altre spiegazioni
+in un altro paragrafo.
 
-#### Special sections
+#### Sezioni speciali
 
-Next, are special sections. These are indicated with a header, `#`. There
-are four kinds of headers that are commonly used. They aren't special syntax,
-just convention, for now.
+Poi, ci sono le sezioni speciali. Queste sono indicate con un'intestazione,
+`#`. Ci sono quattro tipi di intestazioni che vengono comunemente usate.
+Per adesso, non hanno una sintassi speciale, ma solo convenzioni.
 
 ```rust
-/// # Panics
+/// # Panico
 # fn foo() {}
 ```
 
-Unrecoverable misuses of a function (i.e. programming errors) in Rust are
-usually indicated by panics, which kill the whole current thread at the very
-least. If your function has a non-trivial contract like this, that is
-detected/enforced by panics, documenting it is very important.
+L'abuso irrecuperabile di una funzione (cioè un errore di programmazione)
+in Rust è solitamente chiamato panico, che come minimo uccide l'intero thread
+corrente. Se la propria funzione ha un contratto non banale, che se
+rilevato/forzato produce un panico, è molto importante documentarlo.
 
 ```rust
-/// # Errors
+/// # Errori
 # fn foo() {}
 ```
 
-If your function or method returns a `Result<T, E>`, then describing the
-conditions under which it returns `Err(E)` is a nice thing to do. This is
-slightly less important than `Panics`, because failure is encoded into the type
-system, but it's still a good thing to do.
+Se la propria funzion o il proprio metodo rene un `Result<T, E>`, allora
+descrivere le condizioni sotto le quali rende `Err(E)` è una cosa carina
+da fare. Questo è leggermento meno importante del `Panics`,
+perché tale fallimento è codificato nel sistema dei tipi,
+ma è sempre una buona cosa da fare.
 
 ```rust
-/// # Safety
+/// # Sicurezza
 # fn foo() {}
 ```
 
-If your function is `unsafe`, you should explain which invariants the caller is
-responsible for upholding.
+Se la propria funzione è `unsafe`, si dovrebbe spiegare quali invarianti
+il chiamante è tenuto a rispettare.
 
 ```rust
-/// # Examples
+/// # Esempi
 ///
 /// ```
 /// use std::rc::Rc;
 ///
-/// let five = Rc::new(5);
+/// let cinque = Rc::new(5);
 /// ```
 # fn foo() {}
 ```
 
-Fourth, `Examples`. Include one or more examples of using your function or
-method, and your users will love you for it. These examples go inside of
-code block annotations, which we'll talk about in a moment, and can have
-more than one section:
+Quarto, `Esempi`. Aggiungere uno o più esempi di come usare la propria
+funzione, sarà molto apprezzato dagli utenti di tale funzione. Questi esempi
+vanno dentro annotazioni di blocchi di codice, di cui parleremo fra un momento,
+e possono avere più di una sezione:
 
 ```rust
-/// # Examples
+/// # Esempi
 ///
-/// Simple `&str` patterns:
+/// Semplici pattern di `&str`:
 ///
 /// ```
 /// let v: Vec<&str> = "Mary had a little lamb".split(' ').collect();
 /// assert_eq!(v, vec!["Mary", "had", "a", "little", "lamb"]);
 /// ```
 ///
-/// More complex patterns with a lambda:
+/// Pattern più complessi, con una lambda:
 ///
 /// ```
 /// let v: Vec<&str> = "abc1def2ghi".split(|c: char| c.is_numeric()).collect();
@@ -170,85 +177,89 @@ more than one section:
 # fn foo() {}
 ```
 
-Let's discuss the details of these code blocks.
+Discutiamo i dettagli di questi blocchi di codice.
 
-#### Code block annotations
+#### Annotazioni dei blocchi di codice
 
-To write some Rust code in a comment, use the triple graves:
+Per scrivere del codice Rust dentro un commento, si usa
+il triplo accento grave:
 
 ```rust
 /// ```
-/// println!("Hello, world");
+/// println!("Ciao, mondo");
 /// ```
 # fn foo() {}
 ```
 
-If you want something that's not Rust code, you can add an annotation:
+Se si vuol scrivere qualcosa che non è codice Rust, si può aggiungere
+un'annotazione:
 
 ```rust
 /// ```c
-/// printf("Hello, world\n");
+/// printf("Ciao, mondo\n");
 /// ```
 # fn foo() {}
 ```
 
-This will highlight according to whatever language you're showing off.
-If you're only showing plain text, choose `text`.
+Questo evidenzierà la sintassi del codice in base al linguaggio indicato.
+Se si sta mostrando del semplice testo, si scelga `text`.
 
-It's important to choose the correct annotation here, because `rustdoc` uses it
-in an interesting way: It can be used to actually test your examples in a
-library crate, so that they don't get out of date. If you have some C code but
-`rustdoc` thinks it's Rust because you left off the annotation, `rustdoc` will
-complain when trying to generate the documentation.
+Qui è importante scegliere l'annotazione corretta, perché `rustdoc` la usa
+in un modo interessante: può venire usata per collaudare effettivamente
+gli esempi in un crate di libreria, così da assicurasi che rimangano
+aggiornati. Se si ha del codice C ma `rustdoc` pensa che sia Rust perché non
+si è aggiunta l'annotazione, `rustdoc` si lamenterà quando proverà a generare
+la documentazione.
 
-## Documentation as tests
+## Documentazione come test
 
-Let's discuss our sample example documentation:
+Discutiamo il nostro esempio di documentazione:
 
 ```rust
 /// ```
-/// println!("Hello, world");
+/// println!("Ciao, mondo");
 /// ```
 # fn foo() {}
 ```
 
-You'll notice that you don't need a `fn main()` or anything here. `rustdoc` will
-automatically add a `main()` wrapper around your code, using heuristics to attempt
-to put it in the right place. For example:
+Si noterà che qui non c'è bisogno di un `fn main()` né di altro. `rustdoc`
+aggiungerà automaticamente una funzione `main()` intorno al nostro codice,
+usando dell'euristica per tentare di metterlo al posto giusto. Per esempio:
 
 ```rust
 /// ```
 /// use std::rc::Rc;
 ///
-/// let five = Rc::new(5);
+/// let cinque = Rc::new(5);
 /// ```
 # fn foo() {}
 ```
 
-This will end up testing:
+Questo finirà per collaudare:
 
 ```rust
 fn main() {
     use std::rc::Rc;
-    let five = Rc::new(5);
+    let cinque = Rc::new(5);
 }
 ```
 
-Here's the full algorithm rustdoc uses to preprocess examples:
+Ecco l'algoritmo completo che rustdoc usa per preprocessare gli esempi:
 
-1. Any leading `#![foo]` attributes are left intact as crate attributes.
-2. Some common `allow` attributes are inserted, including
-   `unused_variables`, `unused_assignments`, `unused_mut`,
-   `unused_attributes`, and `dead_code`. Small examples often trigger
-   these lints.
-3. If the example does not contain `extern crate`, then `extern crate
-   <mycrate>;` is inserted (note the lack of `#[macro_use]`).
-4. Finally, if the example does not contain `fn main`, the remainder of the
-   text is wrapped in `fn main() { your_code }`.
+1. Tutti gli attributi iniziali `#![foo]` sono lasciati intatt come
+   attributi del crate.
+2. Alcuni attributi `allow` tipici vengono inseriti, tra cui
+   `unused_variables`, `unused_assignments`, `unused_mut`, `unused_attributes`,
+   e `dead_code`. Dei piccoli esempi spesso fanno scattare questi lint.
+3. Se l'esempio non contiene `extern crate`, allora `extern crate
+   <mycrate>;` viene inserito (si noti l'assenza di `#[macro_use]`).
+4. Infine, se l'esempio non contiene `fn main`, il resto del testo è
+   avvolto in `fn main() { il_nostro_codice }`.
 
-This generated `fn main` can be a problem! If you have `extern crate` or a `mod`
-statements in the example code that are referred to by `use` statements, they will
-fail to resolve unless you include at least `fn main() {}` to inhibit step 4.
+Questo `fn main` generato però può creare problemi! Se ci sono istruzioni
+`extern crate` o `mod` nel codice d'esempio che sono riferite da istruzioni
+`use`, non riusciranno a risolvere a meno che si includa almeno `fn main() {}`
+per inibire il passo 4.
 `#[macro_use] extern crate` also does not work except at the crate root, so when
 testing macros an explicit `main` is always required. It doesn't have to clutter
 up your docs, though -- keep reading!

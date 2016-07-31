@@ -1,32 +1,36 @@
-% Getting Started
+% Iniziare
 
-This first chapter of the book will get us going with Rust and its tooling.
-First, we’ll install Rust. Then, the classic ‘Hello World’ program. Finally,
-we’ll talk about Cargo, Rust’s build system and package manager.
+Questo primo capitolo del libro farà partire a usare Rust e la sua
+strumentazione. Dapprima, installeremo Rust. Poi, il classico programma
+‘Hello World’. Infine, parleremo di Cargo, il sistema di build nonché
+gestore di pacchetti di Rust.
 
-# Installing Rust
+# Installare Rust
 
-The first step to using Rust is to install it. Generally speaking, you’ll need
-an Internet connection to run the commands in this section, as we’ll be
-downloading Rust from the Internet.
+Il primo passo per usare Rust è installarlo. In generale, servirà
+una connessione a Internet per eseguire i comandi di questa sezione, dato che
+scaricheremo Rust da Internet.
 
-We’ll be showing off a number of commands using a terminal, and those lines all
-start with `$`. You don't need to type in the `$`s, they are there to indicate
-the start of each command. We’ll see many tutorials and examples around the web
-that follow this convention: `$` for commands run as our regular user, and `#`
-for commands we should be running as an administrator.
+Mostreremo vari comandi usando un terminale, e tutte quelle righe di comando
+inizieranno con il segno `$`. Però non si devono digitare quei segni `$`;
+stanno lì per indicare l'inizio di ogni comando. Vedremo molti tutorial ed
+esempi in giro per il Web che seguono questa convenzione: `$` per i comandi
+eseguiti da un utente normale, e `#` per i comandi che possono essere eseguiti
+solamente da un amministratore.
 
-## Platform support
+## Supporto alle piattaforme
 
-The Rust compiler runs on, and compiles to, a great number of platforms, though
-not all platforms are equally supported. Rust's support levels are organized
-into three tiers, each with a different set of guarantees.
+Il compilatore Rust funziona su, e genera codice per, un gran numero
+di piattaforme; però non tutte le piattaforme sono egualmente supportate.
+I livelli di supporto di Rust sono organizzati in tre livelli ["tier"],
+ognuno con un diverso insieme di garanzie.
 
-Platforms are identified by their "target triple" which is the string to inform
-the compiler what kind of output should be produced. The columns below indicate
-whether the corresponding component works on the specified platform.
+Le piattaforme sono identificate dalla loro "terna bersaglio" ["target triple"]
+che è la stringa che informa il compilatore su quale tipo di output dovrebbe
+essere prodotto. Le colonne sotto indicano se il componente corrispondente
+funzion sulla piattaforma specificata.
 
-### Tier 1
+### Livello 1
 
 Tier 1 platforms can be thought of as "guaranteed to build and work".
 Specifically they will each satisfy the following requirements:
@@ -37,144 +41,150 @@ Specifically they will each satisfy the following requirements:
 * Official release artifacts are provided for the platform.
 * Documentation for how to use and how to build the platform is available.
 
-|  Target                       | std |rustc|cargo| notes                      |
-|-------------------------------|-----|-----|-----|----------------------------|
-| `i686-apple-darwin`           |  ✓  |  ✓  |  ✓  | 32-bit OSX (10.7+, Lion+)  |
-| `i686-pc-windows-gnu`         |  ✓  |  ✓  |  ✓  | 32-bit MinGW (Windows 7+)  |
-| `i686-pc-windows-msvc`        |  ✓  |  ✓  |  ✓  | 32-bit MSVC (Windows 7+)   |
-| `i686-unknown-linux-gnu`      |  ✓  |  ✓  |  ✓  | 32-bit Linux (2.6.18+)     |
-| `x86_64-apple-darwin`         |  ✓  |  ✓  |  ✓  | 64-bit OSX (10.7+, Lion+)  |
-| `x86_64-pc-windows-gnu`       |  ✓  |  ✓  |  ✓  | 64-bit MinGW (Windows 7+)  |
-| `x86_64-pc-windows-msvc`      |  ✓  |  ✓  |  ✓  | 64-bit MSVC (Windows 7+)   |
-| `x86_64-unknown-linux-gnu`    |  ✓  |  ✓  |  ✓  | 64-bit Linux (2.6.18+)     |
+|  Target                       | std |rustc|cargo| note                        |
+|-------------------------------|-----|-----|-----|-----------------------------|
+| `i686-apple-darwin`           |  ✓  |  ✓  |  ✓  | OSX (10.7+, Lion+) a 32-bit |
+| `i686-pc-windows-gnu`         |  ✓  |  ✓  |  ✓  | MinGW (Windows 7+) a 32-bit |
+| `i686-pc-windows-msvc`        |  ✓  |  ✓  |  ✓  | MSVC (Windows 7+) a 32-bit  |
+| `i686-unknown-linux-gnu`      |  ✓  |  ✓  |  ✓  | Linux (2.6.18+) a 32-bit    |
+| `x86_64-apple-darwin`         |  ✓  |  ✓  |  ✓  | OSX (10.7+, Lion+) a 64-bit |
+| `x86_64-pc-windows-gnu`       |  ✓  |  ✓  |  ✓  | MinGW (Windows 7+) a 64-bit |
+| `x86_64-pc-windows-msvc`      |  ✓  |  ✓  |  ✓  | MSVC (Windows 7+) a 64-bit  |
+| `x86_64-unknown-linux-gnu`    |  ✓  |  ✓  |  ✓  | Linux (2.6.18+) a 64-bit    |
 
-### Tier 2
+### Livello 2
 
-Tier 2 platforms can be thought of as "guaranteed to build". Automated tests
-are not run so it's not guaranteed to produce a working build, but platforms
-often work to quite a good degree and patches are always welcome! Specifically,
-these platforms are required to have each of the following:
+Le piattaforme di livello 2 possono essere pensate come "con build garantito".
+I collaudi automatizzati non vengono eseguiti e quindi non è garantito che
+si produca una build che funzioni, ma queste piattaforme spesso funzionano
+abbastanza bene e le migliorie sono sempre benvenute! Specificamente,
+per queste piattaforme è richiesto che abbiano tutto quanto segue:
 
-* Automated building is set up, but may not be running tests.
-* Landing changes to the `rust-lang/rust` repository's master branch is gated on
-  platforms **building**. Note that this means for some platforms only the
-  standard library is compiled, but for others the full bootstrap is run.
-* Official release artifacts are provided for the platform.
+* Il build automatizzato è impostato, ma potrebbe non eseguire i collaudi.
+* Per depositare le modifiche nel ramo master del repository `rust-lang/rust`,
+  si deve **eseguire il build** di tale piattaforma. Si noti che ciò significa
+  che per alcune piattaforme viene compilata solamente la libreria standard,
+  mentre per altre viene eseguito il bootstrap completo.
+* Per tale piattaforma sono forniti degli artefatti di rilascio ufficiale.
 
-|  Target                       | std |rustc|cargo| notes                      |
-|-------------------------------|-----|-----|-----|----------------------------|
-| `aarch64-apple-ios`           |  ✓  |     |     | ARM64 iOS                  |
-| `aarch64-unknown-linux-gnu`   |  ✓  |  ✓  |  ✓  | ARM64 Linux (2.6.18+)      |
-| `arm-linux-androideabi`       |  ✓  |     |     | ARM Android                |
-| `arm-unknown-linux-gnueabi`   |  ✓  |  ✓  |  ✓  | ARM Linux (2.6.18+)        |
-| `arm-unknown-linux-gnueabihf` |  ✓  |  ✓  |  ✓  | ARM Linux (2.6.18+)        |
-| `armv7-apple-ios`             |  ✓  |     |     | ARM iOS                    |
-|`armv7-unknown-linux-gnueabihf`|  ✓  |  ✓  |  ✓  | ARMv7 Linux (2.6.18+)      |
-| `armv7s-apple-ios`            |  ✓  |     |     | ARM iOS                    |
-| `i386-apple-ios`              |  ✓  |     |     | 32-bit x86 iOS             |
-| `i586-pc-windows-msvc`        |  ✓  |     |     | 32-bit Windows w/o SSE     |
-| `mips-unknown-linux-gnu`      |  ✓  |     |     | MIPS Linux (2.6.18+)       |
-| `mips-unknown-linux-musl`     |  ✓  |     |     | MIPS Linux with MUSL       |
-| `mipsel-unknown-linux-gnu`    |  ✓  |     |     | MIPS (LE) Linux (2.6.18+)  |
-| `mipsel-unknown-linux-musl`   |  ✓  |     |     | MIPS (LE) Linux with MUSL  |
-| `powerpc-unknown-linux-gnu`   |  ✓  |     |     | PowerPC Linux (2.6.18+)    |
-| `powerpc64-unknown-linux-gnu` |  ✓  |     |     | PPC64 Linux (2.6.18+)      |
-|`powerpc64le-unknown-linux-gnu`|  ✓  |     |     | PPC64LE Linux (2.6.18+)    |
-| `x86_64-apple-ios`            |  ✓  |     |     | 64-bit x86 iOS             |
-| `x86_64-rumprun-netbsd`       |  ✓  |     |     | 64-bit NetBSD Rump Kernel  |
-| `x86_64-unknown-freebsd`      |  ✓  |  ✓  |  ✓  | 64-bit FreeBSD             |
-| `x86_64-unknown-linux-musl`   |  ✓  |     |     | 64-bit Linux with MUSL     |
-| `x86_64-unknown-netbsd`       |  ✓  |  ✓  |  ✓  | 64-bit NetBSD              |
+|  Target                       | std |rustc|cargo| note                            |
+|-------------------------------|-----|-----|-----|---------------------------------|
+| `aarch64-apple-ios`           |  ✓  |     |     | iOS per ARM64                   |
+| `aarch64-unknown-linux-gnu`   |  ✓  |  ✓  |  ✓  | Linux (2.6.18+) per ARM64       |
+| `arm-linux-androideabi`       |  ✓  |     |     | Android per ARM                 |
+| `arm-unknown-linux-gnueabi`   |  ✓  |  ✓  |  ✓  | Linux (2.6.18+) per ARM         |
+| `arm-unknown-linux-gnueabihf` |  ✓  |  ✓  |  ✓  | Linux (2.6.18+) per ARM         |
+| `armv7-apple-ios`             |  ✓  |     |     | iOS per ARM                     |
+|`armv7-unknown-linux-gnueabihf`|  ✓  |  ✓  |  ✓  | Linux (2.6.18+) per ARMv7       |
+| `armv7s-apple-ios`            |  ✓  |     |     | iOS per ARM                     |
+| `i386-apple-ios`              |  ✓  |     |     | iOS a 32 bit per x86            |
+| `i586-pc-windows-msvc`        |  ✓  |     |     | Windows a 32 bit senza SSE      |
+| `mips-unknown-linux-gnu`      |  ✓  |     |     | Linux (2.6.18+) per MIPS        |
+| `mips-unknown-linux-musl`     |  ✓  |     |     | Linux con MUSL per MIPS         |
+| `mipsel-unknown-linux-gnu`    |  ✓  |     |     | Linux (2.6.18+) per MIPS (LE)   |
+| `mipsel-unknown-linux-musl`   |  ✓  |     |     | Linux con MUSL per MIPS (LE)    |
+| `powerpc-unknown-linux-gnu`   |  ✓  |     |     | Linux (2.6.18+) per PowerPC     |
+| `powerpc64-unknown-linux-gnu` |  ✓  |     |     | Linux (2.6.18+) per PPC64       |
+|`powerpc64le-unknown-linux-gnu`|  ✓  |     |     | Linux (2.6.18+) per PPC64LE     |
+| `x86_64-apple-ios`            |  ✓  |     |     | iOS a 64 bit per x86            |
+| `x86_64-rumprun-netbsd`       |  ✓  |     |     | NetBSD a 64 bit con Kernel Rump |
+| `x86_64-unknown-freebsd`      |  ✓  |  ✓  |  ✓  | FreeBSD a 64 bit                |
+| `x86_64-unknown-linux-musl`   |  ✓  |     |     | Linux a 64 bit con MUSL         |
+| `x86_64-unknown-netbsd`       |  ✓  |  ✓  |  ✓  | NetBSD a 64 bit                 |
 
-### Tier 3
+### Livello 3
 
-Tier 3 platforms are those which Rust has support for, but landing changes is
-not gated on the platform either building or passing tests. Working builds for
-these platforms may be spotty as their reliability is often defined in terms of
-community contributions. Additionally, release artifacts and installers are not
-provided, but there may be community infrastructure producing these in
-unofficial locations.
+Le piattaforme di livello 3 sono quelle per cui Rust ha supporto, ma per
+depositare modifiche non è necessario né eseguire il build né passare
+il collaudo. Le build funzionanti su tali piattaforme possono essere lacunose,
+dato che la loro affidabilità è spesso definita in termini di contributi
+dalla comunità. In aggiunta, gli artefatti di rilascio e gli installatori
+non sono forniti, ma ci possono essere infrastrutture comunitarie che
+li producono in luoghi non ufficiali.
 
-|  Target                       | std |rustc|cargo| notes                      |
-|-------------------------------|-----|-----|-----|----------------------------|
-| `aarch64-linux-android`       |  ✓  |     |     | ARM64 Android              |
-| `armv7-linux-androideabi`     |  ✓  |     |     | ARM-v7a Android            |
-| `i686-linux-android`          |  ✓  |     |     | 32-bit x86 Android         |
-| `i686-pc-windows-msvc` (XP)   |  ✓  |     |     | Windows XP support         |
-| `i686-unknown-freebsd`        |  ✓  |  ✓  |  ✓  | 32-bit FreeBSD             |
-| `x86_64-pc-windows-msvc` (XP) |  ✓  |     |     | Windows XP support         |
-| `x86_64-sun-solaris`          |  ✓  |  ✓  |     | 64-bit Solaris/SunOS       |
-| `x86_64-unknown-bitrig`       |  ✓  |  ✓  |     | 64-bit Bitrig              |
-| `x86_64-unknown-dragonfly`    |  ✓  |  ✓  |     | 64-bit DragonFlyBSD        |
-| `x86_64-unknown-openbsd`      |  ✓  |  ✓  |     | 64-bit OpenBSD             |
+|  Target                       | std |rustc|cargo| note                     |
+|-------------------------------|-----|-----|-----|--------------------------|
+| `aarch64-linux-android`       |  ✓  |     |     | Android per ARM64        |
+| `armv7-linux-androideabi`     |  ✓  |     |     | Android per ARM-v7a      |
+| `i686-linux-android`          |  ✓  |     |     | Android a 32 bit per x86 |
+| `i686-pc-windows-msvc` (XP)   |  ✓  |     |     | Windows XP support       |
+| `i686-unknown-freebsd`        |  ✓  |  ✓  |  ✓  | FreeBSD a 32 bit         |
+| `x86_64-pc-windows-msvc` (XP) |  ✓  |     |     | Windows XP support       |
+| `x86_64-sun-solaris`          |  ✓  |  ✓  |     | Solaris/SunOS a 64 bit   |
+| `x86_64-unknown-bitrig`       |  ✓  |  ✓  |     | Bitrig a 64 bit          |
+| `x86_64-unknown-dragonfly`    |  ✓  |  ✓  |     | DragonFlyBSD a 64 bit    |
+| `x86_64-unknown-openbsd`      |  ✓  |  ✓  |     | OpenBSD a 64 bit         |
 
-Note that this table can be expanded over time, this isn't the exhaustive set of
-tier 3 platforms that will ever be!
+Si noti che questa tabella si può espandere al passare del tempo; questo non
+l'insieme esauriente di piattaforme di livello 3 che ci sarà sempre!
 
-## Installing on Linux or Mac
+## Installare su Linux o Mac
 
-If we're on Linux or a Mac, all we need to do is open a terminal and type this:
+Chi è su Linux o su un Mac, deve solamente aprire un terminale e digitare:
 
 ```bash
 $ curl -sSf https://static.rust-lang.org/rustup.sh | sh
 ```
 
-This will download a script, and start the installation. If it all goes well,
-you’ll see this appear:
+Questo scaricherà uno script, e avvierà l'installazione. Se tutto va bene,
+Si vedrà apparire:
 
 ```text
 Rust is ready to roll.
 ```
 
-From here, press `y` for ‘yes’, and then follow the rest of the prompts.
+Da qui, premere `y` per ‘yes’, e poi seguire il resto dei prompt.
 
-## Installing on Windows
+## Installare su Windows
 
-If you're on Windows, please download the appropriate [installer][install-page].
+Chi è su Windows, scarichi l'appropriato [installatore][install-page].
 
 [install-page]: https://www.rust-lang.org/install.html
 
-## Uninstalling
+## Disinstallare
 
-Uninstalling Rust is as easy as installing it. On Linux or Mac, run
-the uninstall script:
+Disinstallare Rust è tanto facile quanto installarlo. Su Linux o Mac,
+si lanci lo script uninstall:
 
 ```bash
 $ sudo /usr/local/lib/rustlib/uninstall.sh
 ```
 
-If we used the Windows installer, we can re-run the `.msi` and it will give us
-an uninstall option.
+Chi ha usato l'installatore per Windows, può rieseguire il file `.msi` e
+seguire l'opzione di disinstallazione.
 
-## Troubleshooting
+## Risoluzione difficoltà
 
-If we've got Rust installed, we can open up a shell, and type this:
+Dopo aver installato Rust, si può aprire un terminale, e digitare:
 
 ```bash
 $ rustc --version
 ```
 
-You should see the version number, commit hash, and commit date.
+Si dovrebbe vedere il numero di versione, lo hash di commit, e la data
+di commit.
 
-If you do, Rust has been installed successfully! Congrats!
+Se è così, Rust è stato installato con successo! Congratulazioni!
 
-If you don't and you're on Windows, check that Rust is in your %PATH% system
-variable: `$ echo %PATH%`. If it isn't, run the installer again, select "Change"
-on the "Change, repair, or remove installation" page and ensure "Add to PATH" is
-installed on the local hard drive.  If you need to configure your path manually,
-you can find the Rust executables in a directory like
+Se non è così, e siamo su Windows, si verifichi che Rust sia nella variabile
+di sitema %PATH%, digitando: `$ echo %PATH%`. Se non c'è, si rilanci
+l'installatore, si selezioni "Change" nella pagina "Change, repair, or remove
+installation" e ci si assicuri che "Add to PATH" sia installato sul disco fisso
+locale. Se c'è bisogno di configurare manualmente la variabile PATH,
+gli eseguibili di Rust si trovano in una directory come
 `"C:\Program Files\Rust stable GNU 1.x\bin"`.
 
-Rust does not do its own linking, and so you’ll need to have a linker
-installed. Doing so will depend on your specific system, consult its
-documentation for more details.
+Rust non esegue personalmente il link, e perciò c'è bisogno di avere un linker
+installato. Come installare unlinker dipende dallo specifico sistema;
+si consulti la sua documentazione per avere maggiori dettagli.
 
-If not, there are a number of places where we can get help. The easiest is
-[the #rust-beginners IRC channel on irc.mozilla.org][irc-beginners] and for
-general discussion [the #rust IRC channel on irc.mozilla.org][irc], which we
-can access through [Mibbit][mibbit]. Then we'll be chatting with other
-Rustaceans (a silly nickname we call ourselves) who can help us out. Other great
-resources include [the user’s forum][users] and [Stack Overflow][stackoverflow].
+Se l'installazione non funziona, ci sono vari posti dove ottenere aiuto.
+Il più facile è [il canale IRC #rust-beginners su irc.mozilla.org]
+[irc-beginners] e per discussioni generali
+[il canale IRC #rust su irc.mozilla.org][irc], a cui si può accedere tramite
+[Mibbit][mibbit]. Lì si potrà chattare con altri Rustacean (uno sciocco
+soprannome con cui ci chiamiamo) che possono aiutarci. Altre ottime risorse
+sono [il forum degli utenti][users] e [Stack Overflow][stackoverflow].
 
 [irc-beginners]: irc://irc.mozilla.org/#rust-beginners
 [irc]: irc://irc.mozilla.org/#rust
@@ -182,41 +192,42 @@ resources include [the user’s forum][users] and [Stack Overflow][stackoverflow
 [users]: https://users.rust-lang.org/
 [stackoverflow]: http://stackoverflow.com/questions/tagged/rust
 
-This installer also installs a copy of the documentation locally, so we can
-read it offline. On UNIX systems, `/usr/local/share/doc/rust` is the location.
-On Windows, it's in a `share/doc` directory, inside the directory to which Rust
-was installed.
+Questa installazione installa anche localmente una copia della documentazione,
+e quindi la si può leggere offline. Sui sistemi UNIX si trova in
+`/usr/local/share/doc/rust`. Su Windows, si trova nella direcory `share\doc`,
+all'interno della directory in cui Rust è stato installato.
 
 # Hello, world!
 
-Now that you have Rust installed, we'll help you write your first Rust program.
-It's traditional when learning a new language to write a little program to
-print the text “Hello, world!” to the screen, and in this section, we'll follow
-that tradition.
+Adesso che abbiamo installato Rust, vedremo come si scrive il primo programma
+in Rust. Quando si impara un nuovo linguaggio di programmazione, c'è
+la tradizione di scrivere programmino che stampi il testo “Hello, world!”
+sullo schermo, e in questa sezione, seguiremo questa tradizione.
 
-The nice thing about starting with such a simple program is that you can
-quickly verify that your compiler is installed, and that it's working properly.
-Printing information to the screen is also a pretty common thing to do, so
-practicing it early on is good.
+La cosa carina riguardo a iniziare un tale semplice programma è che si può
+verificare rapidamente che il compilatore funzioni correttamente.
+Stampare delle informazioni sullo schermo è anche una cosa che si fa spesso,
+e quindi è bene incominciare subito a farlo.
 
-> Note: This book assumes basic familiarity with the command line. Rust itself
-> makes no specific demands about your editing, tooling, or where your code
-> lives, so if you prefer an IDE to the command line, that's an option. You may
-> want to check out [SolidOak], which was built specifically with Rust in mind.
-> There are a number of extensions in development by the community, and the
-> Rust team ships plugins for [various editors]. Configuring your editor or
-> IDE is out of the scope of this tutorial, so check the documentation for your
-> specific setup.
+> Nota: Questo libro assume familiarità di base con la riga di comando. Rust
+> stesso non pone specifici requisiti su quali strumenti usare, o su dove
+> risieda il codice sorgente, e quindi se si preferisce un IDE alla riga
+> di comando, si può fare. Si può provare [SolidOak], che è stato costruito
+> specificamente per Rust. La comunità sta sviluppando varie estensioni, e
+> la squadra di Rust cosegna dei plugin per [vari editor]. Però questo libro
+> non si occuperarà di come configurare il proprio editor o IDE, e quindi si
+> verifichi la docuentazione per il proprio specifico ambiente.
 
 [SolidOak]: https://github.com/oakes/SolidOak
 [various editors]: https://github.com/rust-lang/rust/blob/master/src/etc/CONFIGS.md
 
-## Creating a Project File
+## Creare un file di progetto
 
-First, make a file to put your Rust code in. Rust doesn't care where your code
-lives, but for this book, I suggest making a *projects* directory in your home
-directory, and keeping all your projects there. Open a terminal and enter the
-following commands to make a directory for this particular project:
+Prima, creiamo un file per metterci dentro il codice Rust. A Rust
+non interessa dove risieda il codice sorgente, a per questo libro, suggeriamo
+di creare una directory *progetti* nell'area del proprio utente, e di tenerci
+tutti i propri progetti. Si apra un terminal e si inseriscano i seguenti
+comandi per creare una directory per questo progetto:
 
 ```bash
 $ mkdir ~/projects
@@ -225,17 +236,17 @@ $ mkdir hello_world
 $ cd hello_world
 ```
 
-> Note: If you’re on Windows and not using PowerShell, the `~` may not work.
-> Consult the documentation for your shell for more details.
+> Nota: Se si usa Windows ma non PowerShell né CygWin, la `~` non funziona.
+> Si consulti la documentazione della propria shell per avere più dettagli.
 
-## Writing and Running a Rust Program
+## Scrivere ed eseguire un programma in Rust
 
-Next, make a new source file and call it *main.rs*. Rust files always end
-in a *.rs* extension. If you’re using more than one word in your filename, use
-an underscore to separate them; for example, you'd use *hello_world.rs* rather
-than *helloworld.rs*.
+Poi, creiamo un nuovo file sorgente e lo chiamiamo *main.rs*. I file Rust
+finiscono sempre con l'estensione *.rs*. Se si mettono più parole nel nome
+del file, si usi un underscore per separarle; per esempio, si scriva
+*hello_world.rs* invece di *helloworld.rs* o *hello world.rs*.
 
-Now open the *main.rs* file you just created, and type the following code:
+Adesso si digiti il seguente codice nel file *main.rs* appena creato:
 
 ```rust
 fn main() {
@@ -243,8 +254,8 @@ fn main() {
 }
 ```
 
-Save the file, and go back to your terminal window. On Linux or OSX, enter the
-following commands:
+Si salvi il file, e si torni alla finestra del terminale. Su Linux o OSX,
+si digiti i seguenti comandi:
 
 ```bash
 $ rustc main.rs
@@ -252,15 +263,14 @@ $ ./main
 Hello, world!
 ```
 
-In Windows, replace `main` with `main.exe`. Regardless of your operating
-system, you should see the string `Hello, world!` print to the terminal. If you
-did, then congratulations! You've officially written a Rust program. That makes
-you a Rust programmer! Welcome.
+In Windows, si sostituisca `./main` con `main`. Indipendentemente dal sistema
+operativo, si dovrebbe vedere il testo `Hello, world!` sampato sul terminale.
+Se è così, congratulazioni! Abbiamo scritto ufficialmente un programma in Rust.
 
-## Anatomy of a Rust Program
+## Anatomia di una programma in Rust
 
-Now, let’s go over what just happened in your "Hello, world!" program in
-detail. Here's the first piece of the puzzle:
+Adesso, esaminiamo ciò che è appena accaduto nel nostro programma
+"Hello, world!". Ecco il primo pezzo del puzzle:
 
 ```rust
 fn main() {
@@ -268,76 +278,77 @@ fn main() {
 }
 ```
 
-These lines define a *function* in Rust. The `main` function is special: it's
-the beginning of every Rust program. The first line says, “I’m declaring a
-function named `main` that takes no arguments and returns nothing.” If there
-were arguments, they would go inside the parentheses (`(` and `)`), and because
-we aren’t returning anything from this function, we can omit the return type
-entirely.
+Queste righe definiscono una *funzione* in Rust. La funzione `main` è speciale:
+è l'inizio di ogni programma in Rust. La prima riga dice, “Sto dichiarando
+una funzione chiamata `main` che non prende argomenti e non rende niente.”
+Se ci fossero argomenti, andrebbero fra le parentesi (`(` e `)`), e siccome
+non stiamo rendendo niente da questa funzione, possiamo omettere il tipo reso.
 
-Also note that the function body is wrapped in curly braces (`{` and `}`). Rust
-requires these around all function bodies. It's considered good style to put
-the opening curly brace on the same line as the function declaration, with one
-space in between.
+Si noti anche che il corpo della funzione è racchiuso da graffe (`{` e `}`).
+Rust le richiede intorno a tutti i corpi delle funzioni. Si considera buon
+stile mettere la graffa aperta sulla stessa riga della dichiarazione
+di funzione, separata da uno spazio.
 
-Inside the `main()` function:
+Passiamo all'interno della funzione `main()`:
 
 ```rust
     println!("Hello, world!");
 ```
 
-This line does all of the work in this little program: it prints text to the
-screen. There are a number of details that are important here. The first is
-that it’s indented with four spaces, not tabs.
+Questa riga fa tutto il lavoro di questo programmino: stampa il testo sullo
+schermo. Qui ci sono vari dettagli importanti. Il primo è che è rientrato
+di quattro spazi, senza tabulazioni.
 
-The second important part is the `println!()` line. This is calling a Rust
-*[macro]*, which is how metaprogramming is done in Rust. If it were calling a
-function instead, it would look like this: `println()` (without the !). We'll
-discuss Rust macros in more detail later, but for now you only need to
-know that when you see a `!` that means that you’re calling a macro instead of
-a normal function.
-
+La seconda parte importante è l'espressione `println!()`. Questa chiama
+una *[macro]* di Rust, che è il modo usato da Rust per fare
+la metaprogrammazione. Se invece stesse chiamando una funzione,
+si presenterebbe così: `println()` (senza il !). In seguito discuteremo
+le macro in Rust in maggiore dettaglio, ma per ora basti sapere che quando c'è
+un `!` significa che si sta chiamando una macro invece di una funzione.
 
 [macro]: macros.html
 
-Next is `"Hello, world!"` which is a *string*. Strings are a surprisingly
-complicated topic in a systems programming language, and this is a *[statically
-allocated]* string. We pass this string as an argument to `println!`, which
-prints the string to the screen. Easy enough!
+Poi c'è `"Hello, world!"` che è una *stringa*. Le stringhe sono un argomento
+sorprendentemente complicato in un linguaggio di programmazione di sistema,
+e questa è una stringa *[allocata staticamente]*. Passiamo questa stringa come
+argumento a `println!`, che stampa la stringa sul terminale. Abbastanza facile!
 
-[statically allocated]: the-stack-and-the-heap.html
+[allocata staticamente]: the-stack-and-the-heap.html
 
-The line ends with a semicolon (`;`). Rust is an *[expression-oriented
-language]*, which means that most things are expressions, rather than
-statements. The `;` indicates that this expression is over, and the next one is
-ready to begin. Most lines of Rust code end with a `;`.
+La riga finisce con un punto-e-virgola (`;`). Rust è un *[linguaggio orientato
+alle espressioni]*, che significa che la maggior prte delle cose sono
+espressioni, invece che istruzioni. Il `;` indica che questa espressione
+è finita, e la prossima sta per cominciare. La maggior parte delle righe
+di codice Rust finiscono con un `;`.
 
-[expression-oriented language]: glossary.html#expression-oriented-language
+[linguaggio orientato alle espressioni]:
+glossary.html#expression-oriented-language
 
-## Compiling and Running Are Separate Steps
+## Compilare ed eseguire sono passi separati
 
-In "Writing and Running a Rust Program", we showed you how to run a newly
-created program. We'll break that process down and examine each step now.
+In "Scrivere ed eseguire un programma in Rust", abbiamo mostrato come eseguire
+un programma appena creato. Adesso scomporremo quel procedimento e
+ne esamineremo ogni passo.
 
-Before running a Rust program, you have to compile it. You can use the Rust
-compiler by entering the `rustc` command and passing it the name of your source
-file, like this:
+Prima di eseguire un programma in Rust, bisogna compilarlo. Si può usare
+il compilatore Rust digitando il comando `rustc` e passandogli il nome del file
+sorgente, così:
 
 ```bash
 $ rustc main.rs
 ```
 
-If you come from a C or C++ background, you'll notice that this is similar to
-`gcc` or `clang`. After compiling successfully, Rust should output a binary
-executable, which you can see on Linux or OSX by entering the `ls` command in
-your shell as follows:
+Chi ha esperienza dei linguaggi C o C++, noterà che questo è simile all'uso di
+`gcc` o `clang`. Dopo aver compilato con successo, Rust dovrebbe emettere un
+programma eseguibile binario, che si può vedere su Linux o OSX digitando
+il comando `ls` nel terminale come segue:
 
 ```bash
 $ ls
 main  main.rs
 ```
 
-On Windows, you'd enter:
+Su Windows, si dovrebbe digitare:
 
 ```bash
 $ dir
@@ -345,148 +356,152 @@ main.exe
 main.rs
 ```
 
-This shows we have two files: the source code, with an `.rs` extension, and the
-executable (`main.exe` on Windows, `main` everywhere else). All that's left to
-do from here is run the `main` or `main.exe` file, like this:
+Questo mostra che ci sono due file: il codice sorgente, con estensione `.rs`,
+e l'eseguibile (`main.exe` su Windows, `main` altrove). Ciò che rimane da fare
+è lanciare il file `main` o `main.exe`, così:
 
 ```bash
-$ ./main  # or .\main.exe on Windows
+$ ./main  # o main su Windows
 ```
 
-If *main.rs* were your "Hello, world!" program, this would print `Hello,
-world!` to your terminal.
+Se *main.rs* fosse il nostro programma "Hello, world!" program, questo comando
+stamperebbe `Hello, world!` sul nostro terminale.
 
-If you come from a dynamic language like Ruby, Python, or JavaScript, you may
-not be used to compiling and running a program being separate steps. Rust is an
-*ahead-of-time compiled* language, which means that you can compile a program,
-give it to someone else, and they can run it even without Rust installed. If
-you give someone a `.rb` or `.py` or `.js` file, on the other hand, they need
-to have a Ruby, Python, or JavaScript implementation installed (respectively),
-but you only need one command to both compile and run your program. Everything
-is a tradeoff in language design.
+Chi venisse da un linguaggio dinamico come Ruby, Python, o JavaScript, potrebbe
+non essere abituato a compilare ed eseguire un programma in due passi separati.
+Rust è un linguaggio *compilato in anticipo*, il che significa che si può
+compilare un programma, darlo a qualcun altro, e questo lo può eseguire
+anche se non ha Rust installato. Invece se si da a qualcuno un file `.rb`
+o `.py` o `.js`, serve avere rispettivamente un'implementazione Ruby, Python,
+o JavaScript installata, ma basta un solo comando per compilare ed eseguire
+il programma. Ci sono pro e contro nella progettazione dei linguaggi.
 
-Just compiling with `rustc` is fine for simple programs, but as your project
-grows, you'll want to be able to manage all of the options your project has,
-and make it easy to share your code with other people and projects. Next, I'll
-introduce you to a tool called Cargo, which will help you write real-world Rust
-programs.
+Limitarsi a compilare con `rustc` va bene per programmi semplici, ma man mano
+che si affrontano progetti più grossi, si vorrà poter gestire tutte le opzioni
+del proprio progetto, e facilitare la condivisione del codice con altre persone
+e altri progetti. Quindi, presenteremo uno strumento chiamato Cargo, che
+aiuterà a scrivere programmi realistici in Rust.
 
 # Hello, Cargo!
 
-Cargo is Rust’s build system and package manager, and Rustaceans use Cargo to
-manage their Rust projects. Cargo manages three things: building your code,
-downloading the libraries your code depends on, and building those libraries.
-We call libraries your code needs ‘dependencies’ since your code depends on
-them.
+Cargo è il sistema di build e gestore di pacchetti di Rust, e i Rustacean usano
+Cargo per gestire i loro progetti in Rust. Cargo si occupa di tre attività:
+costruire i propri programmi e librerie, scaricare le librerie che servono
+al proprio codice, e costruire quelle librerie.
+Le librerie che servono al proprio codice si chiamano ‘dipendenze’ dato che
+il proprio codice dipende da loro.
 
-The simplest Rust programs don’t have any dependencies, so right now, you'd
-only use the first part of its functionality. As you write more complex Rust
-programs, you’ll want to add dependencies, and if you start off using Cargo,
-that will be a lot easier to do.
+I più semplici programmi in Rust non hanno dipendenze, e quindi per adesso
+usiamo solamente la prima parte delle sue funzionalità. Man mano che scriveremo
+programmi in Rust più complessi, si vorranno aggiungere dipendenze, e se si
+comincia subito a usare Cargo, poi sarà molto più facile.
 
-As the vast, vast majority of Rust projects use Cargo, we will assume that
-you’re using it for the rest of the book. Cargo comes installed with Rust
-itself, if you used the official installers. If you installed Rust through some
-other means, you can check if you have Cargo installed by typing:
+Dato che la vastissima maggioranza di progetti in Rust usano Cargo, assumeremo
+che sia usato per il resto di questo libro. Cargo viene installato insieme
+a Rust, se vengono usati gli installatori ufficiali. Se Rust è stato installato
+tramirte qualche altro mezzo, si può verificare se Cargo è installato
+digitando in un terminale:
 
 ```bash
 $ cargo --version
 ```
 
-Into a terminal. If you see a version number, great! If you see an error like
-‘`command not found`’, then you should look at the documentation for the system
-in which you installed Rust, to determine if Cargo is separate.
+Se si vede un numero di versione, ottimo! Se si vede un errore come
+‘`command not found`’, allora si dovrebbe guardare la documentazione
+del sistema in cui è installato Rust, per determinare come installarlo.
 
-## Converting to Cargo
+## Convertire a Cargo
 
-Let’s convert the Hello World program to Cargo. To Cargo-fy a project, you need
-to do three things:
+Convertiamo in Cargo il programma Hello World. Per farlo, si devono fare
+tre cose:
 
-1. Put your source file in the right directory.
-2. Get rid of the old executable (`main.exe` on Windows, `main` everywhere
-   else).
-3. Make a Cargo configuration file.
+1. Mettere il file sorgente nella giusta directory.
+2. Sbarazzarsi del vecchio eseguibile (`main.exe` su Windows, `main` altrove).
+3. Creare un file di configurazione di Cargo.
 
-Let's get started!
+Partiamo!
 
-### Creating a Source Directory and Removing the Old Executable
+### Creare una directory dei sorgenti e rimuovere il vecchio eseguibile
 
-First, go back to your terminal, move to your *hello_world* directory, and
-enter the following commands:
+Prima, torniamo al terminale, spostiamo alla nostra directory *hello_world*,
+e digitiamo i seguenti comandi:
 
 ```bash
 $ mkdir src
-$ mv main.rs src/main.rs # or 'move main.rs src/main.rs' on Windows
-$ rm main  # or 'del main.exe' on Windows
+$ mv main.rs src/main.rs # o 'move main.rs src\main.rs' su Windows
+$ rm main  # o 'del main.exe' su Windows
 ```
 
-Cargo expects your source files to live inside a *src* directory, so do that
-first. This leaves the top-level project directory (in this case,
-*hello_world*) for READMEs, license information, and anything else not related
-to your code. In this way, using Cargo helps you keep your projects nice and
-tidy. There's a place for everything, and everything is in its place.
+Cargo si aspetta che i file sorgente risiedano dentro la directory *src*, e
+quindi prima ce lo mettiamo. Questo lascia la directory superiore del progetto
+(in questo caso, *hello_world*) per il README, le informazioni di licenza, e
+ogni altra cosa non correlata al codice. In questo modo, usare Cargo aiuta
+a mantenere ordinati i propri progetti. C'è un posto per ogni cosa, e ogni cosa
+sta al suo posto.
 
-Now, move *main.rs* into the *src* directory, and delete the compiled file you
-created with `rustc`. As usual, replace `main` with `main.exe` if you're on
-Windows.
+Adesso, si sposti *main.rs* nella directory *src*, e si elimina il file
+compilato che abbiamo creato con `rustc`. Come al solito, si sostituisca `main`
+con `main.exe` se si sta usando Windows.
 
-This example retains `main.rs` as the source filename because it's creating an
-executable. If you wanted to make a library instead, you'd name the file
-`lib.rs`. This convention is used by Cargo to successfully compile your
-projects, but it can be overridden if you wish.
+Questo esempio mantiene `main.rs` come nome del file sorgente, perché stiamo
+creando un programma. Se volessimo creare una libreria invece, chiameremmo
+`lib.rs` il file sorgente. Questa convenzione è usata da Cargo per compilare
+con successo il progetto, ma può essere scavalcata se si desidera.
 
-### Creating a Configuration File
+### Creare un file di configurazione
 
-Next, create a new file inside your *hello_world* directory, and call it
+Poi, creiamo un nuovo file nella nostra directory *hello_world*, e lo chiamiamo
 `Cargo.toml`.
 
-Make sure to capitalize the `C` in `Cargo.toml`, or Cargo won't know what to do
-with the configuration file.
+Assicuriamoci di scrivere in maiuscolo la `C` in `Cargo.toml`, altrimenti
+Cargo non saprà che farsene del file di configurazione.
 
-This file is in the *[TOML]* (Tom's Obvious, Minimal Language) format. TOML is
-similar to INI, but has some extra goodies, and is used as Cargo’s
-configuration format.
+Questo file è nel formato *[TOML]*. Questo formato è simile al formato INI,
+ma ha alcuni vantaggi, e viene usato come formato di configurazione di Cargo.
 
 [TOML]: https://github.com/toml-lang/toml
 
-Inside this file, type the following information:
+Dentro questo file, si digiti la seguente informazione:
 
 ```toml
 [package]
 
 name = "hello_world"
 version = "0.0.1"
-authors = [ "Your name <you@example.com>" ]
+authors = [ "Il tuo nome <tu@esempio.it>" ]
 ```
 
-The first line, `[package]`, indicates that the following statements are
-configuring a package. As we add more information to this file, we’ll add other
-sections, but for now, we only have the package configuration.
+La prima riga, `[package]`, indica che le direttive seguenti stanno
+configurando un pacchetto. Man mano che aggiungiamo altre informazioni
+a questo file, aggiungeremo altre sezioni, ma per adesso, abbiamo solamente
+la configurazione del pacchetto.
 
-The other three lines set the three bits of configuration that Cargo needs to
-know to compile your program: its name, what version it is, and who wrote it.
+Le altre tre righe impostano le tre informazioni che servono a Cargo
+per compilare il nostro programma: il suo nome, a quale versione è, e chi
+l'ha scritto.
 
-Once you've added this information to the *Cargo.toml* file, save it to finish
-creating the configuration file.
+Dopo aver aggiunto queste informazioni al file *Cargo.toml*, lo si salvi per
+completare la creazione del file di configurazione.
 
-## Building and Running a Cargo Project
+## Costruire ed eseguire un progetto Cargo
 
-With your *Cargo.toml* file in place in your project's root directory, you
-should be ready to build and run your Hello World program! To do so, enter the
-following commands:
+Con il nostro file *Cargo.toml* al suo posto nella directory radice del nostro
+progetto, siamo pronti a costruire ed eseguire il nostro programma Hello World!
+Per farlo, si digitino i seguenti comandi:
 
 ```bash
 $ cargo build
-   Compiling hello_world v0.0.1 (file:///home/yourname/projects/hello_world)
+   Compiling hello_world v0.0.1 (file:///home/iltuonome/progetti/hello_world)
 $ ./target/debug/hello_world
 Hello, world!
 ```
 
-Bam! If all goes well, `Hello, world!` should print to the terminal once more.
+Bam! Se tutto va bene, `Hello, world!` dovrebbe apparire sul terminale ancora
+una volta.
 
-You just built a project with `cargo build` and ran it with
-`./target/debug/hello_world`, but you can actually do both in one step with
-`cargo run` as follows:
+Abbiamo appena costruito un progetto con il comando `cargo build` e l'abbiamo
+eseguito con il comando `./target/debug/hello_world`, ma in realtà si possono
+eseguire entrambi con il solo comando `cargo run`:
 
 ```bash
 $ cargo run
@@ -494,40 +509,42 @@ $ cargo run
 Hello, world!
 ```
 
-Notice that this example didn’t re-build the project. Cargo figured out that
-the file hasn’t changed, and so it just ran the binary. If you'd modified your
-source code, Cargo would have rebuilt the project before running it, and you
-would have seen something like this:
+Si noti che questo esempio non ha ricostruito il progetto. Cargo si è accorto
+che il file sorgente non è cambiato, e perciò ha subito lanciato il programma.
+Se avessimo modificato il nostro file codice sorgente, Cargo avrebbe
+ricostruito il progetto prima di eseguirlo, e avremmo visto qualcosa come:
 
 ```bash
 $ cargo run
-   Compiling hello_world v0.0.1 (file:///home/yourname/projects/hello_world)
+   Compiling hello_world v0.0.1 (file:///home/iltuonome/progetti/hello_world)
      Running `target/debug/hello_world`
 Hello, world!
 ```
 
-Cargo checks to see if any of your project’s files have been modified, and only
-rebuilds your project if they’ve changed since the last time you built it.
+Cargo verifica se qualcuno dei file del progretto sono stati modificati, e
+ricostruisce il progetto solamente se sono cambiati dall'ultima volta
+che è stato costruito.
 
-With simple projects, Cargo doesn't bring a whole lot over just using `rustc`,
-but it will become useful in the future. This is especially true when you start
-using crates; these are synonymous with a ‘library’ or ‘package’ in other
-programming languages. For complex projects composed of multiple crates, it’s
-much easier to let Cargo coordinate the build. Using Cargo, you can run `cargo
-build`, and it should work the right way.
+Con progetti semplici, Cargo non porta molti vantaggi rispetto a usare `rustc`,
+ma diventerà utile in futuro. Questo è vero spacialmente quando si inizia
+a usare i "crate"; questi sono chiamati ‘librerie’ o ‘pacchetti’ in altri
+linguaggi di programmazione. Per progetti complessi, composti da più crate, è
+molto più facile lasciare che Cargo coordini la costruzione. Usando Cargo,
+si può lanciare `cargo build`, e dovrebbe funzionare nel modo giusto.
 
-### Building for Release
+### Costruire per il rilascio
 
-When your project is ready for release, you can use `cargo build
---release` to compile your project with optimizations. These optimizations make
-your Rust code run faster, but turning them on makes your program take longer
-to compile. This is why there are two different profiles, one for development,
-and one for building the final program you’ll give to a user.
+Quando il proprio progetto è pronto per il rilascio, si può eseguire
+`cargo build --release` per compilare il progetto con ottimizazioni.
+Queste ottimizzazioni fanno andare più veloce il codice Rust, ma attivandole
+ci vuole più tempo per compilare il programma. Ecco perché ci sono due diversi
+profili, uno per lo sviluppo, e uno per costruire il programma finale
+che verrà distribuito.
 
-### What Is That `Cargo.lock`?
+### Cos'è quel `Cargo.lock`?
 
-Running `cargo build` also causes Cargo to create a new file called
-*Cargo.lock*, which looks like this:
+Eseguendo `cargo build` si fa anche in modo che Cargo crei un nuovo file
+chiamato *Cargo.lock*, anologo a questo:
 
 ```toml
 [root]
@@ -535,64 +552,67 @@ name = "hello_world"
 version = "0.0.1"
 ```
 
-Cargo uses the *Cargo.lock* file to keep track of dependencies in your
-application. This is the Hello World project's *Cargo.lock* file. This project
-doesn't have dependencies, so the file is a bit sparse. Realistically, you
-won't ever need to touch this file yourself; just let Cargo handle it.
+Cargo usa il file *Cargo.lock* per tener traccia delle dipendenze nella nostra
+applicazione. Questo è il file *Cargo.lock* del progetto Hello World. Questo
+progetto non ha dipendenze, e quindi il file è molto piccolo. Realisticamente,
+non avremo mai bisogno di toccare questo file; lasciamolo gestire a Cargo.
 
-That’s it! If you've been following along, you should have successfully built
-`hello_world` with Cargo.
+Eccolo! Dopo aver fatto tutti i passi, dovremmo aver costruito con successo
+`hello_world` usando Cargo.
 
-Even though the project is simple, it now uses much of the real tooling you’ll
-use for the rest of your Rust career. In fact, you can expect to start
-virtually all Rust projects with some variation on the following commands:
+Anche se il progetto è semplice, usa gran parte degli strumenti che useremo per
+il resto della nostra carriera Rust. Di fatto, ci si può aspettare di iniziare
+praticamente tutti i progetti Rust con qualche variante dei seguenti comandi:
 
 ```bash
-$ git clone someurl.com/foo
+$ git clone qualcheurl.com/foo
 $ cd foo
 $ cargo build
 ```
 
-## Making A New Cargo Project the Easy Way
+## Creare un nuovo progetto Cargo nel modo facile
 
-You don’t have to go through that previous process every time you want to start
-a new project! Cargo can quickly make a bare-bones project directory that you
-can start developing in right away.
+Ma non si deve seguire quel procedimento precedente ogni volta che si vuole
+iniziare un nuovo progetto! Cargo può creare rapidamente uno scheletro
+di directory di progetto in cui si può iniziare a sviluppare subito.
 
-To start a new project with Cargo, enter `cargo new` at the command line:
+Per iniziare un nuovo progetto usando Cargo, si digiti `cargo new` alla riga
+di comando:
 
 ```bash
 $ cargo new hello_world --bin
 ```
 
-This command passes `--bin` because the goal is to get straight to making an
-executable application, as opposed to a library. Executables are often called
-*binaries* (as in `/usr/bin`, if you’re on a Unix system).
+Questo comando passa l'opzione `--bin` perché l'obiettivo è di creare
+direttamente un'applicazione eseguibile, e non una libreria. Le applicazioni
+compilate sono spesso chiamate *binari* (da cui `/usr/bin`, sui sistemi Unix).
 
-Cargo has generated two files and one directory for us: a `Cargo.toml` and a
-*src* directory with a *main.rs* file inside. These should look familiar,
-they’re exactly what we created by hand, above.
+Cargo ha generato due file e una directory per noi: il file `Cargo.toml` e
+la directory *src* con il file *main.rs* al suo interno. Questi dovrebbero
+essere familiari, dato che sono esattamente quelli che prima abbiamo creato
+a mano.
 
-This output is all you need to get started. First, open `Cargo.toml`. It should
-look something like this:
+Questo output è ciò che basta per iniziare. Prima si apre il file `Cargo.toml`.
+Il suo contenuto dovrebbe essere analogo a questo:
 
 ```toml
 [package]
 
 name = "hello_world"
 version = "0.1.0"
-authors = ["Your Name <you@example.com>"]
+authors = ["Il tuo nome <tu@esempio.it>"]
 
 [dependencies]
 ```
 
-Do not worry about the `[dependencies]` line, we will come back to it later.
+Non ci si deve preoccupare della riga `[dependencies]`, ne parleremo dopo.
 
-Cargo has populated *Cargo.toml* with reasonable defaults based on the arguments
-you gave it and your `git` global configuration. You may notice that Cargo has
-also initialized the `hello_world` directory as a `git` repository.
+Cargo ha inserito in *Cargo.toml* dei default ragionevoli, che si basano sugli
+argomenti che gli abbiamo passato e sulla configurazione globale di `git`.
+Si potrà notare che Cargo ha anche initializzato la directory `hello_world`
+come un repository `git`.
 
-Here’s what should be in `src/main.rs`:
+Ecco cosa ci dovrebbe essere in `src/main.rs`:
 
 ```rust
 fn main() {
@@ -600,24 +620,26 @@ fn main() {
 }
 ```
 
-Cargo has generated a "Hello World!" for you, and you’re ready to start coding!
+Cargo ha generato un "Hello World!" per noi, e siamo pronti a iniziare
+a programmare!
 
-> Note: If you want to look at Cargo in more detail, check out the official [Cargo
-guide], which covers all of its features.
+> Nota: Se si vuole guardare a Cargo in maggiore dettaglio, si verifichi
+la [guida ufficiale di Cargo], che tratta tutte le sue funzionalità.
 
-[Cargo guide]: http://doc.crates.io/guide.html
+[guida ufficiale Cargo]: http://doc.crates.io/guide.html
 
-# Closing Thoughts
+# Pensieri finali
 
-This chapter covered the basics that will serve you well through the rest of
-this book, and the rest of your time with Rust. Now that you’ve got the tools
-down, we'll cover more about the Rust language itself.
+Questo capitolo ha trattato le basi che serviranno per il resto del libro, e
+il resto del tempo dedicato a Rust. Adesso che abbiamo visto gli strumenti,
+passeremo a trattare il linguaggio Rust stesso.
 
-You have two options: Dive into a project with ‘[Tutorial: Guessing Game][guessinggame]’, or
-start from the bottom and work your way up with ‘[Syntax and
-Semantics][syntax]’. More experienced systems programmers will probably prefer
-‘Tutorial: Guessing Game’, while those from dynamic backgrounds may enjoy either. Different
-people learn differently! Choose whatever’s right for you.
+Ci sono due strade: Tuffersi in un progetto con
+il ‘[Tutorial: Indovina il numero][guessinggame]’, o iniziare dal fondo
+e risalire, con ‘[Sintassi e semantica][sintassi]’. I programmatori di sistema
+più esperti probabilmente preferiranno ‘Tutorial: indovina il numero’, mentre
+quelli esperti di linguaggi dinamici potrebbero preferire l'altro. Diversa
+gente impara in modo diverso! Si scelga quello che si preferisce.
 
 [guessinggame]: guessing-game.html
-[syntax]: syntax-and-semantics.html
+[sintassi]: syntax-and-semantics.html

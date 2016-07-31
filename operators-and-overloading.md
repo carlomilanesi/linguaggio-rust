@@ -1,32 +1,32 @@
-% Operators and Overloading
+% Operatori e sovraccaricamento ["overloading"]
 
-Rust allows for a limited form of operator overloading. There are certain
-operators that are able to be overloaded. To support a particular operator
-between types, there’s a specific trait that you can implement, which then
-overloads the operator.
+Rust consente una forma limitata di sovraccaricamento degli operatori.
+Ci sono certi operatori che possono essere sovraccaricati. Per supportare
+un particolare operatore fra tipi, c'è uno specifico tratto che si può
+implementare, il quale si occupa di sovraccaricare l'operatore.
 
-For example, the `+` operator can be overloaded with the `Add` trait:
+Per esempio, l'operatore `+` può essere sovraccaricato con il tratto `Add`:
 
 ```rust
 use std::ops::Add;
 
 #[derive(Debug)]
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-impl Add for Point {
-    type Output = Point;
+impl Add for Punto {
+    type Output = Punto;
 
-    fn add(self, other: Point) -> Point {
-        Point { x: self.x + other.x, y: self.y + other.y }
+    fn add(self, other: Punto) -> Punto {
+        Punto { x: self.x + other.x, y: self.y + other.y }
     }
 }
 
 fn main() {
-    let p1 = Point { x: 1, y: 0 };
-    let p2 = Point { x: 2, y: 3 };
+    let p1 = Punto { x: 1, y: 0 };
+    let p2 = Punto { x: 2, y: 3 };
 
     let p3 = p1 + p2;
 
@@ -34,17 +34,17 @@ fn main() {
 }
 ```
 
-In `main`, we can use `+` on our two `Point`s, since we’ve implemented
-`Add<Output=Point>` for `Point`.
+In `main`, possiamo usare `+` sui nostri due oggetti di tipo `Punto`, dato che
+abbiamo implementato `Add<Output=Punto>` per `Punto`.
 
-There are a number of operators that can be overloaded this way, and all of
-their associated traits live in the [`std::ops`][stdops] module. Check out its
-documentation for the full list.
+Ci sono vari operatori che possono essere sovraccaricati in questo modo,
+e tutti i loro tratti associati si trovano nel modulo [`std::ops`][stdops].
+Si veda la sua documentazione per avere l'elenco completo.
 
 [stdops]: ../std/ops/index.html
 
-Implementing these traits follows a pattern. Let’s look at [`Add`][add] in more
-detail:
+L'implementazione di questi tratti segue un pattern. Guardiamo [`Add`][add]
+più in dettaglio:
 
 ```rust
 # mod foo {
@@ -58,78 +58,81 @@ pub trait Add<RHS = Self> {
 
 [add]: ../std/ops/trait.Add.html
 
-There’s three types in total involved here: the type you `impl Add` for, `RHS`,
-which defaults to `Self`, and `Output`. For an expression `let z = x + y`, `x`
-is the `Self` type, `y` is the RHS, and `z` is the `Self::Output` type.
+Qui ci sono tre tipi coinvolti: il tipo per cui si implementa `Add`, `RHS`,
+che di default è ancora `Self`, e `Output`. Nel caso di dell'espressione
+`let z = x + y`, `x` è di tipo `Self`, `y` è di tipo RHS, e `z` è di tipo
+`Self::Output`.
 
 ```rust
-# struct Point;
+# struct Punto;
 # use std::ops::Add;
-impl Add<i32> for Point {
+impl Add<i32> for Punto {
     type Output = f64;
 
     fn add(self, rhs: i32) -> f64 {
-        // add an i32 to a Point and get an f64
+        // somma un i32 a un Punto e ottieni un f64
 # 1.0
     }
 }
 ```
 
-will let you do this:
+consente di fare questo:
 
 ```rust,ignore
-let p: Point = // ...
+let p: Punto = // ...
 let x: f64 = p + 2i32;
 ```
 
-# Using operator traits in generic structs
+# Utilizzo di tratti di operator in strutture generiche
 
-Now that we know how operator traits are defined, we can define our `HasArea`
-trait and `Square` struct from the [traits chapter][traits] more generically:
+Adesso che sappiamo come sono definiti i tratti degli operatori, possiamo
+definire in modo più generico il nostro tratto `HaArea` e la nostra struttura
+`Quadrato` di cui si è parlato nel [capitolo sui tratti][tratti]:
 
-[traits]: traits.html
+[tratti]: traits.html
 
 ```rust
 use std::ops::Mul;
 
-trait HasArea<T> {
+trait HaArea<T> {
     fn area(&self) -> T;
 }
 
-struct Square<T> {
+struct Quadrato<T> {
     x: T,
     y: T,
-    side: T,
+    lato: T,
 }
 
-impl<T> HasArea<T> for Square<T>
+impl<T> HaArea<T> for Quadrato<T>
         where T: Mul<Output=T> + Copy {
     fn area(&self) -> T {
-        self.side * self.side
+        self.lato * self.lato
     }
 }
 
 fn main() {
-    let s = Square {
+    let s = Quadrato {
         x: 0.0f64,
         y: 0.0f64,
-        side: 12.0f64,
+        lato: 12.0f64,
     };
 
-    println!("Area of s: {}", s.area());
+    println!("Area di s: {}", s.area());
 }
 ```
 
-For `HasArea` and `Square`, we declare a type parameter `T` and replace
-`f64` with it. The `impl` needs more involved modifications:
+Per `HaArea` e `Quadrato`, dichiariamo un parametro di tipo `T` e sostituiamo
+`f64` con tale parametro. L'`impl` ha bisogno di modifiche più involute:
 
 ```rust,ignore
 impl<T> HasArea<T> for Square<T>
         where T: Mul<Output=T> + Copy { ... }
 ```
 
-The `area` method requires that we can multiply the sides, so we declare that
-type `T` must implement `std::ops::Mul`. Like `Add`, mentioned above, `Mul`
-itself takes an `Output` parameter: since we know that numbers don't change
-type when multiplied, we also set it to `T`. `T` must also support copying, so
-Rust doesn't try to move `self.side` into the return value.
+Il metodo `area` richiede che possiamo moltiplicare i lati, e quindi
+dichiariamo che il tipo `T` deve implementare `std::ops::Mul`. Come `Add`,
+citato prima, `Mul` stesso prende un parametro `Output`: dato che sappiamo
+che i numeri non cambiano tipo quando vengono moltiplicati, impostiamo
+anch'esso a `T`. `T` deve anche supportare la copia, cosicché Rust non provi
+a spostare `self.side` nel valore reso.

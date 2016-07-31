@@ -79,7 +79,7 @@ fn main() {
 }
 ```
 
-This has a great upside: static dispatch allows function calls to be
+Questo ha un aspetto molto positivo: static dispatch allows function calls to be
 inlined because the callee is known at compile time, and inlining is
 the key to good optimization. Static dispatch is fast, but it comes at
 a tradeoff: ‘code bloat’, due to many copies of the same function

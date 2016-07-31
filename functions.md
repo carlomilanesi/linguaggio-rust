@@ -54,51 +54,52 @@ fn stampa_somma(x: i32, y: i32) {
 }
 ```
 
-You separate arguments with a comma, both when you call the function, as well
-as when you declare it.
+Si separano gli argomenti usando una virgola, sia quando si chiama la funzione,
+che quando la si dichiara.
 
-Unlike `let`, you _must_ declare the types of function arguments. This does
-not work:
+Diversamente dall'istruzione `let`, i tipi degli argomenti delle funzioni
+_devono_ essere dichiarati. Pertanto questo non funziona:
 
 ```rust,ignore
-fn print_sum(x, y) {
-    println!("sum is: {}", x + y);
+fn stampa_somma(x, y) {
+    println!("la somma è: {}", x + y);
 }
 ```
 
-You get this error:
+Si ottiene l'errore:
 
 ```text
 expected one of `!`, `:`, or `@`, found `)`
 fn print_sum(x, y) {
 ```
 
-This is a deliberate design decision. While full-program inference is possible,
-languages which have it, like Haskell, often suggest that documenting your
-types explicitly is a best-practice. We agree that forcing functions to declare
-types while allowing for inference inside of function bodies is a wonderful
-sweet spot between full inference and no inference.
+Questa è una precisa decisione progettuale. Per quanto sia possibile
+l'inferenza di tipo sull'intero programma, i linguaggi che ce l'hanno,
+come Haskell, spesso suggeriscono che sia meglio documentare esplicitamente
+i propri tipi. Concordiamo che costringere le funzioni a dichiarare i tipi
+mentre consentire l'inferenza all'interno dei corpi delle funzioni sia
+un punto di equilibrio perfetto tra l'inferenza completa e nessuna inferenza.
 
-What about returning a value? Here’s a function that adds one to an integer:
+Che dire del valore reso? Ecco una funzione che somma uno a un intero:
 
 ```rust
-fn add_one(x: i32) -> i32 {
+fn somma_uno(x: i32) -> i32 {
     x + 1
 }
 ```
 
-Rust functions return exactly one value, and you declare the type after an
-‘arrow’, which is a dash (`-`) followed by a greater-than sign (`>`). The last
-line of a function determines what it returns. You’ll note the lack of a
-semicolon here. If we added it in:
+Le funzioni di Rust rendono esattamente un valore, e si dichiara il tipo dopo
+una ‘freccia’, che è un trattino (`-`) seguito da un segno di maggiore (`>`).
+L'ultima riga di una funzione determina che cosa rende. Qui si noterà
+la mancanza di un punto-e-virgola. Se l'avessimo aggiunto:
 
 ```rust,ignore
-fn add_one(x: i32) -> i32 {
+fn somma_uno(x: i32) -> i32 {
     x + 1;
 }
 ```
 
-We would get an error:
+Avremmo ottenuto un errore:
 
 ```text
 error: not all control paths return a value
@@ -111,23 +112,25 @@ help: consider removing this semicolon:
           ^
 ```
 
-This reveals two interesting things about Rust: it is an expression-based
-language, and semicolons are different from semicolons in other ‘curly brace
-and semicolon’-based languages. These two things are related.
+Questo rivela due cose interessanti di Rust: è un linguaggio basato
+sulle espressioni, e i punto-e-virgola sono diversi dai punto-e-virgola
+in altri linguaggi basati su ‘graffe e punto-e-virgola’. Questi due aspetti
+sono correlati.
 
-## Expressions vs. Statements
+## Espressioni contro istruzioni
 
-Rust is primarily an expression-based language. There are only two kinds of
-statements, and everything else is an expression.
+Rust è primariamente un linguaggio basato sulle espressioni. Ci sono solamente
+due tipi di istruzioni, e ogni altra cosa è un'espressione.
 
-So what's the difference? Expressions return a value, and statements do not.
-That’s why we end up with ‘not all control paths return a value’ here: the
-statement `x + 1;` doesn’t return a value. There are two kinds of statements in
-Rust: ‘declaration statements’ and ‘expression statements’. Everything else is
-an expression. Let’s talk about declaration statements first.
+E qual è la differenza? Le espressioni rendono un valore, mentre
+le istruzioni no. Ecco perché andiamo a finire con il messaggio d'errore
+‘non tutti i percorsi di controllo rendono un valore’: l'istruzione `x + 1;`
+non ritorna un valore. Ci sono due tipi di istruzioni in Rust:
+le ‘istruzioni di dichiarazione’ e le ‘istruzioni di espressione’. Tutto
+il resto è un'espressione. Prima parliamo delle istruzioni di dichiarazione.
 
-In some languages, variable bindings can be written as expressions, not
-statements. Like Ruby:
+In alcuni linguaggi, i legami delle variabili possono essere scritti
+come espressioni, non come istruzioni. Come in Ruby:
 
 ```ruby
 x = y = 5

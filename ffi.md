@@ -518,7 +518,7 @@ fn main() {
 ```
 
 Note that all interaction with a `static mut` is unsafe, both reading and
-writing. Dealing with global mutable state requires a great deal of care.
+writing. Trattare uno stato mutabile globale necessita di moltissima attenzione.
 
 # Foreign calling conventions
 

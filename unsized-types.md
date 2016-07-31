@@ -1,53 +1,57 @@
-% Unsized Types
+% Tipi non dimensionati
 
-Most types have a particular size, in bytes, that is knowable at compile time.
-For example, an `i32` is thirty-two bits big, or four bytes. However, there are
-some types which are useful to express, but do not have a defined size. These are
-called ‘unsized’ or ‘dynamically sized’ types. One example is `[T]`. This type
-represents a certain number of `T` in sequence. But we don’t know how many
-there are, so the size is not known.
+La maggior parte dei tipi hanno una dimensione particolare, in byte, che è
+conoscibile in fase di compilazione.
+Per esempio, un `i32` è grande trentadue bit, ossia quattro byte. Però, si sono
+alcuni tipi che sono utili da esprimere, ma che non hanno una dimensione
+definita in fase di compilazione. Questi tipi sono detti ‘non dimensionati’
+o ‘dimensionati dinamicamente’. Un esempio è `[T]`. Questo tipo rappresenta
+un certo numero di `T` in sequenza. Ma non sappiamo quanti ce ne sono, e quindi
+la dimensione dell'oggetto non è nota.
 
-Rust understands a few of these types, but they have some restrictions. There
-are three:
+Rust capisce alcuni di questi tipi, ma hanno alcune restrizioni.
+Ce ne sono tre:
 
-1. We can only manipulate an instance of an unsized type via a pointer. An
-   `&[T]` works fine, but a `[T]` does not.
-2. Variables and arguments cannot have dynamically sized types.
-3. Only the last field in a `struct` may have a dynamically sized type; the
-   other fields must not. Enum variants must not have dynamically sized types as
-   data.
+1. Un'istanza di un tipo non dipensionato può essere manipolata solamente
+   tramite un puntatore. Un `&[T]` funziona bene, ma un `[T]` no.
+2. Le variabili e gli argomenti di funzione non possono avere tipi dimensionati
+   dinamicamente.
+3. Solamente l'ultimo campo di una `struct` può avere un tipo dimensionato
+   dinamicamente; gli altri campi no. Le varianti delle enumerazioni non
+   possono avere come dati dei tipi dimensionati dinamicamente.
 
-So why bother? Well, because `[T]` can only be used behind a pointer, if we
-didn’t have language support for unsized types, it would be impossible to write
-this:
+Quindi che fastidio danno? Beh, siccome `[T]` può essere usato dietro
+un puntatore, se non avessimo un supporto linguistico ai tipi non dimensionati,
+sarebbe impossibile scrivere questo:
 
 ```rust,ignore
 impl Foo for str {
 ```
 
-or
+o
 
 ```rust,ignore
 impl<T> Foo for [T] {
 ```
 
-Instead, you would have to write:
+Invece, dovresti scrivere:
 
 ```rust,ignore
 impl Foo for &str {
 ```
 
-Meaning, this implementation would only work for [references][ref], and not
-other types of pointers. With the `impl for str`, all pointers, including (at
-some point, there are some bugs to fix first) user-defined custom smart
-pointers, can use this `impl`.
+Intendendo che questa implementazione funzionerebbe solamente
+per dei [riferimenti][ref], e non per altri tipi di puntatori.
+Con l'`impl for str`, tutti i puntatori, compresi (in futuro, per adesso
+ci sono dei difetti da correggere) gli smart pointer personalizzati definiti
+dall'utente, possono usare questa `impl`.
 
 [ref]: references-and-borrowing.html
 
 # ?Sized
 
-If you want to write a function that accepts a dynamically sized type, you
-can use the special bound syntax, `?Sized`:
+Se si vuole scrivere una funzione che accetta un tipo dimensionato
+dinamicamente, si può usare la spaciale sintassi legata, `?Sized`:
 
 ```rust
 struct Foo<T: ?Sized> {
@@ -55,7 +59,7 @@ struct Foo<T: ?Sized> {
 }
 ```
 
-This `?Sized`, read as “T may or may not be `Sized`”, which allows us to match
-both sized and unsized types. All generic type parameters implicitly
-have the `Sized` bound, so the `?Sized` can be used to opt-out of the implicit
-bound.
+Questo `?Sized` va letto come “T può essere oppure no `Sized`”, il che ci
+consente di accettare sia tipi dimensionati che non dimensionati. Tutti
+i parametri generici di tipo implicitamente sono legati a `Sized`, e quindi
+`?Sized` può essere usato per uscire dal legame implicito.

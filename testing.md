@@ -1,27 +1,30 @@
-% Testing
+% Collaudo ["Testing"]
 
-> Program testing can be a very effective way to show the presence of bugs, but
-> it is hopelessly inadequate for showing their absence.
->
+> Il collaudo dei programmi può essere un modo molto efficace per mostrare
+> la presenza di difetti, ma è disperatamente inadeguato a mostrare
+> la loro assenza.
+> 
 > Edsger W. Dijkstra, "The Humble Programmer" (1972)
 
-Let's talk about how to test Rust code. What we will not be talking about is
-the right way to test Rust code. There are many schools of thought regarding
-the right and wrong way to write tests. All of these approaches use the same
-basic tools, and so we'll show you the syntax for using them.
+Parliamo di come collaudare il codice Rust. Ciò di cui non parleremo è il modo
+giusto di collaudare il codice Rust. Ci sono molte scuole di pensiero
+riguardo il modo giusto o sbagliato di eseguire collaudi. Però, tutti questi
+approcci usano gli stessi strumenti di base, e quindi mostreremo la sintassi
+per usarli.
 
-# The `test` attribute
+# L'attributo `test`
 
-At its simplest, a test in Rust is a function that's annotated with the `test`
-attribute. Let's make a new project with Cargo called `adder`:
+Nel caso più semplice, un collaudo in Rust ha un solo test, che è una funzione
+annotata con l'attributo `test`. Usando Cargo, facciamo un nuovo progetto
+chiamato `sommatore`:
 
 ```bash
-$ cargo new adder
-$ cd adder
+$ cargo new sommatore
+$ cd sommatore
 ```
 
-Cargo will automatically generate a simple test when you make a new project.
-Here's the contents of `src/lib.rs`:
+Cargo genera automaticamente un semplice test quando si crea un nuovo progetto.
+Ecco il contenuto di `src/lib.rs`:
 
 ```rust
 # fn main() {}
@@ -30,50 +33,52 @@ fn it_works() {
 }
 ```
 
-Note the `#[test]`. This attribute indicates that this is a test function. It
-currently has no body. That's good enough to pass! We can run the tests with
-`cargo test`:
+Si noti il `#[test]`. Questo attributo indica che questa è una funzione
+di collaudo. Attualmente ha il corpo vuoto. È abbastanza buono per passare!
+Possiamo eseguire i test con il comando `cargo test`:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-Cargo compiled and ran our tests. There are two sets of output here: one
-for the test we wrote, and another for documentation tests. We'll talk about
-those later. For now, see this line:
+Cargo ha compilato ed eseguito il nostro test. Qui ci sono due insiemi
+di output: uno per il test che abbiamo scritto, e un altro per i test
+della documentazione. Di quelli ne parleremo dopo. Per adesso, vediamo
+questa riga:
 
 ```text
 test it_works ... ok
 ```
 
-Note the `it_works`. This comes from the name of our function:
+Si noti il `it_works` ("funziona"). Deriva dal nome della nostra funzione:
 
 ```rust
 fn it_works() {
 # }
 ```
 
-We also get a summary line:
+Abbiamo anche una riga riassuntiva:
 
 ```text
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-So why does our do-nothing test pass? Any test which doesn't `panic!` passes,
-and any test that does `panic!` fails. Let's make our test fail:
+Quindi perché il nostro test non-fare-niente è passato? Qualunque test
+che non va in `panic!` passa, e qualunque test che va in `panic!` fallisce.
+Facciamo fallire il nostro test:
 
 ```rust
 # fn main() {}
@@ -83,14 +88,14 @@ fn it_works() {
 }
 ```
 
-`assert!` is a macro provided by Rust which takes one argument: if the argument
-is `true`, nothing happens. If the argument is `false`, it will `panic!`. Let's
-run our tests again:
+`assert!` è una macro fornita da Rust che prende un argomento: se l'argomento
+è `true`, non succede niente. Se l'argomento è `false`, va in `panic!`.
+Rieseguiamo i nostri test:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test it_works ... FAILED
@@ -98,7 +103,7 @@ test it_works ... FAILED
 failures:
 
 ---- it_works stdout ----
-        thread 'it_works' panicked at 'assertion failed: false', /home/steve/tmp/adder/src/lib.rs:3
+        thread 'it_works' panicked at 'assertion failed: false', /home/steve/tmp/sommatore/src/lib.rs:3
 
 
 
@@ -110,41 +115,43 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured
 thread 'main' panicked at 'Some tests failed', /home/steve/src/rust/src/libtest/lib.rs:247
 ```
 
-Rust indicates that our test failed:
+Rust indica che il nostro test è fallito:
 
 ```text
 test it_works ... FAILED
 ```
 
-And that's reflected in the summary line:
+E si riflette nella riga riassuntiva:
 
 ```text
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured
 ```
 
-We also get a non-zero status code. We can use `$?` on OS X and Linux:
+Otteniamo anche un codice di stato non-nullo. Possiamo usare `$?` su OS X
+o su Linux:
 
 ```bash
 $ echo $?
 101
 ```
 
-On Windows, if you’re using `cmd`:
+Su Windows, se si usa `cmd`:
 
 ```bash
 > echo %ERRORLEVEL%
 ```
 
-And if you’re using PowerShell:
+Mentre se si usa PowerShell:
 
 ```bash
-> echo $LASTEXITCODE # the code itself
-> echo $? # a boolean, fail or succeed
+> echo $LASTEXITCODE # il codice stesso
+> echo $? # un booleano, fallimento o successo
 ```
 
-This is useful if you want to integrate `cargo test` into other tooling.
+Questo è utile se si vuole integrare `cargo test` con altre utility.
 
-We can invert our test's failure with another attribute: `should_panic`:
+Possiamo invertire il fallimento del nostro test usando un altro attributo:
+`should_panic`:
 
 ```rust
 # fn main() {}
@@ -155,115 +162,117 @@ fn it_works() {
 }
 ```
 
-This test will now succeed if we `panic!` and fail if we complete. Let's try it:
+Questo test adesso ha successo se va in `panic!` e fallisce
+termina normalmente. Proviamolo:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-Rust provides another macro, `assert_eq!`, that compares two arguments for
-equality:
+Rust fornisce un'altra macro, `assert_eq!`, che verifica l'uguaglianza tra
+due argomenti:
 
 ```rust
 # fn main() {}
 #[test]
 #[should_panic]
 fn it_works() {
-    assert_eq!("Hello", "world");
+    assert_eq!("Ciao", "mondo");
 }
 ```
 
-Does this test pass or fail? Because of the `should_panic` attribute, it
-passes:
+Questo test passerà o fallirà? A causa dell'attribute `should_panic`, passerà:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-`should_panic` tests can be fragile, as it's hard to guarantee that the test
-didn't fail for an unexpected reason. To help with this, an optional `expected`
-parameter can be added to the `should_panic` attribute. The test harness will
-make sure that the failure message contains the provided text. A safer version
-of the example above would be:
+Però, i test `should_panic` possono essere fragili, dato che è difficile
+garantire che il test non è fallito per una ragione inattesa. Per aiutare
+in questa difficoltà, un argomento facoltativo `expected` può essere aggiunto
+all'attributo `should_panic`. L'ambiente di collaudo assicuererà che
+il messaggio di fallimento contenga il testo fornito. Una versione più sicura
+dell'esempio precedente sarebbe:
 
 ```rust
 # fn main() {}
 #[test]
-#[should_panic(expected = "assertion failed")]
+#[should_panic(expected = "asserzione fallita")]
 fn it_works() {
     assert_eq!("Hello", "world");
 }
 ```
 
-That's all there is to the basics! Let's write one 'real' test:
+E questo è tutto per i fondamenti! Scriviamo un test 'vero':
 
 ```rust,ignore
 # fn main() {}
-pub fn add_two(a: i32) -> i32 {
+pub fn somma_due(a: i32) -> i32 {
     a + 2
 }
 
 #[test]
 fn it_works() {
-    assert_eq!(4, add_two(2));
+    assert_eq!(4, somma_due(2));
 }
 ```
 
-This is a very common use of `assert_eq!`: call some function with
-some known arguments and compare it to the expected output.
+Questo è un uso molto comune di `assert_eq!`: chiamare una funzione
+con alcuni argomenti noti, e confrontarne l'esito con l'output atteso.
 
-# The `ignore` attribute
+# L'attributo `ignore`
 
-Sometimes a few specific tests can be very time-consuming to execute. These
-can be disabled by default by using the `ignore` attribute:
+Talvolta alcuni test specifici possono richiedere molto tempo per essere
+eseguiti. Questi possono essere disabilitati di default usando l'attributo
+`ignore`:
 
 ```rust
 # fn main() {}
 #[test]
 fn it_works() {
-    assert_eq!(4, add_two(2));
+    assert_eq!(4, somma_due(2));
 }
 
 #[test]
 #[ignore]
-fn expensive_test() {
-    // code that takes an hour to run
+fn test_costoso() {
+    // codice che impiega un'ora
 }
 ```
 
-Now we run our tests and see that `it_works` is run, but `expensive_test` is
-not:
+Adesso eseguiamo i nostri test e vediamo che `it_works` viene eseguito,
+ma `test_costoso` no:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 2 tests
 test expensive_test ... ignored
@@ -271,72 +280,75 @@ test it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-The expensive tests can be run explicitly using `cargo test -- --ignored`:
+I test costosi possono essere eseguiti esplicitamente usando
+`cargo test -- --ignored`:
 
 ```bash
 $ cargo test -- --ignored
-     Running target/adder-91b3e234d4ed382a
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test expensive_test ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-The `--ignored` argument is an argument to the test binary, and not to Cargo,
-which is why the command is `cargo test -- --ignored`.
+L'argomento `--ignored` è un argomento per il programma di collaudo, e non
+per Cargo, e per questo motivo il comando è `cargo test -- --ignored`.
 
-# The `tests` module
+# Il modulo `tests`
 
-There is one way in which our existing example is not idiomatic: it's
-missing the `tests` module. The idiomatic way of writing our example
-looks like this:
+C'è un solo aspetto per cui il nostro esempio esistente non è tipico di Rust:
+gli manca il modulo `tests`. Il modo tipico di scrivere il nostro esempio
+è il seguente:
 
 ```rust,ignore
 # fn main() {}
-pub fn add_two(a: i32) -> i32 {
+pub fn somma_due(a: i32) -> i32 {
     a + 2
 }
 
 #[cfg(test)]
 mod tests {
-    use super::add_two;
+    use super::somma_due;
 
     #[test]
     fn it_works() {
-        assert_eq!(4, add_two(2));
+        assert_eq!(4, somma_due(2));
     }
 }
 ```
 
-There's a few changes here. The first is the introduction of a `mod tests` with
-a `cfg` attribute. The module allows us to group all of our tests together, and
-to also define helper functions if needed, that don't become a part of the rest
-of our crate. The `cfg` attribute only compiles our test code if we're
-currently trying to run the tests. This can save compile time, and also ensures
-that our tests are entirely left out of a normal build.
+Qui ci sono alcuni cambiamenti. Il primo è l'introduzione di un `mod tests`
+con un attributo `cfg`. Il modulo ci consente di raggruppare insieme
+tutti i nostri test, e anche di definire delle funzioni ausiliare,
+se servono, le quali non diventano parte del resto del nostro crate.
+L'attributo `cfg` compila il nostro codice di collaudo solamente se
+attualmente stiamo provando a eseguire i test. Questo può far risparmiare
+tempo di compilazione, e inoltre assicura che i nostri test siano
+interamente lasciati fuori da una build normale.
 
-The second change is the `use` declaration. Because we're in an inner module,
-we need to bring our test function into scope. This can be annoying if you have
-a large module, and so this is a common use of globs. Let's change our
-`src/lib.rs` to make use of it:
+Il secondo cambiamento è la dichiarazione `use`. Siccome siamo in un modulo
+interno, dobbiamo portare la nostra funzione di test nell'ambito. Ciò può
+essere seccante in un grande modulo, e perciò questo è un uso tipico
+dei globali. Modifichiamo il nostro `src/lib.rs` per farne uso:
 
 ```rust,ignore
 # fn main() {}
-pub fn add_two(a: i32) -> i32 {
+pub fn somma_due(a: i32) -> i32 {
     a + 2
 }
 
@@ -346,66 +358,69 @@ mod tests {
 
     #[test]
     fn it_works() {
-        assert_eq!(4, add_two(2));
+        assert_eq!(4, somma_due(2));
     }
 }
 ```
 
-Note the different `use` line. Now we run our tests:
+Si noti la dversa riga `use`. Adesso esuiamo i nostri test:
 
 ```bash
 $ cargo test
     Updating registry `https://github.com/rust-lang/crates.io-index`
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test tests::it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-It works!
+Funziona!
 
-The current convention is to use the `tests` module to hold your "unit-style"
-tests. Anything that tests one small bit of functionality makes sense to
-go here. But what about "integration-style" tests instead? For that, we have
-the `tests` directory.
+La convenzione attuale è usare il modulo `tests` per tenere i propri test
+di unità. Ogni cosa che collauda un pezzettino di funzionalità
+ha senso che vada qui. Ma che dire invece dei test di integrazione?
+Per quelli c'è la directory `tests`.
 
-# The `tests` directory
+# La directory `tests`
 
-Each file in `tests/*.rs` directory is treated as individual crate.
-So, to write an integration test, let's make a `tests` directory, and
-put a `tests/integration_test.rs` file inside, with this as its contents:
+Ogni file `*.rs` nella directory `tests` viene trattato come un crate
+individuale. Perciò, per scrivere un test di integrazione, creiamo
+la directory `tests`, e ci mettiamo dentro il file `integration_test.rs`,
+avente il seguente contenuto:
 
 ```rust,ignore
-extern crate adder;
+extern crate sommatore;
 
 # fn main() {}
 #[test]
 fn it_works() {
-    assert_eq!(4, adder::add_two(2));
+    assert_eq!(4, sommatore::somma_due(2));
 }
 ```
 
-This looks similar to our previous tests, but slightly different. We now have
-an `extern crate adder` at the top. This is because each test in the `tests`
-directory is an entirely separate crate, and so we need to import our library.
-This is also why `tests` is a suitable place to write integration-style tests:
-they use the library like any other consumer of it would.
+Questo appare simile ai nostri test precedenti, ma è leggermente diverso.
+Adesso abbiamo in cima l'istruzione `extern crate sommatore`. Questo perché
+ogni test della directory `tests` è un crate completamente separato, e quindi
+dobbiamo importare la nostra libreria.
+Questo spiega anche perché `tests` è un posto adatto per metterci i test
+di integrazione: tali test usano la libreria come lo farebbe qualunque altro
+consumatore.
 
-Let's run them:
+Eseguiamoli:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/you/projects/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test tests::it_works ... ok
@@ -419,54 +434,58 @@ test it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-Now we have three sections: our previous test is also run, as well as our new
-one.
+Adesso abbiamo tre sezioni: anche il nostro test precedente viene eseguito,
+così come quello nuovo.
 
-Cargo will ignore files in subdirectories of the `tests/` directory.
-Therefore shared modules in integrations tests are possible.
-For example `tests/common/mod.rs` is not separately compiled by cargo but can
-be imported in every test with `mod common;`
+Cargo ignorerà i file nelle sottodirectory della directory `tests`.
+Perciò in tali sottodirectory si potranno mettere i moduli condivisi dai
+test di integrazione.
+Per esempio, il file `tests/common/mod.rs` non verrà compilato separatamente
+da Cargo ma potrà essere importato in ogni test con l'istruzione `mod common;`
 
-That's all there is to the `tests` directory. The `tests` module isn't needed
-here, since the whole thing is focused on tests.
+Questo è tutto quel che c'è da dire sulla directory `tests`. Qui non serve
+il modulo `tests`, dato che il tutto si incentra sui test.
 
-Let's finally check out that third section: documentation tests.
+Infine andiamo a vedere quella terza sezione: i test della documentazione.
 
-# Documentation tests
+# I test della documentazione
 
-Nothing is better than documentation with examples. Nothing is worse than
-examples that don't actually work, because the code has changed since the
-documentation has been written. To this end, Rust supports automatically
-running examples in your documentation (**note:** this only works in library
-crates, not binary crates). Here's a fleshed-out `src/lib.rs` with examples:
+Non c'è niente di meglio che della documentazione con degli esempi.
+E non c'è niente di peggio che degli esempi che in realtà non funzionano,
+perché il codice è cambiato da quando la documentazione è stata scritta.
+A questo scopo, Rust supporta l'esecuzione automatica degli esempi contenuti
+nella documentazione del codice (**nota:** questo funziona solamente
+nei crate di libreria, non nei crate di programma). Ecco un `src/lib.rs`
+concretizzato con degli esempi:
 
 ```rust,ignore
 # fn main() {}
-//! The `adder` crate provides functions that add numbers to other numbers.
+//! Il crate `sommatore` fornisce delle funzioni
+//! che sommano numeri ad altri numeri.
 //!
-//! # Examples
+//! # Esempi
 //!
 //! ```
-//! assert_eq!(4, adder::add_two(2));
+//! assert_eq!(4, sommatore::somma_due(2));
 //! ```
 
-/// This function adds two to its argument.
+/// Questa funzione somma due al suo argomento.
 ///
-/// # Examples
+/// # Esempi
 ///
 /// ```
-/// use adder::add_two;
+/// use sommatore::somma_due;
 ///
-/// assert_eq!(4, add_two(2));
+/// assert_eq!(4, somma_due(2));
 /// ```
-pub fn add_two(a: i32) -> i32 {
+pub fn somma_due(a: i32) -> i32 {
     a + 2
 }
 
@@ -476,22 +495,24 @@ mod tests {
 
     #[test]
     fn it_works() {
-        assert_eq!(4, add_two(2));
+        assert_eq!(4, somma_due(2));
     }
 }
 ```
 
-Note the module-level documentation with `//!` and the function-level
-documentation with `///`. Rust's documentation supports Markdown in comments,
-and so triple graves mark code blocks. It is conventional to include the
-`# Examples` section, exactly like that, with examples following.
+Si noti che la documentazione a livello di modulo è marcata con `//!`, mentre
+la documentazione a livello di funzione è marcata con `///`. La documentazione
+di Rust supporta il linguaggio Markdown nei commenti, e quindi i blocchi
+di codice nei commenti sono marcati da terne di accenti gravi.
+Si usa aggiungere la sezione `# Esempi`, proprio come sopra, seguita
+da uno o più esempi.
 
-Let's run the tests again:
+Eseguiamo nuovamente i test:
 
 ```bash
 $ cargo test
-   Compiling adder v0.0.1 (file:///home/steve/tmp/adder)
-     Running target/adder-91b3e234d4ed382a
+   Compiling sommatore v0.0.1 (file:///home/steve/tmp/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
 
 running 1 test
 test tests::it_works ... ok
@@ -505,19 +526,20 @@ test it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
-   Doc-tests adder
+   Doc-tests sommatore
 
 running 2 tests
-test add_two_0 ... ok
+test somma_due_0 ... ok
 test _0 ... ok
 
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured
 ```
 
-Now we have all three kinds of tests running! Note the names of the
-documentation tests: the `_0` is generated for the module test, and `add_two_0`
-for the function test. These will auto increment with names like `add_two_1` as
-you add more examples.
+Adesso abbiamo eseguito realmente tutti e tre i tipi di test! Si notino i nomi
+dei test di documentazione: il nome `_0` viene generato per il test di modulo,
+e il nome `somma_due_0` per il test di funzione. Questi si autoincrementeranno,
+producendo nomi come `somma_due_1` quando si aggiungono altri esempi.
 
-We haven’t covered all of the details with writing documentation tests. For more,
-please see the [Documentation chapter](documentation.html).
+Non abbiamo trattato tutti i dettagli della scrittura dei test
+della documentazione. Per saperne di più, si veda
+il [capitolo della documentazione](documentation.html).

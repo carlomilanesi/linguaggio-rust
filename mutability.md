@@ -1,30 +1,30 @@
-% Mutability
+% Mutabilità
 
-Mutability, the ability to change something, works a bit differently in Rust
-than in other languages. The first aspect of mutability is its non-default
-status:
+La mutabilità, ossia la capacità di cambiare qualcosa, funziona in Rust un po'
+diversamente che in altri linguaggi. Il primo aspetto della mutabilità in Rust
+è il fatto di non esserci per default:
 
 ```rust,ignore
 let x = 5;
-x = 6; // error!
+x = 6; // errore!
 ```
 
-We can introduce mutability with the `mut` keyword:
+Si può introdurre la mutabilità con la parola-chiave `mut`:
 
 ```rust
 let mut x = 5;
-
-x = 6; // no problem!
+x = 6; // non c'è problema!
 ```
 
-This is a mutable [variable binding][vb]. When a binding is mutable, it means
-you’re allowed to change what the binding points to. So in the above example,
-it’s not so much that the value at `x` is changing, but that the binding
-changed from one `i32` to another.
+Questo è un [legame di variabile][vb] mutabile. Quando un legame è mutabile,
+significa che si può cambiare ciò a cui quel legame punta. Perciò nell'esempio
+sopra, non è tanto che il valore alla posizione `x` cambia, quanto che
+il legame passa dal puntare un `i32` al puntarne un altro.
 
 [vb]: variable-bindings.html
 
-You can also create a [reference][ref] to it, using `&x`, but if you want to use the reference to change it, you will need a mutable reference:
+Si può anche creare un [riferimento][ref] ad esso, usando `&x`, ma se si vuole
+usare il riferimento per cambiarlo, ci vorrà un riferimento mutabile:
 
 ```rust
 let mut x = 5;
@@ -33,20 +33,22 @@ let y = &mut x;
 
 [ref]: references-and-borrowing.html
 
-`y` is an immutable binding to a mutable reference, which means that you can’t bind 'y' to something else (`y = &mut z`), but `y` can be used to bind `x` to something else (`*y = 5`). A subtle distinction.
+`y` è un legame immutabile a un riferimento mutabile, il che significa che non
+si può legare 'y' a qualcos'altro (`y = &mut z`), ma `y` può essere usato
+per legare `x` a qualcos'altro (`*y = 5`). Una distinzione sottile.
 
-Of course, if you need both:
+Naturalmente, se servono entrambi:
 
 ```rust
 let mut x = 5;
 let mut y = &mut x;
 ```
 
-Now `y` can be bound to another value, and the value it’s referencing can be
-changed.
+Adesso `y` può essere legato a un altro valore, e inoltre il valore che sta
+referenziando può essere cambiato.
 
-It’s important to note that `mut` is part of a [pattern][pattern], so you
-can do things like this:
+È importante notare che `mut` fa parte di un [pattern][pattern], e perciò
+si possono fare cose come questa:
 
 ```rust
 let (mut x, y) = (5, 6);
@@ -55,15 +57,15 @@ fn foo(mut x: i32) {
 # }
 ```
 
-Note that here, the `x` is mutable, but not the `y`.
+Si noti che qui la `x` è mutabile, mentre la `y` non lo è.
 
 [pattern]: patterns.html
 
-# Interior vs. Exterior Mutability
+# Mutabilità interiore contro mutabilità esteriore
 
-However, when we say something is ‘immutable’ in Rust, that doesn’t mean that
-it’s not able to be changed: we are referring to its ‘exterior mutability’ that
-in this case is immutable. Consider, for example, [`Arc<T>`][arc]:
+Però, quando diciamo che qualcosa è ‘immutabile’ in Rust, non intendiamo che
+è impossibile cambiarla: ci stiamo riferendo alla sua ‘immutabilità esteriore’.
+Si consideri, per esempio, [`Arc<T>`][arc]:
 
 ```rust
 use std::sync::Arc;
@@ -74,30 +76,33 @@ let y = x.clone();
 
 [arc]: ../std/sync/struct.Arc.html
 
-When we call `clone()`, the `Arc<T>` needs to update the reference count. Yet
-we’ve not used any `mut`s here, `x` is an immutable binding, and we didn’t take
-`&mut 5` or anything. So what gives?
+Quando chiamiamo `clone()`, l'oggetto di tipo `Arc<T>` deve aggiornare
+il conteggio dei riferimenti. Però qui non abbiamo usato nessun `mut`, `x` è
+un legame immutabile, e non abbiamo preso il valore `&mut 5` né altri valori.
+E allora?
 
-To understand this, we have to go back to the core of Rust’s guiding
-philosophy, memory safety, and the mechanism by which Rust guarantees it, the
-[ownership][ownership] system, and more specifically, [borrowing][borrowing]:
+Per capirlo, dobbiamo tornare al nucleo della filosofia guida di Rust, che è
+la sicurezza di memoria, e al meccanismo col quale Rust la garantisce, che è
+il sistema di [possesso][possesso], e più specificamente,
+il [prestito][prestito]:
 
-> You may have one or the other of these two kinds of borrows, but not both at
-> the same time:
+> Si possono avere l'uno o l'altro di questi due tipi di prestiti, ma non
+> entrambi allo stesso tempo:
 >
-> * one or more references (`&T`) to a resource,
-> * exactly one mutable reference (`&mut T`).
+> * uno o più riferimenti immutabili (`&T`) a una risorsa,
+> * esattamente un riferimento mutabile (`&mut T`).
 
 [ownership]: ownership.html
 [borrowing]: references-and-borrowing.html#borrowing
 
-So, that’s the real definition of ‘immutability’: is this safe to have two
-pointers to? In `Arc<T>`’s case, yes: the mutation is entirely contained inside
-the structure itself. It’s not user facing. For this reason, it hands out `&T`
-with `clone()`. If it handed out `&mut T`s, though, that would be a problem.
+Perciò, questa è la vera definizione di ‘immutabilità’: è sicuro che ci siano
+due puntatori a questo oggetto? Nel caso di `Arc<T>`, sì: la mutazione è
+contenuta interamente dentro la struttura stessa. Non si presenta all'utente.
+Per questa ragione, passa un `&T` a `clone()`. Se gli avesse passato
+un `&mut T`, però, sarebbe un errore.
 
-Other types, like the ones in the [`std::cell`][stdcell] module, have the
-opposite: interior mutability. For example:
+Altri tipi, come quelli nel modulo [`std::cell`][stdcell], sono
+nella situazione opposta: mutabilità interiore. Per esempio:
 
 ```rust
 use std::cell::RefCell;
@@ -109,8 +114,8 @@ let y = x.borrow_mut();
 
 [stdcell]: ../std/cell/index.html
 
-RefCell hands out `&mut` references to what’s inside of it with the
-`borrow_mut()` method. Isn’t that dangerous? What if we do:
+RefCell passa dei riferimenti `&mut` a ciò che c'è al suo interno usando
+il metodo `borrow_mut()`. Non è pericoloso? Che succede se facciamo:
 
 ```rust,ignore
 use std::cell::RefCell;
@@ -122,60 +127,61 @@ let z = x.borrow_mut();
 # (y, z);
 ```
 
-This will in fact panic, at runtime. This is what `RefCell` does: it enforces
-Rust’s borrowing rules at runtime, and `panic!`s if they’re violated. This
-allows us to get around another aspect of Rust’s mutability rules. Let’s talk
-about it first.
+Di fatto questo andrà in panico, in fase di esecuzione. Questo è quello che fa
+`RefCell`: forza le regole di prestito di Rust in fase di esecuzione, e va in
+`panic!` se sono violate. Questo ci consente di aggirare un altro aspetto
+delle regole di mutabilità di Rust. Prima parliamone.
 
-## Field-level mutability
+## Mutabilità a livello di campo
 
-Mutability is a property of either a borrow (`&mut`) or a binding (`let mut`).
-This means that, for example, you cannot have a [`struct`][struct] with
-some fields mutable and some immutable:
+La mutabilità è una proprietà o di un prestito (`&mut`) o di un legame
+(`let mut`). Ciò significa che, per esempio, non si può avere
+una [`struct`][struct] con alcuni campi mutabili e altri immutabili:
 
 ```rust,ignore
-struct Point {
+struct Punto {
     x: i32,
-    mut y: i32, // nope
+    mut y: i32, // non si può
 }
 ```
 
-The mutability of a struct is in its binding:
+La mutabilità di una struct sta nel suo legame:
 
 ```rust,ignore
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-let mut a = Point { x: 5, y: 6 };
+let mut a = Punto { x: 5, y: 6 };
 
 a.x = 10;
 
-let b = Point { x: 5, y: 6};
+let b = Punto { x: 5, y: 6};
 
-b.x = 10; // error: cannot assign to immutable field `b.x`
+b.x = 10; // errore: non si può assegnare al campo immutabile `b.x`
 ```
 
 [struct]: structs.html
 
-However, by using [`Cell<T>`][cell], you can emulate field-level mutability:
+Però, usando [`Cell<T>`][cell], si può emulare la mutabilità a livello
+di campo:
 
 ```rust
 use std::cell::Cell;
 
-struct Point {
+struct Punto {
     x: i32,
     y: Cell<i32>,
 }
 
-let point = Point { x: 5, y: Cell::new(6) };
+let punto = Punto { x: 5, y: Cell::new(6) };
 
-point.y.set(7);
+punto.y.set(7);
 
-println!("y: {:?}", point.y);
+println!("y: {:?}", punto.y);
 ```
 
 [cell]: ../std/cell/struct.Cell.html
 
-This will print `y: Cell { value: 7 }`. We’ve successfully updated `y`.
+Questo stamperà `y: Cell { value: 7 }`. Abbiamo aggiornato `y` con successo.

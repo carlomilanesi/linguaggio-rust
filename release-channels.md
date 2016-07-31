@@ -1,52 +1,58 @@
-% Release Channels
+% Canali di rilascio
 
-The Rust project uses a concept called ‘release channels’ to manage releases.
-It’s important to understand this process to choose which version of Rust
-your project should use.
+Il progetto Rust usa un concetto chiamato ‘canali di rilascio’ per gestire
+i rilasci. È importante capire questo procedimento per scegliere
+quale versione di Rust è meglio usare.
 
-# Overview
+# Panoramica
 
-There are three channels for Rust releases:
+Ci sono tre canali per i rilasci di Rust:
 
-* Nightly
+* Notturno ["Nightly"]
 * Beta
-* Stable
+* Stabile ["Stable"]
 
-New nightly releases are created once a day. Every six weeks, the latest
-nightly release is promoted to ‘Beta’. At that point, it will only receive
-patches to fix serious errors. Six weeks later, the beta is promoted to
-‘Stable’, and becomes the next release of `1.x`.
+I nuovi rilasci notturni vengono creati una volta al giorno. Ogni sei
+settimane, l'ultimo rilascio notturno viene promosso a ‘Beta’. Da questo
+momento, riceverà solamente pezze per correggere gravi errori. Sei settimane
+dopo, la beta viene promossa a ‘Stabile’, e diventa la versione `1.x`.
 
-This process happens in parallel. So every six weeks, on the same day,
-nightly goes to beta, beta goes to stable. When `1.x` is released, at
-the same time, `1.(x + 1)-beta` is released, and the nightly becomes the
-first version of `1.(x + 2)-nightly`.
+Questo procedimento avviene in parallelo. Quindi ogni sei settimane,
+nel medesimo giorno, la beta diventa la nuova stable, e la notturna diventa
+la nuova beta. Quando la versione `1.x` viene rilasciata, nello stesso tempo,
+anche la versione `1.(x + 1)-beta` viene rilasciata, e le ultime aggiunte al
+sistema entrano a far parte della prima versione di `1.(x + 2)-nightly`.
 
-# Choosing a version
+# Scegliere una versione
 
-Generally speaking, unless you have a specific reason, you should be using the
-stable release channel. These releases are intended for a general audience.
+In generale, a meno di avere una ragione specifica, si dovrebbe usare il canale
+del rilascio stabile. Questi rilasci sono rivolti al pubblico generale.
 
-However, depending on your interest in Rust, you may choose to use nightly
-instead. The basic tradeoff is this: in the nightly channel, you can use
-unstable, new Rust features. However, unstable features are subject to change,
-and so any new nightly release may break your code. If you use the stable
-release, you cannot use experimental features, but the next release of Rust
-will not cause significant issues through breaking changes.
+Però, a seconda dell'interesse che si ha verso Rust, si può scegliere invece
+di usare la versione notturna. I pro e contro di base sono questi: usando
+il canale notturno, si possono usare caratteristiche nuove di Rust,
+ma instabili. Queste caratteristiche instabili sono soggette a modifiche, e
+così ogni nuovo rilascio notturno potrebbe essere incompatibile con il proprio
+codice. Se si usa il rilascio stabile, non si possono usare le caratteristiche
+sperimentali, ma il nuovo rilascio di Rust non provocherà problemi
+significativi a causa di modifiche incompatibili.
 
-# Helping the ecosystem through CI
+# Aiutare l'ecosistema tramite CI
 
-What about beta? We encourage all Rust users who use the stable release channel
-to also test against the beta channel in their continuous integration systems.
-This will help alert the team in case there’s an accidental regression.
+E che dire della beta? Incoraggiamo tutti gli utenti di Rust che usano
+il canale di rilascio stabile a collaudare anche rispetto al canale beta
+nei loro sistemi di integrazione continua.
+Questo aiuterà ad allertare la squadra nel caso ci sia una regressione
+accidentale.
 
-Additionally, testing against nightly can catch regressions even sooner, and so
-if you don’t mind a third build, we’d appreciate testing against all channels.
+In aggiunta, collaudare rispetto alla versione beta può rilevare
+delle regressioni ancora prima, e quindi un terzo build non crea troppo
+fastidio, apprezziamo il collaudo rispetto tutti i canali.
 
-As an example, many Rust programmers use [Travis](https://travis-ci.org/) to
-test their crates, which is free for open source projects. Travis [supports
-Rust directly][travis], and you can use a `.travis.yml` file like this to
-test on all channels:
+Come esempio, molti programmatori Rust, per collaudare i loro crate, usano
+[Travis](https://travis-ci.org/) che è gratuito per progetti open source.
+Travis [supporta Rust direttamente][travis], e per collaudare su tutti
+i canali, si può usare un file `.travis.yml` come questo:
 
 ```yaml
 language: rust
@@ -62,7 +68,7 @@ matrix:
 
 [travis]: http://docs.travis-ci.com/user/languages/rust/
 
-With this configuration, Travis will test all three channels, but if something
-breaks on nightly, it won’t fail your build. A similar configuration is
-recommended for any CI system, check the documentation of the one you’re
-using for more details.
+Con questa configurazione, Travis collauderà tutte e tre i canali, ma se
+qualcosa va storto sul canale notturno, non fallirà la costruzione.
+Una configurazione simile è consigliata per ogni sistema CI. Si cosnulti
+la documentazione di quella che si sta usando per avere più dettagli.

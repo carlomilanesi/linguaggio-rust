@@ -1,32 +1,37 @@
-% Strings
+% Le stringhe
 
-Strings are an important concept for any programmer to master. Rust’s string
-handling system is a bit different from other languages, due to its systems
-focus. Any time you have a data structure of variable size, things can get
-tricky, and strings are a re-sizable data structure. That being said, Rust’s
-strings also work differently than in some other systems languages, such as C.
+Le stringhe sono un concetto di cui è importante che ogni programmatore
+si impadronisca. Il sistema di gestione delle stringhe di Rust è un po' diverso
+da quello degli altri linguaggi, a causa del suo incentrarsi
+sulla programmazione di sistema. Ogni volta che c'è una struttura dati
+di dimensione variabile, le cose possono complicarsi, e le stringhe sono
+una struttura dati ridimensionabile. Detto questo, le stringhe di Rust
+funzionano diversamente anche da alcuni altri linguaggi di sistema, come il C.
 
-Let’s dig into the details. A ‘string’ is a sequence of Unicode scalar values
-encoded as a stream of UTF-8 bytes. All strings are guaranteed to be a valid
-encoding of UTF-8 sequences. Additionally, unlike some systems languages,
-strings are not NUL-terminated and can contain NUL bytes.
+Scaviamo nei dettagli. Una ‘stringa’ è una sequenza di valori scalari Unicode
+codificati come flusso di byte UTF-8. Tutte le stringhe sono garantite essere
+una ecodifica valida di sequenze UTF-8. In aggiunta, diversamente da alcuni
+linguaggi di sistema, le stringhe non hanno un carattere terminatore e possono
+contenere il carattere NUL, rappresentato dal byte 0.
 
-Rust has two main types of strings: `&str` and `String`. Let’s talk about
-`&str` first. These are called ‘string slices’. A string slice has a fixed
-size, and cannot be mutated. It is a reference to a sequence of UTF-8 bytes.
+Rust ha due principali tipi di stringhe: `&str` e `String`. Dapprima parliamo
+di `&str`. Queste sono chiamate ‘slice di stringa’. Una slice di stringa ha
+una dimensione fissa, e non può essere modificata. È un riferimento
+a una sequenza di byte UTF-8.
 
 ```rust
-let greeting = "Hello there."; // greeting: &'static str
+let saluto = "Ciao là."; // saluto: &'static str
 ```
 
-`"Hello there."` is a string literal and its type is `&'static str`. A string
-literal is a string slice that is statically allocated, meaning that it’s saved
-inside our compiled program, and exists for the entire duration it runs. The
-`greeting` binding is a reference to this statically allocated string. Any
-function expecting a string slice will also accept a string literal.
+`"Ciao là."` è un letterale di stringa il cui tipo è `&'static str`.
+Un letterale di stringa è uno slice di stringa che è allocato staticamente,
+il che significa che è salvato dentro il nostro programma compilato, ed esiste
+per l'intera durata dell'esecuzione. Il legamo `saluto` è un riferimento
+a questa stringa staticamente allocata. Qualunque funzione che si aspetta
+una slice di stringa accetterà anche un letterale di stringa.
 
-String literals can span multiple lines. There are two forms. The first will
-include the newline and the leading spaces:
+I letterali di stringa possono estendersi su più righe. Ce ne sono due forme.
+La prima includerà i caratteri a-capo e gli spazi che li seguono:
 
 ```rust
 let s = "foo
@@ -35,7 +40,7 @@ let s = "foo
 assert_eq!("foo\n    bar", s);
 ```
 
-The second, with a `\`, trims the spaces and the newline:
+La seconda, con un `\`, rimuove gli a-capo e gli spazi che li seguono:
 
 ```rust
 let s = "foo\
@@ -44,70 +49,74 @@ let s = "foo\
 assert_eq!("foobar", s);
 ```
 
-Note that you normally cannot access a `str` directly, but only through a `&str`
-reference. This is because `str` is an unsized type which requires additional
-runtime information to be usable. For more information see the chapter on
-[unsized types][ut].
+Si noti che normalmente non si può accedere direttamente a una `str`,
+ma solamente tramite un riferimento `&str`. Questo perché `str` è un tipo
+non dimensionato che richiede informazioni aggiuntive in fase di esecuzione
+per poter essere usata. Per avere maggiori informazioni, si veda il capitolo
+sui [tipi non dimensionati][ut].
 
-Rust has more than only `&str`s though. A `String` is a heap-allocated string.
-This string is growable, and is also guaranteed to be UTF-8. `String`s are
-commonly created by converting from a string slice using the `to_string`
-method.
+Però Rust ha di più oltre alle `&str`. Una `String` è una stringa allocata
+sullo heap.
+Questa string è estendibile, ed è anche garantita essere UTF-8. Le `String`
+tipicamente sono create convertendo una slice di stringa, usando il metodo
+`to_string`.
 
 ```rust
-let mut s = "Hello".to_string(); // mut s: String
+let mut s = "Ciao".to_string(); // mut s: String
 println!("{}", s);
 
-s.push_str(", world.");
+s.push_str(", mondo.");
 println!("{}", s);
 ```
 
-`String`s will coerce into `&str` with an `&`:
+Le `String` vengono forzate ad essere un `&str` usando un `&`:
 
 ```rust
-fn takes_slice(slice: &str) {
-    println!("Got: {}", slice);
+fn prendi_slice(slice: &str) {
+    println!("Preso: {}", slice);
 }
 
 fn main() {
-    let s = "Hello".to_string();
-    takes_slice(&s);
+    let s = "Ciao".to_string();
+    prendi_slice(&s);
 }
 ```
 
-This coercion does not happen for functions that accept one of `&str`’s traits
-instead of `&str`. For example, [`TcpStream::connect`][connect] has a parameter
-of type `ToSocketAddrs`. A `&str` is okay but a `String` must be explicitly
-converted using `&*`.
+Questa forzatura non avviene per le funzioni che accettano uno dei tratti
+di `&str` invece di `&str` stessa. Per esempio, [`TcpStream::connect`][connect]
+ha un argomento  di tipo `ToSocketAddrs`. Una `&str` va bene, ma una `String`
+deve essere esplicitamente convertita usando `&*`.
 
 ```rust,no_run
 use std::net::TcpStream;
 
-TcpStream::connect("192.168.0.1:3000"); // &str parameter
+TcpStream::connect("192.168.0.1:3000"); // argomento di tipo &str
 
-let addr_string = "192.168.0.1:3000".to_string();
-TcpStream::connect(&*addr_string); // convert addr_string to &str
+let stringa_indirizzo = "192.168.0.1:3000".to_string();
+TcpStream::connect(&*stringa_indirizzo); // converte stringa_indirizzo in &str
 ```
 
-Viewing a `String` as a `&str` is cheap, but converting the `&str` to a
-`String` involves allocating memory. No reason to do that unless you have to!
+Vedere una `String` come una `&str` costa poco, ma convertire la `&str` in
+una `String` comporta allocare della memoria. Non c'è ragione di farlo,
+a meno che sia necessario!
 
-## Indexing
+## Indicizzazione
 
-Because strings are valid UTF-8, they do not support indexing:
+Siccome le stringhe sono UTF-8 valide, non supportano l'indicizzazione:
 
 ```rust,ignore
-let s = "hello";
+let s = "ciao";
 
-println!("The first letter of s is {}", s[0]); // ERROR!!!
+println!("La prima lettera di s è {}", s[0]); // ERRORE!!!
 ```
 
-Usually, access to a vector with `[]` is very fast. But, because each character
-in a UTF-8 encoded string can be multiple bytes, you have to walk over the
-string to find the nᵗʰ letter of a string. This is a significantly more
-expensive operation, and we don’t want to be misleading. Furthermore, ‘letter’
-isn’t something defined in Unicode, exactly. We can choose to look at a string as
-individual bytes, or as codepoints:
+Solitamente, l'accesso a un vettore con `[]` è molto veloce. Ma, siccome
+ogni carattere una stringa codificata in UTF-8 può occupare più byte, si deve
+percorrere la stringa per trovare l'ennesima lettera di una stringa.
+Questa è un'operazione significativamente più costosa, e non si vuole essere
+fuorvianti. Inoltre, il concetto di ‘lettera’ non è qualcosa di ben definito
+in Unicode. Possiamo scegliere di guardare una stringa come una sequenza
+di singoli byte, o come punti di codice ["codepoint"]:
 
 ```rust
 let hachiko = "忠犬ハチ公";
@@ -125,70 +134,70 @@ for c in hachiko.chars() {
 println!("");
 ```
 
-This prints:
+Questo stampa:
 
 ```text
 229, 191, 160, 231, 138, 172, 227, 131, 143, 227, 131, 129, 229, 133, 172,
 忠, 犬, ハ, チ, 公,
 ```
 
-As you can see, there are more bytes than `char`s.
+Come si vede, ci sono più byte che `char`.
 
-You can get something similar to an index like this:
+Si può ottenere qualcosa di simile a un indice in questo modo:
 
 ```rust
 # let hachiko = "忠犬ハチ公";
-let dog = hachiko.chars().nth(1); // kinda like hachiko[1]
+let dog = hachiko.chars().nth(1); // un po' come hachiko[1]
 ```
 
-This emphasizes that we have to walk from the beginning of the list of `chars`.
+Questo evidenzia che dobbiamo percorrere la lista di `char` dall'inizio.
 
-## Slicing
+## Affettatura ["slicing"]
 
-You can get a slice of a string with slicing syntax:
+Si può ottenere una slice di una stringa con la sintassi dell'affettatura:
 
 ```rust
 let dog = "hachiko";
 let hachi = &dog[0..5];
 ```
 
-But note that these are _byte_ offsets, not _character_ offsets. So
-this will fail at runtime:
+Ma si noti che questi sono offset in _byte_, non offset in _caratturi_. Perciò
+questo fallirà in fase di esecuzione:
 
 ```rust,should_panic
 let dog = "忠犬ハチ公";
 let hachi = &dog[0..2];
 ```
 
-with this error:
+con questo errore:
 
 ```text
 thread 'main' panicked at 'index 0 and/or 2 in `忠犬ハチ公` do not lie on
 character boundary'
 ```
 
-## Concatenation
+## Concatenazione
 
-If you have a `String`, you can concatenate a `&str` to the end of it:
-
-```rust
-let hello = "Hello ".to_string();
-let world = "world!";
-
-let hello_world = hello + world;
-```
-
-But if you have two `String`s, you need an `&`:
+Avendo una `String`, si può concatenare una `&str` alla sua fine:
 
 ```rust
-let hello = "Hello ".to_string();
-let world = "world!".to_string();
+let ciao = "Ciao ".to_string();
+let mondo = "mondo!";
 
-let hello_world = hello + &world;
+let ciao_mondo = ciao + mondo;
 ```
 
-This is because `&String` can automatically coerce to a `&str`. This is a
-feature called ‘[`Deref` coercions][dc]’.
+Ma se avendo due `String`, serve un `&`:
+
+```rust
+let ciao = "Ciao ".to_string();
+let mondo = "mondo!".to_string();
+
+let ciao_mondo = ciao + &mondo;
+```
+
+Questo perché `&String` può essere automaticamente forzata in un `&str`.
+Questa caratteristica si chiama ‘[forzatura `Deref`][dc]’.
 
 [ut]: unsized-types.html
 [dc]: deref-coercions.html

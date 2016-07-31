@@ -56,8 +56,8 @@ desirable in your code, but are expressly _not_ unsafe:
 * Integer overflow
 
 Rust cannot prevent all kinds of software problems. Buggy code can and will be
-written in Rust. These things aren’t great, but they don’t qualify as `unsafe`
-specifically.
+written in Rust. Queste cose non sono desiderabili, ma non si possono chiamare
+specificamente `unsafe`.
 
 In addition, the following are all undefined behaviors in Rust, and must be
 avoided, even when writing `unsafe` code:

@@ -1,231 +1,238 @@
-% Traits
+% Tratti ["trait"]
 
-A trait is a language feature that tells the Rust compiler about
-functionality a type must provide.
+Un tratto è una caratteristica del linguaggio che dice al compilatore Rust
+quali funzionalità un tipo deve fornire.
 
-Recall the `impl` keyword, used to call a function with [method
-syntax][methodsyntax]:
+Ricordiamo la parola-chiave `impl`, usata per chiamare una funzione con
+la [sintassi dei metodi][methodsyntax]:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl Circle {
+impl Cerchio {
     fn area(&self) -> f64 {
-        std::f64::consts::PI * (self.radius * self.radius)
+        std::f64::consts::PI * (self.raggio * self.raggio)
     }
 }
 ```
 
 [methodsyntax]: method-syntax.html
 
-Traits are similar, except that we first define a trait with a method
-signature, then implement the trait for a type. In this example, we implement the trait `HasArea` for `Circle`:
+I tratti sono simili, eccetto che dapprima si definisce un tratto con
+una firma di metodo, e poi si implementa il tratto per un tipo. In questo
+esempio, implementiamo il tratto `HaArea` per `Cerchio`:
 
 ```rust
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-trait HasArea {
+trait HaArea {
     fn area(&self) -> f64;
 }
 
-impl HasArea for Circle {
+impl HaArea for Cerchio {
     fn area(&self) -> f64 {
-        std::f64::consts::PI * (self.radius * self.radius)
+        std::f64::consts::PI * (self.raggio * self.raggio)
     }
 }
 ```
 
-As you can see, the `trait` block looks very similar to the `impl` block,
-but we don’t define a body, only a type signature. When we `impl` a trait,
-we use `impl Trait for Item`, rather than only `impl Item`.
+Come si può vedere, il blocco `trait` appare molto simile al blocco `impl`,
+ma non contiene il corpo della funzione, solamente una firma di tipo.
+Quando si implementa un tratto, si usa la formula `impl Trait for Item`,
+invece della più semplice `impl Item`.
 
-## Trait bounds on generic functions
+## Legami del tratto sulle funzioni generiche
 
-Traits are useful because they allow a type to make certain promises about its
-behavior. Generic functions can exploit this to constrain, or [bound][bounds], the types they
-accept. Consider this function, which does not compile:
+I tratti sono utili perché consentono a un tipo di fare certe promesse sul suo
+comportamento. Le funzioni generiche possono sfruttare questo per vincolare, o
+[legare][legami], i tipi che accettano. Si consideri questa funzione,
+che non compila:
 
-[bounds]: glossary.html#bounds
+[legami]: glossary.html#bounds
 
 ```rust,ignore
-fn print_area<T>(shape: T) {
-    println!("This shape has an area of {}", shape.area());
+fn stampa_area<T>(figura: T) {
+    println!("Questa figura ha un'area di {}", figura.area());
 }
 ```
 
-Rust complains:
+Rust si lamenta:
 
 ```text
 error: no method named `area` found for type `T` in the current scope
 ```
 
-Because `T` can be any type, we can’t be sure that it implements the `area`
-method. But we can add a trait bound to our generic `T`, ensuring
-that it does:
+Siccome `T` può essere qualunque tipo, non possiamo essere sicuri
+che implementi il metodo `area`. Ma possiamo aggiungere un tratto legato
+al nostro `T` generico, assicurando che lo faccia:
 
 ```rust
-# trait HasArea {
+# trait HaArea {
 #     fn area(&self) -> f64;
 # }
-fn print_area<T: HasArea>(shape: T) {
-    println!("This shape has an area of {}", shape.area());
+fn stampa_area<T: HaArea>(figura: T) {
+    println!("Questa figura ha un'area di {}", figura.area());
 }
 ```
 
-The syntax `<T: HasArea>` means “any type that implements the `HasArea` trait.”
-Because traits define function type signatures, we can be sure that any type
-which implements `HasArea` will have an `.area()` method.
+La sintassi `<T: HaArea>` significa “qualunque tipo che implementa il tratto
+`HaArea`.” Siccome i tratti definiscono delle firme di tipo di funzione,
+possiamo star sicuri che qualunque tipo che implementa `HaArea` avrà un metodo
+`.area()`.
 
-Here’s an extended example of how this works:
+Ecco un esempio esteso di come funziona questa cosa:
 
 ```rust
-trait HasArea {
+trait HaArea {
     fn area(&self) -> f64;
 }
 
-struct Circle {
+struct Cerchio {
     x: f64,
     y: f64,
-    radius: f64,
+    raggio: f64,
 }
 
-impl HasArea for Circle {
+impl HaArea for Cerchio {
     fn area(&self) -> f64 {
-        std::f64::consts::PI * (self.radius * self.radius)
+        std::f64::consts::PI * (self.raggio * self.raggio)
     }
 }
 
-struct Square {
+struct Quadrato {
     x: f64,
     y: f64,
-    side: f64,
+    lato: f64,
 }
 
-impl HasArea for Square {
+impl HaArea for Quadrato {
     fn area(&self) -> f64 {
-        self.side * self.side
+        self.lato * self.lato
     }
 }
 
-fn print_area<T: HasArea>(shape: T) {
-    println!("This shape has an area of {}", shape.area());
+fn stampa_area<T: HaArea>(figura: T) {
+    println!("Questa figura ha un'area di {}", figura.area());
 }
 
 fn main() {
-    let c = Circle {
+    let c = Cerchio {
         x: 0.0f64,
         y: 0.0f64,
-        radius: 1.0f64,
+        raggio: 1.0f64,
     };
 
-    let s = Square {
+    let q = Quadrato {
         x: 0.0f64,
         y: 0.0f64,
-        side: 1.0f64,
+        lato: 1.0f64,
     };
 
-    print_area(c);
-    print_area(s);
+    stampa_area(c);
+    stampa_area(q);
 }
 ```
 
-This program outputs:
+Questo programma emette:
 
 ```text
-This shape has an area of 3.141593
-This shape has an area of 1
+Questa figura ha un'area di 3.141593
+Questa figura ha un'area di 1
 ```
 
-As you can see, `print_area` is now generic, but also ensures that we have
-passed in the correct types. If we pass in an incorrect type:
+Da come si vede, `stampa_area` adesso è generica, ma assicura anche che le
+abbiamo passato i tipi corretti. Se le passiamo un tipo scorretto:
 
 ```rust,ignore
-print_area(5);
+stampa_area(5);
 ```
 
-We get a compile-time error:
+Otteniamo un errore in fase di compilazione:
 
 ```text
 error: the trait bound `_ : HasArea` is not satisfied [E0277]
 ```
 
-## Trait bounds on generic structs
+## Legami di tratto su struct generiche
 
-Your generic structs can also benefit from trait bounds. All you need to
-do is append the bound when you declare type parameters. Here is a new
-type `Rectangle<T>` and its operation `is_square()`:
+Anche le proprie struct generiche possono trarre beneficio dai legami
+dei tratti. L'unica cosa da fare è attaccare il legame quando si dichiarano
+i parametri di tipo. Ecco un nuovo tipo `Rettangolo<T>` e la sua operazione
+`e_quadrato()`:
 
 ```rust
-struct Rectangle<T> {
+struct Rettangolo<T> {
     x: T,
     y: T,
-    width: T,
-    height: T,
+    larghezza: T,
+    altezza: T,
 }
 
-impl<T: PartialEq> Rectangle<T> {
-    fn is_square(&self) -> bool {
-        self.width == self.height
+impl<T: PartialEq> Rettangolo<T> {
+    fn e_quadrato(&self) -> bool {
+        self.larghezza == self.altezza
     }
 }
 
 fn main() {
-    let mut r = Rectangle {
+    let mut r = Rettangolo {
         x: 0,
         y: 0,
-        width: 47,
-        height: 47,
+        larghezza: 47,
+        altezza: 47,
     };
 
-    assert!(r.is_square());
+    assert!(r.e_quadrato());
 
-    r.height = 42;
-    assert!(!r.is_square());
+    r.altezza = 42;
+    assert!(!r.e_quadrato());
 }
 ```
 
-`is_square()` needs to check that the sides are equal, so the sides must be of
-a type that implements the [`core::cmp::PartialEq`][PartialEq] trait:
+`e_quadrato()` ha bisogno di verificare che i lati siano uguali, perciò i lati
+devono essere di un tipo che implementa il tratto
+[`core::cmp::PartialEq`][PartialEq]:
 
 ```rust,ignore
-impl<T: PartialEq> Rectangle<T> { ... }
+impl<T: PartialEq> Rettangolo<T> { ... }
 ```
 
-Now, a rectangle can be defined in terms of any type that can be compared for
-equality.
+Adesso, un rettangolo può essere definito in termini di ogni tipo che può
+essere confrontato per l'uguaglianza.
 
 [PartialEq]: ../core/cmp/trait.PartialEq.html
 
-Here we defined a new struct `Rectangle` that accepts numbers of any
-precision—really, objects of pretty much any type—as long as they can be
-compared for equality. Could we do the same for our `HasArea` structs, `Square`
-and `Circle`? Yes, but they need multiplication, and to work with that we need
-to know more about [operator traits][operators-and-overloading].
+Qui abbiamo definito una nuova struct `Rettangolo` che accetta dei numeri
+di qualunque precisione — in realtà, oggetti quasi di qualunque tipo — purché
+possano essere confrontati per l'uguaglianza. Potremmo fare lo stesso
+per le nostre struct `HaArea`, cioè `Quadrato` e `Cerchio`? Sì, ma hanno
+bisogno della moltiplicazione, e per lavorarci ci serve saperne di più
+riguardo ai [tratti di operatore][operators-and-overloading].
 
 [operators-and-overloading]: operators-and-overloading.html
 
-# Rules for implementing traits
+# Regole per implementare i tratti
 
-So far, we’ve only added trait implementations to structs, but you can
-implement a trait for any type. So technically, we _could_ implement `HasArea`
-for `i32`:
+Finora, abbiamo aggiunto implementazioni di tratti solamente a delle struct,
+ma un tratto può essere implementato per qualunque tipo. Perciò tecnicamente,
+_potremmo_ implementare `HaArea` anche per il tipo `i32`:
 
 ```rust
-trait HasArea {
+trait HaArea {
     fn area(&self) -> f64;
 }
 
-impl HasArea for i32 {
+impl HaArea for i32 {
     fn area(&self) -> f64 {
-        println!("this is silly");
+        println!("questo è sciocco");
 
         *self as f64
     }
@@ -234,26 +241,26 @@ impl HasArea for i32 {
 5.area();
 ```
 
-It is considered poor style to implement methods on such primitive types, even
-though it is possible.
+È considerato stile scadente implementare dei metodi su tali tipi primitivi,
+anche se è possibile.
 
-This may seem like the Wild West, but there are two restrictions around
-implementing traits that prevent this from getting out of hand. The first is
-that if the trait isn’t defined in your scope, it doesn’t apply. Here’s an
-example: the standard library provides a [`Write`][write] trait which adds
-extra functionality to `File`s, for doing file I/O. By default, a `File`
-won’t have its methods:
+Questo può sembrare come il Far West, ma ci sono due restrizioni riguardo
+l'implementazione dei tratti che prevengono che la cosa ci sfugga di mano.
+La prima è che se il tratto non è definito nel nostro ambito, non si applica.
+Ecco un esempio: la libreria standard fornisce un tratto [`Write`][write]
+che aggiunge delle funzionalità ai `File`, per fare I/O su file. Di default,
+un `File` non avrà i suoi metodi:
 
 [write]: ../std/io/trait.Write.html
 
 ```rust,ignore
-let mut f = std::fs::File::open("foo.txt").expect("Couldn’t open foo.txt");
-let buf = b"whatever"; // byte string literal. buf: &[u8; 8]
-let result = f.write(buf);
-# result.unwrap(); // ignore the error
+let mut f = std::fs::File::open("foo.txt").expect("Fallita apertura di foo.txt");
+let buf = b"qualcosa"; // letterale di stringa di byte. buf: &[u8; 8]
+let risultato = f.write(buf);
+# risultato.unwrap(); // ignora l'errore
 ```
 
-Here’s the error:
+Ecco l'errore:
 
 ```text
 error: type `std::fs::File` does not implement any method in scope named `write`
@@ -261,43 +268,45 @@ let result = f.write(buf);
                ^~~~~~~~~~
 ```
 
-We need to `use` the `Write` trait first:
+Dapprima dobbiamo importare il tratto `Write` con `use`:
 
 ```rust,ignore
 use std::io::Write;
 
-let mut f = std::fs::File::open("foo.txt").expect("Couldn’t open foo.txt");
-let buf = b"whatever";
-let result = f.write(buf);
+let mut f = std::fs::File::open("foo.txt").expect("Fallita apertura di foo.txt");
+let buf = b"qualcosa"; // letterale di stringa di byte. buf: &[u8; 8]
+let risultato = f.write(buf);
 # result.unwrap(); // ignore the error
 ```
 
-This will compile without error.
+Questo compilerà senza errori.
 
-This means that even if someone does something bad like add methods to `i32`,
-it won’t affect you, unless you `use` that trait.
+Ciò significa che anche se qualcuno fa qualcosa di male come implementare
+un tratto per `i32`, questo non ci toccherà, a meno che importiamo quel tratto.
 
-There’s one more restriction on implementing traits: either the trait
-or the type you’re implementing it for must be defined by you. Or more
-precisely, one of them must be defined in the same crate as the `impl`
-you're writing. For more on Rust's module and package system, see the
-chapter on [crates and modules][cm].
+C'è un'altra restrizione sull'implementare i tratti: o il tratto
+o il tipo per cui lo stiamo implementando, devono essere definiti da noi.
+O per meglio dire, almeno uno di essi deve essere definito nello stesso crate
+in cui si trova l'`impl` che stiamo scrivendo. Per saperne di più sul sistema
+dei moduli e dei pacchetti di Rust, si veda la sezione su [crate e moduli][cm].
 
-So, we could implement the `HasArea` type for `i32`, because we defined
-`HasArea` in our code. But if we tried to implement `ToString`, a trait
-provided by Rust, for `i32`, we could not, because neither the trait nor
-the type are defined in our crate.
+Perciò, potremmo implementare il tratto `HasArea` per `i32`, dato che abbiamo
+definito `HaArea` nel nostro codice. Ma se provassimo a implementare
+`ToString`, un tratto fornito da Rust, per `i32`, non potremmo, perché né
+il tratto né il tipo sono definiti nel nostro crate.
 
-One last thing about traits: generic functions with a trait bound use
-‘monomorphization’ (mono: one, morph: form), so they are statically dispatched.
-What’s that mean? Check out the chapter on [trait objects][to] for more details.
+Un'ultima cosa sui tratti: le funzioni generiche con un legame di tratto usano
+la ‘monomorfizzazione’ (dal greco "mono"="uno" e "morfo"="forma"), e quindi
+sono smistati staticamente.
+Che significa? Si guardi la sezione sugli [oggetti-tratto][to] per avere
+maggiori dettagli.
 
 [cm]: crates-and-modules.html
 [to]: trait-objects.html
 
-# Multiple trait bounds
+# Legami di tratto multipli
 
-You’ve seen that you can bound a generic type parameter with a trait:
+Abbiamo visto che si può legare un parametro generico di tipo a un tratto:
 
 ```rust
 fn foo<T: Clone>(x: T) {
@@ -305,7 +314,7 @@ fn foo<T: Clone>(x: T) {
 }
 ```
 
-If you need more than one bound, you can use `+`:
+Se serve più di un legame, si può usare `+`:
 
 ```rust
 use std::fmt::Debug;
@@ -316,13 +325,13 @@ fn foo<T: Clone + Debug>(x: T) {
 }
 ```
 
-`T` now needs to be both `Clone` as well as `Debug`.
+`T` adesso ha bisogno di essere sia `Clone` che `Debug`.
 
-# Where clause
+# La clausola Where
 
-Writing functions with only a few generic types and a small number of trait
-bounds isn’t too bad, but as the number increases, the syntax gets increasingly
-awkward:
+Scrivere funzioni con solamente alcuni tipi generici e un piccolo numero
+di legami di tratto non è malaccio, ma man mano che il loro numero si accresce,
+la sintassi divenga sempre più goffa:
 
 ```rust
 use std::fmt::Debug;
@@ -334,10 +343,10 @@ fn foo<T: Clone, K: Clone + Debug>(x: T, y: K) {
 }
 ```
 
-The name of the function is on the far left, and the parameter list is on the
-far right. The bounds are getting in the way.
+Il nome della funzione è all'estrema sinistra, e la lista degli argomenti è
+all'estrema destra. I legami stanno diventando d'intralcio.
 
-Rust has a solution, and it’s called a ‘`where` clause’:
+Rust ha una soluzione, e si chiama ‘clausola `where`’:
 
 ```rust
 use std::fmt::Debug;
@@ -355,15 +364,15 @@ fn bar<T, K>(x: T, y: K) where T: Clone, K: Clone + Debug {
 }
 
 fn main() {
-    foo("Hello", "world");
-    bar("Hello", "world");
+    foo("Ciao", "mondo");
+    bar("Ciao", "mondo");
 }
 ```
 
-`foo()` uses the syntax we showed earlier, and `bar()` uses a `where` clause.
-All you need to do is leave off the bounds when defining your type parameters,
-and then add `where` after the parameter list. For longer lists, whitespace can
-be added:
+`foo()` usa la sintassi che abbiamo mostrato prima, e `bar()` usa una clausola
+`where`. Si devono solo omettere i vincoli quando si definiscono i propri
+parametri di tipo, e poi aggiungere `where` dopo l'elenco degli argomenti.
+Per liste più lunghe, si possono aggiungere spaziature:
 
 ```rust
 use std::fmt::Debug;
@@ -378,9 +387,9 @@ fn bar<T, K>(x: T, y: K)
 }
 ```
 
-This flexibility can add clarity in complex situations.
+Questa flessibilità può aggiungere chiarezza un situazioni complesse.
 
-`where` is also more powerful than the simpler syntax. For example:
+`where` è anche più potente della sintassi più semplice. Per esempio:
 
 ```rust
 trait ConvertTo<Output> {

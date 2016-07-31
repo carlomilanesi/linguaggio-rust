@@ -172,7 +172,7 @@ struct Cerchio {
 }
 
 impl Cerchio {
-    fn nuovo(x: f64, y: f64, raggio: f64) -> Cerchio {
+    fn new(x: f64, y: f64, raggio: f64) -> Cerchio {
         Cerchio {
             x: x,
             y: y,
@@ -182,7 +182,7 @@ impl Cerchio {
 }
 
 fn main() {
-    let c = Cerchio::nuovo(0.0, 0.0, 2.0);
+    let c = Cerchio::new(0.0, 0.0, 2.0);
 }
 ```
 
@@ -221,7 +221,7 @@ struct CostruttoreDiCerchi {
 }
 
 impl CostruttoreDiCerchi {
-    fn nuovo() -> CostruttoreDiCerchi {
+    fn new() -> CostruttoreDiCerchi {
         CostruttoreDiCerchi { x: 0.0, y: 0.0, raggio: 1.0, }
     }
 
@@ -246,7 +246,7 @@ impl CostruttoreDiCerchi {
 }
 
 fn main() {
-    let c = CostruttoreDiCerchi::nuovo()
+    let c = CostruttoreDiCerchi::new()
         .x(1.0)
         .y(2.0)
         .raggio(2.0)
