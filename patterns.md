@@ -1,30 +1,30 @@
-% Patterns
+% I pattern
 
-Patterns are quite common in Rust. We use them in [variable
-bindings][bindings], [match expressions][match], and other places, too. Let’s go
-on a whirlwind tour of all of the things patterns can do!
+I pattern sono molto comuni in Rust. Li usiamo nei [legami di variabile]
+[bindings], nelle [espressioni match][match], e anche in altri posti. Facciamo
+una carrellata di tutte le cose che i pattern possono fare!
 
 [bindings]: variable-bindings.html
 [match]: match.html
 
-A quick refresher: you can match against literals directly, and `_` acts as an
-‘any’ case:
+Un rapido ripasso: si può far combaciare direttamente con letterali, e
+il carattere `_` agisce come caso ‘qualunque’:
 
 ```rust
 let x = 1;
 
 match x {
-    1 => println!("one"),
-    2 => println!("two"),
-    3 => println!("three"),
-    _ => println!("anything"),
+    1 => println!("uno"),
+    2 => println!("due"),
+    3 => println!("tre"),
+    _ => println!("qualunque cosa"),
 }
 ```
 
-This prints `one`.
+Questo stampa `uno`.
 
-There’s one pitfall with patterns: like anything that introduces a new binding,
-they introduce shadowing. For example:
+C'è un trabocchetto con i pattern: come ogni cosa che introduce
+un nuovo legame, anche i pattern possono introdurre l'oscuramento. Per esempio:
 
 ```rust
 let x = 1;
@@ -37,348 +37,348 @@ match c {
 println!("x: {}", x)
 ```
 
-This prints:
+Questo stampa:
 
 ```text
 x: c c: c
 x: 1
 ```
 
-In other words, `x =>` matches the pattern and introduces a new binding named
-`x`. This new binding is in scope for the match arm and takes on the value of
-`c`. Notice that the value of `x` outside the scope of the match has no bearing
-on the value of `x` within it. Because we already have a binding named `x`, this
-new `x` shadows it.
+In altre parole, `x =>` combacia con il valore di `c` e introduce un nuovo
+legame avente nome `x`. Questo nuovo legame è ha come ambito il braccio
+di match e prende il valore di `c`. Si noti che il valore di `x` all'esterno
+dell'ambito di match è ininfluente sul valore `x` al suo interno. Siccome
+avevamo già un legame chiamato `x`, questo nuovo `x` lo oscura.
 
-# Multiple patterns
+# Pattern multipli
 
-You can match multiple patterns with `|`:
+Possiamo far combaciare più pattern usando `|`:
 
 ```rust
 let x = 1;
 
 match x {
-    1 | 2 => println!("one or two"),
-    3 => println!("three"),
-    _ => println!("anything"),
+    1 | 2 => println!("uno o due"),
+    3 => println!("tre"),
+    _ => println!("qualunque cosa"),
 }
 ```
 
-This prints `one or two`.
+Questo stampa `uno o due`.
 
-# Destructuring
+# Destrutturazione
 
-If you have a compound data type, like a [`struct`][struct], you can destructure it
-inside of a pattern:
+Se si ha un tipo di dati composito, come una [`struct`][struct], lo si può
+destrutturare dentro un pattern:
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-let origin = Point { x: 0, y: 0 };
+let origine = Punto { x: 0, y: 0 };
 
-match origin {
-    Point { x, y } => println!("({},{})", x, y),
+match origine {
+    Punto { x, y } => println!("({},{})", x, y),
 }
 ```
 
 [struct]: structs.html
 
-We can use `:` to give a value a different name.
+Possiamo usare `:` per dare un altro nome a un valore.
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-let origin = Point { x: 0, y: 0 };
+let origine = Punto { x: 0, y: 0 };
 
-match origin {
-    Point { x: x1, y: y1 } => println!("({},{})", x1, y1),
+match origine {
+    Punto { x: x1, y: y1 } => println!("({},{})", x1, y1),
 }
 ```
 
-If we only care about some of the values, we don’t have to give them all names:
+Se ci interessano solamente alcuni valori, non dobbiamo dare dei nomi a tutti:
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-let origin = Point { x: 0, y: 0 };
+let origine = Punto { x: 0, y: 0 };
 
-match origin {
-    Point { x, .. } => println!("x is {}", x),
+match origine {
+    Punto { x, .. } => println!("x is {}", x),
 }
 ```
 
-This prints `x is 0`.
+Questo stampa `x è 0`.
 
-You can do this kind of match on any member, not only the first:
+si può fare questo genere di match su qualunque membro, non solamente il primo:
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-let origin = Point { x: 0, y: 0 };
+let origine = Punto { x: 0, y: 0 };
 
-match origin {
-    Point { y, .. } => println!("y is {}", y),
+match origine {
+    Punto { y, .. } => println!("y is {}", y),
 }
 ```
 
-This prints `y is 0`.
+Questo stampa `y è 0`.
 
-This ‘destructuring’ behavior works on any compound data type, like
-[ennuple][ennuple] or [enums][enums].
+Questo comportamento ‘destrutturante’ funziona su qualunque tipo di dati
+composito, come le [ennuple][ennuple] o le [enum][enum].
 
 [ennuple]: primitive-types.html#tuples
-[enums]: enums.html
+[enum]: enums.html
 
-# Ignoring bindings
+# Ignorare i legami
 
-You can use `_` in a pattern to disregard the type and value.
-For example, here’s a `match` against a `Result<T, E>`:
+Si può usare `_` in un pattern per non tener conto del tipo e del valore.
+Per esempio, ecco un `match` con un `Result<T, E>`:
 
 ```rust
-# let some_value: Result<i32, &'static str> = Err("There was an error");
-match some_value {
-    Ok(value) => println!("got a value: {}", value),
-    Err(_) => println!("an error occurred"),
+# let qualche_valore: Result<i32, &'static str> = Err("C'era un errore");
+match qualche_valore {
+    Ok(valore) => println!("preso un valore: {}", valore),
+    Err(_) => println!("è avvenuto un errore"),
 }
 ```
 
-In the first arm, we bind the value inside the `Ok` variant to `value`. But
-in the `Err` arm, we use `_` to disregard the specific error, and print
-a general error message.
+Nel primo braccio, leghiamo il valore dentro la variante `Ok` a `valore`. Ma
+nel braccio `Err`, usiamo `_` per non tener conto dello specifico errore, e
+stampiamo un messaggio d'errore generico.
 
-`_` is valid in any pattern that creates a binding. This can be useful to
-ignore parts of a larger structure:
+`_` è valido in qualunque pattern che crea un legame. Ciò può essere utile
+per ignorare parti di una struttura più grande:
 
 ```rust
 fn coordinate() -> (i32, i32, i32) {
-    // generate and return some sort of ennupla tripla
+    // genera e rendi una terna
 # (1, 2, 3)
 }
 
 let (x, _, z) = coordinate();
 ```
 
-Here, we bind the first and last element dell'ennupla to `x` and `z`, but
-ignore the middle element.
+Qui, leghiamo il primo e l'ultimo elemento dell'ennupla a `x` e a `z`, ma
+ignoriamo l'elemento di mezzo.
 
-It’s worth noting that using `_` never binds the value in the first place,
-which means that the value does not move:
+Vale la pena notare che usando `_` il valore combaciante non viene affatto
+legato, il che comporta che tale valore non viene spostato:
 
 ```rust
-let ennupla: (u32, String) = (5, String::from("five"));
+let ennupla: (u32, String) = (5, String::from("cinque"));
 
-// Here, ennupla is moved, because the String moved:
+// Qui, ennupla viene spostata, perché l'oggetto String è stato spostato:
 let (x, _s) = ennupla;
 
-// The next line would give "error: use of partially moved value: `ennupla`"
-// println!("L'ennupla is: {:?}", ennupla);
+// La prossima riga darebbe "error: use of partially moved value: `ennupla`"
+// println!("L'ennupla è: {:?}", ennupla);
 
-// However,
+// Però,
 
 let ennupla = (5, String::from("five"));
 
-// Here, ennupla is _not_ moved, as the String was never moved, and u32 is Copy:
+// Qui, ennupla _non_ vien spostata, dato che l'oggetto String non è
+// mai stato spostato, e l'oggetto u32 è Copy:
 let (x, _) = ennupla;
 
-// That means this works:
-println!("L'ennupla is: {:?}", ennupla);
+// Ciò comporta che questo funziona:
+println!("L'ennupla è: {:?}", ennupla);
 ```
 
-This also means that any temporary variables will be dropped at the end of the
-statement:
+Ciò comporta anche che ogni variabile temporanea verrà distrutta alla fine
+dell'istruzione:
 
 ```rust
-// Here, the String created will be dropped immediately, as it’s not bound:
-
+// Qui, la String creata verrà distrutta immediatamente, dato che non è legata:
 let _ = String::from("  hello  ").trim();
 ```
 
-You can also use `..` in a pattern to disregard multiple values:
+Si può usare anche `..` in un pattern per ignorare più valori:
 
 ```rust
 enum EnnuplaOpzionale {
-    Value(i32, i32, i32),
-    Missing,
+    Valore(i32, i32, i32),
+    Mancante,
 }
 
-let x = EnnuplaOpzionale::Value(5, -2, 3);
+let x = EnnuplaOpzionale::Valore(5, -2, 3);
 
 match x {
-    EnnuplaOpzionale::Value(..) => println!("Got a ennupla!"),
-    EnnuplaOpzionale::Missing => println!("No such luck."),
+    EnnuplaOpzionale::Valore(..) => println!("Ho un'ennupla!"),
+    EnnuplaOpzionale::Mancante => println!("Non ho tale fortuna."),
 }
 ```
 
-This prints `Got a ennupla!`.
+Questo stampa `Ho un'ennupla!`.
 
-# ref and ref mut
+# `ref` e `ref mut`
 
-If you want to get a [reference][ref], use the `ref` keyword:
+Se si vuole ottenere un [riferimento][ref], si usi la parola-chiave `ref`:
 
 ```rust
 let x = 5;
 
 match x {
-    ref r => println!("Got a reference to {}", r),
+    ref r => println!("Ho un riferimento a {}", r),
 }
 ```
 
-This prints `Got a reference to 5`.
+Questo stampa `Ho un riferimento a 5`.
 
 [ref]: references-and-borrowing.html
 
-Here, the `r` inside the `match` has the type `&i32`. In other words, the `ref`
-keyword _creates_ a reference, for use in the pattern. If you need a mutable
-reference, `ref mut` will work in the same way:
+Qui, la `r` dentro il `match` ha il tipo `&i32`. In altre parole,
+la parola-chiave `ref` _crea_ un riferimento, da usare nel pattern. Se serve
+un riferimento mutabile, `ref mut` funzionerà allo stesso modo:
 
 ```rust
 let mut x = 5;
 
 match x {
-    ref mut mr => println!("Got a mutable reference to {}", mr),
+    ref mut mr => println!("Ho un riferimento mutabile a {}", mr),
 }
 ```
 
-# Ranges
+# Gamme
 
-You can match a range of values with `...`:
+Si può far combaciare una gamma di valori usando `...`:
 
 ```rust
 let x = 1;
 
 match x {
-    1 ... 5 => println!("one through five"),
-    _ => println!("anything"),
+    1 ... 5 => println!("da uno a cinque"),
+    _ => println!("qualunque cosa"),
 }
 ```
 
-This prints `one through five`.
+Questo stampa `da uno a cinque`.
 
-Ranges are mostly used with integers and `char`s:
+Le gamme sono usate per lo più con gli interi e i `char`:
 
 ```rust
 let x = '💅';
 
 match x {
-    'a' ... 'j' => println!("early letter"),
-    'k' ... 'z' => println!("late letter"),
-    _ => println!("something else"),
+    'a' ... 'j' => println!("lettera precoce"),
+    'k' ... 'z' => println!("lettera tardiva"),
+    _ => println!("qualcos'altro"),
 }
 ```
 
-This prints `something else`.
+Questo stampa `qualcos'altro`.
 
-# Bindings
+# Legami
 
-You can bind values to names with `@`:
+Si possono legare valori a nomi usando `@`:
 
 ```rust
 let x = 1;
 
 match x {
-    e @ 1 ... 5 => println!("got a range element {}", e),
-    _ => println!("anything"),
+    e @ 1 ... 5 => println!("ho un elemento della gamma: {}", e),
+    _ => println!("qualunque cosa"),
 }
 ```
 
-This prints `got a range element 1`. This is useful when you want to
-do a complicated match of part of a data structure:
+Questo stampa `ho un elemento della gamma: 1`. Questo operatore serve anche
+quando si vuole estrarre una parte di una struttura dati complicata:
 
 ```rust
 #[derive(Debug)]
-struct Person {
-    name: Option<String>,
+struct Persona {
+    nome: Option<String>,
 }
 
-let name = "Steve".to_string();
-let x: Option<Person> = Some(Person { name: Some(name) });
+let nome = "Steve".to_string();
+let x: Option<Persona> = Some(Persona { nome: Some(nome) });
 match x {
-    Some(Person { name: ref a @ Some(_), .. }) => println!("{:?}", a),
+    Some(Persona { nome: ref a @ Some(_), .. }) => println!("{:?}", a),
     _ => {}
 }
 ```
 
-This prints `Some("Steve")`: we’ve bound the inner `name` to `a`.
+Questo stampa `Some("Steve")`: abbiamo legato il `nome` interno ad `a`.
 
-If you use `@` with `|`, you need to make sure the name is bound in each part
-of the pattern:
+Se si usa `@` con `|`, bisogna assicurarsi che il nome sia legato in ogni
+parte del pattern:
 
 ```rust
 let x = 5;
 
 match x {
-    e @ 1 ... 5 | e @ 8 ... 10 => println!("got a range element {}", e),
-    _ => println!("anything"),
+    e @ 1 ... 5 | e @ 8 ... 10 => println!("ho un elemento della gamma: {}", e),
+    _ => println!("qualunque cosa"),
 }
 ```
 
-# Guards
+# Guardie
 
-You can introduce ‘match guards’ with `if`:
+Si possono introdurre le ‘guardie di match’ usando `if`:
 
 ```rust
 enum OptionalInt {
-    Value(i32),
-    Missing,
+    Valore(i32),
+    Mancante,
 }
 
-let x = OptionalInt::Value(5);
+let x = OptionalInt::Valore(5);
 
 match x {
-    OptionalInt::Value(i) if i > 5 => println!("Got an int bigger than five!"),
-    OptionalInt::Value(..) => println!("Got an int!"),
-    OptionalInt::Missing => println!("No such luck."),
+    OptionalInt::Valore(i) if i > 5 => println!("Ho un int maggiore di cinque!"),
+    OptionalInt::Valore(..) => println!("Ho un int!"),
+    OptionalInt::Mancante => println!("Non ho tale fortuna."),
 }
 ```
 
-This prints `Got an int!`.
+Questo stampa `Ho un int!`.
 
-If you’re using `if` with multiple patterns, the `if` applies to both sides:
+Se si sta usando `if` con più pattern, la `if` si applica a entrambi i lati:
 
 ```rust
 let x = 4;
 let y = false;
 
 match x {
-    4 | 5 if y => println!("yes"),
+    4 | 5 if y => println!("sì"),
     _ => println!("no"),
 }
 ```
 
-This prints `no`, because the `if` applies to the whole of `4 | 5`, and not to
-only the `5`. In other words, the precedence of `if` behaves like this:
+Questo stampa `no`, perché la `if` si applica a tutta l'espressione `4 | 5`, e
+non solamente al `5`. In altre parole, la precedenza di `if` si comporta così:
 
 ```text
 (4 | 5) if y => ...
 ```
 
-not this:
+non così:
 
 ```text
 4 | (5 if y) => ...
 ```
 
-# Mix and Match
+# Mescolare e abbinare
 
-Whew! That’s a lot of different ways to match things, and they can all be
-mixed and matched, depending on what you’re doing:
+Urca! Ci sono molti modi diversi di far combaciare le cose, e tutti quanti
+possono essere mescolati e abbinati, a seconda di ciò che si sta facendo:
 
 ```rust,ignore
 match x {
-    Foo { x: Some(ref name), y: None } => ...
+    Foo { x: Some(ref nome), y: None } => ...
 }
 ```
 
-Patterns are very powerful. Make good use of them.
+I pattern sono molto potenti. Facciamone buon uso.

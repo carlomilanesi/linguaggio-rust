@@ -1,83 +1,85 @@
 % Riferimenti e prestiti
 
 Questa è la seconda delle tre sezioni che presentano il sistema di possesso
-di Rust. Si assume che sia già stata letta la sezione sul [possesso][possesso]:
+di Rust. Si assume che sia già stata letta la sezione sul [possesso][possesso].
 
 [possesso]: ownership.html
 
 # Borrowing
 
-At the end of the [ownership][ownership] section, we had a nasty function that looked
-like this:
+Alla fine della sezione sul [possesso][possesso], avevamo una brutta funzione
+che si presentava così:
 
 ```rust
 fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
-    // do stuff with v1 and v2
+    // fa' qualcosa con v1 e con v2
 
-    // hand back ownership, and the result of our function
+    // restituisci il possesso di v1 e v2, e rendi anche
+    // il risultato della nostra funzione
     (v1, v2, 42)
 }
 
 let v1 = vec![1, 2, 3];
 let v2 = vec![1, 2, 3];
-
-let (v1, v2, answer) = foo(v1, v2);
+let (v1, v2, risposta) = foo(v1, v2);
 ```
 
-This is not idiomatic Rust, however, as it doesn’t take advantage of borrowing. Here’s
-the first step:
+Però questo non è Rust tipico, dato che non sfrutta i prestiti.
+Ecco il primo passo:
 
 ```rust
 fn foo(v1: &Vec<i32>, v2: &Vec<i32>) -> i32 {
-    // do stuff with v1 and v2
+    // fa' qualcosa con v1 e con v2
 
-    // return the answer
+    // rendi la risposta
     42
 }
 
 let v1 = vec![1, 2, 3];
 let v2 = vec![1, 2, 3];
 
-let answer = foo(&v1, &v2);
+let risposta = foo(&v1, &v2);
 
-// we can use v1 and v2 here!
+// qui possiamo usare v1 e v2!
 ```
 
-A more concrete example:
+Un esempio più concreto:
 
 ```rust
 fn main() {
-    // Don't worry if you don't understand how `fold` works, the point here is that an immutable reference is borrowed.
-    fn sum_vec(v: &Vec<i32>) -> i32 {
+    // Non importa se non si capisce cosa fa `fold`, quello che importa
+    // qui è che un riferimento immutabile viene preso in prestito.
+    fn somma_vec(v: &Vec<i32>) -> i32 {
         return v.iter().fold(0, |a, &b| a + b);
     }
-    // Borrow two vectors and sum them.
-    // This kind of borrowing does not allow mutation to the borrowed.
+    // Prendi in prestito due vettori e sommane gli elementi.
+    // Questo tipo di prestito non permette che gli oggetti siano mutati.
     fn foo(v1: &Vec<i32>, v2: &Vec<i32>) -> i32 {
-        // do stuff with v1 and v2
-        let s1 = sum_vec(v1);
-        let s2 = sum_vec(v2);
-        // return the answer
+        // fa' qualcosa con v1 e con v2
+        let s1 = somma_vec(v1);
+        let s2 = somma_vec(v2);
+        // rendi la risposta
         s1 + s2
     }
 
     let v1 = vec![1, 2, 3];
     let v2 = vec![4, 5, 6];
 
-    let answer = foo(&v1, &v2);
-    println!("{}", answer);
+    let risposta = foo(&v1, &v2);
+    println!("{}", risposta);
 }
 ```
 
-Instead of taking `Vec<i32>`s as our arguments, we take a reference:
-`&Vec<i32>`. And instead of passing `v1` and `v2` directly, we pass `&v1` and
-`&v2`. We call the `&T` type a ‘reference’, and rather than owning the resource,
-it borrows ownership. A binding that borrows something does not deallocate the
-resource when it goes out of scope. This means that after the call to `foo()`,
-we can use our original bindings again.
+Invece di prendere dei `Vec<i32>` come argomenti, prendiamo dei riferimenti:
+`&Vec<i32>`. E invece di passare `v1` e `v2` direttamente, passiamo `&v1` e
+`&v2`. Il tipo `&T` viene chiamato ‘riferimento’, e invece di possedere
+la risorsa, ne prende in prestito il possesso. Un legame che prende in prestito
+qualche oggetto non dealloca quella risorsa quando esce dall'ambito.
+Ciò significa che dopo la chiamata a `foo()`, possiamo usare ancora i nostri
+legami originali.
 
-References are immutable, like bindings. This means that inside of `foo()`,
-the vectors can’t be changed at all:
+I riferimenti sono immutabile, come i legami. Ciò significa che dentro `foo()`,
+i due vettori non possono affatto essere modificati:
 
 ```rust,ignore
 fn foo(v: &Vec<i32>) {
@@ -89,7 +91,7 @@ let v = vec![];
 foo(&v);
 ```
 
-will give us this error:
+ci darà questo errore:
 
 ```text
 error: cannot borrow immutable borrowed content `*v` as mutable
@@ -97,12 +99,13 @@ v.push(5);
 ^
 ```
 
-Pushing a value mutates the vector, and so we aren’t allowed to do it.
+Aggiungere un valore (chiamando `push`) muterebbe il vettore, e quindi non
+ci viene permesso.
 
-# &mut references
+# I riferimenti &mut
 
-There’s a second kind of reference: `&mut T`. A ‘mutable reference’ allows you
-to mutate the resource you’re borrowing. For example:
+C'è un altro tipo di riferimenti: `&mut T`. Un ‘riferimento mutabile’ permette
+di mutare la risorsa che viene presa in prestito. Per esempio:
 
 ```rust
 let mut x = 5;
@@ -113,18 +116,21 @@ let mut x = 5;
 println!("{}", x);
 ```
 
-This will print `6`. We make `y` a mutable reference to `x`, then add one to
-the thing `y` points at. You’ll notice that `x` had to be marked `mut` as well.
-If it wasn’t, we couldn’t take a mutable borrow to an immutable value.
+Questo stamperà `6`. Abbiamo creato `y` come riferimento mutabile a `x`, e poi
+abbiamo incrementato l'oggetto a cui `y` punta. Si noterà che abbiamo dovuto
+marcare anche `x` come `mut`.
+Se non l'avessimo fatto, non avremmo potuto prendere in prestito mutabile
+un valore immutabile.
 
-You'll also notice we added an asterisk (`*`) in front of `y`, making it `*y`,
-this is because `y` is a `&mut` reference. You'll need to use astrisks to
-access the contents of a reference as well.
+Si noterà anche che abbiamo aggiunto un asterisco (`*`) prima di `y`,
+rendendolo `*y`.  Questo è necessario perché `y` è un riferimento. Se deve
+usare un asterisco per accedere al contenuto di un riferimento, che sia
+mutabile o immutabile.
 
-Otherwise, `&mut` references are like references. There _is_ a large
-difference between the two, and how they interact, though. You can tell
-something is fishy in the above example, because we need that extra scope, with
-the `{` and `}`. If we remove them, we get an error:
+I riferimenti `&mut` somigliano ai riferimenti; però, c'_è_ una grossa
+differenza tra i due, e su come interagiscono. Si potrebbe dire che
+nell'esempio qui sopra ci sono due graffe di troppo, che racchiudono l'ambito
+di `y`. Ma se le togliamo, otteniamo un errore:
 
 ```text
 error: cannot borrow `x` as immutable because it is also borrowed as mutable
@@ -141,37 +147,37 @@ fn main() {
 ^
 ```
 
-As it turns out, there are rules.
+Da quel che risulta, ci sono regole da rispettare.
 
-# The Rules
+# Le regole
 
-Here are the rules for borrowing in Rust:
+Ecco le regole per prendere a prestito in Rust:
 
-First, any borrow must last for a scope no greater than that of the owner.
-Second, you may have one or the other of these two kinds of borrows, but not
-both at the same time:
+Primo, ogni prestito deve durare per un ambito non più esteso di quello
+del possessore. Secondo, si può avere uno o l'altro dei due seguenti generi
+di prestiti, ma non entrambi allo stesso tempo:
 
-* one or more references (`&T`) to a resource,
-* exactly one mutable reference (`&mut T`).
+* uno o più riferimenti non mutabili (`&T`) a un oggetto,
+* esattamente un riferimento mutabile (`&mut T`) a un oggetto.
 
+Questa regola è molto simile, anche se non esattamente uguale,
+alla definizione di 'corsa ai dati' ["data race"]:
 
-You may notice that this is very similar to, though not exactly the same as,
-the definition of a data race:
+> C'è una ‘corsa ai dati’ quando due o più puntatori accedono alla medesima
+> posizione di memoria nello stesso tempo, e per almeno uno di essi tale
+> accesso è in scrittura, e tali accessi non sono sincronizzati.
 
-> There is a ‘data race’ when two or more pointers access the same memory
-> location at the same time, where at least one of them is writing, and the
-> operations are not synchronized.
+Per quanto riguarda i riferimenti immutabili, se ne possono avere quanti se ne
+vogliono, dato che nessuno di essi sta scrivendo. Però, dato possiamo avere
+solamente un riferimenti mutabili per volta, è impossibile avere una corsa
+ai dati. Questa tecnica consente a Rust in fase di compilazione di prevenire
+le corse ai dati: otterremmo degli errori se violiamo le regole.
 
-With references, you may have as many as you’d like, since none of them are
-writing. However, as we can only have one `&mut` at a time, it is impossible to
-have a data race. This is how Rust prevents data races at compile time: we’ll
-get errors if we break the rules.
+Tenendo questo a mente, consideriamo ancora il nostro esempio.
 
-With this in mind, let’s consider our example again.
+## Pensare secondo gli ambiti
 
-## Thinking in scopes
-
-Here’s the code:
+Ecco il codice:
 
 ```rust,ignore
 fn main() {
@@ -184,7 +190,7 @@ fn main() {
 }
 ```
 
-This code gives us this error:
+Questo codice ci dà questo errore:
 
 ```text
 error: cannot borrow `x` as immutable because it is also borrowed as mutable
@@ -192,9 +198,9 @@ error: cannot borrow `x` as immutable because it is also borrowed as mutable
                    ^
 ```
 
-This is because we’ve violated the rules: we have a `&mut T` pointing to `x`,
-and so we aren’t allowed to create any `&T`s. It's one or the other. The note
-hints at how to think about this problem:
+Questo perché abbiamo violate le regole: abbiamo un `&mut T` che punta a `x`,
+e così non ci è permesso creare dei `&T` che puntino al medesimo oggetto.
+È l'uno o l'altro. L'annotazione suggerisce come pensare a questo problema:
 
 ```text
 note: previous borrow ends here
@@ -204,53 +210,56 @@ fn main() {
 ^
 ```
 
-In other words, the mutable borrow is held through the rest of our example. What
-we want is for the mutable borrow by `y` to end so that the resource can be
-returned to the owner, `x`. `x` can then provide a immutable borrow to `println!`.
-In Rust, borrowing is tied to the scope that the borrow is valid for. And our
-scopes look like this:
+In altre parole, il prestito mutabile viene tenuto per tutto il resto
+del programma. Ciò che vogliamo è che il prestito mutable a `y` finisca, così
+che la risorsa possa essere restituita al possessore, `x`. Poi `x` può fornire
+un prestito immutabile a `println!`. In Rust, prendere a prestito è legato
+all'ambito per cui il prestito è valido. E il nostro ambito si presenta così:
 
 ```rust,ignore
 fn main() {
     let mut x = 5;
 
-    let y = &mut x;    // -+ &mut borrow of x starts here
+    let y = &mut x;    // -+ qui inizia il prestito mutabile di x 
                        //  |
     *y += 1;           //  |
                        //  |
-    println!("{}", x); // -+ - try to borrow x here
-}                      // -+ &mut borrow of x ends here
+    println!("{}", x); // -+ - qui prova a prendere a prestito immutabile x
+}                      // -+ qui finisce il prestito mutabile di x
                        
 ```
 
-The scopes conflict: we can’t make an `&x` while `y` is in scope.
+Gli ambiti sono in conflitto: non possiamo fare un `&x` mentre `y` è
+nell'ambito.
 
-So when we add the curly braces:
+Perciò quando aggiungiamo le graffe:
 
 ```rust
 let mut x = 5;
 
 {
-    let y = &mut x; // -+ &mut borrow starts here
+    let y = &mut x; // -+ qui inizia il prestito mutabile
     *y += 1;        //  |
-}                   // -+ ... and ends here
+}                   // -+ ... e qui finisce
 
-println!("{}", x);  // <- try to borrow x here
+println!("{}", x);  // <- qui prova a prendere a prestito immutabile x
 ```
 
-There’s no problem. Our mutable borrow goes out of scope before we create an
-immutable one. So scope is the key to seeing how long a borrow lasts for.
+Non c'è problema. Il nostro prestito mutabile esce di ambito prima che venga
+creato quello immutabile. Perciò l'ambito è la chiave per vedere quanto dura
+un prestito.
 
-## Issues borrowing prevents
+## Difetti prevenuti dai prestiti
 
-Why have these restrictive rules? Well, as we noted, these rules prevent data
-races. What kinds of issues do data races cause? Here are a few.
+Perché ci sono queste regole restrittive? Beh, come abbiamo detto,
+queste regole prevengono le corse ai dati. Le corse ai dati che genere
+di difetti provocano? Ecconi alcuni.
 
-### Iterator invalidation
+### Invalidazione degli iteratori
 
-One example is ‘iterator invalidation’, which happens when you try to mutate a
-collection that you’re iterating over. Rust’s borrow checker prevents this from
-happening:
+Un esempio è l'‘invalidazione degli iteratori’, che avviene quando si prova
+a mutare una collezione su cui si sta iterando. Il verificatore dei prestiti
+di Rust previene che accada:
 
 ```rust
 let mut v = vec![1, 2, 3];
@@ -260,9 +269,10 @@ for i in &v {
 }
 ```
 
-This prints out one through three. As we iterate through the vector, we’re
-only given references to the elements. And `v` is itself borrowed as immutable,
-which means we can’t change it while we’re iterating:
+Questo codice stampa i numeri da uno a tre. Mentre iteriamo lungo il vettore,
+ci vengono dati solamente dei riferimenti agli elementi. E `v` è esso stesso
+preso in prestito come immutabile, il che significa che non possiamo cambiarlo
+mentre stiamo iterando:
 
 ```rust,ignore
 let mut v = vec![1, 2, 3];
@@ -273,7 +283,7 @@ for i in &v {
 }
 ```
 
-Here’s the error:
+Ecco l'errore:
 
 ```text
 error: cannot borrow `v` as mutable because it is also borrowed as immutable
@@ -291,15 +301,16 @@ for i in &v {
 ^
 ```
 
-We can’t modify `v` because it’s borrowed by the loop.
+Non possiamo modificare `v` perché è preso in prestito dal ciclo.
 
-### Use after free
+### Uso dopo il rilascio
 
-References must not live longer than the resource they refer to. Rust will
-check the scopes of your references to ensure that this is true.
+I riferimenti non devono vivere più a lungo dell'oggetto a cui fanno
+riferimento. Rust verificherà gli ambiti dei riferimenti per assicurare
+che sia così.
 
-If Rust didn’t check this property, we could accidentally use a reference
-which was invalid. For example:
+Se Rust non verificasse questa proprietà, potremmo accidentalmente usare
+un oggetto che è diventato invalido. Per esempio:
 
 ```rust,ignore
 let y: &i32;
@@ -311,7 +322,7 @@ let y: &i32;
 println!("{}", y);
 ```
 
-We get this error:
+Otteniamo questo errore:
 
 ```text
 error: `x` does not live long enough
@@ -332,14 +343,15 @@ statement 0 at 4:18
 }
 ```
 
-In other words, `y` is only valid for the scope where `x` exists. As soon as
-`x` goes away, it becomes invalid to refer to it. As such, the error says that
-the borrow ‘doesn’t live long enough’ because it’s not valid for the right
-amount of time.
+In altre parole, il valore di `y` è valido solamente per l'ambito dove `x`
+esiste. Non appena `x` se ne va, diventa invalido fare riferimento ad esso.
+Come tale, l'errore dice che il prestito ‘non vive abbastanza a lungo’ perché
+non è valido per la giusta quantità di tempo.
 
-The same problem occurs when the reference is declared _before_ the variable it
-refers to. This is because resources within the same scope are freed in the
-opposite order they were declared:
+Il medesimo problema avviene quando il riferimento è dichiarato _prima_
+della variabile a cui si riferisce. Questo è devuto al fatto che le risorse
+entro lo stesso ambito vengono rilasciate nell'ordine inverso di quello
+con cui sono state acquisite:
 
 ```rust,ignore
 let y: &i32;
@@ -349,7 +361,7 @@ y = &x;
 println!("{}", y);
 ```
 
-We get this error:
+Otteniamo questo errore:
 
 ```text
 error: `x` does not live long enough
@@ -373,5 +385,5 @@ statement 1 at 3:14
 }
 ```
 
-In the above example, `y` is declared before `x`, meaning that `y` lives longer
-than `x`, which is not allowed.
+Nell'esempio qui sopra, `y` è dichiarato prima di `x`, il che comporta che `y`
+vive (leggermente) più a lungo di `x`, il che non è consentito.

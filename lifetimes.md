@@ -2,6 +2,7 @@
 
 Questa è l'ultima delle tre sezioni che presentano il sistema di possesso
 di Rust. Qui si assume che siano già state lette le altre due:
+
 * Il [possesso][possesso], il concetto chiave
 * I [prestiti][prestiti], e le loro caratteristiche associate, i ‘riferimenti’
 

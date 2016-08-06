@@ -230,70 +230,73 @@ passando un argomente o `read_line()`: `&mut tentativo`.
 [read_line]: ../std/io/struct.Stdin.html#method.read_line
 [metodo]: method-syntax.html
 
-Remember how we bound `guess` above? We said it was mutable. However,
-`read_line` doesn’t take a `String` as an argument: it takes a `&mut String`.
-Rust has a feature called ‘[references][references]’, which allows you to have
-multiple references to one piece of data, which can reduce copying. References
-are a complex feature, as one of Rust’s major selling points is how safe and
-easy it is to use references. We don’t need to know a lot of those details to
-finish our program right now, though. For now, all we need to know is that
-like `let` bindings, references are immutable by default. Hence, we need to
-write `&mut guess`, rather than `&guess`.
+Come abbiamo legato il nome `tentativo` prima? Abbiamo detto che era mutabile.
+Però, `read_line` non prende una `String` come argomento: prende
+una `&mut String`. Rust ha una caratteristica chiamata ‘[riferimenti]
+[riferimenti]’, che consente di avere più riferimenti a un singolo dato,
+il che può ridurre la necessità di copiare. I riferimenti sono
+una caratteristica complessa, dato che uno dei principali vantaggi di Rust
+è quanto sia sicuro e facile usare i riferimenti. Però, per adesso, non
+ci serve sapere molti dettagli per finire il nostro programma. Per adesso,
+l'unica cosa che dobbiamo sapere è che anche i riferimenti, come i legami
+`let`, sono immutabili di default. Pertanto, dobbiamo scrivere
+`&mut tentativo`, invece che semplicemente `&tentativo`.
 
-Why does `read_line()` take a mutable reference to a string? Its job is
-to take what the user types into standard input, and place that into a
-string. So it takes that string as an argument, and in order to add
-the input, it needs to be mutable.
+Perché `read_line()` prende un riferimento mutabile a una stringa? Il suo
+compito è prendere i caratteri digitati dall'utente tramite lo standard input,
+e collocarli in una stringa. Quindi prende quella come argomento, e per poterci
+aggiungere l'input, ha bisogno che sia mutabile.
 
-[references]: references-and-borrowing.html
+[riferimenti]: references-and-borrowing.html
 
-But we’re not quite done with this line of code, though. While it’s
-a single line of text, it’s only the first part of the single logical line of
-code:
-
-```rust,ignore
-        .expect("Failed to read line");
-```
-
-When you call a method with the `.foo()` syntax, you may introduce a newline
-and other whitespace. This helps you split up long lines. We _could_ have
-done:
+Ma non abbiamo proprio finito con questa riga di codice. Anche se è una singola
+riga di testo, è solamente la prima parte della singola riga logica di codice:
 
 ```rust,ignore
-    io::stdin().read_line(&mut guess).expect("failed to read line");
+        .expect("Non si riesce a leggere la riga");
 ```
 
-But that gets hard to read. So we’ve split it up, two lines for two method
-calls. We already talked about `read_line()`, but what about `expect()`? Well,
-we already mentioned that `read_line()` puts what the user types into the `&mut
-String` we pass it. But it also returns a value: in this case, an
-[`io::Result`][ioresult]. Rust has a number of types named `Result` in its
-standard library: a generic [`Result`][result], and then specific versions for
-sub-libraries, like `io::Result`.
+Quando si chiama un metodo con la sintassi `.foo()`, si può andare a capo
+o si possono inserire spazi. Ciò aiuta a spezzare righe lunghe. _Avremmo anche
+potuto_ scrivere:
+
+```rust,ignore
+    io::stdin().read_line(&mut tentativo).expect("Non si riesce a leggere la riga");
+```
+
+Ma sarebbe diventato più difficile da leggere. E allora l'abbiamo spezzto;
+due righe per due chiamate di metodo. Abbiamo già parlato di `read_line()`,
+ma che dire di `expect()`? Beh, abbiamo già accennato che `read_line()` mette
+ciò che viene digitato dall'utente nella `&mut String` che le passiamo.
+Ma ritorna anche un valore: in questo caso, un [`io::Result`][ioresult]. Rust
+ha vari tipi chiamati `Result` nella sua libreria standard: un [`Result`]
+[result] generico, e poi delle versioni specifiche per delle sotto-librerie,
+come `io::Result`.
 
 [ioresult]: ../std/io/type.Result.html
 [result]: ../std/result/enum.Result.html
 
-The purpose of these `Result` types is to encode error handling information.
-Values of the `Result` type, like any type, have methods defined on them. In
-this case, `io::Result` has an [`expect()` method][expect] that takes a value
-it’s called on, and if it isn’t a successful one, [`panic!`][panic]s with a
-message you passed it. A `panic!` like this will cause our program to crash,
-displaying the message.
+Lo scopo di questi tipi `Result` è codificare le informazioni di gestione
+degli errori. Per i valori del tipo `Result`, come per quelli di ogni altro
+tipo, sono definiti dei metodi. In questo caso, `io::Result` ha un [metodo
+`expect()`][expect] che prende un valore su cui è chiamato, e se tale valore
+non rappresenta un successo, va in [`panic!`][panic] emettendo il messaggio
+che gli è stato passato. Un `panic!` come questo manderà in crash il programma,
+mostrando il messaggio.
 
 [expect]: ../std/result/enum.Result.html#method.expect
 [panic]: error-handling.html
 
-If we leave off calling this method, our program will compile, but
-we’ll get a warning:
+Se omettiamo la chiamata a questo metodo, il nostro programma compilerà,
+ma otterremo un avvertimento:
 
 ```bash
 $ cargo build
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-src/main.rs:10:5: 10:39 warning: unused result which must be used,
+src/main.rs:10:5: 10:43 warning: unused result which must be used,
 #[warn(unused_must_use)] on by default
-src/main.rs:10     io::stdin().read_line(&mut guess);
-                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:10     io::stdin().read_line(&mut tentativo);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
 Rust warns us that we haven’t used the `Result` value. This warning comes from
@@ -307,19 +310,19 @@ project.
 There’s only one line of this first example left:
 
 ```rust,ignore
-    println!("You guessed: {}", guess);
+    println!("Hai digitato: {}", tentativo);
 }
 ```
 
 This prints out the string we saved our input in. The `{}`s are a placeholder,
-and so we pass it `guess` as an argument. If we had multiple `{}`s, we would
+and so we pass it `tentativo` as an argument. If we had multiple `{}`s, we would
 pass multiple arguments:
 
 ```rust
 let x = 5;
 let y = 10;
 
-println!("x and y: {} and {}", x, y);
+println!("x e y: {} e {}", x, y);
 ```
 
 Easy.
@@ -330,54 +333,55 @@ Anyway, that’s the tour. We can run what we have with `cargo run`:
 $ cargo run
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
      Running `target/debug/guessing_game`
-Guess the number!
-Please input your guess.
+Indovina il numero!
+Prego, digita un tentativo.
 6
-You guessed: 6
+Hai digitato: 6
 ```
 
 All right! Our first part is done: we can get input from the keyboard,
 and then print it back out.
 
-# Generating a secret number
+# Generare un numero segreto
 
-Next, we need to generate a secret number. Rust does not yet include random
-number functionality in its standard library. The Rust team does, however,
-provide a [`rand` crate][randcrate]. A ‘crate’ is a package of Rust code.
-We’ve been building a ‘binary crate’, which is an executable. `rand` is a
-‘library crate’, which contains code that’s intended to be used with other
-programs.
+Poi, dobbiamo generare un numero segreto. La libreria standard di Rust
+non comprende ancora un generatore di numeri pseudo-casuali. Però, la squadra
+di Rust fornisce un [crate `rand`][randcrate]. Un ‘crate’ ["cassone"] è
+un pacchetto di codice Rust. Stiamo costruendo un ‘crate di programma’, mentre
+`rand` è un ‘crate di libreria’, cioè contiene del codice pronto per essere
+usato da altri programmi.
 
 [randcrate]: https://crates.io/crates/rand
 
-Using external crates is where Cargo really shines. Before we can write
-the code using `rand`, we need to modify our `Cargo.toml`. Open it up, and
-add these few lines at the bottom:
+Usare crate esterni è la cosa per cui Cargo fa faville. Prima di poter scrivere
+del codice che usa `rand`, dobbiamo modificare il nostro `Cargo.toml`.
+Apriamolo, e aggiungiamo in fondo queste due righe:
 
 ```toml
 [dependencies]
-
 rand="0.3.0"
 ```
 
-The `[dependencies]` section of `Cargo.toml` is like the `[package]` section:
-everything that follows it is part of it, until the next section starts.
-Cargo uses the dependencies section to know what dependencies on external
-crates you have, and what versions you require. In this case, we’ve specified version `0.3.0`,
-which Cargo understands to be any release that’s compatible with this specific version.
-Cargo understands [Semantic Versioning][semver], which is a standard for writing version
-numbers. A bare number like above is actually shorthand for `^0.3.0`,
-meaning "anything compatible with 0.3.0".
-If we wanted to use only `0.3.0` exactly, we could say `rand="=0.3.0"`
-(note the two equal signs).
-And if we wanted to use the latest version we could use `*`.
-We could also use a range of versions.
-[Cargo’s documentation][cargodoc] contains more details.
+La sezione `[dependencies]` di `Cargo.toml` è simile alla sezione `[package]`:
+ogni cosa che la segue ne fa parte, fino all'inizio di un'altra sezione.
+Cargo usa la sezione dependencies per sapere quali dipendenze ci sono da crate
+esterni, e quali versioni di essi sono richieste. In questo caso, abbiamo
+specificato la versione `0.3.0`, che Cargo capisce essere qualunque rilascio
+che è compatibile con questa specifica versione. Cargo capisce
+il [versionamento semantico][semver], che è uno standard per scrivere
+numeri di versione. Un semplice numero come quello sopra è in realtà
+un'abbreviazione di `^0.3.0`, che significa "tutte le versioni compatibili
+con la versione 0.3.0".
+Se avessimo voluto usare solamente proprio la versione `0.3.0`, avremmo potuto
+dire `rand="=0.3.0"` (si notino i due segni di uguaglianza).
+E se volessimo usare sempre la versione più recente, potremmo usare `*`.
+Potremmo usare anche una gamma di versioni.
+La [documentazione di Cargo][cargodoc] contiene ulteriori dettagli.
 
 [semver]: http://semver.org
 [cargodoc]: http://doc.crates.io/specifying-dependencies.html
 
-Now, without changing any of our code, let’s build our project:
+Adesso, senza cambiare nient'altro del codice, costruiamo il nostro progetto:
 
 ```bash
 $ cargo build
@@ -389,70 +393,77 @@ $ cargo build
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
 ```
 
-(You may see different versions, of course.)
+(Naturalmente, si potranno vedere diversi numeri di versione.)
 
-Lots of new output! Now that we have an external dependency, Cargo fetches the
-latest versions of everything from the registry, which is a copy of data from
-[Crates.io][cratesio]. Crates.io is where people in the Rust ecosystem
-post their open source Rust projects for others to use.
+Un sacco di nuovo output! Adesso che abbiamo una dipendenza esterna, Cargo
+va a prendere le versioni più recenti di ogni cosa dal registry, che è
+una copia di dati presi da [Crates.io][cratesio]. Crates.io è il posto dove
+la gente nell'ecosistema di Rust invia i suoi progetti open source in Rust
+per farli usare ad altri.
 
 [cratesio]: https://crates.io
 
-After updating the registry, Cargo checks our `[dependencies]` and downloads
-any we don’t have yet. In this case, while we only said we wanted to depend on
-`rand`, we’ve also grabbed a copy of `libc`. This is because `rand` depends on
-`libc` to work. After downloading them, it compiles them, and then compiles
-our project.
+Dopo aver aggiornato il registry, Cargo verifica la nostra sezione
+`[dependencies]` e scarica tutti i pacchetti che non abbiamo ancora. In questo
+caso, mentre abbiamo detto soltanto che volevamo dipendere da `rand`, ci siamo
+presi anche una copia di `libc`. Questo perché `rand` dipende da `libc`
+per funzionare. Dopo averli scaricati, li compila, e poi compila
+il nostro progetto.
 
-If we run `cargo build` again, we’ll get different output:
+Se eseguiamo ancora `cargo build`, otteniamo un output diverso:
 
 ```bash
 $ cargo build
 ```
 
-That’s right, no output! Cargo knows that our project has been built, and that
-all of its dependencies are built, and so there’s no reason to do all that
-stuff. With nothing to do, it simply exits. If we open up `src/main.rs` again,
-make a trivial change, and then save it again, we’ll only see one line:
+Va bene, nessun output! Cargo sa che il nostro progetto è stato costruito, e
+che tutte le sue dipendenze sono state scaricate e costruite, e quindi non c'è
+ragione di fare tutta quella roba. Non avendo niente da fare, semplicemente
+termina. Se riapriamo `src/main.rs`, facciamo una modifica banale, e lo
+risalviamo, vedremo solamente una riga:
 
 ```bash
 $ cargo build
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
 ```
 
-So, we told Cargo we wanted any `0.3.x` version of `rand`, and so it fetched the latest
-version at the time this was written, `v0.3.8`. But what happens when next
-week, version `v0.3.9` comes out, with an important bugfix? While getting
-bugfixes is important, what if `0.3.9` contains a regression that breaks our
-code?
+Perciò, abbiamo detto a Cargo che volevamo la versione `0.3.x` di `rand`, e
+quindi ci ha preso la versione più recente che c'era all'istante in cui questo
+libro è stato scritto, la `v0.3.8`. Ma cosa accadrà la prossima settimana,
+quando uscirà la versione `v0.3.9`, contenente una correzione importante?
+Ricevere le correzioni è importante, ma se la versione `0.3.9` contiene
+una regressione incompatibile con il nostro codice?
 
-The answer to this problem is the `Cargo.lock` file you’ll now find in your
-project directory. When you build your project for the first time, Cargo
-figures out all of the versions that fit your criteria, and then writes them
-to the `Cargo.lock` file. When you build your project in the future, Cargo
-will see that the `Cargo.lock` file exists, and then use that specific version
-rather than do all the work of figuring out versions again. This lets you
-have a repeatable build automatically. In other words, we’ll stay at `0.3.8`
-until we explicitly upgrade, and so will anyone who we share our code with,
-thanks to the lock file.
+La risposta a questo problema è il file `Cargo.lock` che adesso si troverà
+nella directory del nostro progetto. Quando costruiamo un progetto per
+la prima volta, Cargo calcola tutti i numeri di versione che soddisfano
+i nostri criteri, e poi li scrive nel file `Cargo.lock`. Quando si costruisce
+nuovamente il progetto, Cargo vedrà che il file `Cargo.lock` esiste, e quindi
+usa quella specifica versione invece di rifare tutto il lavoro di calcolare
+i numeri di versione. Questo consente di avere automaticamente un build
+ripetibile. In altri termini, rimarremo alla versione `0.3.8` finché ci
+aggiorniamo esplicitamente, e così farà chiunque condivida il nostro codice,
+grazie al file `.lock`.
 
-What about when we _do_ want to use `v0.3.9`? Cargo has another command,
-`update`, which says ‘ignore the lock, figure out all the latest versions that
-fit what we’ve specified. If that works, write those versions out to the lock
-file’. But, by default, Cargo will only look for versions larger than `0.3.0`
-and smaller than `0.4.0`. If we want to move to `0.4.x`, we’d have to update
-the `Cargo.toml` directly. When we do, the next time we `cargo build`, Cargo
-will update the index and re-evaluate our `rand` requirements.
+E che fare quando _vogliamo_ usare la versione `v0.3.9`? Cargo ha un altro
+comando, `update`, che significa ‘ignora il file `.lock`, calcola tutte
+le versioni più recenti che soddisfano quello che abbiamo specificato.
+Se funziona, scrivi quelle versioni nel file `.lock`’. Ma, di default, Cargo
+cercherà solamente versioni maggiori inferiori alla `0.4.0`. Se volessimo
+spostarci a una versione `0.4.x`, dovremmo aggiornare direttamente il file
+`Cargo.toml`. Quando lo facciamo, la prossima volta che eseguiamo il comando
+`cargo build`, Cargo aggiornerà l'indice e rivaluterà i requisiti del nostro
+`rand`.
 
-There’s a lot more to say about [Cargo][doccargo] and [its
-ecosystem][doccratesio], but for now, that’s all we need to know. Cargo makes
-it really easy to re-use libraries, and so Rustaceans tend to write smaller
-projects which are assembled out of a number of sub-packages.
+C'è molto più da dire su [Cargo][doccargo] e sul [suo ecosistema][doccratesio],
+ma per adesso, è tutto  quello che ci serve. Cargo rende davvero facile usare
+librerie, e quindi i Rustaciani tendono a scrivere progetti piccoli, assemblati
+usando vari sotto-progetti.
 
 [doccargo]: http://doc.crates.io
 [doccratesio]: http://doc.crates.io/crates-io.html
 
-Let’s get on to actually _using_ `rand`. Here’s our next step:
+Procediamo a _usare_ `rand`. Ecco il nostro prossimo passo:
 
 ```rust,ignore
 extern crate rand;
@@ -461,85 +472,87 @@ use std::io;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 
-    println!("Please input your guess.");
+    println!("Prego, digita un tentativo.");
 
-    let mut guess = String::new();
+    let mut tentativo = String::new();
 
-    io::stdin().read_line(&mut guess)
-        .expect("failed to read line");
+    io::stdin().read_line(&mut tentativo)
+        .expect("Non si riesce a leggere la riga");
 
-    println!("You guessed: {}", guess);
+    println!("Hai digitato: {}", tentativo);
 }
 ```
 
-The first thing we’ve done is change the first line. It now says
-`extern crate rand`. Because we declared `rand` in our `[dependencies]`, we
-can use `extern crate` to let Rust know we’ll be making use of it. This also
-does the equivalent of a `use rand;` as well, so we can make use of anything
-in the `rand` crate by prefixing it with `rand::`.
+La prima cosa che abbiamo fatto è cambiare la prima riga. Adesso dice
+`extern crate rand`. Dato che abbiamo dichiarato `rand` nelle nostre
+`[dependencies]`, possiamo usare `extern crate` per far sapere a Rust che ne
+faremo uso. Questa istruzione fa anche l'equivalente di un `use rand;`,
+e quindi possiamo fare uso di ogni cosa presente nel crate `rand` pur di
+qualificarla con il prefisso `rand::`.
 
-Next, we added another `use` line: `use rand::Rng`. We’re going to use a
-method in a moment, and it requires that `Rng` be in scope to work. The basic
-idea is this: methods are defined on something called ‘traits’, and for the
-method to work, it needs the trait to be in scope. For more about the
-details, read the [traits][traits] section.
+Poi, abbiamo aggiunto un'altra riga `use`: `use rand::Rng`. Fra un attimo
+useremo un metodo, e tale metodo richiede che `Rng` sia nel suo ambito. L'idea
+di base è questa: i metodi sono definiti su cose chiamate ‘tratti’, e affinché
+un metodo funzioni, ha bisogno che il suo tratto sia attivo nell'ambito
+corrente. Per maggiori dettagli, si legga la sezione sui [tratti][tratti].
 
-[traits]: traits.html
+[tratti]: traits.html
 
-There are two other lines we added, in the middle:
+Abbiamo aggiunto due altre righe, nel mezzo:
 
 ```rust,ignore
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 ```
 
-We use the `rand::thread_rng()` function to get a copy of the random number
-generator, which is local to the particular [thread][concurrency] of execution
-we’re in. Because we `use rand::Rng`’d above, it has a `gen_range()` method
-available. This method takes two arguments, and generates a number between
-them. It’s inclusive on the lower bound, but exclusive on the upper bound,
-so we need `1` and `101` to get a number ranging from one to a hundred.
+Usiamo la funzione `rand::thread_rng()` per ottenere una copia del generatore
+di numeri pseudo-casuali, che è locale al particolare [thread][concurrency]
+in cui siamo. Siccome sopra abbiamo scritto `use rand::Rng`, adesso il metodo
+`gen_range()` è disponibile. Questo metodo prende due argomenti, e genera
+un numero compreso tra di essi. Il limite inferiore è incluso, mentre il limite
+superiore è escluso, e quindi ci servono `1` e `101` per ottenere un numero
+che può andare da uno a cento.
 
 [concurrency]: concurrency.html
 
-The second line prints out the secret number. This is useful while
-we’re developing our program, so we can easily test it out. But we’ll be
-deleting it for the final version. It’s not much of a game if it prints out
-the answer when you start it up!
+La seconda riga stampa il numero segreto. Questa è utile fintanto che stiamo
+sviluppando il nostro programma, così che possiamo collaudarlo facilmente.
+Ma la toglieremo per la versione finale. Non sarebbe un gran gioco se stampasse
+la risposta esatta quando lo si lancia!
 
-Try running our new program a few times:
+Proviamo a eseguire alcune volte il nostro nuovo programma:
 
 ```bash
 $ cargo run
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
      Running `target/debug/guessing_game`
-Guess the number!
-The secret number is: 7
-Please input your guess.
+Indovina il numero!
+Il numero segreto è: 7
+Prego, digita un tentativo.
 4
-You guessed: 4
+Hai digitato: 4
 $ cargo run
      Running `target/debug/guessing_game`
-Guess the number!
-The secret number is: 83
-Please input your guess.
+Indovina il numero!
+Il numero segreto è: 83
+Prego, digita un tentativo.
 5
-You guessed: 5
+Hai digitato: 5
 ```
 
-Great! Next up: comparing our guess to the secret number.
+Ottimo! Prossimo passo: confrontare il nostro tentativo con il numero segreto.
 
-# Comparing guesses
+# Confrontare i tentativi
 
-Now that we’ve got user input, let’s compare our guess to the secret number.
-Here’s our next step, though it doesn’t quite compile yet:
+Adesso che abbiamo l'input dell'utente, confrontiamo il nostro tentativo
+al numero segreto. Ecco il nostro nuovo passo, anche se non compila ancora:
 
 ```rust,ignore
 extern crate rand;
@@ -549,46 +562,47 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 
-    println!("Please input your guess.");
+    println!("Prego, digita un tentativo.");
 
-    let mut guess = String::new();
+    let mut tentativo = String::new();
 
-    io::stdin().read_line(&mut guess)
-        .expect("failed to read line");
+    io::stdin().read_line(&mut tentativo)
+        .expect("Non si riesce a leggere la riga");
 
-    println!("You guessed: {}", guess);
+    println!("Hai digitato: {}", tentativo);
 
-    match guess.cmp(&secret_number) {
-        Ordering::Less    => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal   => println!("You win!"),
+    match tentativo.cmp(&numero_segreto) {
+        Ordering::Less    => println!("Troppo piccolo!"),
+        Ordering::Greater => println!("Troppo grande!"),
+        Ordering::Equal   => println!("Hai vinto!"),
     }
 }
 ```
 
-A few new bits here. The first is another `use`. We bring a type called
-`std::cmp::Ordering` into scope. Then, five new lines at the bottom that use
-it:
+Ci sono alcune aggiunte. La prima è un altro `use`. Portiamo nell'ambito
+un tipo chiamato `std::cmp::Ordering`. Poi, ci sono cinque nuove righe
+in fondo che usano tale tipo:
 
 ```rust,ignore
-match guess.cmp(&secret_number) {
-    Ordering::Less    => println!("Too small!"),
-    Ordering::Greater => println!("Too big!"),
-    Ordering::Equal   => println!("You win!"),
+match tentativo.cmp(&numero_segreto) {
+    Ordering::Less    => println!("Troppo piccolo!"),
+    Ordering::Greater => println!("Troppo grande!"),
+    Ordering::Equal   => println!("Hai vinto!"),
 }
 ```
 
-The `cmp()` method can be called on anything that can be compared, and it
-takes a reference to the thing you want to compare it to. It returns the
-`Ordering` type we `use`d earlier. We use a [`match`][match] statement to
-determine exactly what kind of `Ordering` it is. `Ordering` is an
-[`enum`][enum], short for ‘enumeration’, which looks like this:
+Il metodo `cmp()` può essere chiamato su qualunque oggetto che può essere
+confrontata, e prende un riferimento all'oggetto con cui ci si vuole
+confrontare. Rende il tipo `Ordering` che abbiamo importato prima. Usiamo
+un'istruzione [`match`][match] per determinare esattamente quale `Ordering`
+abbiamo ottenuto dal confronto. `Ordering` è una [`enum`][enum], abbreviazione
+di ‘enumerazione’. Le enumerazioni si dichiarano così:
 
 ```rust
 enum Foo {
@@ -600,56 +614,60 @@ enum Foo {
 [match]: match.html
 [enum]: enums.html
 
-With this definition, anything of type `Foo` can be either a
-`Foo::Bar` or a `Foo::Baz`. We use the `::` to indicate the
-namespace for a particular `enum` variant.
+Con questa definizione, ogni oggetto di tipo `Foo` può essere o una `Foo::Bar`
+o un `Foo::Baz`. Usiamo il `::` per indicare lo spazio dei nomi
+di una paricolare variante della `enum`.
 
-The [`Ordering`][ordering] `enum` has three possible variants: `Less`, `Equal`,
-and `Greater`. The `match` statement takes a value of a type, and lets you
-create an ‘arm’ for each possible value. Since we have three types of
-`Ordering`, we have three arms:
+L'`enum` [`Ordering`][ordering] ha tre possibili varianti: `Less`, `Equal`,
+e `Greater`. L'istruzione `match` prende un valore di un tipo, e permette
+di creare un ‘braccio’ per ogni valore possibile. Dato che abbiamo tre varianti
+di `Ordering`, dobbiamo avere tre bracci:
 
 ```rust,ignore
-match guess.cmp(&secret_number) {
-    Ordering::Less    => println!("Too small!"),
-    Ordering::Greater => println!("Too big!"),
-    Ordering::Equal   => println!("You win!"),
+match tentativo.cmp(&numero_segreto) {
+    Ordering::Less    => println!("Troppo piccolo!"),
+    Ordering::Greater => println!("Troppo grande!"),
+    Ordering::Equal   => println!("Hai vinto!"),
 }
 ```
 
 [ordering]: ../std/cmp/enum.Ordering.html
 
-If it’s `Less`, we print `Too small!`, if it’s `Greater`, `Too big!`, and if
-`Equal`, `You win!`. `match` is really useful, and is used often in Rust.
+Se vale `Less`, stampiamo `Troppo piccolo!`, se vale `Greater`,
+`Troppo grande!`, e se vale `Equal`, `Hai vinto!`. `match` è davvero utile,
+ed è usato spesso in Rust.
 
-I did mention that this won’t quite compile yet, though. Let’s try it:
+Ho già detto che questo codice non compilava, però. Proviamolo:
 
 ```bash
 $ cargo build
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-src/main.rs:28:21: 28:35 error: mismatched types:
+src/main.rs:28:25: 28:40 error: mismatched types:
  expected `&collections::string::String`,
     found `&_`
 (expected struct `collections::string::String`,
     found integral variable) [E0308]
-src/main.rs:28     match guess.cmp(&secret_number) {
-                                   ^~~~~~~~~~~~~~
+src/main.rs:28     match tentativo.cmp(&numero_segreto) {
+                                       ^~~~~~~~~~~~~~~
 error: aborting due to previous error
 Could not compile `guessing_game`.
 ```
 
-Whew! This is a big error. The core of it is that we have ‘mismatched types’.
-Rust has a strong, static type system. However, it also has type inference.
-When we wrote `let guess = String::new()`, Rust was able to infer that `guess`
-should be a `String`, and so it doesn’t make us write out the type. And with
-our `secret_number`, there are a number of types which can have a value
-between one and a hundred: `i32`, a thirty-two-bit number, or `u32`, an
-unsigned thirty-two-bit number, or `i64`, a sixty-four-bit number or others.
-So far, that hasn’t mattered, and so Rust defaults to an `i32`. However, here,
-Rust doesn’t know how to compare the `guess` and the `secret_number`. They
-need to be the same type. Ultimately, we want to convert the `String` we
-read as input into a real number type, for comparison. We can do that
-with two more lines. Here’s our new program:
+Urca! Questo è un grosso erroro. Il suo nucleo è che abbiamo dei ‘tipi male
+accoppiati’ ["‘mismatched types’"]. Rust ha un sistema dei tipi forte
+e statico. Però, ha anche l'inferenza dei tipi. Quando abbiamo scritto
+`let tentativo = String::new()`, Rust è stato capace di inferire che
+`tentativo` doveva essere una `String`, e quindi non ci ha costretto
+a scriverne il tipo. E con il nostro `numero_secreto`, ci sono vari tipi
+chd possono avere un valore fra uno e cento: `i32`, cioè un numero intero
+con segno a trentadue bit, o `u32`, cioè un numero intero senza segno
+a trentadue bit, o `i64`, un numero intero con segno a sessantaquattro bit
+oppure altri. Finora, non ha importato, e quindi Rust ha preso come default
+un `i32`. Però, qui, Rust non sa come confrontare `tentativo` con
+`secret_number`. Devono essere dello stesso tipo. Pertanto, dobbiamo convertire
+la `String` che abbiamo letto come input in un vero tipo numerico, per poterlo
+confrontare. Lo possiamo fare aggiungendo due righe. Ecco il nostro nuovo
+programma:
 
 ```rust,ignore
 extern crate rand;
@@ -659,97 +677,103 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 
-    println!("Please input your guess.");
+    println!("Prego, digita un tentativo.");
 
-    let mut guess = String::new();
+    let mut tentativo = String::new();
 
-    io::stdin().read_line(&mut guess)
-        .expect("failed to read line");
+    io::stdin().read_line(&mut tentativo)
+        .expect("Non si riesce a leggere la riga");
 
-    let guess: u32 = guess.trim().parse()
-        .expect("Please type a number!");
+    let tentativo: u32 = tentativo.trim().parse()
+        .expect("Prego, digita un numero!");
 
-    println!("You guessed: {}", guess);
+    println!("Hai digitato: {}", tentativo);
 
-    match guess.cmp(&secret_number) {
-        Ordering::Less    => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal   => println!("You win!"),
+    match tentativo.cmp(&numero_segreto) {
+        Ordering::Less    => println!("Troppo piccolo!"),
+        Ordering::Greater => println!("Troppo grande!"),
+        Ordering::Equal   => println!("Hai vinto!"),
     }
 }
 ```
 
-The new two lines:
+Le due nuove righe:
 
 ```rust,ignore
-    let guess: u32 = guess.trim().parse()
-        .expect("Please type a number!");
+    let tentativo: u32 = tentativo.trim().parse()
+        .expect("Prego, digita un numero!");
 ```
 
-Wait a minute, I thought we already had a `guess`? We do, but Rust allows us
-to ‘shadow’ the previous `guess` with a new one. This is often used in this
-exact situation, where `guess` starts as a `String`, but we want to convert it
-to an `u32`. Shadowing lets us re-use the `guess` name, rather than forcing us
-to come up with two unique names like `guess_str` and `guess`, or something
-else.
+Aspetta un attimo, pensavo che che avevamo già un `tentativo`? Sì, ma Rust ci
+permette di ’oscurare’ ["‘shadow’"] il precedente `tentativo` con uno nuovo.
+Questo si usa spesso proprio in questa situazione, in cui `tentativo` inizia
+come `String`, ma lo vogliamo convertire in un `u32`. L'oscuramento ci permette
+di riusare il nome `tentativo`, invece di costringerci a inventare due nomi
+univoci come `tentativo_str` e `tentativo`, o qualcosa del genere.
 
-We bind `guess` to an expression that looks like something we wrote earlier:
+Leghiamo `tentativo` a un'espressione che somiglia a qualcosa che abbiamo
+scritto prima:
 
 ```rust,ignore
-guess.trim().parse()
+tentativo.trim().parse()
 ```
 
-Here, `guess` refers to the old `guess`, the one that was a `String` with our
-input in it. The `trim()` method on `String`s will eliminate any white space at
-the beginning and end of our string. This is important, as we had to press the
-‘return’ key to satisfy `read_line()`. This means that if we type `5` and hit
-return, `guess` looks like this: `5\n`. The `\n` represents ‘newline’, the
-enter key. `trim()` gets rid of this, leaving our string with only the `5`. The
-[`parse()` method on strings][parse] parses a string into some kind of number.
-Since it can parse a variety of numbers, we need to give Rust a hint as to the
-exact type of number we want. Hence, `let guess: u32`. The colon (`:`) after
-`guess` tells Rust we’re going to annotate its type. `u32` is an unsigned,
-thirty-two bit integer. Rust has [a number of built-in number types][number],
-but we’ve chosen `u32`. It’s a good default choice for a small positive number.
+Qui, `tentativo` si riferisce al vecchio `tentativo`, quello che era
+una `String` contenente il nostro input. Il metodo `trim()` applicato a
+una `String` eliminerà tutti gli spazi all'inizio e alla fine della stringa.
+Questo è importanto, dato che abbiamo dovuto premere il tasto ‘Invio’
+per soddisfare la funzione `read_line()`. Ciò significa che se digitiamo `5`
+e battiamo Invio, `tentativo` conterrà `5\n`. La stringa `\n` rappresenta un
+carattere ‘a capo’, inserito dal tasto Invio. `trim()` se ne sbarazza,
+lasciando nella nostra stringa solamente il `5`. Il [metodo `parse()` applicato
+a una stringa][parse] analizza la stringa estraendone un numero di qualche
+tipo. Dato che tale metodo può riconoscere vari tipi di numeri, dobbiamo
+suggerire a Rust il tipo esatto del numero che vogliamo. Pertanto, scriviamo
+`let tentativo: u32`. Il due-punti (`:`) dopo `tentativo` dice a Rust
+che stiamo annotando il tipo del legame. `u32` è il tipo intero senza segno
+a trentadue bit. Rust ha [vari tipi numerici predefiniti][number], ma abbiamo
+scelto `u32`. È una buona scelta di default per un numero positivo piccolo.
 
 [parse]: ../std/primitive.str.html#method.parse
 [number]: primitive-types.html#numeric-types
 
-Just like `read_line()`, our call to `parse()` could cause an error. What if
-our string contained `A👍%`? There’d be no way to convert that to a number. As
-such, we’ll do the same thing we did with `read_line()`: use the `expect()`
-method to crash if there’s an error.
+Proprio come `read_line()`, anche la nostra chiamata a `parse()` potrebbe
+provocare un errore. Che fare se la nostra stringa contenesse `A👍%`? Non ci
+sarebbe modo di convertirla in un numero. Pertanto, faremo la stessa cosa che
+abbiamo fatto con `read_line()`: usiamo il metodo `expect()` per andare
+in crash se c'è un errore.
 
-Let’s try our program out!
+Proviamo il nostro programma!
 
 ```bash
 $ cargo run
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
      Running `target/guessing_game`
-Guess the number!
-The secret number is: 58
-Please input your guess.
+Indovina il numero!
+Il numero segreto è: 58
+Prego, digita un tentativo.
   76
-You guessed: 76
-Too big!
+Hai digitato: 76
+Troppo grande!
 ```
 
-Nice! You can see I even added spaces before my guess, and it still figured
-out that I guessed 76. Run the program a few times, and verify that guessing
-the number works, as well as guessing a number too small.
+Carino! Si può vedere che abbiamo perfino aggiunto degli spazi prima
+di digitare il tentativo, ma è comunque riuscito a valutarlo come 76.
+Eseguiamo il programma alcune volte, e verifichiamo che funzioni quando
+si indovina il numero, e anche quando il tentativo è un numero troppo piccolo.
 
-Now we’ve got most of the game working, but we can only make one guess. Let’s
-change that by adding loops!
+Adesso abbiamo che la maggior parte del gioco funziona, ma possiamo fare
+un solo tentativo. Modifichiamolo aggiungendo i cicli!
 
-# Looping
+# Ciclare
 
-The `loop` keyword gives us an infinite loop. Let’s add that in:
+La parola-chiave `loop` ci dà un ciclo infinito. Aggiungiamola:
 
 ```rust,ignore
 extern crate rand;
@@ -759,63 +783,64 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 
     loop {
-        println!("Please input your guess.");
+        println!("Prego, digita un tentativo.");
 
-        let mut guess = String::new();
+        let mut tentativo = String::new();
 
-        io::stdin().read_line(&mut guess)
-            .expect("failed to read line");
+        io::stdin().read_line(&mut tentativo)
+            .expect("Non si riesce a leggere la riga");
 
-        let guess: u32 = guess.trim().parse()
-            .expect("Please type a number!");
+        let tentativo: u32 = tentativo.trim().parse()
+            .expect("Prego, digita un numero!");
 
-        println!("You guessed: {}", guess);
+        println!("Hai digitato: {}", tentativo);
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less    => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal   => println!("You win!"),
+        match tentativo.cmp(&numero_segreto) {
+            Ordering::Less    => println!("Troppo piccolo!"),
+            Ordering::Greater => println!("Troppo grande!"),
+            Ordering::Equal   => println!("Hai vinto!"),
         }
     }
 }
 ```
 
-And try it out. But wait, didn’t we just add an infinite loop? Yup. Remember
-our discussion about `parse()`? If we give a non-number answer, we’ll `panic!`
-and quit. Observe:
+E proviamola. Ma, un momento, non abbiamo appena aggiunto un ciclo infinito?
+Già. Prima, parlando di `parse()`, abbiamo detto che se gli diamo una risposta
+che non è un numero, andrà in `panic!` e terminerà. Osserviamo:
 
 ```bash
 $ cargo run
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
      Running `target/guessing_game`
-Guess the number!
-The secret number is: 59
-Please input your guess.
+Indovina il numero!
+Il numero segreto è: 59
+Prego, digita un tentativo.
 45
-You guessed: 45
-Too small!
-Please input your guess.
+Hai digitato: 45
+Troppo piccolo!
+Prego, digita un tentativo.
 60
-You guessed: 60
-Too big!
-Please input your guess.
+Hai digitato: 60
+Troppo grande!
+Prego, digita un tentativo.
 59
-You guessed: 59
-You win!
-Please input your guess.
-quit
-thread 'main' panicked at 'Please type a number!'
+Hai digitato: 59
+Hai vinto!
+Prego, digita un tentativo.
+basta
+thread 'main' panicked at 'Prego, digita un numero!'
 ```
 
-Ha! `quit` actually quits. As does any other non-number input. Well, this is
-suboptimal to say the least. First, let’s actually quit when you win the game:
+Ah! Digitando `basta` in effetti si termina il programma. Come fa qualunque
+input non numerico. Beh, questo non è il massimo, a dir poco. Come prima cosa,
+terminiamo effettivamente quando si vince il gioco:
 
 ```rust,ignore
 extern crate rand;
@@ -825,30 +850,30 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 
     loop {
-        println!("Please input your guess.");
+        println!("Prego, digita un tentativo.");
 
-        let mut guess = String::new();
+        let mut tentativo = String::new();
 
-        io::stdin().read_line(&mut guess)
-            .expect("failed to read line");
+        io::stdin().read_line(&mut tentativo)
+            .expect("Non si riesce a leggere la riga");
 
-        let guess: u32 = guess.trim().parse()
-            .expect("Please type a number!");
+        let tentativo: u32 = tentativo.trim().parse()
+            .expect("Prego, digita un numero!");
 
-        println!("You guessed: {}", guess);
+        println!("Hai digitato: {}", tentativo);
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less    => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
+        match tentativo.cmp(&numero_segreto) {
+            Ordering::Less    => println!("Troppo piccolo!"),
+            Ordering::Greater => println!("Troppo grande!"),
             Ordering::Equal   => {
-                println!("You win!");
+                println!("Hai vinto!");
                 break;
             }
         }
@@ -856,11 +881,11 @@ fn main() {
 }
 ```
 
-By adding the `break` line after the `You win!`, we’ll exit the loop when we
-win. Exiting the loop also means exiting the program, since it’s the last
-thing in `main()`. We have only one more tweak to make: when someone inputs a
-non-number, we don’t want to quit, we want to ignore it. We can do that
-like this:
+Aggiungendo la riga `break` dopo la stampa di `Hai vinto!`, usciremo dal ciclo
+quando si vince. Uscire dal ciclo comporta anche uscire dal programma, dato che
+non c'è altro in `main()`. Abbiamo solamente un altro ritocco da fare: quando
+si digita un input non numerico, non vogliamo terminare, vogliamo ignorarlo.
+Lo possiamo fare così:
 
 ```rust,ignore
 extern crate rand;
@@ -870,32 +895,32 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
-    println!("The secret number is: {}", secret_number);
+    println!("Il numero segreto è: {}", numero_segreto);
 
     loop {
-        println!("Please input your guess.");
+        println!("Prego, digita un tentativo.");
 
-        let mut guess = String::new();
+        let mut tentativo = String::new();
 
-        io::stdin().read_line(&mut guess)
-            .expect("failed to read line");
+        io::stdin().read_line(&mut tentativo)
+            .expect("Non si riesce a leggere la riga");
 
-        let guess: u32 = match guess.trim().parse() {
+        let tentativo: u32 = match tentativo.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };
 
-        println!("You guessed: {}", guess);
+        println!("Hai digitato: {}", tentativo);
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less    => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
+        match tentativo.cmp(&numero_segreto) {
+            Ordering::Less    => println!("Troppo piccolo!"),
+            Ordering::Greater => println!("Troppo grande!"),
             Ordering::Equal   => {
-                println!("You win!");
+                println!("Hai vinto!");
                 break;
             }
         }
@@ -903,54 +928,56 @@ fn main() {
 }
 ```
 
-These are the lines that changed:
+Le righe modificate sono queste:
 
 ```rust,ignore
-let guess: u32 = match guess.trim().parse() {
+let tentativo: u32 = match tentativo.trim().parse() {
     Ok(num) => num,
     Err(_) => continue,
 };
 ```
-This is how you generally move from ‘crash on error’ to ‘actually handle the
-error’, by switching from `expect()` to a `match` statement. A `Result` is
-returned by `parse()`, this is an `enum`  like `Ordering`, but in this case,
-each variant has some data associated with it: `Ok` is a success, and `Err` is a
-failure. Each contains more information: the successfully parsed integer, or an
-error type. In this case, we `match` on `Ok(num)`, which sets the name `num` to
-the unwrapped `Ok` value (the integer), and then we  return it on the
-right-hand side. In the `Err` case, we don’t care what kind of error it is, so
-we just use the catch all `_` instead of a name. This catches everything that
-isn't `Ok`, and `continue` lets us move to the next iteration of the loop; in
-effect, this enables us to ignore all errors and continue with our program.
+Il modo tipico per passare da un ‘crash dovuto a errore’ a una ‘gestione
+effettiva dell'errore’, è passare dall'uso del metodo `expect()` all'uso
+dell'istruzione `match`. La chiamata a `parse()` rende un `Result`; questo è
+una `enum`, come `Ordering`, ma in questo caso, ogni variante ha alcuni dati
+associati ad essa: `Ok` indica un successo, e `Err` indica un fallimento, ma
+entrambi contengono ulteriori informazioni: per il primo, l'intero estratto
+con successo, e per l'altro il genere di errore. In questo caso, `match`
+proverà a far commbaciare il suo argomento con `Ok(num)`, che assegnerà al nome
+il valore contenuto in `Ok` (cioè l'intero estratto), e poi assegnamo
+quest'ultimi al lato sinistro. Nel caso `Err`, non ci interessa il genere
+di errore, e così usiamo il carattere piglia-tutto `_`, invece di un nome.
+Questo jolly combacia con qualunque codice d'errore, e poi `continue` ci
+sposterà alla prossima iterazione del ciclo; in effetti, questo codice
+ci consente di ignorare tutti gli errori e continuare nel programma.
 
-Now we should be good! Let’s try:
+Adesso dovremmo essere a posto! Proviamo:
 
 ```bash
 $ cargo run
    Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
      Running `target/guessing_game`
-Guess the number!
-The secret number is: 61
-Please input your guess.
+Indovina il numero!
+Il numero segreto è: 61
+Prego, digita un tentativo.
 10
-You guessed: 10
-Too small!
-Please input your guess.
+Hai digitato: 10
+Troppo piccolo!
+Prego, digita un tentativo.
 99
-You guessed: 99
-Too big!
-Please input your guess.
+Hai digitato: 99
+Troppo grande!
+Prego, digita un tentativo.
 foo
-Please input your guess.
+Prego, digita un tentativo.
 61
-You guessed: 61
-You win!
+Hai digitato: 61
+Hai vinto!
 ```
 
-Awesome! With one tiny last tweak, we have finished the guessing game. Can you
-think of what it is? That’s right, we don’t want to print out the secret
-number. It was good for testing, but it kind of ruins the game. Here’s our
-final source:
+Magnifico! Con un ultimo ritocchino, abbiamo finito il gioco. Chi indovina
+quale sarà? Giusto, non vogliamo stampare subito il numero segreto. Andava
+bene per il collaudo, ma rovinava il gioco. Ecco il nostro sorgente finale:
 
 ```rust,ignore
 extern crate rand;
@@ -960,30 +987,30 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 fn main() {
-    println!("Guess the number!");
+    println!("Indovina il numero!");
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
 
     loop {
-        println!("Please input your guess.");
+        println!("Prego, digita un tentativo.");
 
-        let mut guess = String::new();
+        let mut tentativo = String::new();
 
-        io::stdin().read_line(&mut guess)
-            .expect("failed to read line");
+        io::stdin().read_line(&mut tentativo)
+            .expect("Non si riesce a leggere la riga");
 
-        let guess: u32 = match guess.trim().parse() {
+        let tentativo: u32 = match tentativo.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };
 
-        println!("You guessed: {}", guess);
+        println!("Hai digitato: {}", tentativo);
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less    => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
+        match tentativo.cmp(&numero_segreto) {
+            Ordering::Less    => println!("Troppo piccolo!"),
+            Ordering::Greater => println!("Troppo grande!"),
             Ordering::Equal   => {
-                println!("You win!");
+                println!("Hai vinto!");
                 break;
             }
         }
@@ -991,9 +1018,10 @@ fn main() {
 }
 ```
 
-# Complete!
+# Finito!
 
-This project showed you a lot: `let`, `match`, methods, associated
-functions, using external crates, and more.
+Questo progetti ha mostrato parecchie cose: `let`, `match`, i metodi,
+le funzioni associate, l'uso di crate esterni, e altro.
 
-At this point, you have successfully built the Guessing Game! Congratulations!
+A questo punto, abbiamo costruito un gioco Indovina-numero funzionante!
+Congratulazioni!

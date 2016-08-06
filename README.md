@@ -25,7 +25,7 @@ come è richiesto per un linguaggio a basso livello.
 Questa introduzione è il primo. Dopo ci sono:
 
 * [Iniziare][gs] - Come impostare il computer per lo sviluppo con Rust.
-* [Tutorial: Indovinello][gg] - Imparare un po' di Rust con un piccolo progetto.
+* [Tutorial: Invovina-numero][gg] - Imparare un po' di Rust con un piccolo progetto.
 * [Sintassi e semantica][ss] - Ogni parte di Rust, un pezzetto per volta.
 * [Rust efficace][er] - Concetti ad alto livello per scrivere dell'eccellente codice Rust.
 * [Rust notturno][nr] - Funzionalità all'avanguardia che non sono ancora nella versione stabile.

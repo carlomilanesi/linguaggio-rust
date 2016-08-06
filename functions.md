@@ -103,11 +103,11 @@ Avremmo ottenuto un errore:
 
 ```text
 error: not all control paths return a value
-fn add_one(x: i32) -> i32 {
+fn somma_uno(x: i32) -> i32 {
      x + 1;
 }
 
-help: consider removing this semicolon:
+help: consider removing this punto-e-virgola:
      x + 1;
           ^
 ```
@@ -136,65 +136,68 @@ come espressioni, non come istruzioni. Come in Ruby:
 x = y = 5
 ```
 
-In Rust, however, using `let` to introduce a binding is _not_ an expression. The
-following will produce a compile-time error:
+In Rust, però, l'uso di `let` per introdurre un legamo _non_ è un'espressione.
+La seguente riga produrrà un errore di compilazione:
 
 ```rust,ignore
-let x = (let y = 5); // expected identifier, found keyword `let`
+let x = (let y = 5); // atteso un identificatore, trovata la parola-chiave `let`
 ```
 
-The compiler is telling us here that it was expecting to see the beginning of
-an expression, and a `let` can only begin a statement, not an expression.
+Qui il compilatore ci sta dicendo che si stava aspettando di vedere l'inizio
+di una espressione, mentre un `let` può iniziare solamente un'istruzione,
+non un'espressione.
 
-Note that assigning to an already-bound variable (e.g. `y = 5`) is still an
-expression, although its value is not particularly useful. Unlike other
-languages where an assignment evaluates to the assigned value (e.g. `5` in the
-previous example), in Rust the value of an assignment è un'ennupla vuota `()`
-because the assigned value can have [only one owner](ownership.html), and any
-other returned value would be too surprising:
+Si noti che assegnare a una variabile già legata (per es. `y = 5`) è ancora
+un'espressione, per quanto il suo valore non sia particolarmente utile.
+Diversamente da altri linguaggi, nei quali un assegnamento ha come valore
+il valore assegnato (nell'esempio precedente, `5`), in Rust il valore
+di un assegnmento è un'ennupla vuota `()`, perché il valore assegnato può avere
+[solamente un possessore](ownership.html), e ogni altro valore reso sarebbe
+troppo sorprendente:
 
 ```rust
 let mut y = 5;
 
-let x = (y = 6);  // x has the value `()`, not `6`
+let x = (y = 6);  // x ha valore `()`, non `6`
 ```
 
-The second kind of statement in Rust is the *expression statement*. Its
-purpose is to turn any expression into a statement. In practical terms, Rust's
-grammar expects statements to follow other statements. This means that you use
-semicolons to separate expressions from each other. This means that Rust
-looks a lot like most other languages that require you to use semicolons
-at the end of every line, and you will see semicolons at the end of almost
-every line of Rust code you see.
+Il secondo genere di istruzioni in Rust è l'*istruzione espressione*. Il suo
+scopo è trasformare qualunque espressione in un'istruzione. In pratica,
+la grammatica di Rust si aspetta che delle istruzioni seguano altre istruzioni.
+Ciò significa che si usano punti-e-virgola per separare un'espressione
+dall'altra. Ciò significa che Rust è molto simile alla maggior parte degli
+altri linguaggi che richiedono di usare punti-e-virgola alla fine di ogni riga,
+e si vedranno punti-e-virgola alla fine di quasi tutte le righe di codice Rust.
 
-What is this exception that makes us say "almost"? You saw it already, in this
-code:
+Cos'è questa eccezione che ci fa dire "quasi"? L'abbiamo già visto prima,
+in questo codice:
 
 ```rust
-fn add_one(x: i32) -> i32 {
+fn somma_uno(x: i32) -> i32 {
     x + 1
 }
 ```
 
-Our function claims to return an `i32`, but with a semicolon, it would return
-`()` instead. Rust realizes this probably isn’t what we want, and suggests
-removing the semicolon in the error we saw before.
+La nostra funzione sostiene di rendere un `i32`, ma se ci fosse
+un punto-e-virgola, renderebbe un `()` invece. Rust si rende conto che questo
+probabilmente non è ciò che vogliamo, e, nel messaggio d'errore che abbiamo
+visto prima, consiglia di togliere il punto-e-virgola.
 
-## Early returns
+## Uscite precoci
 
-But what about early returns? Rust does have a keyword for that, `return`:
+E che dire delle uscite precoci? Rust ha una parola-chiave farle, `return`:
 
 ```rust
 fn foo(x: i32) -> i32 {
     return x;
 
-    // we never run this code!
+    // non si eseguirà mai questo codice!
     x + 1
 }
 ```
 
-Using a `return` as the last line of a function works, but is considered poor
-style:
+Usare un `return` come ultima riga di una funzione è corretto, ma è
+considerato stile mediocre:
 
 ```rust
 fn foo(x: i32) -> i32 {
@@ -202,45 +205,46 @@ fn foo(x: i32) -> i32 {
 }
 ```
 
-The previous definition without `return` may look a bit strange if you haven’t
-worked in an expression-based language before, but it becomes intuitive over
-time.
+La precedente definizione senza `return` può sembrare un po' strana a chi non
+avesse mai lavorato con un linguaggio basato su espressioni, ma col tempo
+diventa intuitivo.
 
-## Diverging functions
+## Funzioni divergenti
 
-Rust has some special syntax for ‘diverging functions’, which are functions that
-do not return:
+Rust ha alcune sintassi speciali per le ‘funzioni divergenti’, che sono
+le funzioni da cui non si esce più:
 
 ```rust
-fn diverges() -> ! {
-    panic!("This function never returns!");
+fn diverge() -> ! {
+    panic!("Da questa funzione non si esce mai!");
 }
 ```
 
-`panic!` is a macro, similar to `println!()` that we’ve already seen. Unlike
-`println!()`, `panic!()` causes the current thread of execution to crash with
-the given message. Because this function will cause a crash, it will never
-return, and so it has the type ‘`!`’, which is read ‘diverges’.
+`panic!` è una macro, come lo è `println!()` che abbiamo già visto.
+Diversamente da `println!()`, `panic!()` manda in crash il thread corrente,
+stampando il messaggio ricevuto come argomento. Dato che questa funzione
+provocherà un crash, non si uscirà mai da essa, e quindi ha il tipo ‘`!`’,
+che si legge ‘diverge’.
 
-If you add a main function that calls `diverges()` and run it, you’ll get
-some output that looks like this:
+Se si aggiunge una funzione main che chiama `diverge()` e la si esegue,
+si otterrà un output simile a questo:
 
 ```text
-thread ‘main’ panicked at ‘This function never returns!’, hello.rs:2
+thread ‘main’ panicked at ‘Da questa funzione non si esce mai!’, main.rs:2
 ```
 
-If you want more information, you can get a backtrace by setting the
-`RUST_BACKTRACE` environment variable:
+Se si vogliono più informazioni, si può ottenere un backtrace impostando
+la variabile d'ambiente `RUST_BACKTRACE`:
 
 ```text
-$ RUST_BACKTRACE=1 ./diverges
-thread 'main' panicked at 'This function never returns!', hello.rs:2
+$ RUST_BACKTRACE=1 ./diverge
+thread 'main' panicked at 'Da questa funzione non si esce mai!', main.rs:2
 stack backtrace:
    1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
    2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
    3:     0x7f402773960e - rt::unwind::begin_unwind_inner::h2844b8c5e81e79558Bw
    4:     0x7f4027738893 - rt::unwind::begin_unwind::h4375279447423903650
-   5:     0x7f4027738809 - diverges::h2266b4c4b850236beaa
+   5:     0x7f4027738809 - diverge::h2266b4c4b850236beaa
    6:     0x7f40277389e5 - main::h19bb1149c2f00ecfBaa
    7:     0x7f402773f514 - rt::unwind::try::try_fn::h13186883479104382231
    8:     0x7f402773d1d8 - __rust_try
@@ -251,31 +255,31 @@ stack backtrace:
   13:                0x0 - <unknown>
 ```
 
-If you need to override an already set `RUST_BACKTRACE`, 
-in cases when you cannot just unset the variable, 
-then set it to `0` to avoid getting a backtrace. 
-Any other value (even no value at all) turns on backtrace.
+Se serve scavalcare una variabile `RUST_BACKTRACE` già impostata, nel caso
+in cui non si può semplicemente disimpostare la variabile, allora la si può
+impostare a `0` per evitare di ottenere un backtrace. Qualunque altro valore
+(anche nessun valore affatto) attiva il backtrace.
 
 ```text
 $ export RUST_BACKTRACE=1
 ...
-$ RUST_BACKTRACE=0 ./diverges 
-thread 'main' panicked at 'This function never returns!', hello.rs:2
+$ RUST_BACKTRACE=0 ./diverge 
+thread 'main' panicked at 'Da questa funzione non si esce mai!', main.rs:2
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
-`RUST_BACKTRACE` also works with Cargo’s `run` command:
+`RUST_BACKTRACE` funziona anche con il comando `run` di Cargo:
 
 ```text
 $ RUST_BACKTRACE=1 cargo run
-     Running `target/debug/diverges`
-thread 'main' panicked at 'This function never returns!', hello.rs:2
+     Running `target/debug/diverge`
+thread 'main' panicked at 'Da questa funzione non si esce mai!', main.rs:2
 stack backtrace:
    1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
    2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
    3:     0x7f402773960e - rt::unwind::begin_unwind_inner::h2844b8c5e81e79558Bw
    4:     0x7f4027738893 - rt::unwind::begin_unwind::h4375279447423903650
-   5:     0x7f4027738809 - diverges::h2266b4c4b850236beaa
+   5:     0x7f4027738809 - diverge::h2266b4c4b850236beaa
    6:     0x7f40277389e5 - main::h19bb1149c2f00ecfBaa
    7:     0x7f402773f514 - rt::unwind::try::try_fn::h13186883479104382231
    8:     0x7f402773d1d8 - __rust_try
@@ -286,43 +290,44 @@ stack backtrace:
   13:                0x0 - <unknown>
 ```
 
-A diverging function can be used as any type:
+Una funzione divergente può essere usata dove ci si aspetta un'espressione
+di qualunque tipo:
 
 ```rust,should_panic
-# fn diverges() -> ! {
-#    panic!("This function never returns!");
+# fn diverge() -> ! {
+#    panic!("Da questa funzione non si esce mai!");
 # }
-let x: i32 = diverges();
-let x: String = diverges();
+let x: i32 = diverge();
+let x: String = diverge();
 ```
 
-## Function pointers
+## Puntatori di funzione
 
-We can also create variable bindings which point to functions:
+Possiamo anche creare legami di variabili che puntano a funzioni:
 
 ```rust
 let f: fn(i32) -> i32;
 ```
 
-`f` is a variable binding which points to a function that takes an `i32` as
-an argument and returns an `i32`. For example:
+`f` è un legame di variabile che punta a una funzione che prende un `i32` come
+argomento e rende un `i32`. Per esempio:
 
 ```rust
-fn plus_one(i: i32) -> i32 {
+fn piu_uno(i: i32) -> i32 {
     i + 1
 }
 
-// without type inference
-let f: fn(i32) -> i32 = plus_one;
+// senza l'inferenza di tipo
+let f: fn(i32) -> i32 = piu_uno;
 
-// with type inference
-let f = plus_one;
+// con l'inferenza di tipo
+let f = piu_uno;
 ```
 
-We can then use `f` to call the function:
+Poi possiamo usare `f` per chiamare la funzione:
 
 ```rust
-# fn plus_one(i: i32) -> i32 { i + 1 }
-# let f = plus_one;
-let six = f(5);
+# fn piu_uno(i: i32) -> i32 { i + 1 }
+# let f = piu_uno;
+let sei = f(5);
 ```

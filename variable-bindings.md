@@ -1,8 +1,9 @@
-% Variable Bindings
+% Legami di variabile
 
-Virtually every non-'Hello World’ Rust program uses *variable bindings*. They
-bind some value to a name, so it can be used later. `let` is
-used to introduce a binding, like this:
+Praticamente qualunque programma in Rust più complesso di 'Hello World’ usa
+i *legami di variabile* ["variable binding"]. Tali istruzioni legano qualche
+valore a un nome, in modo da poter essere usato in seguito. Per introdurre
+un legame, si usa la parola-chiave `let`, così:
 
 ```rust
 fn main() {
@@ -10,52 +11,53 @@ fn main() {
 }
 ```
 
-Putting `fn main() {` in each example is a bit tedious, so we’ll leave that out
-in the future. If you’re following along, make sure to edit your `main()`
-function, rather than leaving it off. Otherwise, you’ll get an error.
+Mettere `fn main() {` in ogni esempio è un po' noioso, perciò in futuro
+lo ometteremo. Nel prosieguo, ci si ricordi di editare il corpo della propria
+funzion `main()`, invece di ometterla. Altrimenti, si otterrà un'errore.
 
-# Patterns
+# I pattern
 
-In many languages, a variable binding would be called a *variable*, but Rust’s
-variable bindings have a few tricks up their sleeves. For example the
-left-hand side of a `let` statement is a ‘[pattern][pattern]’, not a
-variable name. This means we can do things like:
+In molti linguaggi, un legame di variabile verrebbe chiamato semplicemente
+*variabile*, ma i legami di variabile di Rust hanno alcuni assi nella manica.
+Per esempio, il lato sinistro di un'istruzione `let` è un ‘[pattern][pattern]’,
+non un semplice nome di variabile. Ciò significa che si può fare:
 
 ```rust
 let (x, y) = (1, 2);
 ```
 
-After this statement is evaluated, `x` will be one, and `y` will be two.
-Patterns are really powerful, and have [their own section][pattern] in the
-book. We don’t need those features for now, so we’ll keep this in the back
-of our minds as we go forward.
+Dopo che questa istruzione viene eseguita, `x` varrà 1, e `y` varrà 2.
+I pattern sono veramente potenti, e hanno [una loro sezione][pattern]
+in questo libro. Per adesso non ci servono quelle caratteristiche, e quindi
+le accantoneremo mentre proseguiamo.
 
 [pattern]: patterns.html
 
-# Type annotations
+# Annotazioni di tipo
 
-Rust is a statically typed language, which means that we specify our types up
-front, and they’re checked at compile time. So why does our first example
-compile? Well, Rust has this thing called ‘type inference’. If it can figure
-out what the type of something is, Rust doesn’t require you to explicitly type
-it out.
+Rust è un linguaggio tipizzato staticamente, il che significa che specifichiamo
+subito i tipi, e questi vengono verificati in fase di compilazione. Allora
+perché il nostro primo esempio compilava? Beh, Rust ha una cosa chiamata
+‘inferenza dei tipi’. Se riesce a desumere qual'è il tipo di qualche oggetto,
+Rust non costringe a digitarlo esplicitamente.
 
-We can add the type if we want to, though. Types come after a colon (`:`):
+Però possiamo aggiungere il tipo, se vogliamo. I tipi si mettono dopo
+un punto-e-virgola (`:`):
 
 ```rust
 let x: i32 = 5;
 ```
 
-If I asked you to read this out loud to the rest of the class, you’d say “`x`
-is a binding with the type `i32` and the value `five`.”
+Se volessi leggere questa istruzione ad alta voce, direi “`x` è un legame
+di tipo `i32` al valore `cinque`.”
 
-In this case we chose to represent `x` as a 32-bit signed integer. Rust has
-many different primitive integer types. They begin with `i` for signed integers
-and `u` for unsigned integers. The possible integer sizes are 8, 16, 32, and 64
-bits.
+In questo caso abbiamo scelto di rappresentare `x` come un intero con segno
+a 32 bit. Rust ha molti tipi interi primitivi. I loro nomi cominciano con `i`
+per gli interi con segno, e con `u` per gli interi senza segno. Le dimensioni
+intere possibili sono 8, 16, 32, e 64 bit.
 
-In future examples, we may annotate the type in a comment. The examples will
-look like this:
+Negli esempi futuri, possiamo annotare il tipo in un commento. Gli esempi si
+presenteranno così:
 
 ```rust
 fn main() {
@@ -63,21 +65,20 @@ fn main() {
 }
 ```
 
-Note the similarities between this annotation and the syntax you use with
-`let`. Including these kinds of comments is not idiomatic Rust, but we'll
-occasionally include them to help you understand what the types that Rust
-infers are.
+Si noti la somiglianza fra questa annotazione e la sintassi che si usa con
+`let`. Scrivere questo genere di commenti è insolito in Rust, ma lo faremo
+occasionalmente per aiutare a capire quali sono i tipi che Rust inferisce.
 
-# Mutability
+# Mutabilità
 
-By default, bindings are *immutable*. This code will not compile:
+Di default, i legami sono *immutabili*. Questo codice non compilerà:
 
 ```rust,ignore
 let x = 5;
 x = 10;
 ```
 
-It will give you this error:
+Darà questo errore:
 
 ```text
 error: re-assignment of immutable variable `x`
@@ -85,32 +86,34 @@ error: re-assignment of immutable variable `x`
      ^~~~~~~
 ```
 
-If you want a binding to be mutable, you can use `mut`:
+Se si vuole che un legame sia mutabile, si deve usare `mut`:
 
 ```rust
 let mut x = 5; // mut x: i32
 x = 10;
 ```
 
-There is no single reason that bindings are immutable by default, but we can
-think about it through one of Rust’s primary focuses: safety. If you forget to
-say `mut`, the compiler will catch it, and let you know that you have mutated
-something you may not have intended to mutate. If bindings were mutable by
-default, the compiler would not be able to tell you this. If you _did_ intend
-mutation, then the solution is quite easy: add `mut`.
+Non c'è una singola ragione per cui i legami sono immutabili di default, ma
+possiamo pensarci in base a uno degli obiettivi primari di Rust: la sicurezza.
+Se ci si dimentica di dire `mut`, il compilatore se ne accorgerà, e farà
+sapere che si ha mutato qualcosa che si potrebbe non aver inteso mutare.
+Se i legami fossero mutabili di default, il compilatore non sarebbe in grado
+di dirlo. Se si _intendesse_ proprio la mutazione, allora la soluzione è
+facilissima: aggiungere `mut`.
 
-There are other good reasons to avoid mutable state when possible, but they’re
-out of the scope of this guide. In general, you can often avoid explicit
-mutation, and so it is preferable in Rust. That said, sometimes, mutation is
-what you need, so it’s not verboten.
+Ci sono altre buone ragioni per evitare lo stato mutabile quando possibile,
+ma non ne parleremo in questo libro. In generale, si può spesso evitare
+la mutazione esplicita, e quindi in Rust è preferibile evitarla. Detto questo,
+talvolta, la mutazione è quello che serve, e quindi non è proibita.
 
-# Initializing bindings
+# Inizializzare un legame
 
-Rust variable bindings have one more aspect that differs from other languages:
-bindings are required to be initialized with a value before you're allowed to
-use them.
+I legami di variabile in Rust hanno un altro aspetto che differisce da altri
+linguaggi: i legami devono essere inizializzati con un valore prima di poterli
+usare.
 
-Let’s try it out. Change your `src/main.rs` file to look like this:
+Facciamo una prova. Modifichiamo il nostro file `src/main.rs` in modo che
+si presenti così:
 
 ```rust
 fn main() {
@@ -120,8 +123,8 @@ fn main() {
 }
 ```
 
-You can use `cargo build` on the command line to build it. You’ll get a
-warning, but it will still print "Hello, world!":
+Si può usare `cargo build` dalla riga di comando per costruirlo. Si otterrà
+un avvertimento, ma stamperà ancora "Hello, world!":
 
 ```text
    Compiling hello_world v0.0.1 (file:///home/you/projects/hello_world)
@@ -131,83 +134,88 @@ src/main.rs:2     let x: i32;
                       ^
 ```
 
-Rust warns us that we never use the variable binding, but since we never use
-it, no harm, no foul. Things change if we try to actually use this `x`,
-however. Let’s do that. Change your program to look like this:
+Rust ci avverte che non abbiamo mai usato il legame di variabile, ma dato che
+non l'abbiamo mai usato, nessun danno, nessun fallo. Però le cose cambiano
+se proviamo a usare effettivamente questa `x`. Facciamolo. Modifichiamo
+il programma in modo che si presenti così:
 
 ```rust,ignore
 fn main() {
     let x: i32;
 
-    println!("The value of x is: {}", x);
+    println!("Il valore di x è: {}", x);
 }
 ```
 
-And try to build it. You’ll get an error:
+E proviamo a costruirlo. Otterremo un errore:
 
 ```bash
 $ cargo build
    Compiling hello_world v0.0.1 (file:///home/you/projects/hello_world)
 src/main.rs:4:39: 4:40 error: use of possibly uninitialized variable: `x`
-src/main.rs:4     println!("The value of x is: {}", x);
-                                                    ^
+src/main.rs:4     println!("Il valore di x è: {}", x);
+                                                   ^
 note: in expansion of format_args!
 <std macros>:2:23: 2:77 note: expansion site
 <std macros>:1:1: 3:2 note: in expansion of println!
-src/main.rs:4:5: 4:42 note: expansion site
+src/main.rs:4:5: 4:41 note: expansion site
 error: aborting due to previous error
 Could not compile `hello_world`.
 ```
 
-Rust will not let us use a value that has not been initialized.
+Rust non ci permetterà di usare un valore che non è stato inizializzato.
 
-Let take a minute to talk about this stuff we've added to `println!`.
+Prendiamo un minuto per parlare di questa roba che abbiamo aggiunto a
+`println!`.
 
-If you include two curly braces (`{}`, some call them moustaches...) in your
-string to print, Rust will interpret this as a request to interpolate some sort
-of value. *String interpolation* is a computer science term that means "stick
-in the middle of a string." We add a comma, and then `x`, to indicate that we
-want `x` to be the value we’re interpolating. The comma is used to separate
-arguments we pass to functions and macros, if you’re passing more than one.
+Se si inseriscono due graffe (`{}`, alcuni li chiamano baffi...) nella nostra
+stringa da stampare, Rust le interpreterà come una richiesta di intercalare
+al loro posto una sorta di valore. L'*interpolazione di stringhe* è un termine
+informatico che significa "inserire una o più stringhe dentro un'altra stringa,
+al posto di altrettanti segnaposto." Dopo la nostra stringa, mettiamo
+una virgola, e una `x`, per indicare che vogliamo che `x` sia il valore che
+stiamo interpolando. La virgola serve a separare gli argomenti che passiamo
+alle funzioni e alle macro.
 
-When you use the curly braces, Rust will attempt to display the value in a
-meaningful way by checking out its type. If you want to specify the format in a
-more detailed manner, there are a [wide number of options available][format].
-For now, we'll stick to the default: integers aren't very complicated to
-print.
+Quando si usa la coppia di graffe, Rust tenterà di visualizzare il valore
+in un modo significativo verificando il suo tipo. Se si vuole specificare
+il formato in una maniera più dettagliata, c'è un [ampio numero di opzioni
+disponibili][format]. Per adesso, ci limitiamo al default: gli interi non sono
+molto complicati da stampare.
 
 [format]: ../std/fmt/index.html
 
-# Scope and shadowing
+# Ambito e oscuramento
 
-Let’s get back to bindings. Variable bindings have a scope - they are
-constrained to live in a block they were defined in. A block is a collection
-of statements enclosed by `{` and `}`. Function definitions are also blocks!
-In the following example we define two variable bindings, `x` and `y`, which
-live in different blocks. `x` can be accessed from inside the `fn main() {}`
-block, while `y` can be accessed only from inside the inner block:
+Torniamo ai legami. I legami di variabile hanno un ambito - ossia sono
+vincolati a risiedere nel blocco in cui sono stati definiti. Un blocco è una
+collezione di istruzioni racchiuse da `{` e `}`. Anche le definizioni
+di funzione sono blocchi! Nell'esempio seguente definiamo due legami
+di variabile, `x` e `y`, che risiedono in blocchi diversi. Si può accedere
+a `x` da tutto il blocco `fn main() {}`, mentre si può accedere a `y` solamente
+dal blocco più interno:
 
 ```rust,ignore
 fn main() {
     let x: i32 = 17;
     {
         let y: i32 = 3;
-        println!("The value of x is {} and value of y is {}", x, y);
+        println!("Il valore di x è {} e il valore di y è {}", x, y);
     }
-    println!("The value of x is {} and value of y is {}", x, y); // This won't work
+    println!("Il valore di x è {} e il valore di y è {}", x, y); // Questo non funziona
 }
 ```
 
-The first `println!` would print "The value of x is 17 and the value of y is
-3", but this example cannot be compiled successfully, because the second
-`println!` cannot access the value of `y`, since it is not in scope anymore.
-Instead we get this error:
+La prima `println!` stamperebbe "Il valore di x è 17 e il valore di y è 3",
+ma questo esempio non può essere compilato con successo, perché la seconda
+`println!` non può accedere al valore di `y`, dato che non è più
+nel suo ambito. Otteniamo invece questo errore:
 
 ```bash
 $ cargo build
    Compiling hello v0.1.0 (file:///home/you/projects/hello_world)
 main.rs:7:62: 7:63 error: unresolved name `y`. Did you mean `x`? [E0425]
-main.rs:7     println!("The value of x is {} and value of y is {}", x, y); // This won't work
+main.rs:7     println!("Il valore di x è {} e il valore di y è {}", x, y); // Questo non funziona
                                                                        ^
 note: in expansion of format_args!
 <std macros>:2:25: 2:56 note: expansion site
@@ -222,35 +230,35 @@ Could not compile `hello`.
 To learn more, run the command again with --verbose.
 ```
 
-Additionally, variable bindings can be shadowed. This means that a later
-variable binding with the same name as another binding that is currently in
-scope will override the previous binding.
+Inoltre, i legami di variabile possono venire oscurati ["shadowed"]. Ciò
+significa che un successivo legame di variabile con il medesimo nome di un
+legame attualmente nel suo ambito scavalcherà il legame precedente.
 
 ```rust
 let x: i32 = 8;
 {
-    println!("{}", x); // Prints "8"
+    println!("{}", x); // Stampa "8"
     let x = 12;
-    println!("{}", x); // Prints "12"
+    println!("{}", x); // Stampa "12"
 }
-println!("{}", x); // Prints "8"
+println!("{}", x); // Stampa "8"
 let x =  42;
-println!("{}", x); // Prints "42"
+println!("{}", x); // Stampa "42"
 ```
 
-Shadowing and mutable bindings may appear as two sides of the same coin, but
-they are two distinct concepts that can't always be used interchangeably. For
-one, shadowing enables us to rebind a name to a value of a different type. It
-is also possible to change the mutability of a binding. Note that shadowing a 
-name does not alter or destroy the value it was bound to, and the value will
-continue to exist until it goes out of scope, even if it is no longer accessible
-by any means.
+L'oscuramento e la mutabilità dei legami possono apparire come due facce
+della stessa medaglia, ma sono due concetti distinti che non sono sempre
+intercambiabili. Per dirne una, l'oscuramento ci consente di rilegare un nome
+a un valore di tipo diverso. È anche possibile cambiare la mutabilità
+di un legame. Si noti che oscurare un nome non altera né distrugge il valore
+a cui era legato quel nome, e tale valore continuerà a esistere finché
+non esce di ambito, anche se non è più accessibile in nessun modo.
 
 ```rust
 let mut x: i32 = 1;
 x = 7;
-let x = x; // x is now immutable and is bound to 7
+let x = x; // x adesso è immutabile ed è legato a 7
 
 let y = 4;
-let y = "I can also be bound to text!"; // y is now of a different type
+let y = "Posso anche essere legato a un testo!"; // y adesso è di un altro tipo
 ```

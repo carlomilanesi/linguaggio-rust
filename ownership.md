@@ -289,7 +289,7 @@ fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
 
 let v1 = vec![1, 2, 3];
 let v2 = vec![1, 2, 3];
-let (v1, v2, answer) = foo(v1, v2);
+let (v1, v2, risposta) = foo(v1, v2);
 ```
 
 Mah! Il tipo reso, la riga finale della funzione, e la chiamata della funzione

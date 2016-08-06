@@ -1,7 +1,7 @@
 # Riassunto
 
 * [Iniziare](getting-started.md)
-* [Tutorial: Indovinello](guessing-game.md)
+* [Tutorial: Indovina-numero](guessing-game.md)
 * [Sintassi e semantica](syntax-and-semantics.md)
     * [Variable Bindings](variable-bindings.md)
     * [Funzioni](functions.md)

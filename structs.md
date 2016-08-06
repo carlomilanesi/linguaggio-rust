@@ -1,63 +1,64 @@
-% Structs
+% Le struct
 
-`struct`s are a way of creating more complex data types. For example, if we were
-doing calculations involving coordinates in 2D space, we would need both an `x`
-and a `y` value:
+Le `struct` sono un modo di creare tipi di dati più complessi. Per esempio, se
+stessimo facendo calcoli che coinvolgono coordinate nello spazio 2D,
+cioè nel piano cartesiano ci servirebbero sia un valore `x` che un valore `y`:
 
 ```rust
-let origin_x = 0;
-let origin_y = 0;
+let origine_x = 0;
+let origine_y = 0;
 ```
 
-A `struct` lets us combine these two into a single, unified datatype with `x`
-and `y` as field labels:
+Una `struct` ci permette di combinare questi due oggetti in un singolo tipo
+di dati unificato, i cui campi sono etichettati `x` e `y`:
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
 fn main() {
-    let origin = Point { x: 0, y: 0 }; // origin: Point
+    let origine = Punto { x: 0, y: 0 }; // origine: Punto
 
-    println!("The origin is at ({}, {})", origin.x, origin.y);
+    println!("L'origine è in ({}, {})", origine.x, origine.y);
 }
 ```
 
-There’s a lot going on here, so let’s break it down. We declare a `struct` with
-the `struct` keyword, and then with a name. By convention, `struct`s begin with
-a capital letter and are camel cased: `PointInSpace`, not `Point_In_Space`.
+Qui ci sono molte cose, analizziamole. Una `struct` si dichiara con
+la parola-chiave `struct`, e poi con un nome. Per convenzione, le `struct`
+hanno la maiuscolizzazione del Pascal: `PuntoNelloSpazio`,
+non `Punto_Nello_Spazio`, né `punto_nello_spazio`.
 
-We can create an instance of our `struct` via `let`, as usual, but we use a `key:
-value` style syntax to set each field. The order doesn’t need to be the same as
-in the original declaration.
+Possiamo creare un'istanza della nostra `struct` usando `let`, come al solito,
+ma per impostare ogni campo usiamo una sintassi con lo stile `chiave: valore`.
+L'ordine non dev'essere il medesimo della dichiarazione originale.
 
-Finally, because fields have names, we can access them through dot
-notation: `origin.x`.
+Infine, siccome i campi hanno un nome, possiamo accedervi tramite la notazione
+a punto: `origine.x`.
 
-The values in `struct`s are immutable by default, like other bindings in Rust.
-Use `mut` to make them mutable:
+I valori nelle `struct` sono immutabile di default, come gli altri legami
+in Rust. Si usi `mut` per renderli mutabile:
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
 fn main() {
-    let mut point = Point { x: 0, y: 0 };
+    let mut punto = Punto { x: 0, y: 0 };
 
-    point.x = 5;
+    punto.x = 5;
 
-    println!("The point is at ({}, {})", point.x, point.y);
+    println!("Il punto è in ({}, {})", punto.x, punto.y);
 }
 ```
 
-This will print `The point is at (5, 0)`.
+Questo stamperà `Il punto è in (5, 0)`.
 
-Rust does not support field mutability at the language level, so you cannot
-write something like this:
+Rust non supporta la mutabilità dei campi a livello del linguaggio, quindi
+non si può scrivere qualcosa così:
 
 ```rust,ignore
 struct Point {
@@ -66,191 +67,192 @@ struct Point {
 }
 ```
 
-Mutability is a property of the binding, not of the structure itself. If you’re
-used to field-level mutability, this may seem strange at first, but it
-significantly simplifies things. It even lets you make things mutable on a temporary
-basis:
+La mutabilità è una proprietà del legame, non della struttura stessa. Chi
+fosse abituato all mutabilità a livello di campo, lo può trovare strano
+dapprima, ma semplifica parecchio le cose. Consente perfino di rendere
+temporaneamente mutabili degli oggetti:
 
 ```rust,ignore
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
 fn main() {
-    let mut point = Point { x: 0, y: 0 };
+    let mut punto = Punto { x: 0, y: 0 };
 
-    point.x = 5;
+    punto.x = 5;
 
-    let point = point; // now immutable
+    let punto = punto; // adesso è immutabile
 
-    point.y = 6; // this causes an error
+    punto.y = 6; // questo provoca un errore
 }
 ```
 
-Your structure can still contain `&mut` pointers, which will let
-you do some kinds of mutation:
+Però una struttura può contenere dei puntatori `&mut`, che consentono
+di applicare qualche tipo di mutazione:
 
 ```rust
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
 }
 
-struct PointRef<'a> {
+struct RifPunto<'a> {
     x: &'a mut i32,
     y: &'a mut i32,
 }
 
 fn main() {
-    let mut point = Point { x: 0, y: 0 };
+    let mut punto = Punto { x: 0, y: 0 };
 
     {
-        let r = PointRef { x: &mut point.x, y: &mut point.y };
+        let r = RifPunto { x: &mut punto.x, y: &mut punto.y };
 
         *r.x = 5;
         *r.y = 6;
     }
 
-    assert_eq!(5, point.x);
-    assert_eq!(6, point.y);
+    assert_eq!(5, punto.x);
+    assert_eq!(6, punto.y);
 }
 ```
 
-# Update syntax
+# Sintassi di aggiornamento
 
-A `struct` can include `..` to indicate that you want to use a copy of some
-other `struct` for some of the values. For example:
+Una `struct` può comprendere `..` per indicare che si vuole usare una copia
+di qualche altra `struct` per alcuni dei valori. Per esempio:
 
 ```rust
-struct Point3d {
+struct Punto3d {
     x: i32,
     y: i32,
     z: i32,
 }
 
-let mut point = Point3d { x: 0, y: 0, z: 0 };
-point = Point3d { y: 1, .. point };
+let mut punto = Punto3d { x: 0, y: 0, z: 0 };
+punto = Punto3d { y: 1, .. punto };
 ```
 
-This gives `point` a new `y`, but keeps the old `x` and `z` values. It doesn’t
-have to be the same `struct` either, you can use this syntax when making new
-ones, and it will copy the values you don’t specify:
+Questo dà a `punto` una nuova `y`, ma mantiene i vecchi valori `x` e `z`. Non
+deve essere nemmeno la medesima `struct`; si può usare questa sintassi quando
+se ne creano di nuove, e si copiano i valori che non vengono specificati:
 
 ```rust
-# struct Point3d {
+# struct Punto3d {
 #     x: i32,
 #     y: i32,
 #     z: i32,
 # }
-let origin = Point3d { x: 0, y: 0, z: 0 };
-let point = Point3d { z: 1, x: 2, .. origin };
+let origine = Punto3d { x: 0, y: 0, z: 0 };
+let punto = Punto3d { z: 1, x: 2, .. origine };
 ```
 
 # Strutture ennuple
 
-Rust has another data type that’s like a hybrid between a [ennupla][ennupla] and a
-`struct`, called a ‘struttura ennupla’. Le strutture ennuple have a name, but their fields
-don't. They are declared with the `struct` keyword, and then with a name
-followed by un'ennupla:
+Rust ha un altro tipo di dati che è come un ibrido fra una [ennupla][ennupla]
+e una `struct`, e si chiama ‘struttura ennupla’. Le strutture ennuple hanno
+un nome, ma i loro campi no. Sono dichiarate con la parola-chiave `struct`,
+e poi con un nome seguito da un'ennupla:
 
 [ennupla]: primitive-types.html#tuples
 
 ```rust
-struct Color(i32, i32, i32);
-struct Point(i32, i32, i32);
+struct Colore(i32, i32, i32);
+struct Punto(i32, i32, i32);
 
-let black = Color(0, 0, 0);
-let origin = Point(0, 0, 0);
+let nero = Colore(0, 0, 0);
+let origine = Punto(0, 0, 0);
 ```
 
-Here, `black` and `origin` are not the same type, even though they contain the
-same values.
+Qui, `nero` e `origine` non sono dello stesso tipo, anche se contengono campi
+degli stessi tipi.
 
-The members of a struttura ennupla may be accessed by dot notation or destructuring
-`let`, proprio come le normali ennuple:
+Si può accedere ai membri di una struttura ennupla tramite la notazione a punto
+o il `let` destrutturante, proprio come le normali ennuple:
 
 ```rust
-# struct Color(i32, i32, i32);
-# struct Point(i32, i32, i32);
-# let black = Color(0, 0, 0);
-# let origin = Point(0, 0, 0);
-let black_r = black.0;
-let Point(_, origin_y, origin_z) = origin;
+# struct Colore(i32, i32, i32);
+# struct Punto(i32, i32, i32);
+# let nero = Colore(0, 0, 0);
+# let origine = Punto(0, 0, 0);
+let nero_r = nero.0;
+let Punto(_, origine_y, origine_z) = origine;
 ```
 
-Patterns like `Point(_, origin_y, origin_z)` are also used in
-[match expressions][match].
+I pattern come `Punto(_, origine_y, origine_z)` sono usati anche nelle
+[espressioni match][match].
 
-One case when una struttura ennupla is very useful is when it has only one element.
-We call this the ‘newtype’ pattern, because it allows you to create a new type
-that is distinct from its contained value and also expresses its own semantic
-meaning:
+Un caso in cui una struttura ennupla è molto utile è quando ha un solo
+elemento. Questo viene chiamato il pattern ‘newtype’, perché consente di creare
+un nuovo tipo che è distinto da quello del suo valore contenuto ed esprime
+anche un suo significato semantico:
 
 ```rust
-struct Inches(i32);
+struct Pollici(i32);
 
-let length = Inches(10);
+let lunghezza = Pollici(10);
 
-let Inches(integer_length) = length;
-println!("length is {} inches", integer_length);
+let Pollici(lunghezza_intera) = lunghezza;
+println!("la lunghezza è {} pollici", lunghezza_intera);
 ```
 
-As above, you can extract the inner integer type through a destructuring `let`.
-In this case, the `let Inches(integer_length)` assigns `10` to `integer_length`.
-We could have used dot notation to do the same thing:
+Come sopra, si può estrarre il tipo intero interno tramite un `let`
+destrutturante. In questo caso, il `let Pollici(lunghezza_intera)` assegna `10`
+a `lunghezza_intera`. Avremmo potuto usare la notazione a punto per fare
+la stessa cosa:
 
 ```rust
-# struct Inches(i32);
-# let length = Inches(10);
-let integer_length = length.0;
+# struct Pollici(i32);
+# let lunghezza = Pollici(10);
+let lunghezza_intera = lunghezza.0;
 ```
 
-It's always possible to use a `struct` instead of a struttura ennupla, and can be
-clearer. We could write `Color` and `Point` like this instead:
+È sempre possibile usare una `struct` invece di una struttura ennupla, e può
+essere più chiara. Avremmo potuto scrivere `Colore` e `Punto` anche così:
 
 ```rust
-struct Color {
-    red: i32,
-    blue: i32,
-    green: i32,
+struct Colore {
+    rosso: i32,
+    blu: i32,
+    verde: i32,
 }
 
-struct Point {
+struct Punto {
     x: i32,
     y: i32,
     z: i32,
 }
 ```
 
-Good names are important, and while values in a struttura ennupla can be
-referenced with dot notation as well, a `struct` gives us actual names,
-rather than positions.
+I buoni nomi sono importanti, e mentre si può fare riferimento ai valori in una
+struttura ennupla anche con la notazione a punto, una `struct` ci dà dei nomi
+effettivi piuttosto che delle posizioni.
 
 [match]: match.html
 
-# Unit-like structs
+# Struct simili a unità
 
-You can define a `struct` with no members at all:
+Si può anche definire una `struct` senza nessun membro:
 
 ```rust
-struct Electron {} // use empty braces...
-struct Proton;     // ...or just a semicolon
+struct Elettrone {} // si usano le graffe vuote...
+struct Protone;     // ...o solo un punto-e-virgola
 
-// whether you declared the struct with braces or not, do the same when creating one
-let x = Electron {};
-let y = Proton;
+// che la struct sia stata dichiarata con le graffe oppure no,
+// si deve fare lo stesso quando se ne istanzia una
+let x = Elettrone {};
+let y = Protone;
 ```
 
-Such a `struct` is called ‘unit-like’ because it resembles the ennupla vuota,
-`()`, sometimes called ‘unit’. Like a struttura ennupla, it defines a
-new type.
+Una tale `struct` è chiamata ‘simile a unità’ perché somiglia alla ennupla
+vuota, `()`, che talvolta è chiamata ‘unità’. Come una struttura ennupla,
+definisce un nuovo tipo.
 
-This is rarely useful on its own (although sometimes it can serve as a
-marker type), but in combination with other features, it can become
-useful. For instance, a library may ask you to create a structure that
-implements a certain [trait][trait] to handle events. If you don’t have
-any data you need to store in the structure, you can create a
-unit-like `struct`.
+Questo tipo è usato raramente da solo (sebbene talvolta può servire come tipo
+marcatore), ma in combinazione con altre caratteristiche, può diventare utile.
+Per esempio, una libreria può chiedere di creare una struttura che implementi
+un certo [tratto][tratto] per gestire eventi. Se non si hanno dati da mettere
+nella struttura, si può creare `struct` simile a unità.
 
-[trait]: traits.html
+[tratto]: traits.html

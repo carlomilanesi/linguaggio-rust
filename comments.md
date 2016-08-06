@@ -1,46 +1,48 @@
-% Comments
+% Commenti
 
-Now that we have some functions, it’s a good idea to learn about comments.
-Comments are notes that you leave to other programmers to help explain things
-about your code. The compiler mostly ignores them.
+Adesso che abbiamo un po' di funzioni, è una buona idea imparare i commenti.
+I commenti sono annotazioni che si lasciano per gli altri programmatori,
+per aiutarli a spiegare il proprio codice. Il compilatore per lo più li ignora.
 
-Rust has two kinds of comments that you should care about: *line comments*
-and *doc comments*.
+Rust ha due tipi di commenti a cui si dovrebbe essere interessati:
+i *commenti di riga* e i *commenti di documentazione* ["doc comment"].
 
 ```rust
-// Line comments are anything after ‘//’ and extend to the end of the line.
+// I commenti di riga sono i caratteri tra la coppia di caratteri ‘//’ e la fine della riga.
 
-let x = 5; // this is also a line comment.
+let x = 5; // anche questo è un commento di riga
 
-// If you have a long explanation for something, you can put line comments next
-// to each other. Put a space between the // and your comment so that it’s
-// more readable.
+// Se si ha una lunga spiegazione da scrivere, si possono mettere più
+// commenti di riga, uno dopo l'altro. Mettere uno spazio tra // e il testo
+// rende più leggibile il commento.
 ```
 
-The other kind of comment is a doc comment. Doc comments use `///` instead of
-`//`, and support Markdown notation inside:
+L'altro genere di commenti è il commento di documentazione. I commenti
+di documentazione usano `///` invece di `//`, e supportano la notazione
+Markdown al loro interno:
 
 ```rust
-/// Adds one to the number given.
+/// Aggiunge uno al numero dato.
 ///
-/// # Examples
+/// # Esempi
 ///
 /// ```
-/// let five = 5;
+/// let cinque = 5;
 ///
-/// assert_eq!(6, add_one(5));
-/// # fn add_one(x: i32) -> i32 {
+/// assert_eq!(6, somma_uno(5));
+/// # fn somma_uno(x: i32) -> i32 {
 /// #     x + 1
 /// # }
 /// ```
-fn add_one(x: i32) -> i32 {
+fn somma_uno(x: i32) -> i32 {
     x + 1
 }
 ```
 
-There is another style of doc comment, `//!`, to comment containing items (e.g.
-crates, modules or functions), instead of the items following it. Commonly used
-inside crates root (lib.rs) or modules root (mod.rs):
+C'è un altro stile di commento di documentazione, `//!`, usato per commentare
+gli elementi (per es. crate, moduli, o funzioni) che contengono tali commenti,
+invece che per commentare gli elementi che li seguono. Sono usati tipicamente
+all'interno delle radici di crate (lib.rs) o delle radici di moduli (mod.rs):
 
 ```
 //! # The Rust Standard Library
@@ -49,11 +51,12 @@ inside crates root (lib.rs) or modules root (mod.rs):
 //! functionality for building portable Rust software.
 ```
 
-When writing doc comments, providing some examples of usage is very, very
-helpful. You’ll notice we’ve used a new macro here: `assert_eq!`. This compares
-two values, and `panic!`s if they’re not equal to each other. It’s very helpful
-in documentation. There’s another macro, `assert!`, which `panic!`s if the
-value passed to it is `false`.
+Quando si scrivono commenti di documentazione, fornire degli esempi di utilizzo
+è di enorme aiuto. Si noterà che qui abbiamo usato una nuova macro:
+`assert_eq!`. Questa macro confronta due valori, e va in `panic!` se non sono
+uguali tra di loro. È di grande aiuto nella documentazione. C'è un'altra macro,
+`assert!`, che va in `panic!` se il valore passatole vale `false`.
 
-You can use the [`rustdoc`](documentation.html) tool to generate HTML documentation
-from these doc comments, and also to run the code examples as tests!
+Si può usare lo strumento [`rustdoc`](documentation.html) per generare
+documentazione HTML da questi commenti di documentazione, e anche per eseguire
+gli esempi di codice come collaudo!

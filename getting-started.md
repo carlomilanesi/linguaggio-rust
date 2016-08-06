@@ -32,14 +32,15 @@ funzion sulla piattaforma specificata.
 
 ### Livello 1
 
-Tier 1 platforms can be thought of as "guaranteed to build and work".
-Specifically they will each satisfy the following requirements:
+Le piattaforme di livello 1 possono essere pensate come "garantite funzionare".
+Specificamente ognuna di esse soddisferà i seguenti requisiti:
 
-* Automated testing is set up to run tests for the platform.
-* Landing changes to the `rust-lang/rust` repository's master branch is gated on
-  tests passing.
-* Official release artifacts are provided for the platform.
-* Documentation for how to use and how to build the platform is available.
+* Il collaudo automatizzato è impostato per eseguire i test per la piattaforma.
+* Per depositare le modifiche nel ramo master del repository `rust-lang/rust`
+  si devono passare tutti i test del collaudo.
+* Per tale piattaforma sono forniti degli artefatti di rilascio ufficiale.
+* Viene fornita la documentazione su come usare e come costruire il software
+  per tale piattaforma.
 
 |  Target                       | std |rustc|cargo| note                        |
 |-------------------------------|-----|-----|-----|-----------------------------|

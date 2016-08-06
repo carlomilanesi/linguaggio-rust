@@ -1,95 +1,100 @@
 % Unsafe
 
-Rust’s main draw is its powerful static guarantees about behavior. But safety
-checks are conservative by nature: there are some programs that are actually
-safe, but the compiler is not able to verify this is true. To write these kinds
-of programs, we need to tell the compiler to relax its restrictions a bit. For
-this, Rust has a keyword, `unsafe`. Code using `unsafe` has fewer restrictions
-than normal code does.
+La principale attrattiva di Rust è costituita dalle potenti garanzie statiche
+sul suo comportamento. Ma le verifiche di sicurezza sono prudenti per natura:
+ci sono alcuni programmi che sono effettivamente sicuri, ma il compilatore
+non è in grado di verificarlo. Per compilare questo genere di programmi,
+dobbiamo dire al compilatore di rilassare un po' le sue restrizioni. A questo
+scopo, Rust ha una parola-chiave, `unsafe` (insicuro, in italiano).
+Il codice che usa `unsafe` ha meno restrizioni del codice normale.
 
-Let’s go over the syntax, and then we’ll talk semantics. `unsafe` is used in
-four contexts. The first one is to mark a function as unsafe:
+Andiamo a vedere la sintassi, e poi parleremo della semantica. `unsafe` si usa
+in quattro contesti. Il primo è per marcare una funzione come insicura:
 
 ```rust
-unsafe fn danger_will_robinson() {
-    // scary stuff
+unsafe fn pericolo_di_morte() {
+    // roba paurosa
 }
 ```
 
-All functions called from [FFI][ffi] must be marked as `unsafe`, for example.
-The second use of `unsafe` is an unsafe block:
+Tutte le funzioni chiamate da [FFI][ffi] devono essere marcate come `unsafe`,
+per esempio. Il secondo uso di `unsafe` è per marcare un blocco insicuro:
 
 [ffi]: ffi.html
 
 ```rust
 unsafe {
-    // scary stuff
+    // roba paurosa
 }
 ```
 
-The third is for unsafe traits:
+Il terzo è per marcare tratti insicuri:
 
 ```rust
-unsafe trait Scary { }
+unsafe trait Pauroso { }
 ```
 
-And the fourth is for `impl`ementing one of those traits:
+E il quarto è per `impl`ementare uno di quei tratti:
 
 ```rust
 # unsafe trait Scary { }
-unsafe impl Scary for i32 {}
+unsafe impl Pauroso for i32 {}
 ```
 
-It’s important to be able to explicitly delineate code that may have bugs that
-cause big problems. If a Rust program segfaults, you can be sure the cause is
-related to something marked `unsafe`.
+È importante essere capaci di delimitare esplicitamente il codice che
+può avere dei difetti che provocano grossi danni. Se un programma in Rust va
+in segmentation fault, si può stare sicuri che la causa è correlata a qualcosa
+marcato come `unsafe`.
 
-# What does ‘safe’ mean?
+# Che cosa significa ‘sicuro’?
 
-Safe, in the context of Rust, means ‘doesn’t do anything unsafe’. It’s also
-important to know that there are certain behaviors that are probably not
-desirable in your code, but are expressly _not_ unsafe:
+Sicuro ["safe"], nel contesto di Rust, significa ‘non fa niente di insicuro
+["unsafe"]’. È anche importante sapere che ci sono certi comportamenti che
+probabilmente non sono desiderabili nel nostro codice, ma che sono
+espressamente _non_ insicuri, tra i quali:
 
-* Deadlocks
-* Leaks of memory or other resources
-* Exiting without calling destructors
-* Integer overflow
+* i deadlock
+* i leak di memoria o di altre risorse
+* uscire senza chiamare i distruttori
+* l'overflow di un intero
 
-Rust cannot prevent all kinds of software problems. Buggy code can and will be
-written in Rust. Queste cose non sono desiderabili, ma non si possono chiamare
-specificamente `unsafe`.
+Rust non può prevenire tutti i tipi di difetti del software. In Rust si può
+scrivere, e inevitabilmente si scrive, del codice bacato. Queste cose
+ovviamente sono indesiderabili, ma non si possono chiamare specificamente
+`unsafe`.
 
-In addition, the following are all undefined behaviors in Rust, and must be
-avoided, even when writing `unsafe` code:
+Inoltre, i seguenti sono tutti comportamenti indefiniti in Rust, e devono
+essere evitati, anche quando si scrive del codice `unsafe`:
 
-* Data races
-* Dereferencing a NULL/dangling raw pointer
-* Reads of [undef][undef] (uninitialized) memory
-* Breaking the [pointer aliasing rules][aliasing] with raw pointers.
-* `&mut T` and `&T` follow LLVM’s scoped [noalias][noalias] model, except if
-  the `&T` contains an `UnsafeCell<U>`. Unsafe code must not violate these
-  aliasing guarantees.
-* Mutating an immutable value/reference without `UnsafeCell<U>`
-* Invoking undefined behavior via compiler intrinsics:
-  * Indexing outside of the bounds of an object with `std::ptr::offset`
-    (`offset` intrinsic), with
-    the exception of one byte past the end which is permitted.
-  * Using `std::ptr::copy_nonoverlapping_memory` (`memcpy32`/`memcpy64`
-    intrinsics) on overlapping buffers
-* Invalid values in primitive types, even in private fields/locals:
-  * NULL/dangling references or boxes
-  * A value other than `false` (0) or `true` (1) in a `bool`
-  * A discriminant in an `enum` not included in its type definition
-  * A value in a `char` which is a surrogate or above `char::MAX`
-  * Non-UTF-8 byte sequences in a `str`
-* Unwinding into Rust from foreign code or unwinding from Rust into foreign
-  code.
+* Accedere simultaneamente ai dati ["data race"]
+* Dereferenziare un puntatore grezzo nullo o penzolante
+* Leggere memoria [non inizializzata][undef]
+* Violare le [regole di aliasing dei puntatori][aliasing] con dei puntatori
+  grezzi.
+* `&mut T` e `&T` seguono il modello [noalias][noalias] di ambito di LLVM,
+  tranne se il `&T` contiene un `UnsafeCell<U>`. Il codice unsafe non deve
+  violare queste garanzie di aliasing.
+* Mutare un valore/riferimento immutabile senza usare `UnsafeCell<U>`
+* Invocare del comportamento indefinito tramite gli intrinseci del compilatore:
+  * Indicizzare fuori dai limiti di un oggetto con `std::ptr::offset`
+    (l'intrinseco `offset`), eccetto uscire di un solo byte il che è permesso.
+  * Usare `std::ptr::copy_nonoverlapping_memory` (gli intrinseci `memcpy32`/
+    `memcpy64`) su buffer che si sovrappongono
+* Usare i seguenti valori non validi in tipi primitivi, anche in campi privati
+  e in legami locali:
+  * un riferimento o box nullo o penzolante
+  * Un valore diverso da `false` (0) e da `true` (1) in un `bool`
+  * Un discriminante in un `enum` non compreso nella definizione del suo tipo
+  * Un valore in un `char` che è un surrogato, o è maggiore di `char::MAX`
+  * Sequenze di byte non UTF-8 in un `str`
+* Svolgere lo stack da codice straniero a codice Rust o da codice Rust a codice
+  straniero.
 
 [noalias]: http://llvm.org/docs/LangRef.html#noalias
 [undef]: http://llvm.org/docs/LangRef.html#undefined-values
 [aliasing]: http://llvm.org/docs/LangRef.html#pointer-aliasing-rules
 
-# Unsafe Superpowers
+# I superpoteri di unsafe
 
 In both unsafe functions and unsafe blocks, Rust will let you do three things
 that you normally can not do. Just three. Here they are:
