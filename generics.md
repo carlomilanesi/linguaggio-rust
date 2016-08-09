@@ -1,13 +1,14 @@
-% Generici
+% I generici
 
-Talvolta, when writing a function or data type, we may want it to work for
-multiple types of arguments. In Rust, we can do this with generics.
-Generics are called ‘parametric polymorphism’ in type theory,
-which means that they are types or functions that have multiple forms (‘poly’
-is multiple, ‘morph’ is form) over a given parameter (‘parametric’).
+Talvolta, quando si scrive una funzione o un tipo di dati, potremmo volere che
+funzioni per più tipi di argomenti. In Rust, lo possiamo fare usando
+i generici. Nella teoria dei tipi, i generici sono chiamati ‘polimorfismo
+parametrico’, che significa che sono tipi o funzioni che hanno più forme
+(in greco ‘poli’ significa ‘plurimo‘, e ‘morfo’ significa ‘forma‘) in base a
+un dato parametro (da cui ‘parametrico’).
 
-Anyway, enough type theory, let’s check out some generic code. Rust’s
-standard library provides a type, `Option<T>`, that’s generic:
+Comunque, basta così con la teoria dei tipi, guardiamo del codice generico.
+La libreria standard di Rust fornisce un tipo, `Option<T>`, che è generico:
 
 ```rust
 enum Option<T> {
@@ -16,20 +17,21 @@ enum Option<T> {
 }
 ```
 
-The `<T>` part, which you’ve seen a few times before, indicates that this is
-a generic data type. Inside the declaration of our `enum`, wherever we see a `T`,
-we substitute that type for the same type used in the generic. Here’s an
-example of using `Option<T>`, with some extra type annotations:
+La parte `<T>`, che abbiamo già visto alcune volte, indica che questo è un tipo
+di dati generico. Ogni volta che nel nostro codice usiamo questo `enum`,
+specifichiamo un tipo che sostituisce il parametro `T` ogni volta che compare
+nella dichiarazione generica. Ecco un esempio di uso di `Option<T>`,
+con un'annotazione di tipo aggiuntiva:
 
 ```rust
 let x: Option<i32> = Some(5);
 ```
 
-In the type declaration, we say `Option<i32>`. Note how similar this looks to
-`Option<T>`. So, in this particular `Option`, `T` has the value of `i32`. On
-the right-hand side of the binding, we make a `Some(T)`, where `T` is `5`.
-Since that’s an `i32`, the two sides match, and Rust is happy. If they didn’t
-match, we’d get an error:
+Nella dichiarazione di tipo, diciamo `Option<i32>`. Si noti quanto simile
+appaia a `Option<T>`. Quindi, in questa particolare `Option`, `T` ha il valore
+di `i32`. Sul lato destro del legame, costruiamo un `Some(T)`, dove l'oggetto
+di tipo `T` è `5`. Dato che si tratta di un `i32`, i due lati combaciano, e
+Rust è contento. Se non combaciassero, otterremmo un errore:
 
 ```rust,ignore
 let x: Option<f64> = Some(5);
@@ -37,17 +39,19 @@ let x: Option<f64> = Some(5);
 // found `core::option::Option<_>` (expected f64 but found integral variable)
 ```
 
-That doesn’t mean we can’t make `Option<T>`s that hold an `f64`! They have
-to match up:
+Ciò non significa che non si possono costruire degli `Option<T>` che tengono
+`f64`! Solamente i due lati dell'assegnamento devono avere lo stesso tipo:
 
 ```rust
 let x: Option<i32> = Some(5);
 let y: Option<f64> = Some(5.0f64);
 ```
 
-This is just fine. One definition, multiple uses.
+Così va bene. Una sola definizione, utilizzi multipli.
 
-Generics don’t have to only be generic over one type. Consider another type from Rust’s standard library that’s similar, `Result<T, E>`:
+I generici non sono limitati ad essere parametrizzati da un solo tipo.
+Si consideri un altro tipo simile, fornito dalla liberia standard di Rust,
+`Result<T, E>`:
 
 ```rust
 enum Result<T, E> {
@@ -56,8 +60,9 @@ enum Result<T, E> {
 }
 ```
 
-This type is generic over _two_ types: `T` and `E`. By the way, the capital letters
-can be any letter you’d like. We could define `Result<T, E>` as:
+Questo tipo è generico relativamente a _due_ tipi: `T` ed `E`. Tra l'altro,
+le lettere maiuscole possono essere qualunque lettera si gradisca. Si sarebbe
+potuto definire `Result<T, E>` come:
 
 ```rust
 enum Result<A, Z> {
@@ -66,79 +71,82 @@ enum Result<A, Z> {
 }
 ```
 
-if we wanted to. Convention says that the first generic parameter should be
-`T`, for ‘type’, and that we use `E` for ‘error’. Rust doesn’t care, however.
+se si avesse voluto. Per convenzione il primo parametro generico dovrebbe
+essere `T`, per ‘tipo’, e si dovrebbe usare `E` per ‘errore’. Però a Rust
+non importa.
 
-The `Result<T, E>` type is intended to be used to return the result of a
-computation, and to have the ability to return an error if it didn’t work out.
+Il tipo `Result<T, E>` è pensato per essere usato come risultato
+di un'elaborazione, dando la possibilità di rendere un errore nel caso
+non si riuscisse a completare correttamente l'elaborazione.
 
-## Generic functions
+## Funzioni generiche
 
-We can write functions that take generic types with a similar syntax:
+Si possono scrivere funzioni che prendono tipi generici, usando una sintassi
+simile:
 
 ```rust
-fn takes_anything<T>(x: T) {
-    // do something with x
+fn prende_qualunque_cosa<T>(x: T) {
+    // fai qualcosa con x
 }
 ```
 
-The syntax has two parts: the `<T>` says “this function is generic over one
-type, `T`”, and the `x: T` says “x has the type `T`.”
+La sintassi ha due parti: la `<T>` dice “questa funzione è generica rispetto
+a un tipo, `T`”, e la `x: T` dice “x è di tipo `T`.”
 
-Multiple arguments can have the same generic type:
+Più argomenti possono essere dello stesso tipo generico:
 
 ```rust
-fn takes_two_of_the_same_things<T>(x: T, y: T) {
+fn prende_due_oggetti_del_medesimo_tipo<T>(x: T, y: T) {
     // ...
 }
 ```
 
-We could write a version that takes multiple types:
+Si può anche scrivere una versione che prende più tipi:
 
 ```rust
-fn takes_two_things<T, U>(x: T, y: U) {
+fn prende_due_oggetti<T, U>(x: T, y: U) {
     // ...
 }
 ```
 
-## Generic structs
+## Struct generiche
 
-You can store a generic type in a `struct` as well:
+Si può usare un tipo generico anche per i campi di una `struct`:
 
 ```rust
-struct Point<T> {
+struct Punto<T> {
     x: T,
     y: T,
 }
 
-let int_origin = Point { x: 0, y: 0 };
-let float_origin = Point { x: 0.0, y: 0.0 };
+let origine_intera = Punto { x: 0, y: 0 };
+let origine_a_virgola_mobile = Punto { x: 0.0, y: 0.0 };
 ```
 
-Similar to functions, the `<T>` is where we declare the generic parameters,
-and we then use `x: T` in the type declaration, too.
+Analogamente alle funzioni, la `<T>` è dove si dichiarano i parametri generici,
+che poi vengono usati nelle dichiarazioni dei campi `x: T` e `y: T`.
 
-When you want to add an implementation for the generic `struct`, you
-declare the type parameter after the `impl`:
+Quando si vuole aggiungere un'implementazione per una `struct` generica, si
+dichiara il parametro di tipo subito dopo la `impl`:
 
 ```rust
-# struct Point<T> {
+# struct Punto<T> {
 #     x: T,
 #     y: T,
 # }
 #
-impl<T> Point<T> {
+impl<T> Punto<T> {
     fn swap(&mut self) {
         std::mem::swap(&mut self.x, &mut self.y);
     }
 }
 ```
 
-So far you’ve seen generics that take absolutely any type. These are useful in
-many cases: you’ve already seen `Option<T>`, and later you’ll meet universal
-container types like [`Vec<T>`][Vec]. On the other hand, often you want to
-trade that flexibility for increased expressive power. Read about [trait
-bounds][traits] to see why and how.
+Finora abbiamo visto dei generici che prendono assolutamente qualunque tipo.
+Questi servono in molti casi: abbiamo già visto `Option<T>`, e poi incontreremo
+i tipi contenitore universali, come [`Vec<T>`][Vec]. D'altra parte, spesso si
+vuole rinunciare a quella flessibilità per avere un maggior poter espressivo.
+Si legga la sezione sui [legami di tratto][tratti] per vedere come e perché.
 
-[traits]: traits.html
+[tratti]: traits.html
 [Vec]: ../std/vec/struct.Vec.html

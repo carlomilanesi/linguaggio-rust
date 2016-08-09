@@ -91,9 +91,10 @@ indirizzamento, gli indirizzi vanno da `0` a `1,073,741,823`. Quel numero
 equivale a 2<sup>30</sup>, cioè il numero di byte in un gigabyte. [^gigabyte]
 
 [^gigabyte]: La parola ‘gigabyte’ viene usata con due possibili significati:
-10^9, o 2^30. Lo standard SI ha risolto l'ambiguità affermando che ‘gigabyte’
-è 10^9, e ‘gibibyte’ è 2^30. Però, pochissima gente usa quest'ultima parola,
-e si affida al contesto per disambiguare. Qui seguiamo la tradizione.
+    10^9, o 2^30. Lo standard SI ha risolto l'ambiguità affermando che
+    ‘gigabyte’ è 10^9, e ‘gibibyte’ è 2^30. Però, pochissima gente usa
+    quest'ultima parola, e si affida al contesto per disambiguare.
+    Qui seguiamo la tradizione.
 
 Perciò ecco un diagramma del nostro primo stack frame:
 

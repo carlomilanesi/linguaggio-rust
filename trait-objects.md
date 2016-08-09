@@ -1,192 +1,202 @@
-% Trait Objects
+% Gli oggetti-tratto
 
-When code involves polymorphism, there needs to be a mechanism to determine
-which specific version is actually run. This is called ‘dispatch’. There are
-two major forms of dispatch: static dispatch and dynamic dispatch. While Rust
-favors static dispatch, it also supports dynamic dispatch through a mechanism
-called ‘trait objects’.
+Quando del codice coinvolge del polimorfismo, serve un meccanismo
+per determinare quale specifica versione viene effettivamente eseguita.
+Questo si chiama ‘dispatch’ (in italiano, "disbrigo"). Ci sono due forme
+principali di dispatch: il dispatch statico e il dispatch dinamico. Rust
+favorisce il dispatch statico, ma supporta anche il dispatch dinamico
+tramite un meccanismo chiamato ‘oggetti-tratto’ ["trait object"].
 
-## Background
+## Premesse
 
-For the rest of this chapter, we’ll need a trait and some implementations.
-Let’s make a simple one, `Foo`. It has one method that is expected to return a
-`String`.
+Per il resto di questa sezione, ci serviranno un tratto e alcune
+implementazioni. Facciamone una semplice, `Foo`. Ha un metodo che ci si
+aspetta che renda una `String`.
 
 ```rust
 trait Foo {
-    fn method(&self) -> String;
+    fn metodo(&self) -> String;
 }
 ```
 
-We’ll also implement this trait for `u8` and `String`:
+Implementeremo anche questo tratto per `u8` e `String`:
 
 ```rust
-# trait Foo { fn method(&self) -> String; }
+# trait Foo { fn metodo(&self) -> String; }
 impl Foo for u8 {
-    fn method(&self) -> String { format!("u8: {}", *self) }
+    fn metodo(&self) -> String { format!("u8: {}", *self) }
 }
 
 impl Foo for String {
-    fn method(&self) -> String { format!("string: {}", *self) }
+    fn metodo(&self) -> String { format!("string: {}", *self) }
 }
 ```
 
+## Dispatch statico
 
-## Static dispatch
-
-We can use this trait to perform static dispatch with trait bounds:
+Possiamo usare questo tratto per eseguire un dispatch static con i legami
+dei tratti:
 
 ```rust
-# trait Foo { fn method(&self) -> String; }
-# impl Foo for u8 { fn method(&self) -> String { format!("u8: {}", *self) } }
-# impl Foo for String { fn method(&self) -> String { format!("string: {}", *self) } }
-fn do_something<T: Foo>(x: T) {
-    x.method();
+# trait Foo { fn metodo(&self) -> String; }
+# impl Foo for u8 { fn metodo(&self) -> String { format!("u8: {}", *self) } }
+# impl Foo for String { fn metodo(&self) -> String { format!("string: {}", *self) } }
+fn fai_qualcosa<T: Foo>(x: T) {
+    x.metodo();
 }
 
 fn main() {
     let x = 5u8;
     let y = "Hello".to_string();
 
-    do_something(x);
-    do_something(y);
+    fai_qualcosa(x);
+    fai_qualcosa(y);
 }
 ```
 
-Rust uses ‘monomorphization’ to perform static dispatch here. This means that
-Rust will create a special version of `do_something()` for both `u8` and
-`String`, and then replace the call sites with calls to these specialized
-functions. In other words, Rust generates something like this:
+Qui Rust usa la ‘monomorfizzazione’ per eseguire il dispatch statico. Questo
+significa che Rust creerà una versione speciale di `fai_qualcosa()` sia
+per `u8` che per `String`, e poi sostituirà i punti di chiamata con chiamate
+a queste funzioni specializzate. In altre parole, Rust genera qualcosa così:
 
 ```rust
-# trait Foo { fn method(&self) -> String; }
-# impl Foo for u8 { fn method(&self) -> String { format!("u8: {}", *self) } }
-# impl Foo for String { fn method(&self) -> String { format!("string: {}", *self) } }
-fn do_something_u8(x: u8) {
-    x.method();
+# trait Foo { fn metodo(&self) -> String; }
+# impl Foo for u8 { fn metodo(&self) -> String { format!("u8: {}", *self) } }
+# impl Foo for String { fn metodo(&self) -> String { format!("string: {}", *self) } }
+fn fai_qualcosa_u8(x: u8) {
+    x.metodo();
 }
 
-fn do_something_string(x: String) {
-    x.method();
+fn fai_qualcosa_string(x: String) {
+    x.metodo();
 }
 
 fn main() {
     let x = 5u8;
     let y = "Hello".to_string();
 
-    do_something_u8(x);
-    do_something_string(y);
+    fai_qualcosa_u8(x);
+    fai_qualcosa_string(y);
 }
 ```
 
-Questo ha un aspetto molto positivo: static dispatch allows function calls to be
-inlined because the callee is known at compile time, and inlining is
-the key to good optimization. Static dispatch is fast, but it comes at
-a tradeoff: ‘code bloat’, due to many copies of the same function
-existing in the binary, one for each type.
+Questo ha un aspetto molto positivo: il dispatch statico consente che
+le chiamate di funzione siano espanse in linea, perché il chiamato è noto
+in fase di compilazione, e l'espansione in linea è la chiave per una buona
+ottimizzazione. Il dispatch statico è veloce, ma si paga: il gonfiore
+del codice ["‘code bloat’"], dovuto alle numerose copie della stessa funzione
+esistente nel binario, uno per ogni tipo.
 
-Furthermore, compilers aren’t perfect and may “optimize” code to become slower.
-For example, functions inlined too eagerly will bloat the instruction cache
-(cache rules everything around us). This is part of the reason that `#[inline]`
-and `#[inline(always)]` should be used carefully, and one reason why using a
-dynamic dispatch is sometimes more efficient.
+Inoltre, i compilatori non sono perfetti e possono “ottimizzare” il codice
+fino a farlo diventare più lento. Per esempio, le funzioni espanse in linea
+troppo avidamente riempiranno la cache delle istruzioni (le cache governano
+le prestazioni). Questo fa parte della ragione per cui `#[inline]`
+e `#[inline(always)]` dovrebbero essere usati attentamente, e una ragione
+per cui usare un dispatch in alcuni casi è più efficiente.
 
-However, the common case is that it is more efficient to use static dispatch,
-and one can always have a thin statically-dispatched wrapper function that does
-a dynamic dispatch, but not vice versa, meaning static calls are more flexible.
-The standard library tries to be statically dispatched where possible for this
-reason.
+Però, il caso più tipico è quello che è più efficiente usare il dispatch
+statico, e si può sempre avere una piccola funzione chiamata con dispatch
+statico che esegue il dispatch dinamico, mentre non è possibile il contrario,
+ossia trasformate il dispatch dinamico in statico, il che significa che
+le chiamate statiche sono più flessibili. Per questo ragione, la libreria
+standard cerca di usare il dispatch statico il più possibile.
 
-## Dynamic dispatch
+## Dispatch dinamico
 
-Rust provides dynamic dispatch through a feature called ‘trait objects’. Trait
-objects, like `&Foo` or `Box<Foo>`, are normal values that store a value of
-*any* type that implements the given trait, where the precise type can only be
-known at runtime.
+Rust fornisce il dispatch dinamico tramite una caratteristica chiamata
+‘oggetti-tratto’. Gli oggetti-tratto, come `&Foo` o `Box<Foo>`, sono valori
+normali che immagazzinano un valore di *qualunque* tipo che implementa il dato
+tratto, dove il preciso tipo può essere noto solo in fase di esecuzione.
 
-A trait object can be obtained from a pointer to a concrete type that
-implements the trait by *casting* it (e.g. `&x as &Foo`) or *coercing* it
-(e.g. using `&x` as an argument to a function that takes `&Foo`).
+Un oggetto-tratto può essere ottenuto da un puntatore a un tipo concreto che
+implementa il tratto, *convertendolo* (per es. `&x as &Foo`) o *forzandolo*
+(per es. usando `&x` come argomento a una funzione che prende un `&Foo`).
 
-These trait object coercions and casts also work for pointers like `&mut T` to
-`&mut Foo` and `Box<T>` to `Box<Foo>`, but that’s all at the moment. Coercions
-and casts are identical.
+Queste forzature e conversioni di oggetti-tratto funzionano anche per
+i puntatori come `&mut T` convertito in `&mut Foo`, e per `Box<T>`
+convertito in `Box<Foo>`, e per il momento per nient'altro. Le forzature e
+le conversioni sono identiche.
 
-This operation can be seen as ‘erasing’ the compiler’s knowledge about the
-specific type of the pointer, and hence trait objects are sometimes referred to
-as ‘type erasure’.
+Questa operazione può essere vista come un ‘cancellare’ la conoscenza che
+il compilatore ha sullo specifico tipo del puntatore, e quindi talvolta si fa
+riferimento agli oggetti-tratto come a ’cancellazioni di tipo’.
 
-Coming back to the example above, we can use the same trait to perform dynamic
-dispatch with trait objects by casting:
+Tornando all'esempio di prima, possiamo usare il medesimo tratto per eseguire
+un dispatch dinamico con gli oggetti-tratto, sia tramite la conversione:
 
 ```rust
-# trait Foo { fn method(&self) -> String; }
-# impl Foo for u8 { fn method(&self) -> String { format!("u8: {}", *self) } }
-# impl Foo for String { fn method(&self) -> String { format!("string: {}", *self) } }
+# trait Foo { fn metodo(&self) -> String; }
+# impl Foo for u8 { fn metodo(&self) -> String { format!("u8: {}", *self) } }
+# impl Foo for String { fn metodo(&self) -> String { format!("string: {}", *self) } }
 
-fn do_something(x: &Foo) {
-    x.method();
+fn fai_qualcosa(x: &Foo) {
+    x.metodo();
 }
 
 fn main() {
     let x = 5u8;
-    do_something(&x as &Foo);
+    fai_qualcosa(&x as &Foo);
 }
 ```
 
-or by coercing:
+che tramite la forzatura:
 
 ```rust
-# trait Foo { fn method(&self) -> String; }
-# impl Foo for u8 { fn method(&self) -> String { format!("u8: {}", *self) } }
-# impl Foo for String { fn method(&self) -> String { format!("string: {}", *self) } }
+# trait Foo { fn metodo(&self) -> String; }
+# impl Foo for u8 { fn metodo(&self) -> String { format!("u8: {}", *self) } }
+# impl Foo for String { fn metodo(&self) -> String { format!("string: {}", *self) } }
 
-fn do_something(x: &Foo) {
-    x.method();
+fn fai_qualcosa(x: &Foo) {
+    x.metodo();
 }
 
 fn main() {
     let x = "Hello".to_string();
-    do_something(&x);
+    fai_qualcosa(&x);
 }
 ```
 
-A function that takes a trait object is not specialized to each of the types
-that implements `Foo`: only one copy is generated, often (but not always)
-resulting in less code bloat. However, this comes at the cost of requiring
-slower virtual function calls, and effectively inhibiting any chance of
-inlining and related optimizations from occurring.
+Una funzione che prende un oggetto-tratto non è specializzata per ognuno
+dei tipi che implementano `Foo`: ne viene generata solamente una copia, con
+la conseguenza che spesso (ma non sempre) si riduce il gonfiore di codice.
+Però, ciò comporta il costo di richiedere le più lente chiamate di funzioni
+virtuali, e di inibire ogni possibilità di espandere in linea e di applicare
+le relative ottimizzazioni.
 
-### Why pointers?
+### Perché i puntatori?
 
-Rust does not put things behind a pointer by default, unlike many managed
-languages, so types can have different sizes. Knowing the size of the value at
-compile time is important for things like passing it as an argument to a
-function, moving it about on the stack and allocating (and deallocating) space
-on the heap to store it.
+Rust non mette le cose dietro un puntatore di default, diversamente da molti
+linguaggi gestiti ["managed"], e quindi i tipi possono avere dimensioni
+diverse. Conoscere la dimensione del valore in fase di compilazione è
+importante per cose come passarlo come argomento a una funzione, spostarlo
+in giro per lo stack, e allocare (e deallocare) spazio sullo heap
+per immagazzinarlo.
 
-For `Foo`, we would need to have a value that could be at least either a
-`String` (24 bytes) or a `u8` (1 byte), as well as any other type for which
-dependent crates may implement `Foo` (any number of bytes at all). There’s no
-way to guarantee that this last point can work if the values are stored without
-a pointer, because those other types can be arbitrarily large.
+Per `Foo`, avrebbo bisogno di avere un valore che potesse rappresentare almeno
+una `String` (24 byte) o un `u8` (1 byte), e così puro qualunque altro tipo
+per cui i crate dipendenti possono implementare `Foo` (assolutamente qualunque
+numero di bytes). Non c'è modo di garantire che quest'ultimo punto possa
+funzionare se i valori vengono immagazzinati senza un puntatore, perché
+quegli altri tipi possono essere arbitrariamente grandi.
 
-Putting the value behind a pointer means the size of the value is not relevant
-when we are tossing a trait object around, only the size of the pointer itself.
+Mettere il valore dietro un puntatore significa che la dimensione di tale
+valore non è rilevante quando si maneggia un oggetto-tratto, e importa solo
+la dimensione del puntatore stesso.
 
-### Representation
+### Rappresentazione
 
-The methods of the trait can be called on a trait object via a special record
-of function pointers traditionally called a ‘vtable’ (created and managed by
-the compiler).
+I metodi del tratto possono essere chiamati su un oggetto-tratto tramite
+uno speciale record di puntatori di funzione tradizionalmente chiamato ‘vtable’
+(creato e gestito dal compilatore).
 
-Trait objects are both simple and complicated: their core representation and
-layout is quite straight-forward, but there are some curly error messages and
-surprising behaviors to discover.
+Gli oggetti-tratto sono sia semplici che complicati: la loro rappresentazione e
+disposizione interna è davvero immediata, ma ci sono da scoprire
+alcuni messaggi d'errore contorti e alcuni comportamenti sorprendenti.
 
-Let’s start simple, with the runtime representation of a trait object. The
-`std::raw` module contains structs with layouts that are the same as the
-complicated built-in types, [including trait objects][stdraw]:
+Iniziamo dal facile, con la rappresentazione in fase di esecuzione di un
+oggetto-tratto. Il modulo `std::raw` contiene le struct con le disposizioni
+che sono le medesime dei complicati tipi incorporati, [compresi
+gli oggetti-tratto][stdraw]:
 
 ```rust
 # mod foo {
@@ -199,18 +209,18 @@ pub struct TraitObject {
 
 [stdraw]: ../std/raw/struct.TraitObject.html
 
-That is, a trait object like `&Foo` consists of a ‘data’ pointer and a ‘vtable’
-pointer.
+Cioè, un oggetto-tratto come `&Foo` consiste in un puntatore ‘data’
+e un puntatore ‘vtable’.
 
-The data pointer addresses the data (of some unknown type `T`) that the trait
-object is storing, and the vtable pointer points to the vtable (‘virtual method
-table’) corresponding to the implementation of `Foo` for `T`.
+Il puntatore data indirizza i dati (di qualche tipo sconosciuto `T`)
+che l'oggetto-tratto sta immagazzinando, e il puntatore vtable punta
+alla vtable (‘tabella dei metodi virtuali’) corrispondente all'implementazione
+di `Foo` per `T`.
 
-
-A vtable is essentially a struct of function pointers, pointing to the concrete
-piece of machine code for each method in the implementation. A method call like
-`trait_object.method()` will retrieve the correct pointer out of the vtable and
-then do a dynamic call of it. For example:
+Una vtable è essenzialmente una struct di puntatori a funzione, che puntano
+al pezzo concreto di codice macchina per ogni metodo nell'implementazione.
+Una chiamata di metodo come `oggetto_tratto.metodo()` recupererà il puntatore
+corretto dalla vtable e poi farà una chiamata dinamica ad esso. Per esempio:
 
 ```rust,ignore
 struct FooVtable {
@@ -223,19 +233,19 @@ struct FooVtable {
 // u8:
 
 fn call_method_on_u8(x: *const ()) -> String {
-    // the compiler guarantees that this function is only called
-    // with `x` pointing to a u8
+    // il compilatore garantisce che questa funzione è chiamata solamente
+    // con `x` che punta a un u8
     let byte: &u8 = unsafe { &*(x as *const u8) };
 
     byte.method()
 }
 
 static Foo_for_u8_vtable: FooVtable = FooVtable {
-    destructor: /* compiler magic */,
+    destructor: /* magia del compilatore */,
     size: 1,
     align: 1,
 
-    // cast to a function pointer
+    // cast a un puntatore a funzione
     method: call_method_on_u8 as fn(*const ()) -> String,
 };
 
@@ -243,16 +253,17 @@ static Foo_for_u8_vtable: FooVtable = FooVtable {
 // String:
 
 fn call_method_on_String(x: *const ()) -> String {
-    // the compiler guarantees that this function is only called
-    // with `x` pointing to a String
+    // il compilatore garantisce che questa funzione è chiamata solamente
+    // con `x` che punta a una String
     let string: &String = unsafe { &*(x as *const String) };
 
     string.method()
 }
 
 static Foo_for_String_vtable: FooVtable = FooVtable {
-    destructor: /* compiler magic */,
-    // values for a 64-bit computer, halve them for 32-bit ones
+    destructor: /* magia del compilatore */,
+    // questi sono i valori per un target a 64-bit;
+    // bisogna dimezzarli per un target a 32-bit
     size: 24,
     align: 8,
 
@@ -260,19 +271,19 @@ static Foo_for_String_vtable: FooVtable = FooVtable {
 };
 ```
 
-The `destructor` field in each vtable points to a function that will clean up
-any resources of the vtable’s type: for `u8` it is trivial, but for `String` it
-will free the memory. This is necessary for owning trait objects like
-`Box<Foo>`, which need to clean-up both the `Box` allocation as well as the
-internal type when they go out of scope. The `size` and `align` fields store
-the size of the erased type, and its alignment requirements; these are
-essentially unused at the moment since the information is embedded in the
-destructor, but will be used in the future, as trait objects are progressively
-made more flexible.
+Il campo `destructor` in ogni vtable punta a una funzione che rilascerà
+qualunque risorsa del tipo vtable: per `u8` è banale, ma per `String` libererà
+della memoria. Questo è necessario per gli oggetti-tratto che possiedono, come
+`Box<Foo>`, che ha bisogno di rilasciare sia l'allocazione di `Box` che
+il tipo interno, quando escono dall'ambito. I campi `size` e `align`
+immagazzinano la dimensione del tipo cancellato, nonché i suoi requisiti
+di allineamento; questi campi sono essenzialmente inutilizzati al momento,
+dato che questa informazione è incorporata nel distruttore, ma verrà usata in
+futuro, dato che gli oggetti-tratto sono resi progressivamente più flessibili.
 
-Suppose we’ve got some values that implement `Foo`. The explicit form of
-construction and use of `Foo` trait objects might look a bit like (ignoring the
-type mismatches: they’re all pointers anyway):
+Supponiamo di avere alcuni valori che implementano `Foo`. La forma esplicita
+di costruzione e utilizzo degli oggetti-tratti di `Foo` potrebbe sembrare
+un po' così (ignorando gli errori di tipo: comunque sono tutti puntatori):
 
 ```rust,ignore
 let a: String = "foo".to_string();
@@ -280,17 +291,17 @@ let x: u8 = 1;
 
 // let b: &Foo = &a;
 let b = TraitObject {
-    // store the data
+    // immagazzina i dati
     data: &a,
-    // store the methods
+    // immagazzina i metodi
     vtable: &Foo_for_String_vtable
 };
 
 // let y: &Foo = x;
 let y = TraitObject {
-    // store the data
+    // immagazzina i dati
     data: &x,
-    // store the methods
+    // immagazzina i metodi
     vtable: &Foo_for_u8_vtable
 };
 
@@ -301,17 +312,18 @@ let y = TraitObject {
 (y.vtable.method)(y.data);
 ```
 
-## Object Safety
+## Sicurezza come oggetto
 
-Not every trait can be used to make a trait object. For example, vectors implement
-`Clone`, but if we try to make a trait object:
+Non tutti i tratti possono essere usati per costruire un oggetto-tratto.
+Per esempio, i vettori implementano `Clone`, ma se proviamo a costruirne
+un oggetto-tratto:
 
 ```rust,ignore
 let v = vec![1, 2, 3];
 let o = &v as &Clone;
 ```
 
-We get an error:
+Otteniamo un errore:
 
 ```text
 error: cannot convert to a trait object because trait `core::clone::Clone` is not object-safe [E0038]
@@ -322,19 +334,20 @@ let o = &v as &Clone;
         ^~
 ```
 
-The error says that `Clone` is not ‘object-safe’. Only traits that are
-object-safe can be made into trait objects. A trait is object-safe if both of
-these are true:
+L'errore dice che `Clone` non è ‘object-safe’, cioè ’sicuro come oggetto’.
+Solamente i tratti che sono sicuri come oggetti possono essere trasformati
+in oggetti-tratto. Un tratto è sicuro come oggetto se sono vere entrambe
+le seguenti proprietà:
 
-* the trait does not require that `Self: Sized`
-* all of its methods are object-safe
+* il tratto non richiede che valga `Self: Sized`
+* tutti i suoi metodi sono sicuri come oggetti
 
-So what makes a method object-safe? Each method must require that `Self: Sized`
-or all of the following:
+Ma che cosa rende un metodo sicuro come oggetto? Ogni metodo
+deve richiedere che valga `Self: Sized` oppure che valga tutto il seguente:
 
-* must not have any type parameters
-* must not use `Self`
+* deve non avere parametri di tipo
+* deve non usare `Self`
 
-Whew! As we can see, almost all of these rules talk about `Self`. A good intuition
-is “except in special circumstances, if your trait’s method uses `Self`, it is not
-object-safe.”
+Urca! Come si può vedere, quasi tutte queste regole parlano di `Self`.
+Una buona intuizione è “eccetto in circostanze speciali, se il metodo
+del tratto usa `Self`, non è object-safe.”

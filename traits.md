@@ -387,90 +387,95 @@ fn bar<T, K>(x: T, y: K)
 }
 ```
 
-Questa flessibilità può aggiungere chiarezza un situazioni complesse.
+Questa flessibilità può aumentare la chiarezza in situazioni complesse.
 
 `where` è anche più potente della sintassi più semplice. Per esempio:
 
 ```rust
-trait ConvertTo<Output> {
-    fn convert(&self) -> Output;
+trait ConvertiIn<Output> {
+    fn converti(&self) -> Output;
 }
 
-impl ConvertTo<i64> for i32 {
-    fn convert(&self) -> i64 { *self as i64 }
+impl ConvertiIn<i64> for i32 {
+    fn converti(&self) -> i64 { *self as i64 }
 }
 
-// can be called with T == i32
-fn normal<T: ConvertTo<i64>>(x: &T) -> i64 {
-    x.convert()
+// si può chiamare con T == i32
+fn normale<T: ConvertiIn<i64>>(x: &T) -> i64 {
+    x.converti()
 }
 
-// can be called with T == i64
-fn inverse<T>(x: i32) -> T
-        // this is using ConvertTo as if it were "ConvertTo<i64>"
-        where i32: ConvertTo<T> {
-    x.convert()
+// si può chiamare con T == i64
+fn inversa<T>(x: i32) -> T
+        // sta usando ConvertiIn come se fosse "ConvertiIn<i64>"
+        where i32: ConvertiIn<T> {
+    x.converti()
 }
 ```
 
-This shows off the additional feature of `where` clauses: they allow bounds
-on the left-hand side not only of type parameters `T`, but also of types (`i32` in this case). In this example, `i32` must implement
-`ConvertTo<T>`. Rather than defining what `i32` is (since that's obvious), the
-`where` clause here constrains `T`.
+Questo codice esibisce la caratteristica aggiuntiva delle clausole `where`:
+tali clausole consentono legami sul lato sinistro, non solamente dei parametri
+di tipo, ma anche dei tipi (in questo caso, il tipo `i32`). In questo esempio,
+`i32` deve implementare `ConvertiIn<T>`. Invece di definire cos'è `i32`
+(dato che è ovvio), qui la clausola `where` vincola `T`.
 
-# Default methods
+# I metodi di default
 
-A default method can be added to a trait definition if it is already known how a typical implementor will define a method. For example, `is_invalid()` is defined as the opposite of `is_valid()`:
+Un metodo di default può essere aggiunto a una definizione di tratto
+se è già noto come un implementatore tipico definirà un metodo. Per esempio,
+`e_invalido()` è definito come l'oppost di `e_valido()`:
 
 ```rust
 trait Foo {
-    fn is_valid(&self) -> bool;
+    fn e_valido(&self) -> bool;
 
-    fn is_invalid(&self) -> bool { !self.is_valid() }
+    fn e_invalido(&self) -> bool { !self.e_valido() }
 }
 ```
 
-Implementors of the `Foo` trait need to implement `is_valid()` but not `is_invalid()` due to the added default behavior. This default behavior can still be overridden as in:
+Gli implementatori del tratto `Foo` devono implementare `e_valido()`, ma
+possono non implementare `e_invalido()`, dato che ha già un comportamento di
+default. Questo comportamento di default può sempre essere scavalcato, come in:
 
 ```rust
 # trait Foo {
-#     fn is_valid(&self) -> bool;
+#     fn e_valido(&self) -> bool;
 #
-#     fn is_invalid(&self) -> bool { !self.is_valid() }
+#     fn e_invalido(&self) -> bool { !self.e_valido() }
 # }
-struct UseDefault;
+struct UsaDefault;
 
-impl Foo for UseDefault {
-    fn is_valid(&self) -> bool {
-        println!("Called UseDefault.is_valid.");
+impl Foo for UsaDefault {
+    fn e_valido(&self) -> bool {
+        println!("Chiamato UsaDefault.e_valido.");
         true
     }
 }
 
-struct OverrideDefault;
+struct ScavalcaDefault;
 
-impl Foo for OverrideDefault {
-    fn is_valid(&self) -> bool {
-        println!("Called OverrideDefault.is_valid.");
+impl Foo for ScavalcaDefault {
+    fn e_valido(&self) -> bool {
+        println!("Chiamato ScavalcaDefault.e_valido.");
         true
     }
 
-    fn is_invalid(&self) -> bool {
-        println!("Called OverrideDefault.is_invalid!");
-        true // overrides the expected value of is_invalid()
+    fn e_invalido(&self) -> bool {
+        println!("Chiamato ScavalcaDefault.e_invalido!");
+        true // Scavalca il valore atteso di e_invalido()
     }
 }
 
-let default = UseDefault;
-assert!(!default.is_invalid()); // prints "Called UseDefault.is_valid."
+let default = UsaDefault;
+assert!(!default.e_invalido()); // stampa "Chiamato UsaDefault.e_valido."
 
-let over = OverrideDefault;
-assert!(over.is_invalid()); // prints "Called OverrideDefault.is_invalid!"
+let scavalca = ScavalcaDefault;
+assert!(scavalca.e_invalido()); // stampa "Chiamato ScavalcaDefault.e_invalido!"
 ```
 
-# Inheritance
+# Ereditarietà
 
-Sometimes, implementing a trait requires implementing another trait:
+Talvolta, implementare un tratto richiede implentare un altro tratto:
 
 ```rust
 trait Foo {
@@ -482,7 +487,7 @@ trait FooBar : Foo {
 }
 ```
 
-Implementors of `FooBar` must also implement `Foo`, like this:
+Gli implementatori di `FooBar` devono implementare anche `Foo`, così:
 
 ```rust
 # trait Foo {
@@ -502,17 +507,17 @@ impl FooBar for Baz {
 }
 ```
 
-If we forget to implement `Foo`, Rust will tell us:
+Se tralasciamo di implementare `Foo`, Rust ce lo dirà:
 
 ```text
 error: the trait bound `main::Baz : main::Foo` is not satisfied [E0277]
 ```
 
-# Deriving
+# Derivazione
 
-Implementing traits like `Debug` and `Default` repeatedly can become
-quite tedious. For that reason, Rust provides an [attribute][attributes] that
-allows you to let Rust automatically implement traits for you:
+Implementare ripetutamente i tratti come `Debug` e `Default` può diventare
+parecchio noioso. Per tale ragione, Rust fornisce un [attributo][attributi]
+che consente di far implementare automaticamente dei tratti a Rust:
 
 ```rust
 #[derive(Debug)]
@@ -523,9 +528,9 @@ fn main() {
 }
 ```
 
-[attributes]: attributes.html
+[attributi]: attributes.html
 
-However, deriving is limited to a certain set of traits:
+Però, la derivazione è limitata a un certo insieme di tratti. Eccoli:
 
 - [`Clone`](../core/clone/trait.Clone.html)
 - [`Copy`](../core/marker/trait.Copy.html)

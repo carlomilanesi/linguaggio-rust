@@ -1,58 +1,61 @@
-% Crates and Modules
+% I crate e i moduli
 
-When a project starts getting large, it’s considered good software
-engineering practice to split it up into a bunch of smaller pieces, and then
-fit them together. It is also important to have a well-defined interface, so
-that some of your functionality is private, and some is public. To facilitate
-these kinds of things, Rust has a module system.
+Quando un progetto inizia a diventare grande, è considerata buona pratica
+di ingegneria del software scomporlo in un gruppo di pezzi più piccoli, e poi
+incastrarli insieme. È importante anche avere un'interfaccia bene definita,
+così che parte delle proprie funzionalità siano private, e parte pubbliche.
+Per facilitare questo genere di cose, Rust ha un sistema di moduli.
 
-# Basic terminology: Crates and Modules
+# Terminologia di base: i crate e i moduli
 
-Rust has two distinct terms that relate to the module system: ‘crate’ and
-‘module’. A crate is synonymous with a ‘library’ or ‘package’ in other
-languages. Hence “Cargo” as the name of Rust’s package management tool: you
-ship your crates to others with Cargo. Crates can produce an executable or a
-library, depending on the project.
+Rust ha due termini distinti relativi al sistema dei moduli: ‘crate’ e ‘modulo’
+["‘module’"]. Un crate è sinonimo di ‘libreria’ o di ‘pacchetto’ in altri
+linguaggi. Da questo deriva il nome di “Cargo”, lo strumento di gestione
+dei pacchetti di Rust: si inviano i propri "cassoni" ["crate"] ad altri
+usando Cargo. Un crate può produrre un programma o una libreria, a seconda
+del progetto.
 
-Each crate has an implicit *root module* that contains the code for that crate.
-You can then define a tree of sub-modules under that root module. Modules allow
-you to partition your code within the crate itself.
+Ogni crate ha un *modulo radice* implicito che contiene il codice
+per quel crate. Poi si può definire un albero di sotto-moduli sotto quel
+modulo radice. I moduli permettono di partizionare il proprio codice
+internamente allo stesso crate.
 
-As an example, let’s make a *phrases* crate, which will give us various phrases
-in different languages. To keep things simple, we’ll stick to ‘greetings’ and
-‘farewells’ as two kinds of phrases, and use English and Japanese (日本語) as
-two languages for those phrases to be in. We’ll use this module layout:
+Come esempio, creiamo un create *frasi*, che ci darà varie frasi in diverse
+lingue. Per mantenerlo semplice, ci limiteremo ai due categorie di frasi
+‘saluti’ e ‘commiati’, e useremo solamente le due lingue inglese e giapponese
+(日本語) per scrivere quelle frasi. Useremo questa organizzazione di moduli:
+
 ```text
-                                    +-----------+
-                                +---| greetings |
-                  +---------+   |   +-----------+
-              +---| english |---+
-              |   +---------+   |   +-----------+
-              |                 +---| farewells |
-+---------+   |                     +-----------+
-| phrases |---+
-+---------+   |                     +-----------+
-              |                 +---| greetings |
-              |   +----------+  |   +-----------+
-              +---| japanese |--+
-                  +----------+  |   +-----------+
-                                +---| farewells |
-                                    +-----------+
+                                  +--------+
+                              +---| saluti |
+                +---------+   |   +--------+
+            +---| inglese |---+
+            |   +---------+   |   +----------+
+            |                 +---| commiati |
++-------+   |                     +----------+
+| frasi |---+
++-------+   |                       +--------+
+            |                   +---| saluti |
+            |   +------------+  |   +--------+
+            +---| giapponese |--+
+                +------------+  |   +----------+
+                                +---| commiati |
+                                    +----------+
 ```
 
-In this example, `phrases` is the name of our crate. All of the rest are
-modules.  You can see that they form a tree, branching out from the crate
-*root*, which is the root of the tree: `phrases` itself.
+In questo esempio, `frasi` è il nome del nostro crate. Tutto il resto sono
+moduli. Si può vedere che formano un albero, che si dirama dal crate *radice*,
+che è la radice dell'albero: `frasi`.
 
-Now that we have a plan, let’s define these modules in code. To start,
-generate a new crate with Cargo:
+Adesso che abbiamo un piano, definiamo questi moduli nel codice. Per iniziare,
+generiamo un nuovo crate usando Cargo:
 
 ```bash
-$ cargo new phrases
-$ cd phrases
+$ cargo new frasi
+$ cd frasi
 ```
 
-If you remember, this generates a simple project for us:
+Come già detto, questo genera un semplice progetto:
 
 ```bash
 $ tree .
@@ -64,85 +67,85 @@ $ tree .
 1 directory, 2 files
 ```
 
-`src/lib.rs` is our crate root, corresponding to the `phrases` in our diagram
-above.
+`src/lib.rs` è la radice del nostro crate, corrispondente al `frasi` nello
+schema disegnato prima.
 
-# Defining Modules
+# Definire i moduli
 
-To define each of our modules, we use the `mod` keyword. Let’s make our
-`src/lib.rs` look like this:
+Per definire ogni modulo, usiamo la parola-chiave `mod`. Facciamo che il nostro
+`src/lib.rs` si presenti così:
 
 ```rust
-mod english {
-    mod greetings {
+mod inglese {
+    mod saluti {
     }
 
-    mod farewells {
+    mod commiati {
     }
 }
 
-mod japanese {
-    mod greetings {
+mod giapponese {
+    mod saluti {
     }
 
-    mod farewells {
+    mod commiati {
     }
 }
 ```
 
-After the `mod` keyword, you give the name of the module. Module names follow
-the conventions for other Rust identifiers: `lower_snake_case`. The contents of
-each module are within curly braces (`{}`).
+Dopo la parola-chiave `mod`, si mette il nome del modulo. I nomi dei moduli
+seguono le convenzioni degli altri identificatori di Rust: `minuscolo
+a serpente`. Il contenuto di ogni modulo sta entro graffe (`{}`).
 
-Within a given `mod`, you can declare sub-`mod`s. We can refer to sub-modules
-with double-colon (`::`) notation: our four nested modules are
-`english::greetings`, `english::farewells`, `japanese::greetings`, and
-`japanese::farewells`. Because these sub-modules are namespaced under their
-parent module, the names don’t conflict: `english::greetings` and
-`japanese::greetings` are distinct, even though their names are both
-`greetings`.
+Entro un dato `mod`, si possono dichiarare dei sotto-`mod`. Si può far
+riferimento a sotto-moduli usando la notazione (`::`): i nostri quattro moduli
+annidati sono `inglese::saluti`, `inglese::commiati`, `giapponese::saluti`, e
+`giapponese::commiati`. Siccome questi sotto-moduli sono definiti all'interno
+dei loro moduli genitore, i loro nomi non sono ambigui: `inglese::saluti` e
+`giapponese::saluti` sono distinti, anche se i loro nomi sono entrambi
+`saluti`.
 
-Because this crate does not have a `main()` function, and is called `lib.rs`,
-Cargo will build this crate as a library:
+Siccome questo crate non ha una funzione `main()`, e si chiama `lib.rs`,
+Cargo costruirà questo crate come libreria:
 
 ```bash
 $ cargo build
-   Compiling phrases v0.0.1 (file:///home/you/projects/phrases)
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
 $ ls target/debug
-build  deps  examples  libphrases-a7448e02a0468eaa.rlib  native
+build  deps  examples  libfrasi-a7448e02a0468eaa.rlib  native
 ```
 
-`libphrases-<hash>.rlib` is the compiled crate. Before we see how to use this
-crate from another crate, let’s break it up into multiple files.
+`libfrasi-<hash>.rlib` è il crate compilato. Prima di vedere come usare
+questo crate da un altro crate, scomponiamolo in più file.
 
-# Multiple File Crates
+# Crate aventi più file
 
-If each crate were just one file, these files would get very large. It’s often
-easier to split up crates into multiple files, and Rust supports this in two
-ways.
+Se ogni crate stesse in un solo file, questo file diventerebbe molto grande.
+Spesso è più facile scomporre i crate in più file, e Rust supporta
+questa operazione in due modi.
 
-Instead of declaring a module like this:
+Invece di dichiarare un modulo così:
 
 ```rust,ignore
-mod english {
-    // contents of our module go here
+mod inglese {
+    // il contenuto del modulo va qui
 }
 ```
 
-We can instead declare our module like this:
+Si può invece dichiarare il modulo così:
 
 ```rust,ignore
-mod english;
+mod inglese;
 ```
 
-If we do that, Rust will expect to find either a `english.rs` file, or a
-`english/mod.rs` file with the contents of our module.
+Se facciamo così, Rust si aspetterà di trovare o un file `inglese.rs`, o
+un file `inglese/mod.rs` con il contenuto del modulo.
 
-Note that in these files, you don’t need to re-declare the module: that’s
-already been done with the initial `mod` declaration.
+Si noti che in questi file, non c'è bisogno di ri-dichiarare il modulo:
+è già stato fatto con la dichiarazione `mod` iniziale.
 
-Using these two techniques, we can break up our crate into two directories and
-seven files:
+Usando queste due tecniche, possiamo scomporre il nostro crate
+in due directory e sette file:
 
 ```bash
 $ tree .
@@ -150,13 +153,13 @@ $ tree .
 ├── Cargo.lock
 ├── Cargo.toml
 ├── src
-│   ├── english
-│   │   ├── farewells.rs
-│   │   ├── greetings.rs
+│   ├── inglese
+│   │   ├── commiati.rs
+│   │   ├── saluti.rs
 │   │   └── mod.rs
-│   ├── japanese
-│   │   ├── farewells.rs
-│   │   ├── greetings.rs
+│   ├── giapponese
+│   │   ├── commiati.rs
+│   │   ├── saluti.rs
 │   │   └── mod.rs
 │   └── lib.rs
 └── target
@@ -164,429 +167,437 @@ $ tree .
         ├── build
         ├── deps
         ├── examples
-        ├── libphrases-a7448e02a0468eaa.rlib
+        ├── libfrasi-a7448e02a0468eaa.rlib
         └── native
 ```
 
-`src/lib.rs` is our crate root, and looks like this:
+`src/lib.rs` è la radice del nostro crate, e si presenta così:
 
 ```rust,ignore
-mod english;
-mod japanese;
+mod inglese;
+mod giapponese;
 ```
 
-These two declarations tell Rust to look for either `src/english.rs` and
-`src/japanese.rs`, or `src/english/mod.rs` and `src/japanese/mod.rs`, depending
-on our preference. In this case, because our modules have sub-modules, we’ve
-chosen the second. Both `src/english/mod.rs` and `src/japanese/mod.rs` look
-like this:
+Queste due dichiarazioni dicono a Rust di cercare o `src/inglese.rs` e
+`src/giapponese.rs`, oppure `src/inglese/mod.rs` e `src/giapponese/mod.rs`,
+a seconda della nostra preferenza. In questo caso, siccome i nostri moduli
+hanno dei sotto-moduli, abbiamo scelto la seconda possibilità.
+Sia `src/inglese/mod.rs` che `src/giapponese/mod.rs` si presentano così:
 
 ```rust,ignore
-mod greetings;
-mod farewells;
+mod saluti;
+mod commiati;
 ```
 
-Again, these declarations tell Rust to look for either
-`src/english/greetings.rs`, `src/english/farewells.rs`,
-`src/japanese/greetings.rs` and `src/japanese/farewells.rs` or
-`src/english/greetings/mod.rs`, `src/english/farewells/mod.rs`,
-`src/japanese/greetings/mod.rs` and
-`src/japanese/farewells/mod.rs`. Because these sub-modules don’t have
-their own sub-modules, we’ve chosen to make them
-`src/english/greetings.rs`, `src/english/farewells.rs`,
-`src/japanese/greetings.rs` and `src/japanese/farewells.rs`. Whew!
+Di nuovo, queste dichiarazioni dicono a Rust di cercare o
+`src/inglese/saluti.rs`, `src/inglese/commiati.rs`,
+`src/giapponese/saluti.rs` e `src/giapponese/commiati.rs` oppure
+`src/inglese/saluti/mod.rs`, `src/inglese/commiati/mod.rs`,
+`src/giapponese/saluti/mod.rs` e `src/giapponese/commiati/mod.rs`.
+Siccome questi sotto-moduli non hanno i loro sotto-moduli, abbiamo scelto
+la prima possibilità. Urca!
 
-The contents of `src/english/greetings.rs`,
-`src/english/farewells.rs`, `src/japanese/greetings.rs` and
-`src/japanese/farewells.rs` are all empty at the moment. Let’s add
-some functions.
+I file `src/inglese/saluti.rs`, `src/inglese/commiati.rs`,
+`src/giapponese/saluti.rs` e `src/giapponese/commiati.rs` al momento sono
+vuoti. Aggiungiamoci alcune funzioni.
 
-Put this in `src/english/greetings.rs`:
+Nel file `src/inglese/saluti.rs` si metta questa:
 
 ```rust
-fn hello() -> String {
+fn ciao() -> String {
     "Hello!".to_string()
 }
 ```
 
-Put this in `src/english/farewells.rs`:
+Nel file `src/inglese/commiati.rs` si metta questa:
 
 ```rust
-fn goodbye() -> String {
+fn arrivederci() -> String {
     "Goodbye.".to_string()
 }
 ```
 
-Put this in `src/japanese/greetings.rs`:
+Nel file `src/giapponese/saluti.rs` si metta questa:
 
 ```rust
-fn hello() -> String {
+fn ciao() -> String {
     "こんにちは".to_string()
 }
 ```
 
-Of course, you can copy and paste this from this web page, or type
-something else. It’s not important that you actually put ‘konnichiwa’ to learn
-about the module system.
+Naturalmente, lo si può copiare e incollare da questa pagina web, oppure
+digitare qualcos'altro. Non è importante mettere proprio ‘konnichiwa’
+per imparare il sistema dei moduli.
 
-Put this in `src/japanese/farewells.rs`:
+E nel file `src/giapponese/commiati.rs` si metta questa:
 
 ```rust
-fn goodbye() -> String {
+fn arrivederci() -> String {
     "さようなら".to_string()
 }
 ```
 
-(This is ‘Sayōnara’, if you’re curious.)
+(Questo commiato è ‘Sayōnara’, per chi interessasse.)
 
-Now that we have some functionality in our crate, let’s try to use it from
-another crate.
+Adesso che abbiamo un po' di funzionalità nel nostro crate, proviamo a usarlo
+da un altro crate.
 
-# Importing External Crates
+# Importare crate esterni
 
-We have a library crate. Let’s make an executable crate that imports and uses
-our library.
+Abbiamo un crate di libreria. Creaiamo un crate di programma che importa e usa
+la nostra libreria.
 
-Make a `src/main.rs` and put this in it (it won’t quite compile yet):
+Creiamo il file `src/main.rs` e mettiamoci dentro questo (anche se
+non compilerà ancora):
 
 ```rust,ignore
-extern crate phrases;
+extern crate frasi;
 
 fn main() {
-    println!("Hello in English: {}", phrases::english::greetings::hello());
-    println!("Goodbye in English: {}", phrases::english::farewells::goodbye());
+    println!("Ciao in inglese: {}", frasi::inglese::saluti::ciao());
+    println!("Arrivederci in inglese: {}", frasi::inglese::commiati::arrivederci());
 
-    println!("Hello in Japanese: {}", phrases::japanese::greetings::hello());
-    println!("Goodbye in Japanese: {}", phrases::japanese::farewells::goodbye());
+    println!("Ciao in giapponese: {}", frasi::giapponese::saluti::ciao());
+    println!("Arrivederci in giapponese: {}", frasi::giapponese::commiati::arrivederci());
 }
 ```
 
-The `extern crate` declaration tells Rust that we need to compile and link to
-the `phrases` crate. We can then use `phrases`’ modules in this one. As we
-mentioned earlier, you can use double colons to refer to sub-modules and the
-functions inside of them.
+La dichiarazione `extern crate` dice a Rust che deve linkare il programma
+con il crate `frasi`. Poi possiamo usare il modulo `frasi`’ in tale crate.
+Come detto prima, si possono usare i doppi due-punti per riferirsi
+ai sotto-moduli e alle funzioni al loro interno.
 
-(Note: when importing a crate that has dashes in its name "like-this", which is
-not a valid Rust identifier, it will be converted by changing the dashes to
-underscores, so you would write `extern crate like_this;`.)
+(Nota: quando si importa un crate che ha trattini nel suo nome "come-questo",
+che non è un identificatore Rust valido, tale nome verrà convertito sostituendo
+i trattini con underscore ("_"), e quindi si dovrà scrivere
+`extern crate come_questo;`.)
 
-Also, Cargo assumes that `src/main.rs` is the crate root of a binary crate,
-rather than a library crate. Our package now has two crates: `src/lib.rs` and
-`src/main.rs`. This pattern is quite common for executable crates: most
-functionality is in a library crate, and the executable crate uses that
-library. This way, other programs can also use the library crate, and it’s also
-a nice separation of concerns.
+Inoltre, Cargo assume che il file `src/main.rs` sia il crate radice di
+un crate di programma, invece che un crate di libreria. Il nostro pacchetto
+adesso contiene due crate: `src/lib.rs` e `src/main.rs`. Questo pattern è
+parecchio tipico per i crate di programma: la maggior parte della funzionalità
+sta in un crate di libreria, e il crate di programma usa quella libreria.
+In questo modo, anche altri programmi possono usare il crate di libreria,
+ed è anche una bella separazione di compiti.
 
-This doesn’t quite work yet, though. We get four errors that look similar to
-this:
+Però quello che abbiamo scritto finora non funziona ancora. Otteniamo quattro
+errori analoghi al seguente:
 
 ```bash
 $ cargo build
-   Compiling phrases v0.0.1 (file:///home/you/projects/phrases)
-src/main.rs:4:38: 4:72 error: function `hello` is private
-src/main.rs:4     println!("Hello in English: {}", phrases::english::greetings::hello());
-                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+src/main.rs:4:37: 4:65 error: function `ciao` is private
+src/main.rs:4     println!("Ciao in inglese: {}", frasi::inglese::saluti::ciao());
+                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 note: in expansion of format_args!
 <std macros>:2:25: 2:58 note: expansion site
 <std macros>:1:1: 2:62 note: in expansion of print!
 <std macros>:3:1: 3:54 note: expansion site
 <std macros>:1:1: 3:58 note: in expansion of println!
-phrases/src/main.rs:4:5: 4:76 note: expansion site
+frasi/src/main.rs:4:5: 4:69 note: expansion site
 ```
 
-By default, everything is private in Rust. Let’s talk about this in some more
-depth.
+Di default, tutto è privato in Rust. Parliamone un po' più in profondità.
 
-# Exporting a Public Interface
+# Exportare un'interfaccia pubblica
 
-Rust allows you to precisely control which aspects of your interface are
-public, and so private is the default. To make things public, you use the `pub`
-keyword. Let’s focus on the `english` module first, so let’s reduce our `src/main.rs`
-to only this:
+Rust consente di controllare con precisione quali aspetti della propria
+interfaccia sono pubblici, e quindi il default è essere privato. Per rendere
+pubbliche le cose, si usa la parola-chiave `pub`. Prima concentriamoci
+sul modulo `inglese`, e perciò riduciamo il file `src/main.rs` a questo:
 
 ```rust,ignore
-extern crate phrases;
+extern crate frasi;
 
 fn main() {
-    println!("Hello in English: {}", phrases::english::greetings::hello());
-    println!("Goodbye in English: {}", phrases::english::farewells::goodbye());
+    println!("Ciao in inglese: {}", frasi::inglese::saluti::ciao());
+    println!("Arrivederci in inglese: {}", frasi::inglese::commiati::arrivederci());
 }
 ```
 
-In our `src/lib.rs`, let’s add `pub` to the `english` module declaration:
+Nel file `src/lib.rs`, aggiungiamo `pub` alla dichiarazione del modulo
+`inglese`:
 
 ```rust,ignore
-pub mod english;
-mod japanese;
+pub mod inglese;
+mod giapponese;
 ```
 
-And in our `src/english/mod.rs`, let’s make both `pub`:
+E nel file `src/inglese/mod.rs`, rendiamo entrambi `pub`:
 
 ```rust,ignore
-pub mod greetings;
-pub mod farewells;
+pub mod saluti;
+pub mod commiati;
 ```
 
-In our `src/english/greetings.rs`, let’s add `pub` to our `fn` declaration:
+Nel file `src/inglese/saluti.rs`, aggiungiamo `pub` alla dichiarazione `fn`:
 
 ```rust,ignore
-pub fn hello() -> String {
+pub fn ciao() -> String {
     "Hello!".to_string()
 }
 ```
 
-And also in `src/english/farewells.rs`:
+E anche nel file `src/inglese/commiati.rs`:
 
 ```rust,ignore
-pub fn goodbye() -> String {
+pub fn arrivederci() -> String {
     "Goodbye.".to_string()
 }
 ```
 
-Now, our crate compiles, albeit with warnings about not using the `japanese`
-functions:
+Adesso, il nostro crate compila, sebbene con degli avvertimenti su fatto che
+non stiamo usando le funzioni del modulo `giapponese`:
 
 ```bash
 $ cargo run
-   Compiling phrases v0.0.1 (file:///home/you/projects/phrases)
-src/japanese/greetings.rs:1:1: 3:2 warning: function is never used: `hello`, #[warn(dead_code)] on by default
-src/japanese/greetings.rs:1 fn hello() -> String {
-src/japanese/greetings.rs:2     "こんにちは".to_string()
-src/japanese/greetings.rs:3 }
-src/japanese/farewells.rs:1:1: 3:2 warning: function is never used: `goodbye`, #[warn(dead_code)] on by default
-src/japanese/farewells.rs:1 fn goodbye() -> String {
-src/japanese/farewells.rs:2     "さようなら".to_string()
-src/japanese/farewells.rs:3 }
-     Running `target/debug/phrases`
-Hello in English: Hello!
-Goodbye in English: Goodbye.
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+src/giapponese/saluti.rs:1:1: 3:2 warning: function is never used: `ciao`, #[warn(dead_code)] on by default
+src/giapponese/saluti.rs:1 fn ciao() -> String {
+src/giapponese/saluti.rs:2     "こんにちは".to_string()
+src/giapponese/saluti.rs:3 }
+src/giapponese/commiati.rs:1:1: 3:2 warning: function is never used: `arrivederci`, #[warn(dead_code)] on by default
+src/giapponese/commiati.rs:1 fn arrivederci() -> String {
+src/giapponese/commiati.rs:2     "さようなら".to_string()
+src/giapponese/commiati.rs:3 }
+     Running `target/debug/frasi`
+Ciao in inglese: Hello!
+Arrivederci in inglese: Goodbye.
 ```
 
-`pub` also applies to `struct`s and their member fields. In keeping with Rust’s
-tendency toward safety, simply making a `struct` public won't automatically
-make its members public: you must mark the fields individually with `pub`.
+`pub` si applica anche alle `struct` e ai loro campi. Rispettando la tendenza
+di Rust verso la sicurezza, semplicemente rendendo pubblica una `struct` non
+rende automaticamente pubblici i suoi membri: i campi devono essere marcati
+individualmente con `pub`.
 
-Now that our functions are public, we can use them. Great! However, typing out
-`phrases::english::greetings::hello()` is very long and repetitive. Rust has
-another keyword for importing names into the current scope, so that you can
-refer to them with shorter names. Let’s talk about `use`.
+Adesso che le nostre funzioni sono pubbliche, possiamo usarle. Ottimo! Però,
+digitare `frasi::inglese::saluti::ciao()` è molto lungo e ripetitivo. Rust ha
+un'altra parola-chiave per importare i nomi nell'ambito corrente, così che
+ci si possa riferire ad essi con nomi più brevi. Parliamo di `use`.
 
-# Importing Modules with `use`
+# Importare modulo usando `use`
 
-Rust has a `use` keyword, which allows us to import names into our local scope.
-Let’s change our `src/main.rs` to look like this:
+Rust ha la parola-chiave `use`, che ci consente di importare dei nomi
+nel nostro ambito locale. Modifichiamo il file `src/main.rs` così:
 
 ```rust,ignore
-extern crate phrases;
+extern crate frasi;
 
-use phrases::english::greetings;
-use phrases::english::farewells;
+use frasi::inglese::saluti;
+use frasi::inglese::commiati;
 
 fn main() {
-    println!("Hello in English: {}", greetings::hello());
-    println!("Goodbye in English: {}", farewells::goodbye());
+    println!("Ciao in inglese: {}", saluti::ciao());
+    println!("Arrivederci in inglese: {}", commiati::arrivederci());
 }
 ```
 
-The two `use` lines import each module into the local scope, so we can refer to
-the functions by a much shorter name. By convention, when importing functions, it’s
-considered best practice to import the module, rather than the function directly. In
-other words, you _can_ do this:
+Le due righe `use` importano ogni modulo nell'ambito locale, e quindi possiamo
+far riferimento alle funzioni con un nome molto più breve. Per convenzione,
+quando si importano funzioni, la pratica migliore è considerata importare
+il modulo, invece che direttamente la funzione. In altre parole, si _può_ fare
+così:
 
 ```rust,ignore
-extern crate phrases;
+extern crate frasi;
 
-use phrases::english::greetings::hello;
-use phrases::english::farewells::goodbye;
+use frasi::inglese::saluti::ciao;
+use frasi::inglese::commiati::arrivederci;
 
 fn main() {
-    println!("Hello in English: {}", hello());
-    println!("Goodbye in English: {}", goodbye());
+    println!("Ciao in inglese: {}", ciao());
+    println!("Arrivederci in inglese: {}", arrivederci());
 }
 ```
 
-But it is not idiomatic. This is significantly more likely to introduce a
-naming conflict. In our short program, it’s not a big deal, but as it grows, it
-becomes a problem. If we have conflicting names, Rust will give a compilation
-error. For example, if we made the `japanese` functions public, and tried to do
-this:
+Ma non è tipico. Così è significativamente più probabile che si verifichi
+un conflitto di nomi. Nel nostro breve programma, non è una grossa questione,
+ma man mano che cresce, diventa un problema. Se abbiamo nomi in conflitto,
+Rust darà un errore di compilazione. Per esempio, se avessimo reso pubbliche
+le funzioni del modulo `giapponese`, e provassimo a fare così:
 
 ```rust,ignore
-extern crate phrases;
+extern crate frasi;
 
-use phrases::english::greetings::hello;
-use phrases::japanese::greetings::hello;
+use frasi::inglese::saluti::ciao;
+use frasi::giapponese::saluti::ciao;
 
 fn main() {
-    println!("Hello in English: {}", hello());
-    println!("Hello in Japanese: {}", hello());
+    println!("Ciao in inglese: {}", ciao());
+    println!("Ciao in giapponese: {}", ciao());
 }
 ```
 
-Rust will give us a compile-time error:
+Rust ci darà un errore di compilazione:
 
 ```text
-   Compiling phrases v0.0.1 (file:///home/you/projects/phrases)
-src/main.rs:4:5: 4:40 error: a value named `hello` has already been imported in this module [E0252]
-src/main.rs:4 use phrases::japanese::greetings::hello;
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+src/main.rs:4:5: 4:36 error: a value named `ciao` has already been imported in this module [E0252]
+src/main.rs:4 use frasi::giapponese::saluti::ciao;
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 error: aborting due to previous error
-Could not compile `phrases`.
+Could not compile `frasi`.
 ```
 
-If we’re importing multiple names from the same module, we don’t have to type it out
-twice. Instead of this:
+Se stiamo importando più nomi dallo stesso modulo, non dobbiamo digitarlo
+due volte. Invece di questo:
 
 ```rust,ignore
-use phrases::english::greetings;
-use phrases::english::farewells;
+use frasi::inglese::saluti;
+use frasi::inglese::commiati;
 ```
 
-We can use this shortcut:
+Possiamo usare questa abbreviazione:
 
 ```rust,ignore
-use phrases::english::{greetings, farewells};
+use frasi::inglese::{saluti, commiati};
 ```
 
-## Re-exporting with `pub use`
+## Ri-esportare usando `pub use`
 
-You don’t only use `use` to shorten identifiers. You can also use it inside of your crate
-to re-export a function inside another module. This allows you to present an external
-interface that may not directly map to your internal code organization.
+Non si usa `use` solamente per abbreviare gli identificatori. Lo si può anche
+usare dentro il proprio crate per ri-esportare una funzione all'interno
+di un altro modulo. Ciò consente di presentare un'interfaccia esterna che
+può non mapparsi direttamente all'organizzazione interna del proprio codice.
 
-Let’s look at an example. Modify your `src/main.rs` to read like this:
+Guardiamo un esempio. Modifichiamo il file `src/main.rs` così:
 
 ```rust,ignore
-extern crate phrases;
+extern crate frasi;
 
-use phrases::english::{greetings,farewells};
-use phrases::japanese;
+use frasi::inglese::{saluti,commiati};
+use frasi::giapponese;
 
 fn main() {
-    println!("Hello in English: {}", greetings::hello());
-    println!("Goodbye in English: {}", farewells::goodbye());
+    println!("Ciao in inglese: {}", saluti::ciao());
+    println!("Arrivederci in inglese: {}", commiati::arrivederci());
 
-    println!("Hello in Japanese: {}", japanese::hello());
-    println!("Goodbye in Japanese: {}", japanese::goodbye());
+    println!("Ciao in giapponese: {}", giapponese::ciao());
+    println!("Arrivederci in giapponese: {}", giapponese::arrivederci());
 }
 ```
 
-Then, modify your `src/lib.rs` to make the `japanese` mod public:
+Poi, modifichiamo il file `src/lib.rs` per rendere pubblico il modulo
+`giapponese`:
 
 ```rust,ignore
-pub mod english;
-pub mod japanese;
+pub mod inglese;
+pub mod giapponese;
 ```
 
-Next, make the two functions public, first in `src/japanese/greetings.rs`:
+Poi, rendiamo pubbliche le due funzioni, prima nel file
+`src/giapponese/saluti.rs`:
 
 ```rust,ignore
-pub fn hello() -> String {
+pub fn ciao() -> String {
     "こんにちは".to_string()
 }
 ```
 
-And then in `src/japanese/farewells.rs`:
+E poi nel file `src/giapponese/commiati.rs`:
 
 ```rust,ignore
-pub fn goodbye() -> String {
+pub fn arrivederci() -> String {
     "さようなら".to_string()
 }
 ```
 
-Finally, modify your `src/japanese/mod.rs` to read like this:
+Infine, modifichiamo il file `src/giapponese/mod.rs` così:
 
 ```rust,ignore
-pub use self::greetings::hello;
-pub use self::farewells::goodbye;
+pub use self::saluti::ciao;
+pub use self::commiati::arrivederci;
 
-mod greetings;
-mod farewells;
+mod saluti;
+mod commiati;
 ```
 
-The `pub use` declaration brings the function into scope at this part of our
-module hierarchy. Because we’ve `pub use`d this inside of our `japanese`
-module, we now have a `phrases::japanese::hello()` function and a
-`phrases::japanese::goodbye()` function, even though the code for them lives in
-`phrases::japanese::greetings::hello()` and
-`phrases::japanese::farewells::goodbye()`. Our internal organization doesn’t
-define our external interface.
+La dichiarazione `pub use` porta la funzione nell'ambito di questa parte
+della gerarchia di moduli. Siccome abbiamo inserito l'istruzione `pub use`
+nel modulo `giapponese`, adesso abbiamo a disposizione la funzione
+`frasi::giapponese::ciao()` e la funzione `frasi::giapponese::arrivederci()`,
+anche se il loro codice risiede rispettivamente in
+`frasi::giapponese::saluti::ciao()` and in
+`frasi::giapponese::commiati::arrivederci()`. La nostra organizzazione interna
+non definisce la nostra interfaccia esterna.
 
-Here we have a `pub use` for each function we want to bring into the
-`japanese` scope. We could alternatively use the wildcard syntax to include
-everything from `greetings` into the current scope: `pub use self::greetings::*`.
+Qui abbiamo un `pub use` per ogni funzione che vogliamo portare nell'ambito di
+`giapponese`. Alternativamente potevamo usare la sintassi jolly per includere
+nell'ambito corrente tutto il contenuto di `saluti`: `pub use self::saluti::*`.
 
-What about the `self`? Well, by default, `use` declarations are absolute paths,
-starting from your crate root. `self` makes that path relative to your current
-place in the hierarchy instead. There’s one more special form of `use`: you can
-`use super::` to reach one level up the tree from your current location. Some
-people like to think of `self` as `.` and `super` as `..`, from many shells’
-display for the current directory and the parent directory.
+Che dire di `self`? Beh, di default, le dichiarazioni `use` sono percorsi
+assoluti, che iniziano dal crate radice. `self` invece fa sì che il percorso
+sia relativo alla posizione corrente nella gerarchia. C'è un'altra forma
+speciale di `use`: si può scrivere `use super::` per salire di un livello
+nell'albero dalla posizione attuale. Ad alcuni piace pensare a `self` come
+alla directory `.`, e a `super` come alla directory `..`.
 
-Outside of `use`, paths are relative: `foo::bar()` refers to a function inside
-of `foo` relative to where we are. If that’s prefixed with `::`, as in
-`::foo::bar()`, it refers to a different `foo`, an absolute path from your
-crate root.
+Fuori dalle istruzioni `use`, i percorsi sono normalmente relativi:
+`foo::bar()` si referisce a una funzione interna a `foo`, relativo a dove
+siamo. Se viene preceduto da `::`, come in `::foo::bar()`, allora si riferisce
+a un diverso `foo`, inquanto è un percorso assoluto dal crate radice.
 
-This will build and run:
+Questo verrà compilato ed eseguito così:
 
 ```bash
 $ cargo run
-   Compiling phrases v0.0.1 (file:///home/you/projects/phrases)
-     Running `target/debug/phrases`
-Hello in English: Hello!
-Goodbye in English: Goodbye.
-Hello in Japanese: こんにちは
-Goodbye in Japanese: さようなら
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+     Running `target/debug/frasi`
+Ciao in inglese: Hello!
+Arrivederci in inglese: Goodbye.
+Ciao in giapponese: こんにちは
+Arrivederci in giapponese: さようなら
 ```
 
-## Complex imports
+## Importazioni complesse
 
-Rust offers several advanced options that can add compactness and
-convenience to your `extern crate` and `use` statements. Here is an example:
+Rust offre varie opzioni avanzate che possono aggiungere compattezza e comodità
+alle istruzioni `extern crate` e `use`. Ecco un esempio:
 
 ```rust,ignore
-extern crate phrases as sayings;
+extern crate frasi as detti;
 
-use sayings::japanese::greetings as ja_greetings;
-use sayings::japanese::farewells::*;
-use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
+use detti::giapponese::saluti as ja_saluti;
+use detti::giapponese::commiati::*;
+use detti::inglese::{self, saluti as en_saluti, commiati as en_commiati};
 
 fn main() {
-    println!("Hello in English; {}", en_greetings::hello());
-    println!("And in Japanese: {}", ja_greetings::hello());
-    println!("Goodbye in English: {}", english::farewells::goodbye());
-    println!("Again: {}", en_farewells::goodbye());
-    println!("And in Japanese: {}", goodbye());
+    println!("Ciao in inglese; {}", en_saluti::ciao());
+    println!("E in giapponese: {}", ja_saluti::ciao());
+    println!("Arrivederci in inglese: {}", inglese::commiati::arrivederci());
+    println!("Ancora: {}", en_commiati::arrivederci());
+    println!("E in giapponese: {}", arrivederci());
 }
 ```
 
-What's going on here?
+Cosa succede qui?
 
-First, both `extern crate` and `use` allow renaming the thing that is being
-imported. So the crate is still called "phrases", but here we will refer
-to it as "sayings". Similarly, the first `use` statement pulls in the
-`japanese::greetings` module from the crate, but makes it available as
-`ja_greetings` as opposed to simply `greetings`. This can help to avoid
-ambiguity when importing similarly-named items from different places.
+Primo, sia `extern crate` che `use` consentono di rinominare la cosa che viene
+importata. Quindi il crate si chiama ancora "frasi", ma qui ci riferiremo
+ad esso come a "detti". Analogamente, la prima istruzione `use` tira dentro
+il modulo `giapponese::saluti` dal crate, ma lo rende disponibile come
+`ja_saluti` invece che semplicemente `saluti`. Ciò può aiutare a evitare
+ambiguità quando si importano elementi con nomi simili da altri posti.
 
-The second `use` statement uses a star glob to bring in all public symbols from
-the `sayings::japanese::farewells` module. As you can see we can later refer to
-the Japanese `goodbye` function with no module qualifiers. This kind of glob
-should be used sparingly. It’s worth noting that it only imports the public
-symbols, even if the code doing the globbing is in the same module.
+La seconda istruzione `use` usa un asterisco jolly per portare dentro tutti
+i simboli pubblici dal modulo `detti::giapponese::commiati`. Come si vede,
+poi possiamo far riferimento alla funzione giapponese `arrivederci` senza
+qualificatori di modulo. Questo genere di jolly dovrebbe essere usato
+con parsimonia. Vale la pena notare che importa solamente i simboli pubblici,
+anche se il codice che usa il jolly è nel medesimo modulo.
 
-The third `use` statement bears more explanation. It's using "brace expansion"
-globbing to compress three `use` statements into one (this sort of syntax
-may be familiar if you've written Linux shell scripts before). The
-uncompressed form of this statement would be:
+La terza istruzione `use` porta più spiegazioni. Usa l'"espansione a graffa"
+per comprimere tre istruzioni `use` in una sola (questo genere di sintassi
+può essere familiare a chi ha già scritto script di shell Linux). La forma
+non compressa di questa istruzione sarebbe:
 
 ```rust,ignore
-use sayings::english;
-use sayings::english::greetings as en_greetings;
-use sayings::english::farewells as en_farewells;
+use detti::inglese;
+use detti::inglese::saluti as en_saluti;
+use detti::inglese::commiati as en_commiati;
 ```
 
-As you can see, the curly brackets compress `use` statements for several items
-under the same path, and in this context `self` refers back to that path.
-Note: The curly brackets cannot be nested or mixed with star globbing.
+Come si vede, le graffe comprimono le istruzioni `use` di varie voci
+sotto il medesimo percorso, e in questo contesto `self` si riferisce
+a quel percorso.
+Nota: Le graffe non possono essere annidate né mescolate con asterischi jolly.

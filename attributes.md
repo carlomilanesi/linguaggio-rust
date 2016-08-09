@@ -1,13 +1,14 @@
-% Attributes
+% Gli attributi
 
-Declarations can be annotated with ‘attributes’ in Rust. They look like this:
+In Rust le dichiarazioni possono essere annotate con ‘attributi’.
+Si presentano così:
 
 ```rust
 #[test]
 # fn foo() {}
 ```
 
-or like this:
+o così:
 
 ```rust
 # mod foo {
@@ -15,8 +16,7 @@ or like this:
 # }
 ```
 
-The difference between the two is the `!`, which changes what the attribute
-applies to:
+La differenza fra i due è il `!`, che cambia ciò a cui l'attributo si applica:
 
 ```rust,ignore
 #[foo]
@@ -27,12 +27,13 @@ mod bar {
 }
 ```
 
-The `#[foo]` attribute applies to the next item, which is the `struct`
-declaration. The `#![bar]` attribute applies to the item enclosing it, which is
-the `mod` declaration. Otherwise, they’re the same. Both change the meaning of
-the item they’re attached to somehow.
+L'attributo `#[foo]` si applica all'elemento che lo segue, che è
+la dichiarazione di `struct`. Invece l'attributo `#![bar]` si applica
+all'elemento che lo racchiude, che è la dichiarazione di `mod`. Per gli altri
+aspetti, sono equivalenti. Entrambi modificano in qualche modo il significato
+dell'elemento a cui si applicano.
 
-For example, consider a function like this:
+Per esempio, si consideri una funzione come questa:
 
 ```rust
 #[test]
@@ -41,13 +42,13 @@ fn check() {
 }
 ```
 
-It is marked with `#[test]`. This means it’s special: when you run
-[tests][tests], this function will execute. When you compile as usual, it won’t
-even be included. This function is now a test function.
+È marcata da `#[test]`. Ciò significa che è speciale: quando si eseguono i
+[test][test], questa funzione verrà eseguita. Quando si compila come al solito,
+non verrà nemmeno inclusa. Questa funzione adesso è una funzione di collaudo.
 
-[tests]: testing.html
+[test]: testing.html
 
-Attributes may also have additional data:
+Gli attributi possono anche avere dati aggiuntivi:
 
 ```rust
 #[inline(always)]
@@ -55,7 +56,7 @@ fn super_fast_fn() {
 # }
 ```
 
-Or even keys and values:
+O perfino chiavi e valori:
 
 ```rust
 #[cfg(target_os = "macos")]
@@ -63,8 +64,8 @@ mod macos_only {
 # }
 ```
 
-Rust attributes are used for a number of different things. There is a full list
-of attributes [in the reference][reference]. Currently, you are not allowed to
-create your own attributes, the Rust compiler defines them.
+Gli attributi di Rust servono a varie cose diverse. C'è una lista completa
+degli attributi [nel riferimento][riferimento]. Attualmente, non è consentito
+creare i propri attributi; li definisce solamente il compilatore Rust.
 
-[reference]: ../reference.html#attributes
+[riferimento]: ../reference.html#attributes

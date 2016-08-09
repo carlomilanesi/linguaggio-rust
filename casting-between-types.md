@@ -1,41 +1,43 @@
-% Casting Between Types
+% Conversione fra tipi
 
-Rust, with its focus on safety, provides two different ways of casting
-different types between each other. The first, `as`, is for safe casts.
-In contrast, `transmute` allows for arbitrary casting, and is one of the
-most dangerous features of Rust!
+Rust, concentrandosi sulla sicurezza, fornisce due diversi modi di convertire
+un valore in un valore di tipo diverso. Il primo, `as`, è per conversioni
+sicure. Invece, `transmute` consente conversioni arbitrarie, ed è una delle
+caratteristiche più pericolose di Rust!
 
-# Coercion
+# La forzatura
 
-Coercion between types is implicit and has no syntax of its own, but can
-be spelled out with [`as`](#explicit-coercions).
+La forzatura tra tipi è implicita e non ha una sua sintassi, ma può essere
+esplicitata usando [`as`](#explicit-coercions).
 
-Coercion occurs in `let`, `const`, and `static` statements; in
-function call arguments; in field values in struct initialization; and in a
-function result.
+La forzatura può avvenire nelle istruzioni `let`, `const`, e `static`; negli
+argomenti delle chiamate di funzione; nei valori dei campi
+nell'inizializzazione di struct; e nei risultati di funzioni.
 
-The most common case of coercion is removing mutability from a reference:
+Il caso più tipico di forzatura è la rimozione della mutabilità
+da un riferimento:
 
  * `&mut T` to `&T`
 
-An analogous conversion is to remove mutability from a
-[raw pointer](raw-pointers.md):
+Un'analoga conversione si ha per rimuovere la mutabilità
+da un [puntatore grezzo](raw-pointers.md):
 
  * `*mut T` to `*const T`
 
-References can also be coerced to raw pointers:
+I riferimenti possono anche essere forzati in puntatori grezzi:
 
  * `&T` to `*const T`
 
  * `&mut T` to `*mut T`
 
-Custom coercions may be defined using [`Deref`](deref-coercions.md).
+Si possono definire delle forzature personalizzate usando
+[`Deref`](deref-coercions.md).
 
-Coercion is transitive.
+Le forzature sono transitive.
 
 # `as`
 
-The `as` keyword does safe casting:
+La parola-chiave `as` esegue una conversione sicura:
 
 ```rust
 let x: i32 = 5;
@@ -43,29 +45,29 @@ let x: i32 = 5;
 let y = x as i64;
 ```
 
-There are three major categories of safe cast: explicit coercions, casts
-between numeric types, and pointer casts.
+Ci sono tre categorie principali di conversioni sicure: le forzature esplicite,
+le conversioni tra tipi numerici, e le conversioni tra puntatori.
 
-Casting is not transitive: even if `e as U1 as U2` is a valid
-expression, `e as U2` is not necessarily so (in fact it will only be valid if
-`U1` coerces to `U2`).
+Le conversioni non sono transitive: anche se `e as U1 as U2` è un'espressione
+valida, `e as U2` non lo è necessariamente (di fatto è valida solamente se 
+`U1` può essere forzata a `U2`).
 
+## Forzature esplicite
 
-## Explicit coercions
+Una conversione `e as U` è valida se `e` ha tipo `T` e `T` *può essere forzato*
+a `U`.
 
-A cast `e as U` is valid if `e` has type `T` and `T` *coerces* to `U`.
+## Conversioni numeriche
 
-## Numeric casts
+Una conversione `e as U` è pure valida in ognuno dei seguenti casi:
 
-A cast `e as U` is also valid in any of the following cases:
+ * `e` è di tipo `T`, e `T` e `U` sono tipi numerici qualunque; *numeric-cast*
+ * `e` è un enum in stile C (cioò senza dati allegati alle varianti),
+    e `U` è un tipo intero; *enum-cast*
+ * `e` è di tipo `bool` o `char`, e `U` è un tipo intero; *prim-int-cast*
+ * `e` è di tipo `u8`, e `U` è `char`; *u8-char-cast*
 
- * `e` has type `T` and `T` and `U` are any numeric types; *numeric-cast*
- * `e` is a C-like enum (with no data attached to the variants),
-    and `U` is an integer type; *enum-cast*
- * `e` has type `bool` or `char` and `U` is an integer type; *prim-int-cast*
- * `e` has type `u8` and `U` is `char`; *u8-char-cast*
-
-For example
+Per esempio
 
 ```rust
 let one = true as u8;
@@ -73,94 +75,101 @@ let at_sign = 64 as char;
 let two_hundred = -56i8 as u8;
 ```
 
-The semantics of numeric casts are:
+La semantica delle conversioni numeriche è la seguente:
 
-* Casting between two integers of the same size (e.g. i32 -> u32) is a no-op
-* Casting from a larger integer to a smaller integer (e.g. u32 -> u8) will
-  truncate
-* Casting from a smaller integer to a larger integer (e.g. u8 -> u32) will
-    * zero-extend if the source is unsigned
-    * sign-extend if the source is signed
-* Casting from a float to an integer will round the float towards zero
-    * **[NOTE: currently this will cause Undefined Behavior if the rounded
-      value cannot be represented by the target integer type][float-int]**.
-      This includes Inf and NaN. This is a bug and will be fixed.
-* Casting from an integer to float will produce the floating point
-  representation of the integer, rounded if necessary (rounding strategy
-  unspecified)
-* Casting from an f32 to an f64 is perfect and lossless
-* Casting from an f64 to an f32 will produce the closest possible value
-  (rounding strategy unspecified)
-    * **[NOTE: currently this will cause Undefined Behavior if the value
-      is finite but larger or smaller than the largest or smallest finite
-      value representable by f32][float-float]**. This is a bug and will
-      be fixed.
+* La conversione fra due interi della stessa dimensione (per es. i32 -> u32)
+  è una no-op (cioè non fa niente)
+* La conversione da un intero più grande a un intero più piccolo (per es.
+  u32 -> u8) troncherà
+* La conversione da un intero più piccolo a un intero più grande (per es.
+  u8 -> u32)
+    * estenderà con zeri se l'originale è senza segno
+    * estenderà con bit del segno se l'originale è con segno
+* La conversione da un numero a virgola mobile a un intero arrotonderà
+  un numero a virgola mobile verso lo zero
+    * **[NOTA: attualmente ciò avrà comportamento indefinito se il valore
+      arrotondato non può essere rappresentato dal tipo intero obiettivo]
+      [float-int]**. Sono compresi Inf e NaN. Questo difetto dovrà essere
+      corretto.
+* La conversione da un intero a un numero a virgola mobile produrrà
+  la rappresentazione a virgola mobile dell'intero, arrotondato se necessario
+  (la strategia di arrotondamento non è specificata)
+* La conversione da un f32 a un f64 è perfetta e senza perdite di precisione
+* La conversione da un f64 a un f32 produrrà il valore più vicino possibile
+  (la strategia di arrotondamento non è specificata)
+    * **[NOTA: attualmente ciò avrà comportamento indefinito se il valore è
+      finito ma più grande o più piccolo del valore finito più grande o più
+      piccolo rappresentabile da f32][float-float]**. Questo difetto dovrà
+      essere corretto.
 
 [float-int]: https://github.com/rust-lang/rust/issues/10184
 [float-float]: https://github.com/rust-lang/rust/issues/15536
 
-## Pointer casts
+## Conversione di puntatori
 
-Perhaps surprisingly, it is safe to cast [raw pointers](raw-pointers.md) to and
-from integers, and to cast between pointers to different types subject to
-some constraints. It is only unsafe to dereference the pointer:
+Forse sorprenderà qualcuno, ma è sicuro convertire [puntatori grezzi]
+(raw-pointers.md) in interi e interi in puntatori grezzi, e convertire
+fra puntatori che puntano a tipi diversi pur di rispettare alcuni vincoli.
+È insicuro solamente dereferenziare il puntatore:
 
 ```rust
-let a = 300 as *const char; // a pointer to location 300
+let a = 300 as *const char; // un puntatore alla posizione 300
 let b = a as u32;
 ```
 
-`e as U` is a valid pointer cast in any of the following cases:
+`e as U` è una valida conversione di puntatore in ognuno dei seguenti casi:
 
-* `e` has type `*T`, `U` has type `*U_0`, and either `U_0: Sized` or
-  `unsize_kind(T) == unsize_kind(U_0)`; a *ptr-ptr-cast*
+* `e` è di tipo `*T`, `U` è `*U_0`, e o vale `U_0: Sized` o
+vale `unsize_kind(T) == unsize_kind(U_0)`; è un *ptr-ptr-cast*
 
-* `e` has type `*T` and `U` is a numeric type, while `T: Sized`; *ptr-addr-cast*
+* `e` è di tipo `*T` e `U` è un tipo numerico, mentre vale `T: Sized`;
+  è un *ptr-addr-cast*
 
-* `e` is an integer and `U` is `*U_0`, while `U_0: Sized`; *addr-ptr-cast*
+* `e` è un intero e `U` è `*U_0`, mentre vale `U_0: Sized`; è un *addr-ptr-cast*
 
-* `e` has type `&[T; n]` and `U` is `*const T`; *array-ptr-cast*
+* `e` è di tipo `&[T; n]` e `U` è `*const T`; è un *array-ptr-cast*
 
-* `e` is a function pointer type and `U` has type `*T`,
-  while `T: Sized`; *fptr-ptr-cast*
+* `e` è un puntatore a funzione e `U` è `*T`,
+  mentre `T: Sized`; è un *fptr-ptr-cast*
 
-* `e` is a function pointer type and `U` is an integer; *fptr-addr-cast*
+* `e` è un puntatore a funzione e `U` è un tipo intero; è un *fptr-addr-cast*
 
 
-# `transmute`
+# La funzione `transmute`
 
-`as` only allows safe casting, and will for example reject an attempt to
-cast four bytes into a `u32`:
+`as` consente solamente conversioni sicure, e per esempio respngerà
+un tentativo di convertire quattro bye in un `u32`:
 
 ```rust,ignore
 let a = [0u8, 0u8, 0u8, 0u8];
 
-let b = a as u32; // four u8s makes a u32
+let b = a as u32; // quattro u8 fanno un u32
 ```
 
-This errors with:
+Ciò produrrà questo errore:
 
 ```text
 error: non-scalar cast: `[u8; 4]` as `u32`
-let b = a as u32; // four u8s makes a u32
+let b = a as u32; // quattro u8 fanno un u32
         ^~~~~~~~
 ```
 
-This is a ‘non-scalar cast’ because we have multiple values here: the four
-elements of the array. These kinds of casts are very dangerous, because they
-make assumptions about the way that multiple underlying structures are
-implemented. For this, we need something more dangerous.
+Questa è una conversione ’non scalare’, perché qui abbiamo più valori:
+i quattro elementi dell'array. Questi generi di conversioni sono molto
+pericolose, perché fanno assunzioni sul modo in cui più strutture soggiacenti
+sono implementate. Per questo, ci serve qualcosa di più pericoloso.
 
-The `transmute` function is provided by a [compiler intrinsic][intrinsics], and
-what it does is very simple, but very scary. It tells Rust to treat a value of
-one type as though it were another type. It does this regardless of the
-typechecking system, and completely trusts you.
+La funzione `transmute` è fornita da un [intrinseco del compilatore]
+[intrinseci], e quello che fa è molto semplice, ma molto pauroso. Dice a Rust
+di trattare un valore di un tipo come se fosse di un altro tipo. Lo fa senza
+riguardo per il sistema di verifica dei tipi, e si fida completamente
+del programmatore.
 
-[intrinsics]: intrinsics.html
+[intrinseci]: intrinsics.html
 
-In our previous example, we know that an array of four `u8`s represents a `u32`
-properly, and so we want to do the cast. Using `transmute` instead of `as`,
-Rust lets us:
+Nell'esempio precedente, sappiamo che un array di quattro `u8` rappresenta
+appropriatamente un `u32`, e quindi vogliamo fare la conversione. Usando
+`transmute` invece di `as`, Rust ce lo lascia fare:
 
 ```rust
 use std::mem;
@@ -170,22 +179,23 @@ fn main() {
         let a = [0u8, 1u8, 0u8, 0u8];
         let b = mem::transmute::<[u8; 4], u32>(a);
         println!("{}", b); // 256
-        // or, more concisely:
+        // o, più concisamente:
         let c: u32 = mem::transmute(a);
         println!("{}", c); // 256
     }
 }
 ```
 
-We have to wrap the operation in an `unsafe` block for this to compile
-successfully. Technically, only the `mem::transmute` call itself needs to be in
-the block, but it's nice in this case to enclose everything related, so you
-know where to look. In this case, the details about `a` are also important, and
-so they're in the block. You'll see code in either style, sometimes the context
-is too far away, and wrapping all of the code in `unsafe` isn't a great idea.
+Dobbiamo avvolgere l'operazione in un blocco `unsafe` affinché compili
+con successo. Tecnicamente, solamente la chiamata `mem::transmute` stessa ha
+bisogno di essere nel blocco, ma in questo caso è carino racchiudere tutte
+le cose correlate, così da saper dove guardare. In questo caso, anche
+i dettagli su `a` sono importanti, e quindi sono nel blocco. Capiterà di vedere
+del codice in entrambi gli stili; talvolta il contesto è troppo lontano, e
+avvolgere tutto il codice in `unsafe` non è un'ottima idea.
 
-While `transmute` does very little checking, it will at least make sure that
-the types are the same size. This errors:
+Per quanto `transmute` faccia pochissime verifiche, almeno si assicura che
+i tipi siano della stessa dimensione. Questa codice:
 
 ```rust,ignore
 use std::mem;
@@ -197,11 +207,11 @@ unsafe {
 }
 ```
 
-with:
+dà il seguente errore:
 
 ```text
 error: transmute called with differently sized types: [u8; 4] (32 bits) to u64
 (64 bits)
 ```
 
-Other than that, you're on your own!
+A parte quello, ci si deve arrangiare!

@@ -1,4 +1,4 @@
-% Chiusure [Closures]
+% Chiusure ["closure"]
 
 Talvolta è utile racchiudere una funzione e le _variabili libere_ per ottenere
 maggiore chiarezza e riutilizzo. Le variabili libere che possono essere usate
@@ -102,19 +102,19 @@ fn main() {
 ```
 
 Un messaggio d'errore prolisso ma utile! Come dice, non si può prendere `num` 
-a prestito mutabile perché la chiusura la sta già tenendo a prestito.
+a prestito mutabile, perché la chiusura la sta già tenendo a prestito.
 Se lasciamo uscire di ambito la chiusura, lo possiamo fare:
 
 ```rust
 let mut numero = 5;
 {
     let piu_numero = |x: i32| x + numero;
-} // piu_num esce di ambito, e quindi il prestito di numero finisce
+} // piu_numero esce di ambito, e quindi il prestito di 'numero' finisce
 
 let y = &mut numero;
 ```
 
-La chiusura lo richiede, comunque, Rust prenderà la ownership and move
+La chiusura lo richiede, però Rust prenderà il possesso and move
 the environment instead. This doesn’t work:
 
 ```rust,ignore
@@ -125,7 +125,7 @@ let prende_numeri = || numeri;
 println!("{:?}", numeri);
 ```
 
-We get this error:
+Otteniamo questo errore:
 
 ```text
 note: `nums` moved into closure environment here because it has type
