@@ -256,40 +256,40 @@ Ecco l'algoritmo completo che rustdoc usa per preprocessare gli esempi:
 4. Infine, se l'esempio non contiene `fn main`, il resto del testo è
    avvolto in `fn main() { il_nostro_codice }`.
 
-Questo `fn main` generato però può creare problemi! Se ci sono istruzioni
-`extern crate` o `mod` nel codice d'esempio che sono riferite da istruzioni
-`use`, non riusciranno a risolvere a meno che si includa almeno `fn main() {}`
-per inibire il passo 4.
-`#[macro_use] extern crate` also does not work except at the crate root, so when
-testing macros an explicit `main` is always required. It doesn't have to clutter
-up your docs, though -- keep reading!
+Però questo `fn main` generato può creare problemi! Se ci sono istruzioni
+`extern crate` o `mod` nel codice d'esempio, che sono riferite da istruzioni
+`use`, non potranno essere risolte a meno che si includa almeno `fn main() {}`
+per inibire il passo 4. Anche l'istruzione `#[macro_use] extern crate`
+non funziona eccetto che alla radice del crate, e quindi, quando si collaudano
+delle macro, è sempre obbligatorio inserire un `main` esplicito. Però,
+non deve ingombrare la documentazione -- andiamo avanti a leggere!
 
-Sometimes this algorithm isn't enough, though. For example, all of these code samples
-with `///` we've been talking about? The raw text:
+Però, talvolta questo algoritmo non basta. Per esempio, che dire di tutti
+questi esempi di codice con `///` di cui abbiamo parlato? Il testo grezzo:
 
 ```text
-/// Some documentation.
+/// Un po' di documentazione.
 # fn foo() {}
 ```
 
-looks different than the output:
+appare diverso dall'output:
 
 ```rust
-/// Some documentation.
+/// Un po' di documentazione.
 # fn foo() {}
 ```
 
-Yes, that's right: you can add lines that start with `# `, and they will
-be hidden from the output, but will be used when compiling your code. You
-can use this to your advantage. In this case, documentation comments need
-to apply to some kind of function, so if I want to show you just a
-documentation comment, I need to add a little function definition below
-it. At the same time, it's only there to satisfy the compiler, so hiding
-it makes the example more clear. You can use this technique to explain
-longer examples in detail, while still preserving the testability of your
-documentation.
+Sì, è giusto: si possono aggiungere righe che iniziano con `# `, e verranno
+nascoste dall'output, ma verranno usate quando si compila il proprio codice.
+Lo si può usare a proprio vantaggio. In questo caso, i commenti
+di documentazione devono essere applicati a qualche tipo di funzione, e quindi
+se voglio mostrare appena un commento di documentazione, devo aggiungere
+una piccola definizione di funzione sotto di esso. Al medesimo tempo, è lì
+solamente per soddisfare il compilatore, e quindi nasconderla rende l'esempio
+più chiaro. Si può usare questa tecnica per spiegare in dettaglio esempi
+più lunghi, pur conservando la collaudabilità della propria documentazione.
 
-For example, imagine that we wanted to document this code:
+Per esempio, si imagini che volessimo documentare questo codice:
 
 ```rust
 let x = 5;
@@ -297,9 +297,9 @@ let y = 6;
 println!("{}", x + y);
 ```
 
-We might want the documentation to end up looking like this:
+Potremmo volere che la documentazione finisca per apparire così:
 
-> First, we set `x` to five:
+> Prima, impostiamo `x` a cinque:
 >
 > ```rust
 > let x = 5;
@@ -307,7 +307,7 @@ We might want the documentation to end up looking like this:
 > # println!("{}", x + y);
 > ```
 >
-> Next, we set `y` to six:
+> Poi, impostiamo `y` a sei:
 >
 > ```rust
 > # let x = 5;
@@ -315,7 +315,7 @@ We might want the documentation to end up looking like this:
 > # println!("{}", x + y);
 > ```
 >
-> Finally, we print the sum of `x` and `y`:
+> E infine, stampiamo la somma di `x` e `y`:
 >
 > ```rust
 > # let x = 5;
@@ -323,12 +323,12 @@ We might want the documentation to end up looking like this:
 > println!("{}", x + y);
 > ```
 
-To keep each code block testable, we want the whole program in each block, but
-we don't want the reader to see every line every time.  Here's what we put in
-our source code:
+Per mantenere collaudabile ogni blocco di codice, vogliamo l'intero programma
+in ogni blocco, ma non vogliamo che il lettore veda tutte le linee ogni volta.
+Ecco cosa abbiamo messo nel nostro codice sorgente:
 
 ```text
-    First, we set `x` to five:
+    Prima, impostiamo `x` a cinque:
 
     ```rust
     let x = 5;
@@ -336,7 +336,7 @@ our source code:
     # println!("{}", x + y);
     ```
 
-    Next, we set `y` to six:
+    Poi, impostiamo `y` a sei:
 
     ```rust
     # let x = 5;
@@ -344,7 +344,7 @@ our source code:
     # println!("{}", x + y);
     ```
 
-    Finally, we print the sum of `x` and `y`:
+    E infine, stampiamo la somma di `x` e `y`:
 
     ```rust
     # let x = 5;
@@ -353,30 +353,30 @@ our source code:
     ```
 ```
 
-By repeating all parts of the example, you can ensure that your example still
-compiles, while only showing the parts that are relevant to that part of your
-explanation.
+Ripetendo tutte le parti dell'esempio, possiamo assicurarci che
+il nostro esempio compili ancora, mentre mostriamo solamente le parti che
+sono rilevanti a quella parte della nostra spiegazione.
 
-### Documenting macros
+### Macro di documentazione
 
-Here’s an example of documenting a macro:
+Ecco un esempio di come si documenta una macro:
 
 ```rust
-/// Panic with a given message unless an expression evaluates to true.
+/// Va in panico con un dato messaggio, a meno che un'espressione valga true.
 ///
-/// # Examples
+/// # Esempi
 ///
 /// ```
 /// # #[macro_use] extern crate foo;
 /// # fn main() {
-/// panic_unless!(1 + 1 == 2, “Math is broken.”);
+/// panic_unless!(1 + 1 == 2, “La matematica è scassata.”);
 /// # }
 /// ```
 ///
 /// ```rust,should_panic
 /// # #[macro_use] extern crate foo;
 /// # fn main() {
-/// panic_unless!(true == false, “I’m broken.”);
+/// panic_unless!(true == false, “Sono scassato.”);
 /// # }
 /// ```
 #[macro_export]
@@ -386,13 +386,13 @@ macro_rules! panic_unless {
 # fn main() {}
 ```
 
-You’ll note three things: we need to add our own `extern crate` line, so that
-we can add the `#[macro_use]` attribute. Second, we’ll need to add our own
-`main()` as well (for reasons discussed above). Finally, a judicious use of
-`#` to comment out those two things, so they don’t show up in the output.
+Si noteranno tre cose: dobbiamo aggiungere la nostra riga `extern crate`, per
+poter aggiungere l'attributo `#[macro_use]`. Secondo, dovremo aggiungere anche
+la nostra `main()` (per la ragione detta prima). Infine, un uso giudizioso
+di `#` per escludere quelle due cose, così che non appaiano nell'output.
 
-Another case where the use of `#` is handy is when you want to ignore
-error handling. Lets say you want the following,
+Un altro caso dove l'suo di `#` è comodo è quando si vuole ignorare
+la gestione degli errori. Diciamo che vogliamo il codice seguente,
 
 ```rust,ignore
 /// use std::io;
@@ -400,11 +400,11 @@ error handling. Lets say you want the following,
 /// try!(io::stdin().read_line(&mut input));
 ```
 
-The problem is that `try!` returns a `Result<T, E>` and test functions
-don't return anything so this will give a mismatched types error.
+Il problema è che `try!` rende un `Result<T, E>`, e dato che le funzioni
+di test non devono rendere niente, questo codice genererà un errore di tipo.
 
 ```rust,ignore
-/// A doc test using try!
+/// Un test di documentazione che usa "try!"
 ///
 /// ```
 /// use std::io;
@@ -417,27 +417,28 @@ don't return anything so this will give a mismatched types error.
 # fn foo() {}
 ```
 
-You can get around this by wrapping the code in a function. This catches
-and swallows the `Result<T, E>` when running tests on the docs. This
-pattern appears regularly in the standard library.
+Questo problema si può aggirare avvolgendo il codice in una funzione.
+Questa prende e inghiotte il `Result<T, E>` quando si eseguono i test
+sui documenti. Questo pattern appare regolarmente nella libreria standard.
 
-### Running documentation tests
+### Eseguire i test della documentazione
 
-To run the tests, either:
+Per eseguire i test, o si esegue:
 
 ```bash
-$ rustdoc --test path/to/my/crate/root.rs
-# or
+$ rustdoc --test percorso/al/mio/crate/radice.rs
+# oppure si esegue
 $ cargo test
 ```
 
-That's right, `cargo test` tests embedded documentation too. **However,
-`cargo test` will not test binary crates, only library ones.** This is
-due to the way `rustdoc` works: it links against the library to be tested,
-but with a binary, there’s nothing to link to.
+Proprio così, `cargo test` collauda anche la documentazione incorporata
+nei sorgenti. **Però, `cargo test` non collauderà i crate di programma, ma
+solamente quelli di libreria.** Questo è dovuto al modo in cui funziona
+`rustdoc`: esegue il link con la libreria da collaudare, ma con un programma,
+non c'è niente con cui eseguire il link.
 
-There are a few more annotations that are useful to help `rustdoc` do the right
-thing when testing your code:
+Ci sono alcune altre annotazione che servono ad aiutare `rustdoc` a fare
+la cosa giusta quando collauda il codice:
 
 ```rust
 /// ```rust,ignore
@@ -446,10 +447,10 @@ thing when testing your code:
 # fn foo() {}
 ```
 
-The `ignore` directive tells Rust to ignore your code. This is almost never
-what you want, as it's the most generic. Instead, consider annotating it
-with `text` if it's not code, or using `#`s to get a working example that
-only shows the part you care about.
+La direttiva `ignore` dice a Rust di ignorare il codice. Questo non è
+quasi mai quello che si vuole, dato che è il più generico. Invece, si prenda
+in considerazione l'annotarlo con `text` se non è codice, o l'usare i `#` per
+ottenere un esempio funzionante che mostra solamente la parte che interessa.
 
 ```rust
 /// ```rust,should_panic
@@ -458,8 +459,8 @@ only shows the part you care about.
 # fn foo() {}
 ```
 
-`should_panic` tells `rustdoc` that the code should compile correctly, but
-not actually pass as a test.
+`should_panic` dice a `rustdoc` che il codice dovrebbe compilare correttamente,
+ma non passare effettivamente come test.
 
 ```rust
 /// ```rust,no_run
@@ -470,61 +471,63 @@ not actually pass as a test.
 # fn foo() {}
 ```
 
-The `no_run` attribute will compile your code, but not run it. This is
-important for examples such as "Here's how to start up a network service,"
-which you would want to make sure compile, but might run in an infinite loop!
+L'attributo `no_run` compilerà il codice, ma non lo eseguirà. Questo è
+importante per gli esempi come "Ecco come avviare un servizio di rete," che si
+vorrebbe assicurarsi che compili, ma che potrebbe eseguire un ciclo infinito!
 
-### Documenting modules
+### Documentare i moduli
 
-Rust has another kind of doc comment, `//!`. This comment doesn't document the next item, but the enclosing item. In other words:
+Rust ha un altro tipo di commento di documentazione, `//!`. Questo commento
+non documenta l'elemento successivo, ma quello che lo racchiude. In altre
+parole:
 
 ```rust
 mod foo {
-    //! This is documentation for the `foo` module.
+    //! Questa è documentazione per il modulo `foo`.
     //!
-    //! # Examples
+    //! # Esempi
 
     // ...
 }
 ```
 
-This is where you'll see `//!` used most often: for module documentation. If
-you have a module in `foo.rs`, you'll often open its code and see this:
+Qui è dove si vedrà `//!` usato più spesso: per la documentazione dei moduli.
+Se si ha un modulo in `foo.rs`, spesso, quando si apre il suo codice, si vedrà:
 
 ```rust
-//! A module for using `foo`s.
+//! Un modulo per usare i `foo`.
 //!
-//! The `foo` module contains a lot of useful functionality blah blah blah
+//! Il modulo `foo` contiene molte funzionalità utili, bla bla bla ...
 ```
 
-### Crate documentation
+### Documentazione dei crate
 
-Crates can be documented by placing an inner doc comment (`//!`) at the
-beginning of the crate root, aka `lib.rs`:
+I crate possono essere documentati collocando un commento interno
+di documentazione (`//!`) all'inizio della radice del crate, ossia di `lib.rs`:
 
 ```rust
-//! This is documentation for the `foo` crate.
+//! Questa è documentazione per il crate `foo`.
 //!
-//! The foo crate is meant to be used for bar.
+//! Il crate `foo` è pensato per essere usate per `bar`.
 ```
 
-### Documentation comment style
+### Stile dei commenti di documentazione
 
-Check out [RFC 505][rfc505] for full conventions around the style and format of
-documentation.
+Si veda la [RFC 505][rfc505] per le convezioni complete sullo stile
+e il formato della documentazione.
 
 [rfc505]: https://github.com/rust-lang/rfcs/blob/master/text/0505-api-comment-conventions.md
 
-## Other documentation
+## Altra documentazione
 
-All of this behavior works in non-Rust source files too. Because comments
-are written in Markdown, they're often `.md` files.
+Tutto questo comportamento funziona anche in file sorgente non in Rust.
+Siccome i commenti sono scritti in Markdown, sono spesso dei file `.md`.
 
-When you write documentation in Markdown files, you don't need to prefix
-the documentation with comments. For example:
+Quando si scrive della documentazione nei file Markdown, non serve marcare
+la documentazione con i prefissi dei commenti. Per esempio:
 
 ```rust
-/// # Examples
+/// # Esempi
 ///
 /// ```
 /// use std::rc::Rc;
@@ -534,10 +537,10 @@ the documentation with comments. For example:
 # fn foo() {}
 ```
 
-is:
+è:
 
 ~~~markdown
-# Examples
+# Esempi
 
 ```
 use std::rc::Rc;
@@ -546,44 +549,45 @@ let five = Rc::new(5);
 ```
 ~~~
 
-when it's in a Markdown file. There is one wrinkle though: Markdown files need
-to have a title like this:
+quando è in un file Markdown. Però c'è un neo: i file Markdown devono avere
+un titolo così:
 
 ```markdown
-% The title
+% Il titolo
 
-This is the example documentation.
+Questa è la documentazione d'esempio.
 ```
 
-This `%` line needs to be the very first line of the file.
+Questa riga che inizia con `%` deve essere la primissima riga del file.
 
-## `doc` attributes
+## Attributi `doc`
 
-At a deeper level, documentation comments are syntactic sugar for documentation
-attributes:
+A un livello più profondo, i commenti di documentazione sono addolcimento
+sintattico per gli attributi di documentazione:
 
 ```rust
-/// this
+/// questo
 # fn foo() {}
 
-#[doc="this"]
+#[doc="questo"]
 # fn bar() {}
 ```
 
-are the same, as are these:
+sono equivalenti, così come lo sono questi:
 
 ```rust
-//! this
+//! questo
 
-#![doc="this"]
+#![doc="questo"]
 ```
 
-You won't often see this attribute used for writing documentation, but it
-can be useful when changing some options, or when writing a macro.
+Non si vedrà spesso questo attributo usato per scrivere documentazione, ma può
+essere utile quando si cambiamo alcune opzioni, o quando si scrive una macro.
 
-### Re-exports
+### Ri-esportazioni
 
-`rustdoc` will show the documentation for a public re-export in both places:
+`rustdoc` mostrerà la documentazione per una ri-esportazione pubblica
+in entrambi i posti:
 
 ```rust,ignore
 extern crate foo;
@@ -591,11 +595,11 @@ extern crate foo;
 pub use foo::bar;
 ```
 
-This will create documentation for `bar` both inside the documentation for the
-crate `foo`, as well as the documentation for your crate. It will use the same
-documentation in both places.
+Questo creerà la documentazione per `bar` sia dentro la documentazione
+del crate `foo`, che nella documentazione del crate corrente. Userà la medesima
+documentazione in entrambi i posti.
 
-This behavior can be suppressed with `no_inline`:
+Questo comportamento può venire soppresso usando `no_inline`:
 
 ```rust,ignore
 extern crate foo;
@@ -604,42 +608,44 @@ extern crate foo;
 pub use foo::bar;
 ```
 
-## Missing documentation
+## Documentazione mancante
 
-Sometimes you want to make sure that every single public thing in your project
-is documented, especially when you are working on a library. Rust allows you to
-to generate warnings or errors, when an item is missing documentation.
-To generate warnings you use `warn`:
+Talvolta ci si vuole assicurare che ogni singola cosa public nel proprio
+progetto sia documentata, specialmente quando si sta lavorando a una libreria.
+Rust consente di generare avvertimenti o errori, quando un elemento è privo
+di documentazione. Per generare degli avvertimenti, si usa `warn`:
 
 ```rust
 #![warn(missing_docs)]
 ```
 
-And to generate errors you use `deny`:
+E per generare errore si usa `deny`:
 
 ```rust,ignore
 #![deny(missing_docs)]
 ```
 
-There are cases where you want to disable these warnings/errors to explicitly
-leave something undocumented. This is done by using `allow`:
+Ci sono casi in cui si vogliono disabilitare questi avvertimenti/errori
+per lasciare esplicitamente qualcosa di non documentato. Questo si fa
+usando `allow`:
 
 ```rust
 #[allow(missing_docs)]
-struct Undocumented;
+struct NonDocumentata;
 ```
 
-You might even want to hide items from the documentation completely:
+Si potrebbe perfino voler nascondere completamente degli elementi
+dalla documentazione:
 
 ```rust
 #[doc(hidden)]
-struct Hidden;
+struct Nascosta;
 ```
 
-### Controlling HTML
+### Controllare l'HTML
 
-You can control a few aspects of the HTML that `rustdoc` generates through the
-`#![doc]` version of the attribute:
+Si possono controllare alcuni aspetti del codice HTML generato da `rustdoc`,
+tramite la versione `#![doc]` dell'attributo:
 
 ```rust
 #![doc(html_logo_url = "https://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png",
@@ -647,34 +653,37 @@ You can control a few aspects of the HTML that `rustdoc` generates through the
        html_root_url = "https://doc.rust-lang.org/")]
 ```
 
-This sets a few different options, with a logo, favicon, and a root URL.
+Quest imposta alcune diverse opzioni, con un logo, un'icona per i preferiti
+(favicon), e un URL radice.
 
-### Configuring documentation tests
+### Configurare il collaudo della documentazione
 
-You can also configure the way that `rustdoc` tests your documentation examples
-through the `#![doc(test(..))]` attribute.
+Si può anche configurare il modo in cui `rustdoc` collauda gli esempi
+nella documentazione tramite l'attributo `#![doc(test(..))]`.
 
 ```rust
 #![doc(test(attr(allow(unused_variables), deny(warnings))))]
 ```
 
-This allows unused variables within the examples, but will fail the test for any
-other lint warning thrown.
+Ciò consente che gli esempi contengano variabili inutilizzate, ma fallirà
+il test per ogni altro avvertimento generato.
 
-## Generation options
+## Opzioni di generazione
 
-`rustdoc` also contains a few other options on the command line, for further customization:
+`rustdoc` contiene anche alcune altre opzioni da riga di comando,
+per un'ulteriore personalizzazione:
 
-- `--html-in-header FILE`: includes the contents of FILE at the end of the
-  `<head>...</head>` section.
-- `--html-before-content FILE`: includes the contents of FILE directly after
-  `<body>`, before the rendered content (including the search bar).
-- `--html-after-content FILE`: includes the contents of FILE after all the rendered content.
+- `--html-in-header FILE`: inserisce il contenuto del file FILE alla fine
+  della sezione `<head>...</head>`.
+- `--html-before-content FILE`: inserisce il contenuto del file FILE appena
+  dopo `<body>`, prima del contenuto mostrato (compresa la barra di ricerca).
+- `--html-after-content FILE`: inserisce il contenuto del file FILE dopo
+  tutto il contenuto mostrato.
 
-## Security note
+## Nota sulla vulnerabilità
 
-The Markdown in documentation comments is placed without processing into
-the final webpage. Be careful with literal HTML:
+Il codice Markdown nei commenti di documentazione viene collocato nella pagina
+web finale senza essere elaborato. Si presti attenzione all'HTML esplicito:
 
 ```rust
 /// <script>alert(document.cookie)</script>

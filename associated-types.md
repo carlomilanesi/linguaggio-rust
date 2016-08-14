@@ -1,202 +1,206 @@
-% Associated Types
+% I tipi associati
 
-Associated types are a powerful part of Rust’s type system. They’re related to
-the idea of a ‘type family’, in other words, grouping multiple types together. That
-description is a bit abstract, so let’s dive right into an example. If you want
-to write a `Graph` trait, you have two types to be generic over: the node type
-and the edge type. So you might write a trait, `Graph<N, E>`, that looks like
-this:
+I tipi associati sono una parte potente del sistema di tipi di Rust. Sono
+correlati all'idea di una ‘famiglia di tipi’, in altre parole, raggruppando
+insieme più tipi. Questa descrizione è un po' astratta, e quindi tuffiamoci
+subito in un esempio. Se si vuole scrivere un tratto `Grafo`, ci sono due tipi
+sui quali essere generici: il tipo dei nodi e il tipo degli archi. Perciò
+si potrebbe scrivere un tratto, `Grafo<N, A>`, così:
 
 ```rust
-trait Graph<N, E> {
-    fn has_edge(&self, &N, &N) -> bool;
-    fn edges(&self, &N) -> Vec<E>;
-    // etc
+trait Grafo<N, A> {
+    fn ha_arco(&self, &N, &N) -> bool;
+    fn archi(&self, &N) -> Vec<A>;
+    // ecc
 }
 ```
 
-While this sort of works, it ends up being awkward. For example, any function
-that wants to take a `Graph` as a parameter now _also_ needs to be generic over
-the `N`ode and `E`dge types too:
+Mentre questo in qualche modo funziona, finisce per essere goffo. Per esempio,
+ogni funione che vuole prendere un `Grafo` come parametro adesso ha bisogno
+_anche_ di essere generica sui tipi `N`odo e `A`rco:
 
 ```rust,ignore
-fn distance<N, E, G: Graph<N, E>>(graph: &G, start: &N, end: &N) -> u32 { ... }
+fn distanza<N, A, G: Grafo<N, A>>(grafo: &G, inizio: &N, fine: &N) -> u32 { ... }
 ```
 
-Our distance calculation works regardless of our `Edge` type, so the `E` stuff in
-this signature is a distraction.
+Il nostro calcolo di distanza funziona indipendentemente dal nostro tipo
+`Arco`, e quindi citare la `A` in questa firma è una distrazione.
 
-What we really want to say is that a certain `E`dge and `N`ode type come together
-to form each kind of `Graph`. We can do that with associated types:
+Ciò che vogliamo realmente dire è che un certo tipo `A`rco e un certo tipo
+`N`odo si mettono insieme per formare ogni tipo di `Grafo`. Lo possiamo fare
+con i tipi associati:
 
 ```rust
-trait Graph {
+trait Grafo {
     type N;
-    type E;
+    type A;
 
-    fn has_edge(&self, &Self::N, &Self::N) -> bool;
-    fn edges(&self, &Self::N) -> Vec<Self::E>;
-    // etc
+    fn ha_arco(&self, &Self::N, &Self::N) -> bool;
+    fn archi(&self, &Self::N) -> Vec<Self::A>;
+    // ecc
 }
 ```
 
-Now, our clients can be abstract over a given `Graph`:
+Adesso, i nostri clienti possono usare tutta l'astrazione di un dato `Graph`:
 
 ```rust,ignore
-fn distance<G: Graph>(graph: &G, start: &G::N, end: &G::N) -> u32 { ... }
+fn distanza<G: Graph>(grafo: &G, inizio: &G::N, fine: &G::N) -> u32 { ... }
 ```
 
-No need to deal with the `E`dge type here!
+Qui non c'è bisogno di trattare con il tipo `A`rco!
 
-Let’s go over all this in more detail.
+Analizziamolo in maggiore dettaglio.
 
-## Defining associated types
+## Definire tipi associati
 
-Let’s build that `Graph` trait. Here’s the definition:
+Costruiamo quel tratto `Grafo`. Ecco la definizione:
 
 ```rust
-trait Graph {
+trait Grafo {
     type N;
-    type E;
+    type A;
 
-    fn has_edge(&self, &Self::N, &Self::N) -> bool;
-    fn edges(&self, &Self::N) -> Vec<Self::E>;
+    fn ha_arco(&self, &Self::N, &Self::N) -> bool;
+    fn archi(&self, &Self::N) -> Vec<Self::A>;
 }
 ```
 
-Simple enough. Associated types use the `type` keyword, and go inside the body
-of the trait, with the functions.
+Abbastanza semplice. I tipi associati usano la parola-chiave `type`, e vanno
+dentro il corpo del tratto, insieme alle funzioni.
 
-These `type` declarations can have all the same thing as functions do. For example,
-if we wanted our `N` type to implement `Display`, so we can print the nodes out,
-we could do this:
+Queste dichiarazioni `type` possono avere tutte le cose che hanno le funzioni.
+Per esempio, se volessimo che il nostro tipo `N` implementi `Display`, così da
+poter stampare i nodi, potremmo fare così:
 
 ```rust
 use std::fmt;
 
-trait Graph {
+trait Grafo {
     type N: fmt::Display;
-    type E;
+    type A;
 
-    fn has_edge(&self, &Self::N, &Self::N) -> bool;
-    fn edges(&self, &Self::N) -> Vec<Self::E>;
+    fn ha_arco(&self, &Self::N, &Self::N) -> bool;
+    fn archi(&self, &Self::N) -> Vec<Self::A>;
 }
 ```
 
-## Implementing associated types
+## Implementare i tipi associati
 
-Just like any trait, traits that use associated types use the `impl` keyword to
-provide implementations. Here’s a simple implementation of Graph:
+Proprio come ogni tratto, i tratti che usano tipi associati usano
+la parola-chiave `impl` per fornire implementazioni. Ecco una semplice
+implementazione di Grafo:
 
 ```rust
-# trait Graph {
+# trait Grafo {
 #     type N;
-#     type E;
-#     fn has_edge(&self, &Self::N, &Self::N) -> bool;
-#     fn edges(&self, &Self::N) -> Vec<Self::E>;
+#     type A;
+#     fn ha_arco(&self, &Self::N, &Self::N) -> bool;
+#     fn archi(&self, &Self::N) -> Vec<Self::A>;
 # }
-struct Node;
+struct Nodo;
 
-struct Edge;
+struct Arco;
 
-struct MyGraph;
+struct IlMioGrafo;
 
-impl Graph for MyGraph {
-    type N = Node;
-    type E = Edge;
+impl Grafo for IlMioGrafo {
+    type N = Nodo;
+    type A = Arco;
 
-    fn has_edge(&self, n1: &Node, n2: &Node) -> bool {
+    fn ha_arco(&self, n1: &Nodo, n2: &Nodo) -> bool {
         true
     }
 
-    fn edges(&self, n: &Node) -> Vec<Edge> {
+    fn archi(&self, n: &Nodo) -> Vec<Arco> {
         Vec::new()
     }
 }
 ```
 
-This silly implementation always returns `true` and an empty `Vec<Edge>`, but it
-gives you an idea of how to implement this kind of thing. We first need three
-`struct`s, one for the graph, one for the node, and one for the edge. If it made
-more sense to use a different type, that would work as well, we’re going to
-use `struct`s for all three here.
+Questa implementazione sciocca rende sempre `true` e un `Vec<Arco>` vuoto, ma
+dà un'idea di come implementare questo tipo di cose. Dapprima ci servono tre
+`struct`, una per il grafo, una per il nodo, e una per l'arco. Se avesse
+più senso usare un altro tipo, quello funzionerebbe altrettanto, qui useremo
+le `struct` per tutti e tre.
 
-Next is the `impl` line, which is an implementation like any other trait.
+Poi c'è la riga `impl`, che è un'implementazione come per qualunque
+altro tratto.
 
-From here, we use `=` to define our associated types. The name the trait uses
-goes on the left of the `=`, and the concrete type we’re `impl`ementing this
-for goes on the right. Finally, we use the concrete types in our function
-declarations.
+Da qui, usiamo `=` per definire i nostri tipi associati. Il nome usato
+dal tratto va sulla sinistra dell'`=`, e il tipo concreto per cui stiamo
+implementando questo va sulla destra. Infine, usiamo i tipi concreti
+nelle nostre dichiarazioni di funzione.
 
-## Trait objects with associated types
+## Gli oggetti-tratto con tipi associati
 
-There’s one more bit of syntax we should talk about: trait objects. If you
-try to create a trait object from a trait with an associated type, like this:
+C'è un altro pezzo di sintassi di cui dovremmo parlare: gli oggetti-tratto. Se
+si prova a creare un oggetto-tratto da un tratto con un tipo associato, così:
 
 ```rust,ignore
-# trait Graph {
+# trait Grafo {
 #     type N;
-#     type E;
-#     fn has_edge(&self, &Self::N, &Self::N) -> bool;
-#     fn edges(&self, &Self::N) -> Vec<Self::E>;
+#     type A;
+#     fn ha_arco(&self, &Self::N, &Self::N) -> bool;
+#     fn archi(&self, &Self::N) -> Vec<Self::A>;
 # }
-# struct Node;
-# struct Edge;
-# struct MyGraph;
-# impl Graph for MyGraph {
-#     type N = Node;
-#     type E = Edge;
-#     fn has_edge(&self, n1: &Node, n2: &Node) -> bool {
+# struct Nodo;
+# struct Arco;
+# struct IlMioGrafo;
+# impl Grafo for IlMioGrafo {
+#     type N = Nodo;
+#     type A = Arco;
+#     fn ha_arco(&self, n1: &Nodo, n2: &Nodo) -> bool {
 #         true
 #     }
-#     fn edges(&self, n: &Node) -> Vec<Edge> {
+#     fn archi(&self, n: &Nodo) -> Vec<Arco> {
 #         Vec::new()
 #     }
 # }
-let graph = MyGraph;
-let obj = Box::new(graph) as Box<Graph>;
+let grafo = IlMioGrafo;
+let ogg = Box::new(grafo) as Box<Grafo>;
 ```
 
-You’ll get two errors:
+Otterremo due errori:
 
 ```text
-error: the value of the associated type `E` (from the trait `main::Graph`) must
+error: the value of the associated type `A` (from the trait `main::Grafo`) must
 be specified [E0191]
-let obj = Box::new(graph) as Box<Graph>;
+let ogg = Box::new(grafo) as Box<Grafo>;
           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 24:44 error: the value of the associated type `N` (from the trait
-`main::Graph`) must be specified [E0191]
-let obj = Box::new(graph) as Box<Graph>;
+`main::Grafo`) must be specified [E0191]
+let ogg = Box::new(grafo) as Box<Grafo>;
           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-We can’t create a trait object like this, because we don’t know the associated
-types. Instead, we can write this:
+Non possiamo creare un oggetto-tratto così, perché non conosciamo
+i tipi associati. Invece, possiamo scrivere così:
 
 ```rust
-# trait Graph {
+# trait Grafo {
 #     type N;
-#     type E;
-#     fn has_edge(&self, &Self::N, &Self::N) -> bool;
-#     fn edges(&self, &Self::N) -> Vec<Self::E>;
+#     type A;
+#     fn ha_arco(&self, &Self::N, &Self::N) -> bool;
+#     fn archi(&self, &Self::N) -> Vec<Self::A>;
 # }
-# struct Node;
-# struct Edge;
-# struct MyGraph;
-# impl Graph for MyGraph {
-#     type N = Node;
-#     type E = Edge;
-#     fn has_edge(&self, n1: &Node, n2: &Node) -> bool {
+# struct Nodo;
+# struct Arco;
+# struct IlMioGrafo;
+# impl Grafo for IlMioGrafo {
+#     type N = Nodo;
+#     type A = Arco;
+#     fn ha_arco(&self, n1: &Nodo, n2: &Nodo) -> bool {
 #         true
 #     }
-#     fn edges(&self, n: &Node) -> Vec<Edge> {
+#     fn archi(&self, n: &Nodo) -> Vec<Arco> {
 #         Vec::new()
 #     }
 # }
-let graph = MyGraph;
-let obj = Box::new(graph) as Box<Graph<N=Node, E=Edge>>;
+let grafo = IlMioGrafo;
+let ogg = Box::new(grafo) as Box<Grafo<N=Nodo, A=Arco>>;
 ```
 
-The `N=Node` syntax allows us to provide a concrete type, `Node`, for the `N`
-type parameter. Same with `E=Edge`. If we didn’t provide this constraint, we
-couldn’t be sure which `impl` to match this trait object to.
+La sintassi `N=Nodo` ci permette di fornire un tipo concreto, `Nodo`, per
+il parametro di tipo `N`. Lo stesso con `A=Arco`. Se non fornissimo questo
+vincolo, non potremmo essere sicuri di quale `impl` corrisponda a questo
+oggetto-tratto.

@@ -1,96 +1,99 @@
-% `Deref` coercions
+% Le forzature `Deref`
 
-The standard library provides a special trait, [`Deref`][deref]. It’s normally
-used to overload `*`, the dereference operator:
+La libreria standard fornisce un tratto speciale, [`Deref`][deref].
+Normalmente lo si usa per sovraccaricare `*`, l'operatore di dereferenziazione:
 
 ```rust
 use std::ops::Deref;
 
-struct DerefExample<T> {
-    value: T,
+struct EsempioDeref<T> {
+    valore: T,
 }
 
-impl<T> Deref for DerefExample<T> {
+impl<T> Deref for EsempioDeref<T> {
     type Target = T;
 
     fn deref(&self) -> &T {
-        &self.value
+        &self.valore
     }
 }
 
 fn main() {
-    let x = DerefExample { value: 'a' };
+    let x = EsempioDeref { valore: 'a' };
     assert_eq!('a', *x);
 }
 ```
 
 [deref]: ../std/ops/trait.Deref.html
 
-This is useful for writing custom pointer types. However, there’s a language
-feature related to `Deref`: ‘deref coercions’. Here’s the rule: If you have a
-type `U`, and it implements `Deref<Target=T>`, values of `&U` will
-automatically coerce to a `&T`. Here’s an example:
+Questo è utile per scrivere dei tipi puntatore personalizzati. Però, c'è
+una caratteristica del linguaggio correlata a `Deref`: le ‘forzature deref’.
+Ecco la regola: Se si ha un tipo `U`, che implementa `Deref<Target=T>`,
+i valori di tipo `&U` automaticamente potranno essere forzati al tipo `&T`.
+Ecco un esempio:
 
 ```rust
 fn foo(s: &str) {
-    // borrow a string for a second
+    // prendi in prestito una stringa per un secondo
 }
 
-// String implements Deref<Target=str>
-let owned = "Hello".to_string();
+// String implementa Deref<Target=str>
+let posseduta = "Hello".to_string();
 
-// therefore, this works:
-foo(&owned);
+// perciò, questo funziona:
+foo(&posseduta);
 ```
 
-Using an ampersand in front of a value takes a reference to it. So `owned` is a
-`String`, `&owned` is an `&String`, and since `impl Deref<Target=str> for
-String`, `&String` will deref to `&str`, which `foo()` takes.
+Usare una e-commerciale davanti a un valore prende un riferimento ad esso.
+Perciò `posseduta` è una `String`, `&posseduta` è un `&String`, e dato che
+esiste `impl Deref<Target=str> for String`, si potrà chiamare `deref` su
+`&String`, ottenendo un `&str`, che è accettato da `foo()`.
 
-That’s it. This rule is one of the only places in which Rust does an automatic
-conversion for you, but it adds a lot of flexibility. For example, the `Rc<T>`
-type implements `Deref<Target=T>`, so this works:
+Ecco. Questa regola è un dei soli posti in cui Rust fa una conversione
+automatica, ma ciò aggiunge molta flessibilità. Per esempio,
+il tipo `Rc<T>` implementa `Deref<Target=T>`, e quindi questo funziona:
 
 ```rust
 use std::rc::Rc;
 
 fn foo(s: &str) {
-    // borrow a string for a second
+    // prende in prestito una stringa per un secondo
 }
 
-// String implements Deref<Target=str>
-let owned = "Hello".to_string();
-let counted = Rc::new(owned);
+// String implementa Deref<Target=str>
+let posseduta = "Hello".to_string();
+let contata = Rc::new(posseduta);
 
-// therefore, this works:
+// perciò, questo funziona:
 foo(&counted);
 ```
 
-All we’ve done is wrap our `String` in an `Rc<T>`. But we can now pass the
-`Rc<String>` around anywhere we’d have a `String`. The signature of `foo`
-didn’t change, but works just as well with either type. This example has two
-conversions: `Rc<String>` to `String` and then `String` to `&str`. Rust will do
-this as many times as possible until the types match.
+Quel che abbiamo fatto è avvolgere la nostra `String` in un `Rc<T>`. Ma adesso
+possiamo passare in giro la `Rc<String>` ovunque sia accettata una `String`.
+La firma di `foo` non è cambiata, ma funziona altrettanto con entrambi i tipi.
+Questo esempio esegue due conversioni: da `Rc<String>` a `String`, e poi
+da `String` a `&str`. Rust lo farà tante volte quanto possibile, fino a che
+i tipi combaciano.
 
-Another very common implementation provided by the standard library is:
+Un'altra implementazione molto tipica fornita dalla libreria standard è:
 
 ```rust
 fn foo(s: &[i32]) {
-    // borrow a slice for a second
+    // prende in prestito una slice per un secondo
 }
 
-// Vec<T> implements Deref<Target=[T]>
-let owned = vec![1, 2, 3];
+// Vec<T> implementa Deref<Target=[T]>
+let posseduta = vec![1, 2, 3];
 
-foo(&owned);
+foo(&posseduta);
 ```
 
-Vectors can `Deref` to a slice.
+I vettori possono essere convertiti da `Deref` in una slice.
 
-## Deref and method calls
+## Deref e le chiamate di metodo
 
-`Deref` will also kick in when calling a method. Consider the following
-example.
+`Deref` scatterà anche quando si chiama un metodo. Si consideri il seguente
+esempio.
 
 ```rust
 struct Foo;
@@ -104,8 +107,8 @@ let f = &&Foo;
 f.foo();
 ```
 
-Even though `f` is a `&&Foo` and `foo` takes `&self`, this works. That’s
-because these things are the same:
+Anche se `f` è un `&&Foo` e `foo` prende invece un `&self`, questo funziona.
+È perché le seguenti espressioni sono equivalenti:
 
 ```rust,ignore
 f.foo();
@@ -114,6 +117,7 @@ f.foo();
 (&&&&&&&&f).foo();
 ```
 
-A value of type `&&&&&&&&&&&&&&&&Foo` can still have methods defined on `Foo`
-called, because the compiler will insert as many * operations as necessary to
-get it right. And since it’s inserting `*`s, that uses `Deref`.
+Si possono chiamare su valore di tipo `&&&&&&&&&&&&&&&&Foo` anche metodi
+definiti per `Foo`, perché il compilatore inserià tante operazioni `*`
+quante ne servono per avere il tipo appropriato. E dato che sta inserendo
+operatori `*`, usa `Deref`.

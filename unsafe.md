@@ -94,54 +94,59 @@ essere evitati, anche quando si scrive del codice `unsafe`:
 [undef]: http://llvm.org/docs/LangRef.html#undefined-values
 [aliasing]: http://llvm.org/docs/LangRef.html#pointer-aliasing-rules
 
-# I superpoteri di unsafe
+# I superpoteri del codice insicuro
 
-In both unsafe functions and unsafe blocks, Rust will let you do three things
-that you normally can not do. Just three. Here they are:
+Sia nelle funzioni insicure che nei blocchi insicuri, Rust consentirà di fare
+tre cose che normalmente non consente. Appena tre. Eccole:
 
-1. Access or update a [static mutable variable][static].
-2. Dereference a raw pointer.
-3. Call unsafe functions. This is the most powerful ability.
+1. Leggere o scrivere una [variabile mutabile statica][static].
+2. Dereferenziare un puntatore grezzo.
+3. Chiamare funzioni insicure. Questa è l'abilità più potente.
 
-That’s it. It’s important that `unsafe` does not, for example, ‘turn off the
-borrow checker’. Adding `unsafe` to some random Rust code doesn’t change its
-semantics, it won’t start accepting anything. But it will let you write
-things that _do_ break some of the rules.
+Ecco. È importante `unsafe`, per esempio, non ‘spenga il verificatore
+dei prestiti’. Aggiungere `unsafe` a qualche porzione di codice Rust non cambia
+la sua semantica; non inizierà ad accettare di tutto. Ma permetterà
+di scrivere cose che _violano_ ancune delle regole.
 
-You will also encounter the `unsafe` keyword when writing bindings to foreign
-(non-Rust) interfaces. You're encouraged to write a safe, native Rust interface
-around the methods provided by the library.
+Si incontrerà la parola-chiave `unsafe` anche quando si scrivono dei legami
+a interfacce straniere (cioè non in Rust). Usando i metodi forniti dalla
+libreria, si è incoraggiati a scrivere interfacce sicure e native in Rust.
 
-Let’s go over the basic three abilities listed, in order.
+Esaminiamo le tre abilità di base elencate, in ordine.
 
-## Access or update a `static mut`
+## Lettura o scrittura di un `static mut`
 
-Rust has a feature called ‘`static mut`’ which allows for mutable global state.
-Doing so can cause a data race, and as such is inherently not safe. For more
-details, see the [static][static] section of the book.
+Rust ha una caratteristica chiamata ‘`static mut`’ che permette uno stato
+global mutabile. Farlo può causare una corsa ai dati, e come tale è
+inerentemente non sicura. Per maggiori dettagli, si veda la sezione
+[static][static] del libro.
 
 [static]: const-and-static.html#static
 
-## Dereference a raw pointer
+## Dereferenziare un puntatore grezzo
 
-Raw pointers let you do arbitrary pointer arithmetic, and can cause a number of
-different memory safety and security issues. In some senses, the ability to
-dereference an arbitrary pointer is one of the most dangerous things you can
-do. For more on raw pointers, see [their section of the book][rawpointers].
+I puntatori grezzi consentono di fare dell'aritmetica di puntatori arbitraria,
+e possono provocare vari diversi difetti nella sicurezza e nella vulnerabilità
+della memoria. In alcuni sensi, l'abilità di dereferenziare un puntatore
+arbitrario è una delle cose più pericolose che si può fare. Per maggiori
+informazioni sui puntatori grezzi, i veda [la loro sezione][rawpointers]
+del libro.
 
 [rawpointers]: raw-pointers.html
 
-## Call unsafe functions
+## Chiamare funzioni insicure
 
-This last ability works with both aspects of `unsafe`: you can only call
-functions marked `unsafe` from inside an unsafe block.
+Quest'ultima abilità funziona con entrambi gli aspetti di `unsafe`: si possono
+chiamare le funzioni marcate `unsafe` solamente dall'interno di un blocco
+insicuro.
 
-This ability is powerful and varied. Rust exposes some [compiler
-intrinsics][intrinsics] as unsafe functions, and some unsafe functions bypass
-safety checks, trading safety for speed.
+Quest'abilità è potente e variegata. Rust espone alcuni [intrinseci
+del compilatore][intrinsics] come funzioni insicure, e alcune funzioni
+insicure eludono le verifiche di sicurezza in fase di esecuzione,
+barattando la sicurezza con la velocità.
 
-I’ll repeat again: even though you _can_ do arbitrary things in unsafe blocks
-and functions doesn’t mean you should. The compiler will act as though you’re
-upholding its invariants, so be careful!
+Lo ripeto ancora: anche se si _può_ fare cose arbitrarie in blocchi e funzioni
+insicuri, ciò non significa che si dovrebbe. Il compilatore agirà come se
+si stessero mantenendo le sue invarianti, perciò bisogna fare attenzione!
 
 [intrinsics]: intrinsics.html

@@ -1,22 +1,22 @@
-% `type` Aliases
+% Alias di tipo
 
-The `type` keyword lets you declare an alias of another type:
-
-```rust
-type Name = String;
-```
-
-You can then use this type as if it were a real type:
+La parola-chiave `type` permette di dichiarare un alias di un altro tipo:
 
 ```rust
-type Name = String;
-
-let x: Name = "Hello".to_string();
+type Nome = String;
 ```
 
-Note, however, that this is an _alias_, not a new type entirely. In other
-words, because Rust is strongly typed, you’d expect a comparison between two
-different types to fail:
+Si può poi usare questo tipo come se fosse un vero tipo:
+
+```rust
+type Nome = String;
+
+let x: Nome = "Hello".to_string();
+```
+
+Si noti, però, che questo è un _alias_, non un tipo interamente nuovo. In altre
+parole, siccome Rust è fortemente tipizzato, ci si aspetterebbe che
+un confronto fra due tipi diversi fallisse:
 
 ```rust,ignore
 let x: i32 = 5;
@@ -27,7 +27,7 @@ if x == y {
 }
 ```
 
-this gives
+questo dà
 
 ```text
 error: mismatched types:
@@ -39,7 +39,7 @@ error: mismatched types:
              ^
 ```
 
-But, if we had an alias:
+Ma, se avessimo un alias:
 
 ```rust
 type Num = i32;
@@ -52,27 +52,28 @@ if x == y {
 }
 ```
 
-This compiles without error. Values of a `Num` type are the same as a value of
-type `i32`, in every way. You can use [struttura ennupla] to really get a new type.
+Questo compila senza errori. Il valore di tipo `Num` è identico in ogni aspetto
+al valore di tipo `i32`. Per ottenere un tipo veramente nuovo, si può usare
+una [struttura ennupla].
 
 [struttura ennupla]: structs.html#tuple-structs
 
-You can also use type aliases with generics:
+Gli alias di tipo possono essere usati anche con i generici:
 
 ```rust
 use std::result;
 
-enum ConcreteError {
+enum ErroreConcreto {
     Foo,
     Bar,
 }
 
-type Result<T> = result::Result<T, ConcreteError>;
+type Result<T> = result::Result<T, ErroreConcreto>;
 ```
 
-This creates a specialized version of the `Result` type, which always has a
-`ConcreteError` for the `E` part of `Result<T, E>`. This is commonly used
-in the standard library to create custom errors for each subsection. For
-example, [io::Result][ioresult].
+Questo codice crea una versione specializzata del tipo `Result`, che ha sempre
+un `ErroreConcreto` nella parte `E` di `Result<T, E>`. Questo viene usato
+tipicamente nella libreria standard per creare errori personalizzati per ogni
+sottosezione. Per esempio, [io::Result][ioresult].
 
 [ioresult]: ../std/io/type.Result.html
