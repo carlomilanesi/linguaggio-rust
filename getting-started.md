@@ -1,19 +1,19 @@
-% Iniziare
+% Come Iniziare
 
-Questo primo capitolo del libro farà partire a usare Rust e la sua
-strumentazione. Dapprima, installeremo Rust. Poi, il classico programma
-‘Hello World’. Infine, parleremo di Cargo, il sistema di build nonché
-gestore di pacchetti di Rust.
+Questo primo capitolo del libro ci farà cominciare ad usare Rust e la sua
+strumentazione. Per cominciare, installeremo Rust. Poi, il classico programma
+‘Hello World’. Infine, parleremo di Cargo, il sistema di build per Rust e
+del suo gestore di pacchetti.
 
 # Installare Rust
 
 Il primo passo per usare Rust è installarlo. In generale, servirà
-una connessione a Internet per eseguire i comandi di questa sezione, dato che
+una connessione ad Internet per eseguire i comandi di questa sezione, dato che
 scaricheremo Rust da Internet.
 
 Mostreremo vari comandi usando un terminale, e tutte quelle righe di comando
-inizieranno con il segno `$`. Però non si devono digitare quei segni `$`;
-stanno lì per indicare l'inizio di ogni comando. Vedremo molti tutorial ed
+inizieranno con `$`. Non devi digitare i `$`,
+sono lì per indicare l'inizio di ogni comando. Vedremo molti tutorial ed
 esempi in giro per il Web che seguono questa convenzione: `$` per i comandi
 eseguiti da un utente normale, e `#` per i comandi che possono essere eseguiti
 solamente da un amministratore.
@@ -21,23 +21,24 @@ solamente da un amministratore.
 ## Supporto alle piattaforme
 
 Il compilatore Rust funziona su, e genera codice per, un gran numero
-di piattaforme; però non tutte le piattaforme sono egualmente supportate.
-I livelli di supporto di Rust sono organizzati in tre livelli ["tier"],
+di piattaforme, anche se non tutte le piattaforme sono egualmente supportate.
+Il supporto per Rust è organizzato in tre livelli (tiers)
 ognuno con un diverso insieme di garanzie.
 
-Le piattaforme sono identificate dalla loro "terna bersaglio" ["target triple"]
+Le piattaforme sono identificate dalla loro "terna tipica" ("target triple")
 che è la stringa che informa il compilatore su quale tipo di output dovrebbe
 essere prodotto. Le colonne sotto indicano se il componente corrispondente
-funzion sulla piattaforma specificata.
+funziona sulla piattaforma specificata.
 
 ### Livello 1
 
-Le piattaforme di livello 1 possono essere pensate come "garantite funzionare".
+Le piattaforme di livello 1 possono essere pensate come "garanzia di
+settaggio e funzionamento".
 Specificamente ognuna di esse soddisferà i seguenti requisiti:
 
 * Il collaudo automatizzato è impostato per eseguire i test per la piattaforma.
-* Per depositare le modifiche nel ramo master del repository `rust-lang/rust`
-  si devono passare tutti i test del collaudo.
+* L'approdo di modifiche al ramo master del repository `rust-lang/rust`
+  dipende dal superamento di tutti i tests.
 * Per tale piattaforma sono forniti degli artefatti di rilascio ufficiale.
 * Viene fornita la documentazione su come usare e come costruire il software
   per tale piattaforma.
@@ -55,17 +56,17 @@ Specificamente ognuna di esse soddisferà i seguenti requisiti:
 
 ### Livello 2
 
-Le piattaforme di livello 2 possono essere pensate come "con build garantito".
+Le piattaforme di livello 2 possono essere pensate come "garanzia di settaggio".
 I collaudi automatizzati non vengono eseguiti e quindi non è garantito che
-si produca una build che funzioni, ma queste piattaforme spesso funzionano
+si produca un settaggio che funzioni, ma queste piattaforme spesso funzionano
 abbastanza bene e le migliorie sono sempre benvenute! Specificamente,
-per queste piattaforme è richiesto che abbiano tutto quanto segue:
+queste piattaforme devono presentare i seguenti requisiti:
 
-* Il build automatizzato è impostato, ma potrebbe non eseguire i collaudi.
-* Per depositare le modifiche nel ramo master del repository `rust-lang/rust`,
-  si deve **eseguire il build** di tale piattaforma. Si noti che ciò significa
+* Il settaggio automatizzato è impostato, ma potrebbe non eseguire i collaudi.
+* L'approdo di modifiche nel ramo master del repository `rust-lang/rust`,
+  dipende dal corretto **settaggio** di tale piattaforma. Si noti che ciò significa
   che per alcune piattaforme viene compilata solamente la libreria standard,
-  mentre per altre viene eseguito il bootstrap completo.
+  mentre per altre viene eseguito il settaggio completo.
 * Per tale piattaforma sono forniti degli artefatti di rilascio ufficiale.
 
 |  Target                       | std |rustc|cargo| note                            |
@@ -96,8 +97,8 @@ per queste piattaforme è richiesto che abbiano tutto quanto segue:
 ### Livello 3
 
 Le piattaforme di livello 3 sono quelle per cui Rust ha supporto, ma per
-depositare modifiche non è necessario né eseguire il build né passare
-il collaudo. Le build funzionanti su tali piattaforme possono essere lacunose,
+applicare delle modifiche non è necessario né eseguire il settaggio né passare
+i tests di collaudo. I settaggi funzionanti su tali piattaforme possono essere lacunosi,
 dato che la loro affidabilità è spesso definita in termini di contributi
 dalla comunità. In aggiunta, gli artefatti di rilascio e gli installatori
 non sono forniti, ma ci possono essere infrastrutture comunitarie che
@@ -116,67 +117,68 @@ li producono in luoghi non ufficiali.
 | `x86_64-unknown-dragonfly`    |  ✓  |  ✓  |     | DragonFlyBSD a 64 bit    |
 | `x86_64-unknown-openbsd`      |  ✓  |  ✓  |     | OpenBSD a 64 bit         |
 
-Si noti che questa tabella si può espandere al passare del tempo; questo non
-l'insieme esauriente di piattaforme di livello 3 che ci sarà sempre!
+Si noti che questa tabella può essere estesa col passare del tempo, questo non è
+l'insieme completo di tutte le piattaforme di livello 3 che saranno
+supportate.
 
 ## Installare su Linux o Mac
 
-Chi è su Linux o su un Mac, deve solamente aprire un terminale e digitare:
+Se usiamo Linux o un Mac, dobbiamo solamente aprire un terminale e digitare:
 
 ```bash
 $ curl -sSf https://static.rust-lang.org/rustup.sh | sh
 ```
 
-Questo scaricherà uno script, e avvierà l'installazione. Se tutto va bene,
-Si vedrà apparire:
+Questo comando scaricherà uno script, e avvierà l'installazione. Se tutto va bene,
+vedrai apparire:
 
 ```text
 Rust is ready to roll.
 ```
 
-Da qui, premere `y` per ‘yes’, e poi seguire il resto dei prompt.
+Da qui, premi `y` per ‘yes’, e poi segui il resto dei prompt.
 
 ## Installare su Windows
 
-Chi è su Windows, scarichi l'appropriato [installatore][install-page].
+Se usi Windows, scarica l'appropriato [installatore][install-page].
 
 [install-page]: https://www.rust-lang.org/install.html
 
 ## Disinstallare
 
 Disinstallare Rust è tanto facile quanto installarlo. Su Linux o Mac,
-si lanci lo script uninstall:
+lancia lo script di disinstallazione:
 
 ```bash
 $ sudo /usr/local/lib/rustlib/uninstall.sh
 ```
 
-Chi ha usato l'installatore per Windows, può rieseguire il file `.msi` e
-seguire l'opzione di disinstallazione.
+Se abbiamo usato l'installatore per Windows, possiamo rieseguire il file
+`.msi` che ci darà l'opzione di disinstallazione.
 
 ## Risoluzione difficoltà
 
-Dopo aver installato Rust, si può aprire un terminale, e digitare:
+Se abbiamo già installato Rust, possiamo aprire una terminale, e digitare:
 
 ```bash
 $ rustc --version
 ```
 
-Si dovrebbe vedere il numero di versione, lo hash di commit, e la data
+Dovresti vedere il numero di versione, l'hash di commit, e la data
 di commit.
 
 Se è così, Rust è stato installato con successo! Congratulazioni!
 
-Se non è così, e siamo su Windows, si verifichi che Rust sia nella variabile
-di sitema %PATH%, digitando: `$ echo %PATH%`. Se non c'è, si rilanci
-l'installatore, si selezioni "Change" nella pagina "Change, repair, or remove
-installation" e ci si assicuri che "Add to PATH" sia installato sul disco fisso
+Se non è così, e usi Windows, controlla che Rust sia nella variabile
+di sistema %PATH%, digitando: `$ echo %PATH%`. Se non c'è, rilancia
+l'installatore, seleziona "Change" nella pagina "Change, repair, or remove
+installation" e assicurati che "Add to PATH" sia installato sul disco fisso
 locale. Se c'è bisogno di configurare manualmente la variabile PATH,
 gli eseguibili di Rust si trovano in una directory come
 `"C:\Program Files\Rust stable GNU 1.x\bin"`.
 
 Rust non esegue personalmente il link, e perciò c'è bisogno di avere un linker
-installato. Come installare unlinker dipende dallo specifico sistema;
+installato. L'installazione del medesimo dipende dallo specifico sistema;
 si consulti la sua documentazione per avere maggiori dettagli.
 
 Se l'installazione non funziona, ci sono vari posti dove ottenere aiuto.
@@ -193,9 +195,9 @@ sono [il forum degli utenti][users] e [Stack Overflow][stackoverflow].
 [users]: https://users.rust-lang.org/
 [stackoverflow]: http://stackoverflow.com/questions/tagged/rust
 
-Questa installazione installa anche localmente una copia della documentazione,
-e quindi la si può leggere offline. Sui sistemi UNIX si trova in
-`/usr/local/share/doc/rust`. Su Windows, si trova nella direcory `share\doc`,
+Questo installatore installa anche localmente una copia della documentazione,
+e quindi la si può leggere offline. Su sistemi UNIX si trova in
+`/usr/local/share/doc/rust`. Su Windows, si trova nella directory `share\doc`,
 all'interno della directory in cui Rust è stato installato.
 
 # Hello, world!
@@ -205,29 +207,30 @@ in Rust. Quando si impara un nuovo linguaggio di programmazione, c'è
 la tradizione di scrivere programmino che stampi il testo “Hello, world!”
 sullo schermo, e in questa sezione, seguiremo questa tradizione.
 
-La cosa carina riguardo a iniziare un tale semplice programma è che si può
-verificare rapidamente che il compilatore funzioni correttamente.
-Stampare delle informazioni sullo schermo è anche una cosa che si fa spesso,
-e quindi è bene incominciare subito a farlo.
+La cosa carina riguardo ad iniziare con un programma così semplice è che si può
+verificare rapidamente che il compilatore sia installato e funzioni correttamente.
+Anche stampare informazioni sullo schermo è una cosa che si fa spesso,
+e quindi è bene fare pratica da subito.
 
-> Nota: Questo libro assume familiarità di base con la riga di comando. Rust
+> Nota: Questo libro assume familiarità di base con la linea di comando. Rust
 > stesso non pone specifici requisiti su quali strumenti usare, o su dove
-> risieda il codice sorgente, e quindi se si preferisce un IDE alla riga
+> risieda il codice sorgente, e quindi se si preferisce un IDE alla linea
 > di comando, si può fare. Si può provare [SolidOak], che è stato costruito
 > specificamente per Rust. La comunità sta sviluppando varie estensioni, e
-> la squadra di Rust cosegna dei plugin per [vari editor]. Però questo libro
-> non si occuperarà di come configurare il proprio editor o IDE, e quindi si
-> verifichi la docuentazione per il proprio specifico ambiente.
+> la squadra di Rust consegna dei plugins per [vari editor].
+> La configurazione dell'editor di testo o IDE non è trattata in questo
+> tutorial, controlla la sua documentazione per il settaggio specifico.
 
 [SolidOak]: https://github.com/oakes/SolidOak
 [various editors]: https://github.com/rust-lang/rust/blob/master/src/etc/CONFIGS.md
 
-## Creare un file di progetto
+## Creare un File di Progetto
 
 Prima, creiamo un file per metterci dentro il codice Rust. A Rust
-non interessa dove risieda il codice sorgente, a per questo libro, suggeriamo
-di creare una directory *progetti* nell'area del proprio utente, e di tenerci
-tutti i propri progetti. Si apra un terminal e si inseriscano i seguenti
+non interessa dove risieda il codice sorgente, ma per questo libro, suggeriamo
+di creare una directory chiamata *projects* (cartella chiamata *progetti*)
+nella propria home directory, e di tenerci tutti i propri progetti.
+Si apra un terminale e si inseriscano i seguenti
 comandi per creare una directory per questo progetto:
 
 ```bash
@@ -237,17 +240,17 @@ $ mkdir hello_world
 $ cd hello_world
 ```
 
-> Nota: Se si usa Windows ma non PowerShell né CygWin, la `~` non funziona.
+> Nota: Se si usa Windows ma non PowerShell, la `~` potrebbe non funzionare.
 > Si consulti la documentazione della propria shell per avere più dettagli.
 
-## Scrivere ed eseguire un programma in Rust
+## Scrivere ed Eseguire un Programma in Rust
 
 Poi, creiamo un nuovo file sorgente e lo chiamiamo *main.rs*. I file Rust
 finiscono sempre con l'estensione *.rs*. Se si mettono più parole nel nome
 del file, si usi un underscore per separarle; per esempio, si scriva
-*hello_world.rs* invece di *helloworld.rs* o *hello world.rs*.
+*hello_world.rs* invece di *helloworld.rs*.
 
-Adesso si digiti il seguente codice nel file *main.rs* appena creato:
+Adesso si apra il file *main.rs* appena creato e si digiti:
 
 ```rust
 fn main() {
@@ -256,7 +259,7 @@ fn main() {
 ```
 
 Si salvi il file, e si torni alla finestra del terminale. Su Linux o OSX,
-si digiti i seguenti comandi:
+si digitino i seguenti comandi:
 
 ```bash
 $ rustc main.rs
@@ -264,14 +267,15 @@ $ ./main
 Hello, world!
 ```
 
-In Windows, si sostituisca `./main` con `main`. Indipendentemente dal sistema
-operativo, si dovrebbe vedere il testo `Hello, world!` sampato sul terminale.
-Se è così, congratulazioni! Abbiamo scritto ufficialmente un programma in Rust.
+In Windows, si sostituisca `main` con `main.exe`. Indipendentemente dal sistema
+operativo, si dovrebbe vedere il testo `Hello, world!` stampato sul terminale.
+Se è così, congratulazioni! Hai scritto ufficialmente un programma in Rust.
+Questo fa di te un programmatore Rust! Benvenuto.
 
-## Anatomia di una programma in Rust
+## Anatomia di una Programma in Rust
 
 Adesso, esaminiamo ciò che è appena accaduto nel nostro programma
-"Hello, world!". Ecco il primo pezzo del puzzle:
+"Hello, world!" in dettaglio. Ecco il primo pezzo del puzzle:
 
 ```rust
 fn main() {
@@ -281,12 +285,13 @@ fn main() {
 
 Queste righe definiscono una *funzione* in Rust. La funzione `main` è speciale:
 è l'inizio di ogni programma in Rust. La prima riga dice, “Sto dichiarando
-una funzione chiamata `main` che non prende argomenti e non rende niente.”
-Se ci fossero argomenti, andrebbero fra le parentesi (`(` e `)`), e siccome
-non stiamo rendendo niente da questa funzione, possiamo omettere il tipo reso.
+una funzione chiamata `main` che non prende argomenti e non ritorna niente.”
+Se ci fossero argomenti, andrebbero fra le parentesi tonde (`(` e `)`), e siccome
+non stiamo ritornando niente da questa funzione, possiamo omettere il tipo di dato
+ritornato.
 
-Si noti anche che il corpo della funzione è racchiuso da graffe (`{` e `}`).
-Rust le richiede intorno a tutti i corpi delle funzioni. Si considera buon
+Si noti anche che il corpo della funzione è racchiuso da parentesi graffe (`{` e `}`).
+Rust le richiede intorno a tutti i corpi di una funzione. Si considera buon
 stile mettere la graffa aperta sulla stessa riga della dichiarazione
 di funzione, separata da uno spazio.
 
@@ -297,27 +302,27 @@ Passiamo all'interno della funzione `main()`:
 ```
 
 Questa riga fa tutto il lavoro di questo programmino: stampa il testo sullo
-schermo. Qui ci sono vari dettagli importanti. Il primo è che è rientrato
-di quattro spazi, senza tabulazioni.
+schermo. Qui ci sono vari dettagli importanti. Il primo è che la linea di
+codice rientra con quattro spazi, senza usare tabulazioni.
 
 La seconda parte importante è l'espressione `println!()`. Questa chiama
 una *[macro]* di Rust, che è il modo usato da Rust per fare
-la metaprogrammazione. Se invece stesse chiamando una funzione,
+la metaprogrammazione. Se invece stessimo chiamando una funzione,
 si presenterebbe così: `println()` (senza il !). In seguito discuteremo
-le macro in Rust in maggiore dettaglio, ma per ora basti sapere che quando c'è
-un `!` significa che si sta chiamando una macro invece di una funzione.
+le macro di Rust in maggiore dettaglio, ma per ora basti sapere che quando c'è
+un `!` significa che si sta chiamando una macro invece di una normale funzione.
 
 [macro]: macros.html
 
 Poi c'è `"Hello, world!"` che è una *stringa*. Le stringhe sono un argomento
-sorprendentemente complicato in un linguaggio di programmazione di sistema,
+sorprendentemente complicato in un linguaggio di programmazione di sistemi,
 e questa è una stringa *[allocata staticamente]*. Passiamo questa stringa come
 argumento a `println!`, che stampa la stringa sul terminale. Abbastanza facile!
 
 [allocata staticamente]: the-stack-and-the-heap.html
 
 La riga finisce con un punto-e-virgola (`;`). Rust è un *[linguaggio orientato
-alle espressioni]*, che significa che la maggior prte delle cose sono
+alle espressioni]*, che significa che la maggior parte delle cose sono
 espressioni, invece che istruzioni. Il `;` indica che questa espressione
 è finita, e la prossima sta per cominciare. La maggior parte delle righe
 di codice Rust finiscono con un `;`.
@@ -325,9 +330,9 @@ di codice Rust finiscono con un `;`.
 [linguaggio orientato alle espressioni]:
 glossary.html#expression-oriented-language
 
-## Compilare ed eseguire sono passi separati
+## Compilare ed Eseguire Sono Passi Separati
 
-In "Scrivere ed eseguire un programma in Rust", abbiamo mostrato come eseguire
+In "Scrivere ed Eseguire un Programma in Rust", abbiamo mostrato come eseguire
 un programma appena creato. Adesso scomporremo quel procedimento e
 ne esamineremo ogni passo.
 
@@ -362,45 +367,45 @@ e l'eseguibile (`main.exe` su Windows, `main` altrove). Ciò che rimane da fare
 è lanciare il file `main` o `main.exe`, così:
 
 ```bash
-$ ./main  # o main su Windows
+$ ./main  # o .\main.exe su Windows
 ```
 
-Se *main.rs* fosse il nostro programma "Hello, world!" program, questo comando
-stamperebbe `Hello, world!` sul nostro terminale.
+Se *main.rs* fosse il nostro programma "Hello, world!", questo comando
+stamperebbe `Hello, world!` sul tuo terminale.
 
 Chi venisse da un linguaggio dinamico come Ruby, Python, o JavaScript, potrebbe
 non essere abituato a compilare ed eseguire un programma in due passi separati.
 Rust è un linguaggio *compilato in anticipo*, il che significa che si può
 compilare un programma, darlo a qualcun altro, e questo lo può eseguire
 anche se non ha Rust installato. Invece se si da a qualcuno un file `.rb`
-o `.py` o `.js`, serve avere rispettivamente un'implementazione Ruby, Python,
+o `.py` o `.js`, serve avere (rispettivamente) un'implementazione Ruby, Python,
 o JavaScript installata, ma basta un solo comando per compilare ed eseguire
 il programma. Ci sono pro e contro nella progettazione dei linguaggi.
 
-Limitarsi a compilare con `rustc` va bene per programmi semplici, ma man mano
-che si affrontano progetti più grossi, si vorrà poter gestire tutte le opzioni
+Limitarsi a compilare con `rustc` va bene per programmi semplici, ma nel
+momento in cui il progetto cresce, è utile poter gestire tutte le opzioni
 del proprio progetto, e facilitare la condivisione del codice con altre persone
 e altri progetti. Quindi, presenteremo uno strumento chiamato Cargo, che
-aiuterà a scrivere programmi realistici in Rust.
+aiuterà a scrivere programmi di dimensioni realistiche in Rust.
 
 # Hello, Cargo!
 
 Cargo è il sistema di build e gestore di pacchetti di Rust, e i Rustacean usano
 Cargo per gestire i loro progetti in Rust. Cargo si occupa di tre attività:
-costruire i propri programmi e librerie, scaricare le librerie che servono
-al proprio codice, e costruire quelle librerie.
-Le librerie che servono al proprio codice si chiamano ‘dipendenze’ dato che
+costruire i propri programmi, scaricare le librerie che servono
+per costruire i propri programmi, e costruire quelle librerie.
+Chiameremo le librerie che servono al proprio codice ‘dipendenze’ dato che
 il proprio codice dipende da loro.
 
 I più semplici programmi in Rust non hanno dipendenze, e quindi per adesso
 usiamo solamente la prima parte delle sue funzionalità. Man mano che scriveremo
 programmi in Rust più complessi, si vorranno aggiungere dipendenze, e se si
-comincia subito a usare Cargo, poi sarà molto più facile.
+comincia da subito ad usare Cargo, il compito sarà molto più facile.
 
-Dato che la vastissima maggioranza di progetti in Rust usano Cargo, assumeremo
+Dato che la vastissima maggioranza di progetti in Rust usa Cargo, assumeremo
 che sia usato per il resto di questo libro. Cargo viene installato insieme
 a Rust, se vengono usati gli installatori ufficiali. Se Rust è stato installato
-tramirte qualche altro mezzo, si può verificare se Cargo è installato
+tramite qualche altro mezzo, si può verificare se Cargo è installato
 digitando in un terminale:
 
 ```bash
@@ -408,12 +413,13 @@ $ cargo --version
 ```
 
 Se si vede un numero di versione, ottimo! Se si vede un errore come
-‘`command not found`’, allora si dovrebbe guardare la documentazione
-del sistema in cui è installato Rust, per determinare come installarlo.
+‘`command not found`’, allora si consiglia di guardare la documentazione
+del sistema in cui è installato Rust, per determinare se Cargo deve essere
+installato separatamente.
 
 ## Convertire a Cargo
 
-Convertiamo in Cargo il programma Hello World. Per farlo, si devono fare
+Convertiamo in Cargo (Cargo-fy) il programma Hello World. Per farlo, si devono fare
 tre cose:
 
 1. Mettere il file sorgente nella giusta directory.
@@ -422,10 +428,10 @@ tre cose:
 
 Partiamo!
 
-### Creare una directory dei sorgenti e rimuovere il vecchio eseguibile
+### Creare una Directory del Sorgente e Rimuovere il Vecchio Eseguibile
 
-Prima, torniamo al terminale, spostiamo alla nostra directory *hello_world*,
-e digitiamo i seguenti comandi:
+Prima, torna al terminale, spostati nella directory *hello_world*,
+e digita i seguenti comandi:
 
 ```bash
 $ mkdir src
@@ -434,31 +440,32 @@ $ rm main  # o 'del main.exe' su Windows
 ```
 
 Cargo si aspetta che i file sorgente risiedano dentro la directory *src*, e
-quindi prima ce lo mettiamo. Questo lascia la directory superiore del progetto
-(in questo caso, *hello_world*) per il README, le informazioni di licenza, e
+quindi prima ce lo mettiamo. Questo lascia la directory principale del progetto
+(in questo caso, *hello_world*) per i READMEs, le informazioni di licenza, e
 ogni altra cosa non correlata al codice. In questo modo, usare Cargo aiuta
 a mantenere ordinati i propri progetti. C'è un posto per ogni cosa, e ogni cosa
 sta al suo posto.
 
-Adesso, si sposti *main.rs* nella directory *src*, e si elimina il file
-compilato che abbiamo creato con `rustc`. Come al solito, si sostituisca `main`
-con `main.exe` se si sta usando Windows.
+Adesso, sposta *main.rs* nella directory *src*, ed elimina il file
+compilato che hai creato con `rustc`. Come al solito, sostituisci `main`
+con `main.exe` se stai usando Windows.
 
 Questo esempio mantiene `main.rs` come nome del file sorgente, perché stiamo
-creando un programma. Se volessimo creare una libreria invece, chiameremmo
-`lib.rs` il file sorgente. Questa convenzione è usata da Cargo per compilare
-con successo il progetto, ma può essere scavalcata se si desidera.
+creando un eseguibile. Se volessimo creare una libreria invece, chiameremmo
+il file sorgente `lib.rs`. Questa convenzione è usata da Cargo per compilare
+con successo il progetto, ma può essere modificata se lo si desidera.
 
-### Creare un file di configurazione
+### Creare un File di Configurazione
 
-Poi, creiamo un nuovo file nella nostra directory *hello_world*, e lo chiamiamo
+Poi, crea un nuovo file nella nostra directory *hello_world*, e chiamalo
 `Cargo.toml`.
 
-Assicuriamoci di scrivere in maiuscolo la `C` in `Cargo.toml`, altrimenti
+Assicurati di scrivere in maiuscolo la `C` in `Cargo.toml`, altrimenti
 Cargo non saprà che farsene del file di configurazione.
 
-Questo file è nel formato *[TOML]*. Questo formato è simile al formato INI,
-ma ha alcuni vantaggi, e viene usato come formato di configurazione di Cargo.
+Questo file è nel formato *[TOML]* (Tom's Obvious Minimal Language). 
+TOML è simile al formato INI, ma ha alcuni vantaggi, e viene usato come
+formato di configurazione di Cargo.
 
 [TOML]: https://github.com/toml-lang/toml
 
@@ -484,10 +491,10 @@ l'ha scritto.
 Dopo aver aggiunto queste informazioni al file *Cargo.toml*, lo si salvi per
 completare la creazione del file di configurazione.
 
-## Costruire ed eseguire un progetto Cargo
+## Costruire ed Eseguire un Progetto Cargo
 
-Con il nostro file *Cargo.toml* al suo posto nella directory radice del nostro
-progetto, siamo pronti a costruire ed eseguire il nostro programma Hello World!
+Con il tuo file *Cargo.toml* al suo posto nella directory principale del
+progetto, dovresti essere pronto a costruire ed eseguire il programma Hello World!
 Per farlo, si digitino i seguenti comandi:
 
 ```bash
@@ -500,7 +507,7 @@ Hello, world!
 Bam! Se tutto va bene, `Hello, world!` dovrebbe apparire sul terminale ancora
 una volta.
 
-Abbiamo appena costruito un progetto con il comando `cargo build` e l'abbiamo
+Hai appena costruito un progetto con il comando `cargo build` ed
 eseguito con il comando `./target/debug/hello_world`, ma in realtà si possono
 eseguire entrambi con il solo comando `cargo run`:
 
@@ -511,9 +518,9 @@ Hello, world!
 ```
 
 Si noti che questo esempio non ha ricostruito il progetto. Cargo si è accorto
-che il file sorgente non è cambiato, e perciò ha subito lanciato il programma.
-Se avessimo modificato il nostro file codice sorgente, Cargo avrebbe
-ricostruito il progetto prima di eseguirlo, e avremmo visto qualcosa come:
+che il file sorgente non è cambiato, e perciò ha solo lanciato l'eseguibile.
+Se avessi modificato il codice sorgente, Cargo avrebbe
+ricostruito il progetto prima di eseguirlo, e avresti visto qualcosa come:
 
 ```bash
 $ cargo run
@@ -522,30 +529,30 @@ $ cargo run
 Hello, world!
 ```
 
-Cargo verifica se qualcuno dei file del progretto sono stati modificati, e
+Cargo verifica se i file di progetto sono stati modificati, e
 ricostruisce il progetto solamente se sono cambiati dall'ultima volta
-che è stato costruito.
+che il progetto è stato costruito.
 
-Con progetti semplici, Cargo non porta molti vantaggi rispetto a usare `rustc`,
-ma diventerà utile in futuro. Questo è vero spacialmente quando si inizia
-a usare i "crate"; questi sono chiamati ‘librerie’ o ‘pacchetti’ in altri
-linguaggi di programmazione. Per progetti complessi, composti da più crate, è
+Con progetti semplici, Cargo non porta molti vantaggi rispetto ad usare `rustc`,
+ma diventerà utile in futuro. Questo è vero specialmente quando si iniziano
+ad usare i crates; questi sono sinonimi di ‘librerie’ o ‘pacchetti’ in altri
+linguaggi di programmazione. Per progetti complessi, composti da più crates, è
 molto più facile lasciare che Cargo coordini la costruzione. Usando Cargo,
-si può lanciare `cargo build`, e dovrebbe funzionare nel modo giusto.
+puoi lanciare `cargo build`, e tutto dovrebbe funzionare nel modo giusto.
 
-### Costruire per il rilascio
+### Costruire per il Rilascio
 
 Quando il proprio progetto è pronto per il rilascio, si può eseguire
-`cargo build --release` per compilare il progetto con ottimizazioni.
-Queste ottimizzazioni fanno andare più veloce il codice Rust, ma attivandole
+`cargo build --release` per compilare il progetto con ottimizzazioni.
+Queste ottimizzazioni velocizzano l'esecuzione del codice Rust, ma attivandole
 ci vuole più tempo per compilare il programma. Ecco perché ci sono due diversi
 profili, uno per lo sviluppo, e uno per costruire il programma finale
-che verrà distribuito.
+che verrà distribuito agli utenti.
 
-### Cos'è quel `Cargo.lock`?
+### Cos'è Quel `Cargo.lock`?
 
 Eseguendo `cargo build` si fa anche in modo che Cargo crei un nuovo file
-chiamato *Cargo.lock*, anologo a questo:
+chiamato *Cargo.lock*, simile a questo:
 
 ```toml
 [root]
@@ -553,17 +560,18 @@ name = "hello_world"
 version = "0.0.1"
 ```
 
-Cargo usa il file *Cargo.lock* per tener traccia delle dipendenze nella nostra
-applicazione. Questo è il file *Cargo.lock* del progetto Hello World. Questo
-progetto non ha dipendenze, e quindi il file è molto piccolo. Realisticamente,
-non avremo mai bisogno di toccare questo file; lasciamolo gestire a Cargo.
+Cargo usa il file *Cargo.lock* per tener traccia delle dipendenze del tuo
+progetto. Questo è il file *Cargo.lock* del progetto Hello World. Questo
+progetto non ha dipendenze, e quindi il contenuto del file è scarso. Realisticamente,
+non avrai mai bisogno di toccare questo file, lascia solo che Cargo lo
+gestisca.
 
-Eccolo! Dopo aver fatto tutti i passi, dovremmo aver costruito con successo
-`hello_world` usando Cargo.
+Tutto qui! Se hai seguito tutti i passi, sarai riuscito a costruire con
+successo `hello_world` usando Cargo.
 
-Anche se il progetto è semplice, usa gran parte degli strumenti che useremo per
-il resto della nostra carriera Rust. Di fatto, ci si può aspettare di iniziare
-praticamente tutti i progetti Rust con qualche variante dei seguenti comandi:
+Anche se il progetto è semplice, usa gran parte degli strumenti che userai per
+il resto della tua carriera come programmatore Rust. Di fatto, ci si può aspettare di iniziare
+praticamente tutti i progetti Rust con qualche variazione dei seguenti comandi:
 
 ```bash
 $ git clone qualcheurl.com/foo
@@ -571,7 +579,7 @@ $ cd foo
 $ cargo build
 ```
 
-## Creare un nuovo progetto Cargo nel modo facile
+## Creare un Nuovo Progetto Cargo nel Modo Facile
 
 Ma non si deve seguire quel procedimento precedente ogni volta che si vuole
 iniziare un nuovo progetto! Cargo può creare rapidamente uno scheletro
@@ -585,16 +593,16 @@ $ cargo new hello_world --bin
 ```
 
 Questo comando passa l'opzione `--bin` perché l'obiettivo è di creare
-direttamente un'applicazione eseguibile, e non una libreria. Le applicazioni
-compilate sono spesso chiamate *binari* (da cui `/usr/bin`, sui sistemi Unix).
+direttamente un eseguibile, e non una libreria. I file eseguibili
+sono spesso chiamati *binari* (come in `/usr/bin`, su sistemi Unix).
 
-Cargo ha generato due file e una directory per noi: il file `Cargo.toml` e
-la directory *src* con il file *main.rs* al suo interno. Questi dovrebbero
+Cargo ha generato due file e una directory per noi: un file `Cargo.toml` e
+una directory *src* con il file *main.rs* al suo interno. Questi dovrebbero
 essere familiari, dato che sono esattamente quelli che prima abbiamo creato
-a mano.
+manualmente.
 
 Questo output è ciò che basta per iniziare. Prima si apre il file `Cargo.toml`.
-Il suo contenuto dovrebbe essere analogo a questo:
+Il suo contenuto dovrebbe essere simile a questo:
 
 ```toml
 [package]
@@ -608,9 +616,9 @@ authors = ["Il tuo nome <tu@esempio.it>"]
 
 Non ci si deve preoccupare della riga `[dependencies]`, ne parleremo dopo.
 
-Cargo ha inserito in *Cargo.toml* dei default ragionevoli, che si basano sugli
+Cargo ha inserito in *Cargo.toml* dei valori di default ragionevoli, che si basano sugli
 argomenti che gli abbiamo passato e sulla configurazione globale di `git`.
-Si potrà notare che Cargo ha anche initializzato la directory `hello_world`
+Si potrà notare che Cargo ha anche inizializzato la directory `hello_world`
 come un repository `git`.
 
 Ecco cosa ci dovrebbe essere in `src/main.rs`:
@@ -621,26 +629,26 @@ fn main() {
 }
 ```
 
-Cargo ha generato un "Hello World!" per noi, e siamo pronti a iniziare
+Cargo ha generato un "Hello World!" per te, e sei pronto ad iniziare
 a programmare!
 
-> Nota: Se si vuole guardare a Cargo in maggiore dettaglio, si verifichi
+> Nota: Se si vuole esaminare Cargo in maggior dettaglio, si verifichi
 la [guida ufficiale di Cargo], che tratta tutte le sue funzionalità.
 
 [guida ufficiale Cargo]: http://doc.crates.io/guide.html
 
-# Pensieri finali
+# Pensieri Finali
 
 Questo capitolo ha trattato le basi che serviranno per il resto del libro, e
 il resto del tempo dedicato a Rust. Adesso che abbiamo visto gli strumenti,
 passeremo a trattare il linguaggio Rust stesso.
 
-Ci sono due strade: Tuffersi in un progetto con
-il ‘[Tutorial: Indovina il numero][guessinggame]’, o iniziare dal fondo
-e risalire, con ‘[Sintassi e semantica][sintassi]’. I programmatori di sistema
-più esperti probabilmente preferiranno ‘Tutorial: indovina il numero’, mentre
-quelli esperti di linguaggi dinamici potrebbero preferire l'altro. Diversa
-gente impara in modo diverso! Si scelga quello che si preferisce.
+Ci sono due strade: Tuffarsi in un progetto con
+il ‘[Tutorial: Gioco-Indovina][guessinggame]’, o iniziare dal fondo
+e poi risalire, con ‘[Sintassi e Semantica][sintassi]’. I programmatori di
+sistemi più esperti probabilmente preferiranno ‘Tutorial: Gioco-Indovina’,
+mentre quelli esperti di linguaggi dinamici potrebbero preferire l'altro. 
+Ognuno impara in modo diverso! Si scelga quello che si preferisce.
 
 [guessinggame]: guessing-game.html
 [sintassi]: syntax-and-semantics.html
