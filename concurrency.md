@@ -39,8 +39,8 @@ il canale fino all'altro thread. Perciò, ci assicureremmo che `Send`
 fosse implementato per tale tipo.
 
 All'opposto, se stessimo avvolgendo una libreria che usa una [FFI][ffi] che
-non è threadsafe, non dovremmo implementare `Send`, e quindi il compilatore
-ci aiuterà a impedire che possa uscire dal thread corrente.
+non è sicuro per i thread, non dovremmo implementare `Send`, e quindi
+il compilatore ci aiuterà a impedire che possa uscire dal thread corrente.
 
 [ffi]: ffi.html
 
@@ -54,51 +54,52 @@ i tipi che non hanno la [mutabilità interna](mutability.html) sono
 inerentemente `Sync`, il che comprende i tipi primitivi semplici (come `u8`)
 e i tipi aggregati che li contengono.
 
-For sharing references across threads, Rust provides a wrapper type called
-`Arc<T>`. `Arc<T>` implements `Send` and `Sync` if and only if `T` implements
-both `Send` and `Sync`. For example, an object of type `Arc<RefCell<U>>` cannot
-be transferred across threads because
-[`RefCell`](choosing-your-guarantees.html#refcellt) does not implement
-`Sync`, consequently `Arc<RefCell<U>>` would not implement `Send`.
+Per condividere i riferimenti tra i thread, Rust fornisce un tipo ausiliario
+chiamato `Arc<T>`. `Arc<T>` implementa `Send` e `Sync` se e solamente se `T`
+implementa sia `Send` che `Sync`. Per esempio, un oggetto di tipo
+`Arc<RefCell<U>>` non può essere trasferito fra thread perché [`RefCell`]
+(choosing-your-guarantees.html#refcellt) non implementa `Sync`, e
+di conseguenza `Arc<RefCell<U>>` non implementerebbe `Send`.
 
-These two traits allow you to use the type system to make strong guarantees
-about the properties of your code under concurrency. Before we demonstrate
-why, we need to learn how to create a concurrent Rust program in the first
-place!
+Questi due tratti consentono di usare il sistema dei tipi per dare forti
+garanzie sulle proprietà del codice concorrente. Prima di mostrare perché,
+in primo luogo, dobbiamo vedere come creare un programma Rust concorrente!
 
-## Threads
+## I thread
 
-Rust's standard library provides a library for threads, which allow you to
-run Rust code in parallel. Here's a basic example of using `std::thread`:
+La libreria standard di Rust contiene una libreria per i thread, che consente
+di eseguire del codice Rust in parallelo. Ecco un esempio di base di come
+usare `std::thread`:
 
 ```rust
 use std::thread;
 
 fn main() {
     thread::spawn(|| {
-        println!("Hello from a thread!");
+        println!("Ciao da un thread!");
     });
 }
 ```
 
-The `thread::spawn()` method accepts a [closure](closures.html), which is executed in a
-new thread. It returns a handle to the thread, that can be used to
-wait for the child thread to finish and extract its result:
+Il metodo `thread::spawn()` accetta una [chiusura](closures.html), che viene
+eseguita in un nuovo thread. Tale metodo rende un handle che rappresenta
+il thread, e tale handle può servire ad aspettare che il thread figlio
+finisca, per poi estrarne il risultato:
 
 ```rust
 use std::thread;
 
 fn main() {
     let handle = thread::spawn(|| {
-        "Hello from a thread!"
+        "Ciao da un thread!"
     });
 
     println!("{}", handle.join().unwrap());
 }
 ```
 
-As closures can capture variables from their environment, we can also try to
-bring some data into the other thread:
+Dato che le chiusure possono catturare le variabili dal loro ambiente,
+possiamo anche provare a portare dei dati nell'altro thread:
 
 ```rust,ignore
 use std::thread;
@@ -106,12 +107,12 @@ use std::thread;
 fn main() {
     let x = 1;
     thread::spawn(|| {
-        println!("x is {}", x);
+        println!("x è {}", x);
     });
 }
 ```
 
-However, this gives us an error:
+Però, questo ci dà un errore:
 
 ```text
 5:19: 7:6 error: closure may outlive the current function, but it
@@ -124,13 +125,15 @@ However, this gives us an error:
       });
 ```
 
-This is because by default closures capture variables by reference, and thus the
-closure only captures a _reference to `x`_. This is a problem, because the
-thread may outlive the scope of `x`, leading to a dangling pointer.
+È così perché di default le chiusure catturano le variabili per riferimento, e
+così la chiusura cattura solamente un _riferimento a `x`_. Questo è un difetto,
+perché il thread può sopravvivere l'ambito di `x`, conducendo ad avere
+un puntatore penzolante.
 
-To fix this, we use a `move` closure as mentioned in the error message. `move`
-closures are explained in depth [here](closures.html#move-closures); basically
-they move variables from their environment into themselves.
+Per correggerlo, usiamo una chiusura `move` come suggerito nel messaggio
+d'errore. Le chiusure `move` sono spiegate approfonditamente [qui]
+(closures.html#move-closures); di base, spostano le variabili dal loro
+ambiente in sé stesse.
 
 ```rust
 use std::thread;
@@ -138,46 +141,46 @@ use std::thread;
 fn main() {
     let x = 1;
     thread::spawn(move || {
-        println!("x is {}", x);
+        println!("x è {}", x);
     });
 }
 ```
 
-Many languages have the ability to execute threads, but it's wildly unsafe.
-There are entire books about how to prevent errors that occur from shared
-mutable state. Rust helps out with its type system here as well, by preventing
-data races at compile time. Let's talk about how you actually share things
-between threads.
+Molti linguaggi hanno la capacità di eseguire dei thread, ma in modo follemente
+insicuro. Ci sono interi libri su come prevenire gli errori dovuti allo stato
+mutabile condiviso. Anche qui, Rust aiuta a uscirne con il suo sistema
+dei tipi, prevenendo le corse ai dati in fase di compilazione. Parliamo di come
+si condividono effettivamente gli oggetti fra i thread.
 
-## Safe Shared Mutable State
+## Lo stato mutabile condiviso in modo sicuro
 
-Due to Rust's type system, we have a concept that sounds like a lie: "safe
-shared mutable state." Many programmers agree that shared mutable state is
-very, very bad.
+A causa del sistema dei tipi di Rust, abbiamo un concetto che suona come una
+bugia: "stato mutabile condiviso in modo sicuro." Molti programmatori
+concordano sul fatto che lo stato mutabile condiviso sia una pessima cosa.
 
-Someone once said this:
+Qualcuno una volta ha detto:
 
-> Shared mutable state is the root of all evil. Most languages attempt to deal
-> with this problem through the 'mutable' part, but Rust deals with it by
-> solving the 'shared' part.
+> Lo stato mutabile condiviso è la radice di tutto il male. La maggior parte
+> dei linguaggi tentano di affrontare questo problema tramite il concetto di
+> 'mutabile', mentre Rust lo affronta risolvendo il concetto di 'condiviso'.
 
-The same [ownership system](ownership.html) that helps prevent using pointers
-incorrectly also helps rule out data races, one of the worst kinds of
-concurrency bugs.
+Lo stesso [sistema di possesso](ownership.html) che aiuta a prevenire l'uso
+scorretto dei puntatori aiuta anche a escludere le corse ai dati, una dei
+peggiori generi di difetti di concorrenza.
 
-As an example, here is a Rust program that would have a data race in many
-languages. It will not compile:
+Come esempio, ecco un programma Rust che avrebbe una corsa ai dati in molti
+linguaggi. Non compilerà:
 
 ```rust,ignore
 use std::thread;
 use std::time::Duration;
 
 fn main() {
-    let mut data = vec![1, 2, 3];
+    let mut dati = vec![1, 2, 3];
 
     for i in 0..3 {
         thread::spawn(move || {
-            data[0] += i;
+            dati[0] += i;
         });
     }
 
@@ -185,26 +188,30 @@ fn main() {
 }
 ```
 
-This gives us an error:
+Questo dà un errore:
 
 ```text
-8:17 error: capture of moved value: `data`
-        data[0] += i;
+8:17 error: capture of moved value: `dati`
+        dati[0] += i;
         ^~~~
 ```
 
-Rust knows this wouldn't be safe! If we had a reference to `data` in each
-thread, and the thread takes ownership of the reference, we'd have three owners!
-`data` gets moved out of `main` in the first call to `spawn()`, so subsequent
-calls in the loop cannot use this variable.
+Rust sa che non sarebbe sicuro! Se avessimo un riferimento a `dati` in ogni
+thread, e i thread prendessero il possesso del riferimento, avremmo tre
+possessori! `dati` viene spostato fuori da `main` nella prima chiamata
+a `spawn()`, e così le chiamate successive nel ciclo non possono più usare
+questa variabile.
 
-So, we need some type that lets us have more than one owning reference to a
-value. Usually, we'd use `Rc<T>` for this, which is a reference counted type
-that provides shared ownership. It has some runtime bookkeeping that keeps track
-of the number of references to it, hence the "reference count" part of its name.
+Perciò, ci serve qualche tipo che ci consente di avere più di un riferimento
+che possiede un valore. Solitamente, per questo useremmo `Rc<T>`, che è
+un tipo a conteggio dei riferimenti che fornisce il possesso condiviso.
+Tiene una certa contabilità in fase di esecuzione che tiene traccia
+del numero di riferimenti a esso, e da ciò deriva il suo nome
+"reference count", cioè "conteggio dei riferimenti".
 
-Calling `clone()` on an `Rc<T>` will return a new owned reference and bump the
-internal reference count. We create one of these for each thread:
+Chiamando `clone()` su un oggetto di tipo `Rc<T>`, si riceverà un nuovo
+riferimento posseduto e si toccherà il conteggio dei riferimenti interno.
+Creiamo uno di questi per ogni thread:
 
 
 ```rust,ignore
@@ -213,15 +220,15 @@ use std::time::Duration;
 use std::rc::Rc;
 
 fn main() {
-    let mut data = Rc::new(vec![1, 2, 3]);
+    let mut dati = Rc::new(vec![1, 2, 3]);
 
     for i in 0..3 {
-        // create a new owned reference
-        let data_ref = data.clone();
+        // crea un nuovo riferimento posseduto
+        let rif_a_dati = dati.clone();
 
-        // use it in a thread
+        // usalo in un thread
         thread::spawn(move || {
-            data_ref[0] += i;
+            rif_a_dati[0] += i;
         });
     }
 
@@ -229,7 +236,7 @@ fn main() {
 }
 ```
 
-This won't work, however, and will give us the error:
+Però, neanche questo funzionerà, e ci darà l'errore:
 
 ```text
 13:9: 13:22 error: the trait bound `alloc::rc::Rc<collections::vec::Vec<i32>> : core::marker::Send`
@@ -239,19 +246,20 @@ This won't work, however, and will give us the error:
             cannot be sent between threads safely
 ```
 
-As the error message mentions, `Rc` cannot be sent between threads safely. This
-is because the internal reference count is not maintained in a thread safe
-matter and can have a data race.
+Come dice il messaggio d'errore, `Rc` non può essere mandato fra thread in modo
+sicuro. È così perché il conteggio dei riferimenti interno non è gestito in
+un modo sicuro per i thread, e può avere una corsa ai dati.
 
-To solve this, we'll use `Arc<T>`, Rust's standard atomic reference count type.
+Per risolvere questo problema, useremo `Arc<T>`, il tipo standard di Rust
+per il conteggio dei riferimenti atomico.
 
-The Atomic part means `Arc<T>` can safely be accessed from multiple threads.
-To do this the compiler guarantees that mutations of the internal count use
-indivisible operations which can't have data races.
+La parola "atomico" significa che `Arc<T>` può essere acceduto in modo sicuro
+da più threads. Per farlo, il compilatore garantisce che le mutazioni
+del contateggio interno usano operazioni indivisibili, le quali non possono
+avere corse ai dati.
 
-In essence, `Arc<T>` is a type that lets us share ownership of data _across
-threads_.
-
+In essenza, `Arc<T>` è un tipo che ci consente di condividere il possesso
+dei dati _attraverso i thread_.
 
 ```rust,ignore
 use std::thread;
@@ -259,12 +267,12 @@ use std::sync::Arc;
 use std::time::Duration;
 
 fn main() {
-    let mut data = Arc::new(vec![1, 2, 3]);
+    let mut dati = Arc::new(vec![1, 2, 3]);
 
     for i in 0..3 {
-        let data = data.clone();
+        let dati = dati.clone();
         thread::spawn(move || {
-            data[0] += i;
+            dati[0] += i;
         });
     }
 
@@ -272,36 +280,37 @@ fn main() {
 }
 ```
 
-Similarly to last time, we use `clone()` to create a new owned handle.
-This handle is then moved into the new thread.
+Analogamente all'ultima volta, usiamo `clone()` per creare un nuovo handle
+posseduto. Questo handle viene poi spostato dentro il nuovo thread.
 
-And... still gives us an error.
+E... ci dà ancora un errore.
 
 ```text
 <anon>:11:24 error: cannot borrow immutable borrowed content as mutable
-<anon>:11                    data[0] += i;
+<anon>:11                    dati[0] += i;
                              ^~~~
 ```
 
-`Arc<T>` by default has immutable contents. It allows the _sharing_ of data
-between threads, but shared mutable data is unsafe and when threads are
-involved can cause data races!
+`Arc<T>` di default ha dei contenuti immutabili. Consente la _condivisione_
+dei dati fra thread, ma i dati mutabili condivisi sono insicuri, e quando
+sono implicati dei thread, provocano delle corse ai dati!
 
+Solitamente quando vogliamo rendere mutabile qualcosa che è in una posizione
+immutabile, usiamo `Cell<T>` o `RefCell<T>` che permettono la mutazione
+sicura tramite delle verifiche in fase di esecuzione o in altro modo (si veda
+anche: [Scegliere le proprie garanzie](choosing-your-guarantees.html)).
+Però, come gli `Rc`, anche questi non sono sicuri per i thread. Se proviamo
+a usarli, otterremo un errore sul fatto che questi tipi non sono `Sync`,
+e il codice non riuscirà a essere compilato.
 
-Usually when we wish to make something in an immutable position mutable, we use
-`Cell<T>` or `RefCell<T>` which allow safe mutation via runtime checks or
-otherwise (see also: [Choosing Your Guarantees](choosing-your-guarantees.html)).
-However, similar to `Rc`, these are not thread safe. If we try using these, we
-will get an error about these types not being `Sync`, and the code will fail to
-compile.
+Pare che ci serva qualche tipo che ci consenta di mutare in modo sicuro
+un valore condiviso tra thread; per esempio un tipo che possa assicurare che
+solamente un thread per volta sia in grado di mutare il valore al suo interno
+in qualunque momento.
 
-It looks like we need some type that allows us to safely mutate a shared value
-across threads, for example a type that can ensure only one thread at a time is
-able to mutate the value inside it at any one time.
+A tale scopo, possiamo usare il tipo `Mutex<T>`!
 
-For that, we can use the `Mutex<T>` type!
-
-Here's the working version:
+Ecco la versione funzionante:
 
 ```rust
 use std::sync::{Arc, Mutex};
@@ -309,13 +318,13 @@ use std::thread;
 use std::time::Duration;
 
 fn main() {
-    let data = Arc::new(Mutex::new(vec![1, 2, 3]));
+    let dati = Arc::new(Mutex::new(vec![1, 2, 3]));
 
     for i in 0..3 {
-        let data = data.clone();
+        let dati = dati.clone();
         thread::spawn(move || {
-            let mut data = data.lock().unwrap();
-            data[0] += i;
+            let mut dati = dati.lock().unwrap();
+            dati[0] += i;
         });
     }
 
@@ -323,67 +332,70 @@ fn main() {
 }
 ```
 
-Note that the value of `i` is bound (copied) to the closure and not shared
-among the threads.
+Si noti che il valore di `i` è legato (copiato) alla chiusura e non condiviso
+fra i thread.
 
-We're "locking" the mutex here. A mutex (short for "mutual exclusion"), as
-mentioned, only allows one thread at a time to access a value. When we wish to
-access the value, we use `lock()` on it. This will "lock" the mutex, and no
-other thread will be able to lock it (and hence, do anything with the value)
-until we're done with it. If a thread attempts to lock a mutex which is already
-locked, it will wait until the other thread releases the lock.
+Qui stiamo usando "lock" sul mutex. Un mutex (abbreviazione di "mutua
+esclusione"), come detto, consente a un solo thread alla volta di accedere
+a un valore. Quando desideriamo accedere al valore, usiamo `lock()` su di esso.
+Useremo "lock" sul mutex, e nessun altro thread potrà farlo (e quindi, fare
+qualcosa con il valore) finché non abbiamo finito di usarlo. Se un thread
+tenta si usare lock su un mutex che è già bloccato da lock, aspetterà finché
+l'altro thread rilasci il blocco lock.
 
-The lock "release" here is implicit; when the result of the lock (in this case,
-`data`) goes out of scope, the lock is automatically released.
+Qui il "rilascio" del lock è implicito; quando il risultato del lock (in questo
+caso, `dati`) esce di scope, il lock viene automaticamente rilasciato.
 
-Note that [`lock`](../std/sync/struct.Mutex.html#method.lock) method of
-[`Mutex`](../std/sync/struct.Mutex.html) has this signature:
+Si noti che il metodo [`lock`](../std/sync/struct.Mutex.html#method.lock) di
+[`Mutex`](../std/sync/struct.Mutex.html) ha questa firma:
 
 ```rust,ignore
 fn lock(&self) -> LockResult<MutexGuard<T>>
 ```
 
-and because `Send` is not implemented for `MutexGuard<T>`, the guard cannot
-cross thread boundaries, ensuring thread-locality of lock acquire and release.
+e siccome `Send` non è implementato per `MutexGuard<T>`, la guardia non può
+attraversare il confine del thread, assicurando località al thread delle
+operazione di acquisizione e rilascio del lock.
 
-Let's examine the body of the thread more closely:
+Esaminiamo più da vicino il corpo del thread:
 
 ```rust
 # use std::sync::{Arc, Mutex};
 # use std::thread;
 # use std::time::Duration;
 # fn main() {
-#     let data = Arc::new(Mutex::new(vec![1, 2, 3]));
+#     let dati = Arc::new(Mutex::new(vec![1, 2, 3]));
 #     for i in 0..3 {
-#         let data = data.clone();
+#         let dati = dati.clone();
 thread::spawn(move || {
-    let mut data = data.lock().unwrap();
-    data[0] += i;
+    let mut dati = dati.lock().unwrap();
+    dati[0] += i;
 });
 #     }
 #     thread::sleep(Duration::from_millis(50));
 # }
 ```
 
-First, we call `lock()`, which acquires the mutex's lock. Because this may fail,
-it returns a `Result<T, E>`, and because this is just an example, we `unwrap()`
-it to get a reference to the data. Real code would have more robust error handling
-here. We're then free to mutate it, since we have the lock.
+Prima, chiamiamo `lock()`, che acquisisce il lock del mutex. Siccome questo
+può fallire, rende un `Result<T, E>`, e siccome questo è appena un esempio,
+eseguiamo `unwrap()` per ottenere un riferimento ai dati. Qui del codice reale
+avrebbe una gestione degli errori più robusta. Poi siamo liberi di mutarlo,
+dato che abbiamo il lock.
 
-Lastly, while the threads are running, we wait on a short timer. But
-this is not ideal: we may have picked a reasonable amount of time to
-wait but it's more likely we'll either be waiting longer than
-necessary or not long enough, depending on just how much time the
-threads actually take to finish computing when the program runs.
+Infine, mentre i thread secondari sono in esecuzione, il thread principale
+aspetta per 50 millisecondi. Ma questo non è certo l'ideale: possiamo aver
+scelto di aspettare una quantità di tempo ragionevole, ma è più probabile che,
+o aspetteremo più a lungo del necessario, o non abbastanza a lungo, a seconda
+di quanto tempo richiedono effettivamente i thread per finire i loro calcoli.
 
-A more precise alternative to the timer would be to use one of the
-mechanisms provided by the Rust standard library for synchronizing
-threads with each other. Let's talk about one of them: channels.
+Un'alternativa più precisa all'attesa temporizzata sarebbe usare uno
+dei meccanismi forniti dalla libreria standard di Rust per sincronizzare
+i thread tra di loro. Parlaimo di un di essi: i canali.
 
-## Channels
+## I canali
 
-Here's a version of our code that uses channels for synchronization, rather
-than waiting for a specific time:
+Ecco una versione del nostro codice che usa i canali per la sincronizzazione,
+invece di aspettare un tempo specifico:
 
 ```rust
 use std::sync::{Arc, Mutex};
@@ -391,18 +403,18 @@ use std::thread;
 use std::sync::mpsc;
 
 fn main() {
-    let data = Arc::new(Mutex::new(0));
+    let dati = Arc::new(Mutex::new(0));
 
-    // `tx` is the "transmitter" or "sender"
-    // `rx` is the "receiver"
+    // `tx` è il "trasmettitore" o "mittente"
+    // `rx` è il "ricevitore"
     let (tx, rx) = mpsc::channel();
 
     for _ in 0..10 {
-        let (data, tx) = (data.clone(), tx.clone());
+        let (dati, tx) = (dati.clone(), tx.clone());
 
         thread::spawn(move || {
-            let mut data = data.lock().unwrap();
-            *data += 1;
+            let mut dati = dati.lock().unwrap();
+            *dati += 1;
 
             tx.send(()).unwrap();
         });
@@ -414,11 +426,12 @@ fn main() {
 }
 ```
 
-We use the `mpsc::channel()` method to construct a new channel. We `send`
-a simple `()` down the channel, and then wait for ten of them to come back.
+Usiamo il metodo `mpsc::channel()` per costruire un nuovo canale.
+Usiamo `send` per inviare un semplice `()` lungo il canale,
+e poi aspettiamo che ne ritornino dieci.
 
-While this channel is sending a generic signal, we can send any data that
-is `Send` over the channel!
+Mentre adesso questo canale sta trasmettendo un segnale generico, lungo
+il canale possiamo inviare qualunque dato che è `Send`!
 
 ```rust
 use std::thread;
@@ -443,14 +456,14 @@ fn main() {
 }
 ```
 
-Here we create 10 threads, asking each to calculate the square of a number (`i`
-at the time of `spawn()`), and then `send()` back the answer over the channel.
+Qui creiamo 10 thread, chiedendo a ognuno di calcolare il quadrato di
+un numero (`i` al momento della `spawn()`), e poi facciamo ritornare
+la risposta lungo il canale usando `send()`.
 
+## Panico
 
-## Panics
-
-A `panic!` will crash the currently executing thread. You can use Rust's
-threads as a simple isolation mechanism:
+Una chiamata a `panic!` manderà in crash il thread attualmente in esecuzione.
+I thread di Rust si possono usare come semplice meccanismo di isolamento:
 
 ```rust
 use std::thread;
@@ -464,5 +477,5 @@ let result = handle.join();
 assert!(result.is_err());
 ```
 
-`Thread.join()` gives us a `Result` back, which allows us to check if the thread
-has panicked or not.
+`Thread.join()` ci rende un `Result`, che ci consente di verificare se
+il thread ha avuto un panico o no.
