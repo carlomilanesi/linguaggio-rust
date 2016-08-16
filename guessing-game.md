@@ -1,4 +1,4 @@
-% Indovina-numero
+% Gioco-indovina
 
 Impariamo un po' di Rust! Come nostro primo progetto, implementeremo
 un classico problema di programmazione per principianti: l'indovina-numero.
@@ -8,7 +8,7 @@ un tentativo, ci dirà se siamo stati troppo bassi o troppo alti.
 Quando indoviniamo, si congratulerà con noi. Mica male, no?
 
 Lungo la strada, impareremo un pochino di Rust. Nel capitolo successivo,
-‘Sintassi e semantica’, ci immergeremo in profondità in ogni parte.
+‘Sintassi e Semantica’, ci immergeremo in profondità in ogni parte.
 
 # Impostazione
 
@@ -24,7 +24,7 @@ $ cd indovina_numero
 ```
 
 Abbiamo passato il nome del nostro progetto al comando `cargo new`, e poi
-il flag `--bin`, dato che stiamo creando un programma, invece di una libreria.
+il flag `--bin`, dato che stiamo creando un programma eseguibile, invece di una libreria.
 
 Verifichiamo il file `Cargo.toml` generato:
 
@@ -36,8 +36,8 @@ version = "0.1.0"
 authors = ["Your Name <you@example.com>"]
 ```
 
-Cargo ricava queste informazioni dall'ambiente. Se non vanno bene, si possono
-sempre correggerle.
+Cargo ricava queste informazioni dall'ambiente. Se non vanno bene, possono
+sempre essere corrette.
 
 Infine, Cargo ha generato un file ‘Hello, world!’. Verifichiamo `src/main.rs`:
 
@@ -47,7 +47,7 @@ fn main() {
 }
 ```
 
-Proviamo a compilare quello che Cargo ci ha preparato:
+Proviamo a compilare quello che Cargo ci ha fornito:
 
 ```{bash}
 $ cargo build
@@ -68,11 +68,11 @@ $ cargo run
 Hello, world!
 ```
 
-Benone! I comando `run` torna comodo quando si deve iterare rapidamente
-su un progetto. Il nostro gioco è un tale progetto, e ci serve collaudare
+Benone! Il comando `run` torna comodo quando si deve iterare rapidamente
+su un progetto. Il nostro gioco è un tale progetto, e ci serve testare
 rapidamente ogni iterazione prima di passare alla successiva.
 
-# Elaborare un tentativo
+# Elaborare un Tentativo
 
 Riprendiamo! La prima cosa che dobbiamo fare per il nostro gioco è
 consentire al giocatore di inserire un tentativo. Scriviamo questo nel file
@@ -102,12 +102,12 @@ use std::io;
 ```
 
 Ci servirà prendere l'input dell'utente, e poi stampare il risultato in output.
-Pertanto, abbiamo bisogno della liberia `io` della libreria standard.
+Pertanto, abbiamo bisogno della libreria `io` presa dalla libreria standard.
 Di default, Rust importa solamente un po' di cose in ogni programma,
 [il ‘preludio’][preludio]. Se non è nel preludio, dovremo importarlo
 direttamente, tramite `use`. C'è anche un secondo ‘preludio’, il
-[preludio `io`][iopreludio], che serve a una funzione simile: lo importi, ed
-esso importa varie cose utili relative all'`io`.
+[preludio `io`][iopreludio], che serve per uno scopo simile: lo importi, ed
+esso importa varie cose utili relative all'`io` (operazioni di input-output).
 
 [preludio]: ../std/prelude/index.html
 [iopreludio]: ../std/io/prelude/index.html
@@ -130,7 +130,7 @@ cioè un'[ennupla][ennuple] vuota.
     println!("Prego, digita un tentativo.");
 ```
 
-Prima abbiamo detto che `println!()` è una [macro][macro] che stampa
+Prima abbiamo imparato che `println!()` è una [macro][macro] che stampa
 una [stringa][stringhe] sullo schermo.
 
 [macro]: macros.html
@@ -143,7 +143,7 @@ una [stringa][stringhe] sullo schermo.
 Adesso si fa interessante! Succedono molte cose in questa breve riga.
 La prima cosa da notare è che questa è un'istruzione [istruzione let][let],
 che viene usata per creare ‘legami a variabili’ [variable bindings].
-Assumono questa forma:
+Questi ultimi assumono la forma:
 
 ```rust,ignore
 let foo = bar;
@@ -158,7 +158,7 @@ di variabile di Rust hanno alcuni assi nella manica.
 Per esempio, di default sono immutabili [immutabile][immutabile]. Ecco perché
 il nostro esempio usa `mut`: rende mutabile il legame, invece che immutabile.
 `let` non prende un nome sul lato sinistro dell'assegnamento, in realtà
-accetta un ‘[pattern][pattern]’. Usere i pattern più avanti. Per adesso è
+accetta un ‘[pattern][pattern]’. Useremo i pattern più avanti. Per adesso è
 abbastanza facile da usare:
 
 ```rust
@@ -175,7 +175,7 @@ tutto il contenuto dei [commenti][commenti].
 [comments]: comments.html
 
 Perciò adesso sappiamo che `let mut tentativo` introduce un legame mutabile
-di nome `tentativo`, ma dobbiamo guardare dall'altra perte dell'`=` per sapere
+di nome `tentativo`, ma dobbiamo guardare dall'altra parte dell'`=` per sapere
 a che cosa è legato: `String::new()`.
 
 `String` è un tipo stringa, fornito dalla libreria standard. Una
@@ -184,8 +184,8 @@ a che cosa è legato: `String::new()`.
 [string]: ../std/string/struct.String.html
 
 La sintassi `::new()` usa i `::` perché questa è una ‘funzione associata’
-di un particolare tipo. Il che significa cheè associata allo stesso tipo
-`String`, invece che a una particolare istanza di `String`. Altri linguaggi
+di un particolare tipo. Il che significa che è associata allo stesso tipo
+`String`, invece che ad una particolare istanza di `String`. Altri linguaggi
 lo chiamerebbero ‘metodo statico’ o ‘metodo di classe’.
 
 Questa funzione si chiama `new()`, perché crea un a nuova `String`, vuota.
@@ -211,7 +211,7 @@ chiamando una funzione associata a tale tipo. Comunque, se non avessimo scritto
 `use std::io`, ce la saremmo cavata scrivendo in questa riga
 `std::io::stdin()`.
 
-Questa funzione particolare rende un handle al flusso standard di input
+Questa funzione particolare ritorna un handle al flusso standard di input
 per la console. Più specificamente, a [std::io::Stdin][iostdin].
 
 [iostdin]: ../std/io/struct.Stdin.html
@@ -224,8 +224,8 @@ La prossima parte userà questo handle per ottenere l'input dall'utente:
 
 Qui, chiamiamo il metodo [`read_line()`][read_line] sul nostro handle.
 I [metodi][metodo] sono come funzioni associate, ma sono disponibili solamente
-su un'istanza particolare di un tipo, invece che sul tipo stesso. Stiamo anche
-passando un argomente o `read_line()`: `&mut tentativo`.
+per un'istanza particolare di un tipo, invece che sul tipo stesso. Stiamo anche
+passando un argomento a `read_line()`: `&mut tentativo`.
 
 [read_line]: ../std/io/struct.Stdin.html#method.read_line
 [metodo]: method-syntax.html
@@ -233,8 +233,8 @@ passando un argomente o `read_line()`: `&mut tentativo`.
 Come abbiamo legato il nome `tentativo` prima? Abbiamo detto che era mutabile.
 Però, `read_line` non prende una `String` come argomento: prende
 una `&mut String`. Rust ha una caratteristica chiamata ‘[riferimenti]
-[riferimenti]’, che consente di avere più riferimenti a un singolo dato,
-il che può ridurre la necessità di copiare. I riferimenti sono
+[riferimenti]’, che consente di avere più riferimenti ad un singolo dato,
+la quale riduce la necessità di copiare. I riferimenti sono
 una caratteristica complessa, dato che uno dei principali vantaggi di Rust
 è quanto sia sicuro e facile usare i riferimenti. Però, per adesso, non
 ci serve sapere molti dettagli per finire il nostro programma. Per adesso,
@@ -261,10 +261,10 @@ o si possono inserire spazi. Ciò aiuta a spezzare righe lunghe. _Avremmo anche
 potuto_ scrivere:
 
 ```rust,ignore
-    io::stdin().read_line(&mut tentativo).expect("Non si riesce a leggere la riga");
+    io::stdin().read_line(&mut tentativo).expect("non si riesce a leggere la riga");
 ```
 
-Ma sarebbe diventato più difficile da leggere. E allora l'abbiamo spezzto;
+Ma sarebbe diventato più difficile da leggere. E allora l'abbiamo spezzato;
 due righe per due chiamate di metodo. Abbiamo già parlato di `read_line()`,
 ma che dire di `expect()`? Beh, abbiamo già accennato che `read_line()` mette
 ciò che viene digitato dall'utente nella `&mut String` che le passiamo.
@@ -292,31 +292,33 @@ ma otterremo un avvertimento:
 
 ```bash
 $ cargo build
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
 src/main.rs:10:5: 10:43 warning: unused result which must be used,
 #[warn(unused_must_use)] on by default
 src/main.rs:10     io::stdin().read_line(&mut tentativo);
                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-Rust warns us that we haven’t used the `Result` value. This warning comes from
-a special annotation that `io::Result` has. Rust is trying to tell you that
-you haven’t handled a possible error. The right way to suppress the error is
-to actually write error handling. Luckily, if we want to crash if there’s
-a problem, we can use `expect()`. If we can recover from the
-error somehow, we’d do something else, but we’ll save that for a future
-project.
+Rust ci avvisa che non abbiamo utilizzato il valore `Result`. Questo
+avvertimento viene generato da una speciale annotazione utilizzata da `io::Result`.
+Rust sta cercando di dirci che non abbiamo gestito un possibile errore. Il
+modo giusto per sopprimere l'errore è scrivere il codice per la gestione
+dell'errore stesso. Fortunatamente, se vogliamo abortire il programma in caso
+ci sia un problema, possiamo usare `expect()`. Se possiamo recuperare
+dall'errore in qualche modo, faremo qualcosa di diverso, ma riserviamo
+l'argomento per un progetto futuro.
 
-There’s only one line of this first example left:
+C'è solo una linea di codice rimasta per questo primo esempio:
 
 ```rust,ignore
     println!("Hai digitato: {}", tentativo);
 }
 ```
 
-This prints out the string we saved our input in. The `{}`s are a placeholder,
-and so we pass it `tentativo` as an argument. If we had multiple `{}`s, we would
-pass multiple arguments:
+Questa linea stampa la stringa dove abbiamo salvato il nostro input. Le
+parentesi graffe `{}` sono dei segna-posto per passare `tentativo` come
+argomento. Se avessimo scritto diversi `{}`, avremmo passato diversi
+argomenti:
 
 ```rust
 let x = 5;
@@ -325,30 +327,30 @@ let y = 10;
 println!("x e y: {} e {}", x, y);
 ```
 
-Easy.
+Facile.
 
-Anyway, that’s the tour. We can run what we have with `cargo run`:
+Possiamo lanciare quello che abbiamo con `cargo run`:
 
 ```bash
 $ cargo run
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-     Running `target/debug/guessing_game`
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+     Running `target/debug/indovina_numero`
 Indovina il numero!
 Prego, digita un tentativo.
 6
 Hai digitato: 6
 ```
 
-All right! Our first part is done: we can get input from the keyboard,
-and then print it back out.
+Tutto bene! La prima parte del progetto è fatta: possiamo prendere input da
+tastiera, e stamparli a schermo.
 
 # Generare un numero segreto
 
 Poi, dobbiamo generare un numero segreto. La libreria standard di Rust
-non comprende ancora un generatore di numeri pseudo-casuali. Però, la squadra
-di Rust fornisce un [crate `rand`][randcrate]. Un ‘crate’ ["cassone"] è
-un pacchetto di codice Rust. Stiamo costruendo un ‘crate di programma’, mentre
-`rand` è un ‘crate di libreria’, cioè contiene del codice pronto per essere
+non comprende ancora un generatore di numeri casuali. Però, la squadra
+di Rust fornisce un [crate `rand`][randcrate]. Un ‘crate’ ('cassone') è
+un pacchetto di codice Rust. Stiamo costruendo un ‘crate binario’, mentre
+`rand` è un ‘crate libreria’, cioè contiene del codice pronto per essere
 usato da altri programmi.
 
 [randcrate]: https://crates.io/crates/rand
@@ -359,16 +361,17 @@ Apriamolo, e aggiungiamo in fondo queste due righe:
 
 ```toml
 [dependencies]
+
 rand="0.3.0"
 ```
 
 La sezione `[dependencies]` di `Cargo.toml` è simile alla sezione `[package]`:
-ogni cosa che la segue ne fa parte, fino all'inizio di un'altra sezione.
+ogni cosa che la segue ne fa parte, fino all'inizio della sezione successiva.
 Cargo usa la sezione dependencies per sapere quali dipendenze ci sono da crate
 esterni, e quali versioni di essi sono richieste. In questo caso, abbiamo
 specificato la versione `0.3.0`, che Cargo capisce essere qualunque rilascio
 che è compatibile con questa specifica versione. Cargo capisce
-il [versionamento semantico][semver], che è uno standard per scrivere
+il [Versionamento Semantico][semver], che è uno standard per scrivere
 numeri di versione. Un semplice numero come quello sopra è in realtà
 un'abbreviazione di `^0.3.0`, che significa "tutte le versioni compatibili
 con la versione 0.3.0".
@@ -390,7 +393,7 @@ $ cargo build
  Downloading libc v0.1.6
    Compiling libc v0.1.6
    Compiling rand v0.3.8
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
 ```
 
 (Naturalmente, si potranno vedere diversi numeri di versione.)
@@ -420,16 +423,16 @@ Va bene, nessun output! Cargo sa che il nostro progetto è stato costruito, e
 che tutte le sue dipendenze sono state scaricate e costruite, e quindi non c'è
 ragione di fare tutta quella roba. Non avendo niente da fare, semplicemente
 termina. Se riapriamo `src/main.rs`, facciamo una modifica banale, e lo
-risalviamo, vedremo solamente una riga:
+salviamo di nuovo, vedremo solamente una riga:
 
 ```bash
 $ cargo build
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
 ```
 
 Perciò, abbiamo detto a Cargo che volevamo la versione `0.3.x` di `rand`, e
 quindi ci ha preso la versione più recente che c'era all'istante in cui questo
-libro è stato scritto, la `v0.3.8`. Ma cosa accadrà la prossima settimana,
+documento è stato scritto, la `v0.3.8`. Ma cosa accadrà la prossima settimana,
 quando uscirà la versione `v0.3.9`, contenente una correzione importante?
 Ricevere le correzioni è importante, ma se la versione `0.3.9` contiene
 una regressione incompatibile con il nostro codice?
@@ -440,8 +443,8 @@ la prima volta, Cargo calcola tutti i numeri di versione che soddisfano
 i nostri criteri, e poi li scrive nel file `Cargo.lock`. Quando si costruisce
 nuovamente il progetto, Cargo vedrà che il file `Cargo.lock` esiste, e quindi
 usa quella specifica versione invece di rifare tutto il lavoro di calcolare
-i numeri di versione. Questo consente di avere automaticamente un build
-ripetibile. In altri termini, rimarremo alla versione `0.3.8` finché ci
+i numeri di versione. Questo consente di avere un build ripetibile automaticamente.
+In altri termini, rimarremo alla versione `0.3.8` finché la
 aggiorniamo esplicitamente, e così farà chiunque condivida il nostro codice,
 grazie al file `.lock`.
 
@@ -449,14 +452,15 @@ E che fare quando _vogliamo_ usare la versione `v0.3.9`? Cargo ha un altro
 comando, `update`, che significa ‘ignora il file `.lock`, calcola tutte
 le versioni più recenti che soddisfano quello che abbiamo specificato.
 Se funziona, scrivi quelle versioni nel file `.lock`’. Ma, di default, Cargo
-cercherà solamente versioni maggiori inferiori alla `0.4.0`. Se volessimo
-spostarci a una versione `0.4.x`, dovremmo aggiornare direttamente il file
+cercherà solamente versioni superiori alla `0.3.0` e inferiori alla `0.4.0`. Se volessimo
+aggiornare ad una versione `0.4.x`, dovremmo aggiornare direttamente il file
 `Cargo.toml`. Quando lo facciamo, la prossima volta che eseguiamo il comando
 `cargo build`, Cargo aggiornerà l'indice e rivaluterà i requisiti del nostro
 `rand`.
 
 C'è molto più da dire su [Cargo][doccargo] e sul [suo ecosistema][doccratesio],
-ma per adesso, è tutto  quello che ci serve. Cargo rende davvero facile usare
+ma per adesso, è tutto  quello che ci serve. Cargo rende davvero facile il
+riutilizzo delle
 librerie, e quindi i Rustaciani tendono a scrivere progetti piccoli, assemblati
 usando vari sotto-progetti.
 
@@ -497,8 +501,10 @@ e quindi possiamo fare uso di ogni cosa presente nel crate `rand` pur di
 qualificarla con il prefisso `rand::`.
 
 Poi, abbiamo aggiunto un'altra riga `use`: `use rand::Rng`. Fra un attimo
-useremo un metodo, e tale metodo richiede che `Rng` sia nel suo ambito. L'idea
-di base è questa: i metodi sono definiti su cose chiamate ‘tratti’, e affinché
+useremo un metodo, e tale metodo richiede che `Rng` sia nell'ambito del
+programma. L'idea
+di base è questa: i metodi sono definiti su cose chiamate ‘tratti’ ('traits'),
+e affinché
 un metodo funzioni, ha bisogno che il suo tratto sia attivo nell'ambito
 corrente. Per maggiori dettagli, si legga la sezione sui [tratti][tratti].
 
@@ -513,8 +519,9 @@ Abbiamo aggiunto due altre righe, nel mezzo:
 ```
 
 Usiamo la funzione `rand::thread_rng()` per ottenere una copia del generatore
-di numeri pseudo-casuali, che è locale al particolare [thread][concurrency]
-in cui siamo. Siccome sopra abbiamo scritto `use rand::Rng`, adesso il metodo
+di numeri casuali, che è locale al particolare [thread][concurrency] di
+esecuzione in cui siamo.
+Siccome sopra abbiamo scritto `use rand::Rng`, adesso il metodo
 `gen_range()` è disponibile. Questo metodo prende due argomenti, e genera
 un numero compreso tra di essi. Il limite inferiore è incluso, mentre il limite
 superiore è escluso, e quindi ci servono `1` e `101` per ottenere un numero
@@ -531,15 +538,15 @@ Proviamo a eseguire alcune volte il nostro nuovo programma:
 
 ```bash
 $ cargo run
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-     Running `target/debug/guessing_game`
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+     Running `target/debug/indovina_numero`
 Indovina il numero!
 Il numero segreto è: 7
 Prego, digita un tentativo.
 4
 Hai digitato: 4
 $ cargo run
-     Running `target/debug/guessing_game`
+     Running `target/debug/indovina_numero`
 Indovina il numero!
 Il numero segreto è: 83
 Prego, digita un tentativo.
@@ -552,7 +559,7 @@ Ottimo! Prossimo passo: confrontare il nostro tentativo con il numero segreto.
 # Confrontare i tentativi
 
 Adesso che abbiamo l'input dell'utente, confrontiamo il nostro tentativo
-al numero segreto. Ecco il nostro nuovo passo, anche se non compila ancora:
+con il numero segreto. Ecco il nostro nuovo passo, anche se non compila ancora:
 
 ```rust,ignore
 extern crate rand;
@@ -598,11 +605,11 @@ match tentativo.cmp(&numero_segreto) {
 ```
 
 Il metodo `cmp()` può essere chiamato su qualunque oggetto che può essere
-confrontata, e prende un riferimento all'oggetto con cui ci si vuole
-confrontare. Rende il tipo `Ordering` che abbiamo importato prima. Usiamo
+confrontato, e prende un riferimento all'oggetto con cui lo si vuole
+confrontare. Il confronto rende il tipo `Ordering` che abbiamo importato prima. Usiamo
 un'istruzione [`match`][match] per determinare esattamente quale `Ordering`
 abbiamo ottenuto dal confronto. `Ordering` è una [`enum`][enum], abbreviazione
-di ‘enumerazione’. Le enumerazioni si dichiarano così:
+di ‘enumerazione’. Le enumerazioni si presentano così:
 
 ```rust
 enum Foo {
@@ -641,7 +648,7 @@ Ho già detto che questo codice non compilava, però. Proviamolo:
 
 ```bash
 $ cargo build
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
 src/main.rs:28:25: 28:40 error: mismatched types:
  expected `&collections::string::String`,
     found `&_`
@@ -650,19 +657,19 @@ src/main.rs:28:25: 28:40 error: mismatched types:
 src/main.rs:28     match tentativo.cmp(&numero_segreto) {
                                        ^~~~~~~~~~~~~~~
 error: aborting due to previous error
-Could not compile `guessing_game`.
+Could not compile `indovina_numero`.
 ```
 
-Urca! Questo è un grosso erroro. Il suo nucleo è che abbiamo dei ‘tipi male
+Urca! Questo è un grosso errore. Il sua sintesi è che abbiamo dei ‘tipi male
 accoppiati’ ["‘mismatched types’"]. Rust ha un sistema dei tipi forte
 e statico. Però, ha anche l'inferenza dei tipi. Quando abbiamo scritto
 `let tentativo = String::new()`, Rust è stato capace di inferire che
 `tentativo` doveva essere una `String`, e quindi non ci ha costretto
 a scriverne il tipo. E con il nostro `numero_secreto`, ci sono vari tipi
-chd possono avere un valore fra uno e cento: `i32`, cioè un numero intero
+che possono avere un valore fra uno e cento: `i32`, cioè un numero intero
 con segno a trentadue bit, o `u32`, cioè un numero intero senza segno
 a trentadue bit, o `i64`, un numero intero con segno a sessantaquattro bit
-oppure altri. Finora, non ha importato, e quindi Rust ha preso come default
+oppure altri. Finora questo fatto non ha importato, e quindi Rust ha preso come default
 un `i32`. Però, qui, Rust non sa come confrontare `tentativo` con
 `secret_number`. Devono essere dello stesso tipo. Pertanto, dobbiamo convertire
 la `String` che abbiamo letto come input in un vero tipo numerico, per poterlo
@@ -710,14 +717,14 @@ Le due nuove righe:
         .expect("Prego, digita un numero!");
 ```
 
-Aspetta un attimo, pensavo che che avevamo già un `tentativo`? Sì, ma Rust ci
+Aspetta un attimo, pensavo che avevamo già un `tentativo`? Sì, ma Rust ci
 permette di ’oscurare’ ["‘shadow’"] il precedente `tentativo` con uno nuovo.
 Questo si usa spesso proprio in questa situazione, in cui `tentativo` inizia
 come `String`, ma lo vogliamo convertire in un `u32`. L'oscuramento ci permette
 di riusare il nome `tentativo`, invece di costringerci a inventare due nomi
-univoci come `tentativo_str` e `tentativo`, o qualcosa del genere.
+diversi come `tentativo_str` e `tentativo`, o qualcos'altro.
 
-Leghiamo `tentativo` a un'espressione che somiglia a qualcosa che abbiamo
+Leghiamo `tentativo` ad una espressione che somiglia a qualcosa che abbiamo
 scritto prima:
 
 ```rust,ignore
@@ -725,9 +732,9 @@ tentativo.trim().parse()
 ```
 
 Qui, `tentativo` si riferisce al vecchio `tentativo`, quello che era
-una `String` contenente il nostro input. Il metodo `trim()` applicato a
+una `String` contenente il nostro input. Il metodo `trim()` applicato ad
 una `String` eliminerà tutti gli spazi all'inizio e alla fine della stringa.
-Questo è importanto, dato che abbiamo dovuto premere il tasto ‘Invio’
+Questo è importante, dato che abbiamo dovuto premere il tasto ‘Invio’
 per soddisfare la funzione `read_line()`. Ciò significa che se digitiamo `5`
 e battiamo Invio, `tentativo` conterrà `5\n`. La stringa `\n` rappresenta un
 carattere ‘a capo’, inserito dal tasto Invio. `trim()` se ne sbarazza,
@@ -735,7 +742,7 @@ lasciando nella nostra stringa solamente il `5`. Il [metodo `parse()` applicato
 a una stringa][parse] analizza la stringa estraendone un numero di qualche
 tipo. Dato che tale metodo può riconoscere vari tipi di numeri, dobbiamo
 suggerire a Rust il tipo esatto del numero che vogliamo. Pertanto, scriviamo
-`let tentativo: u32`. Il due-punti (`:`) dopo `tentativo` dice a Rust
+`let tentativo: u32`. I due-punti (`:`) dopo `tentativo` dicono a Rust
 che stiamo annotando il tipo del legame. `u32` è il tipo intero senza segno
 a trentadue bit. Rust ha [vari tipi numerici predefiniti][number], ma abbiamo
 scelto `u32`. È una buona scelta di default per un numero positivo piccolo.
@@ -753,8 +760,8 @@ Proviamo il nostro programma!
 
 ```bash
 $ cargo run
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-     Running `target/guessing_game`
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+     Running `target/indovina_numero`
 Indovina il numero!
 Il numero segreto è: 58
 Prego, digita un tentativo.
@@ -764,11 +771,11 @@ Troppo grande!
 ```
 
 Carino! Si può vedere che abbiamo perfino aggiunto degli spazi prima
-di digitare il tentativo, ma è comunque riuscito a valutarlo come 76.
+di digitare il tentativo, ma il programma è comunque riuscito a valutarlo come 76.
 Eseguiamo il programma alcune volte, e verifichiamo che funzioni quando
 si indovina il numero, e anche quando il tentativo è un numero troppo piccolo.
 
-Adesso abbiamo che la maggior parte del gioco funziona, ma possiamo fare
+Adesso la maggior parte del gioco funziona, ma possiamo fare
 un solo tentativo. Modifichiamolo aggiungendo i cicli!
 
 # Ciclare
@@ -817,8 +824,8 @@ che non è un numero, andrà in `panic!` e terminerà. Osserviamo:
 
 ```bash
 $ cargo run
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-     Running `target/guessing_game`
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+     Running `target/indovina_numero`
 Indovina il numero!
 Il numero segreto è: 59
 Prego, digita un tentativo.
@@ -928,7 +935,7 @@ fn main() {
 }
 ```
 
-Le righe modificate sono queste:
+Le righe modificate sono le seguenti:
 
 ```rust,ignore
 let tentativo: u32 = match tentativo.trim().parse() {
@@ -936,6 +943,7 @@ let tentativo: u32 = match tentativo.trim().parse() {
     Err(_) => continue,
 };
 ```
+
 Il modo tipico per passare da un ‘crash dovuto a errore’ a una ‘gestione
 effettiva dell'errore’, è passare dall'uso del metodo `expect()` all'uso
 dell'istruzione `match`. La chiamata a `parse()` rende un `Result`; questo è
@@ -943,9 +951,9 @@ una `enum`, come `Ordering`, ma in questo caso, ogni variante ha alcuni dati
 associati ad essa: `Ok` indica un successo, e `Err` indica un fallimento, ma
 entrambi contengono ulteriori informazioni: per il primo, l'intero estratto
 con successo, e per l'altro il genere di errore. In questo caso, `match`
-proverà a far commbaciare il suo argomento con `Ok(num)`, che assegnerà al nome
-il valore contenuto in `Ok` (cioè l'intero estratto), e poi assegnamo
-quest'ultimi al lato sinistro. Nel caso `Err`, non ci interessa il genere
+proverà a far combaciare il suo argomento con `Ok(num)`, che assegnerà al nome
+il valore contenuto in `Ok` (cioè l'intero estratto), e ritornerà
+quest'ultimo nel lato destro. Nel caso `Err`, non ci interessa il genere
 di errore, e così usiamo il carattere piglia-tutto `_`, invece di un nome.
 Questo jolly combacia con qualunque codice d'errore, e poi `continue` ci
 sposterà alla prossima iterazione del ciclo; in effetti, questo codice
@@ -955,8 +963,8 @@ Adesso dovremmo essere a posto! Proviamo:
 
 ```bash
 $ cargo run
-   Compiling guessing_game v0.1.0 (file:///home/you/projects/guessing_game)
-     Running `target/guessing_game`
+   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+     Running `target/indovina_numero`
 Indovina il numero!
 Il numero segreto è: 61
 Prego, digita un tentativo.
@@ -975,7 +983,7 @@ Hai digitato: 61
 Hai vinto!
 ```
 
-Magnifico! Con un ultimo ritocchino, abbiamo finito il gioco. Chi indovina
+Magnifico! Con un ultimo ritocchino, finiremo il gioco. Riesci ad indovinare
 quale sarà? Giusto, non vogliamo stampare subito il numero segreto. Andava
 bene per il collaudo, ma rovinava il gioco. Ecco il nostro sorgente finale:
 
@@ -1020,8 +1028,8 @@ fn main() {
 
 # Finito!
 
-Questo progetti ha mostrato parecchie cose: `let`, `match`, i metodi,
+Questo progetto ha mostrato parecchie cose: `let`, `match`, i metodi,
 le funzioni associate, l'uso di crate esterni, e altro.
 
-A questo punto, abbiamo costruito un gioco Indovina-numero funzionante!
+A questo punto, abbiamo costruito un gioco Gioco-Indovina funzionante!
 Congratulazioni!
