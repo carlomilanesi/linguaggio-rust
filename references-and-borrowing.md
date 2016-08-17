@@ -14,7 +14,7 @@ che si presentava così:
 fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
     // fa' qualcosa con v1 e con v2
 
-    // restituisci il possesso di v1 e v2, e rendi anche
+    // restituisci il possesso di v1 e v2, e restituisci anche
     // il risultato della nostra funzione
     (v1, v2, 42)
 }
@@ -31,7 +31,7 @@ Ecco il primo passo:
 fn foo(v1: &Vec<i32>, v2: &Vec<i32>) -> i32 {
     // fa' qualcosa con v1 e con v2
 
-    // rendi la risposta
+    // restituisci la risposta
     42
 }
 
@@ -58,7 +58,7 @@ fn main() {
         // fa' qualcosa con v1 e con v2
         let s1 = somma_vec(v1);
         let s2 = somma_vec(v2);
-        // rendi la risposta
+        // restituisci la risposta
         s1 + s2
     }
 

@@ -34,7 +34,7 @@ assert_eq!(9, piu_due(7));
 Si notino alcune cose riguardo le chiusure che sono un po' diverse dalle
 normali funzioni con nome definite tramite `fn`. La prima è che non abbiamo
 dovuto annotare i tipi degli argomenti che la chiusura prende né il valore
-che rende. È consentito:
+che restituisce. È consentito:
 
 ```rust
 let piu_uno = |x: i32| -> i32 { x + 1 };
@@ -101,7 +101,7 @@ fn main() {
 ^
 ```
 
-Un messaggio d'errore prolisso ma utile! Come dice, non si può prendere `num` 
+Un messaggio d'errore prolisso ma utile! Come dice, non si può prendere `num`
 a prestito mutabile, perché la chiusura la sta già tenendo a prestito.
 Se lasciamo uscire di ambito la chiusura, lo possiamo fare:
 

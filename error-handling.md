@@ -3,7 +3,7 @@
 Come la maggior parte dei linguaggi di programmazione, Rust incoraggia
 il programmatore a gestire gli errori in un modo particolare. In generale,
 la gestione degli errori è divisa in due ampie categorie: le eccezioni e
-i valori resi. Rust opta per i valori resi.
+i valori restituiti. Rust opta per i valori restituiti.
 
 In questa sezione, intendiamo fornire una descrizione approfondita di come
 trattare gli errori in Rust. In aggiunta, tenteremo di introdurre la gestione
@@ -69,8 +69,8 @@ Ecco un esempio:
 
 ```rust,should_panic
 // Indovina un numero fra 1 e 10.
-// Se combacia col numero che avevamo in mente, rendi true.
-// Altrimenti, rendi false.
+// Se combacia col numero che avevamo in mente, restituisci true.
+// Altrimenti, restituisci false.
 fn indovina(n: i32) -> bool {
     if n < 1 || n > 10 {
         panic!("Numero non valido: {}", n);
@@ -148,8 +148,8 @@ che prova a trovare un carattere in una stringa:
 
 ```rust
 // Cerca in `pagliaio` il carattere Unicode `ago`. Se ne viene trovato uno,
-// viene reso lo scostamento in byte di tale carattere.
-// Altrimenti, viene reso `None`.
+// viene restituito lo scostamento in byte di tale carattere.
+// Altrimenti, viene restituito `None`.
 fn trova(pagliaio: &str, ago: char) -> Option<usize> {
     for (scostamento, c) in pagliaio.char_indices() {
         if c == ago {
@@ -161,7 +161,8 @@ fn trova(pagliaio: &str, ago: char) -> Option<usize> {
 ```
 
 Si noti che quando questa funzione trova un carattere corrispondente,
-non rende solamente lo `scostamento`. Invece, rende `Some(scostamento)`.
+non restituisce solamente lo `scostamento`.
+Invece, restituisce `Some(scostamento)`.
 `Some` è una variante o un *costruttore di valore* per il tipo `Option`.
 Si può pensare ad esso come a una funzione di tipo
 `fn<T>(valore: T) -> Option<T>`. Analogamente, anche `None` è un costruttore
@@ -184,7 +185,8 @@ fn main() {
 ```
 
 Questo codice usa il [pattern matching][1] per fare *l'analisi dei casi*
-sull'`Option<usize>` reso dalla funzione `trova`. Di fatto, l'analisi dei casi
+sulla `Option<usize>` restituita dalla funzione `trova`.
+Di fatto, l'analisi dei casi
 è l'unico modo per arrivare al valore immagazzinato in un `Option<T>`.
 Questo significa che il programmatore deve gestire il caso in cui `Option<T>`
 vale `None` invece di `Some(t)`.
@@ -232,9 +234,9 @@ quindi ha senso metterla in una funzione:
 
 ```rust
 # fn trova(_: &str, _: char) -> Option<usize> { None }
-// Rende l'estensione del dato nome di file, dove l'estensione è definita
+// Restituisce l'estensione del dato nome di file, dove l'estensione è definita
 // come tutti i caratteri che seguono il primo `.`.
-// Se `nome_di_file` non contiene nessun `.`, allora viene reso `None`.
+// Se `nome_di_file` non contiene nessun `.`, allora viene restituito `None`.
 fn estensione_esplicita(nome_di_file: &str) -> Option<&str> {
     match trova(nome_di_file, '.') {
         None => None,
@@ -256,7 +258,7 @@ fatto in `estensione_esplicita`, può diventare un po' seccante.
 
 Di fatto, l'analisi dei casi in `estensione_esplicita` segue un pattern molto
 tipico: *mappare* una funzione al valore interno di un `Option<T>`, a meno che
-l'opzione sia `None`, nel qual caso, rendere `None`.
+l'opzione sia `None`, nel qual caso, restituire `None`.
 
 Rust ha il polimorfismo parametrico, perciò è molto facile definire
 un combinatore che astrae questo pattern:
@@ -282,9 +284,9 @@ Armati del nostro nuovo combinatore, possiamo riscrivere il nostro metodo
 
 ```rust
 # fn trova(_: &str, _: char) -> Option<usize> { None }
-// Rende l'estensione del dato nome di file, dove l'estensione è definita
+// Restituisce l'estensione del dato nome di file, dove l'estensione è definita
 // come tutti i caratteri che seguono il primo `.`.
-// se `nome_di_file` non contiene nessun `.`, allora viene reso `None`.
+// se `nome_di_file` non contiene nessun `.`, allora viene restituito `None`.
 fn estensione(nome_di_file: &str) -> Option<&str> {
     trova(nome_di_file, '.').map(|i| &nome_di_file[i+1..])
 }
@@ -374,21 +376,21 @@ fn estensione_di_percorso_di_file(percorso_di_file: &str) -> Option<&str> {
 }
 ```
 
-Qui la funzione `map` avvolge il valore reso dalla funzione `estensione`
-dentro un'`Option<_>` e siccome la stessa funzione `estensione` rende
-un'`Option<&str>`, l'espressione
+Qui la funzione `map` avvolge il valore restituito dalla funzione `estensione`
+dentro una `Option<_>` e siccome la stessa funzione `estensione` restituisce
+una `Option<&str>`, l'espressione
 `nome_di_file(percorso_di_file).map(|x| estensione(x))`
-rende effettivamente un `Option<Option<&str>>`.
+restituisce effettivamente un `Option<Option<&str>>`.
 
-Ma siccome `estensione_di_percorso_di_file` rende appena `Option<&str>` (e non
-`Option<Option<&str>>`) otteniamo un errore di compilazione.
+Ma siccome `estensione_di_percorso_di_file` restituisce appena `Option<&str>`
+(e non `Option<Option<&str>>`) otteniamo un errore di compilazione.
 
 Il risultato della funzione presa da `map` come input è *sempre* [riavvolto
 da `Some`](#code-option-map). Invece, ci serve qualcosa come `map`, ma che
-consenta al chiamante di rendere direttamente un'`Option<_>` senza avvolgerlo
-in un altro `Option<_>`.
+consenta al chiamante di restituire direttamente un'`Option<_>`
+senza avvolgerlo in un altro `Option<_>`.
 
-La sua implementazione generic è perfino più semplice di `map`:
+La sua implementazione generica è perfino più semplice di `map`:
 
 ```rust
 fn and_then<F, T, A>(opzione: Option<T>, f: F) -> Option<A>
@@ -411,9 +413,9 @@ fn estensione_di_percorso_di_file(percorso_di_file: &str) -> Option<&str> {
 }
 ```
 
-Nota a fianco: `and_then`, siccome funziona essenzialmente come `map`, ma rende
-un `Option<_>` invece di un `Option<Option<_>>`, è noto come `flatmap`
-in alcuni altri linguaggi.
+Nota a fianco: `and_then`, siccome funziona essenzialmente come `map`,
+ma restituisce un `Option<_>` invece di un `Option<Option<_>>`,
+è noto come `flatmap` in alcuni altri linguaggi.
 
 Il tipo `Option` ha molti altri combinatori [definiti nella libreria standard]
 [5]. È una buona idea scorrere questo elenco e familiarizzarsi con ciò che
@@ -514,7 +516,7 @@ thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: ParseInt
 Questo è abbastanza inguardabile, e se è accaduto dentro una libreria che
 si sta usando, si potrebbe essere comprensibilmente seccati. Invece, dovremmo
 provare a gestire l'errore nella nostra funzione e consentire al chiamante
-di decidere cosa fare. Ciò comporta la modifica del tipo del valore resitituito
+di decidere cosa fare. Ciò comporta la modifica del tipo del valore restituito
 da `raddoppia_numero`. Ma a quale tipo? Beh, bisogna guardare la firma
 del [metodo `parse`][9] nella libreria standard:
 
@@ -525,7 +527,7 @@ impl str {
 ```
 
 Ehm. Allora almeno sappiamo che dobbiamo usare un `Result`. Certamente, avrebbe
-potuto restituire un'`Option`. Dopo tutto, una stringa o è valida come numero
+potuto restituire un `Option`. Dopo tutto, una stringa o è valida come numero
 o non lo è, no? Sarebbe certamente un modo ragionevole di procedere, ma
 l'implementazione distingue internamente *perché* la stringa non è un intero
 valido. (Potrebbe essere una stringa vuota, avere una cifra non valida, essere
@@ -805,9 +807,9 @@ Qui ci sono tre diversi errori che possono avvenire:
 1. Un fallimento nella conversione del testo in un numero.
 
 I primi due errori sono descritti tramite il tipo [`std::io::Error`]
-(../std/io/struct.Error.html). Lo sappiamo a causa dei tipi restituiti da
-[`std::fs::File::open`](../std/fs/struct.File.html#method.open) e da
-[`std::io::Read::read_to_string`]
+(../std/io/struct.Error.html). Lo sappiamo a causa dei tipi dei valori
+restituiti da [`std::fs::File::open`](../std/fs/struct.File.html#method.open)
+ e da [`std::io::Read::read_to_string`]
 (../std/io/trait.Read.html#method.read_to_string).
 (Si noti che entrambi usano l'[idioma dell'alias del tipo `Result`]
 (#the-result-type-alias-idiom) descritto prima. Se si clicca sul tipo `Result`,
@@ -820,11 +822,11 @@ più volte.
 Iniziamo il procedimento di rifattorizzazione della funzione `raddoppia_file`.
 Affinché questa funzione sia componibile con altri componenti del programma,
 *non* dovrebbe andare in panico se si incontrano qualcune delle suddette
-condizioni d'errore. Effettivamente, questo comporta che la funzione
-dovrebbe *restituire un errore* se qualcuna delle sue operazioni fallisce.
-Il nostro problema è che il tipo restituito da `raddoppia_file` è `i32`,
+condizioni d'errore. Effettivamente, questo comporta che la funzione dovrebbe
+*restituire un errore* se qualcuna delle sue operazioni fallisce. Il nostro
+problema è che il tipo del valore restituito da `raddoppia_file` è `i32`,
 che non ci dà nessun modo utile di riportare un errore. Così, dobbiamo iniziare
-cambiando il tipo restituito da `i32` a qualcos'altro.
+cambiando il tipo del valore restituito da `i32` a qualcos'altro.
 
 La prima cosa che dobbiamo decidere: dovremmo usare `Option` o `Result`?
 Certamente potremmo usare `Option` molto facilmente. Se avviene uno dei
@@ -867,10 +869,10 @@ fn main() {
 
 Questo codice sembra un po' oscuro. Ci può volere un bel po' di pratica prima
 che del codice come questo diventi facile da scrivere. Il modo in cui
-lo scriviamo è *seguendo i tipi*. Non appena cambiamo il tipo restituito da
-`raddoppia_file` a `Result<i32, String>`, abbiamo dovuto iniziare a cercare
-i giusti combinatori. In questo caso, abbiamo usato solamente tre diversi
-combinatori: `and_then`, `map`, e `map_err`.
+lo scriviamo è *seguendo i tipi*. Non appena cambiamo il tipo del valore
+restituito da `raddoppia_file` a `Result<i32, String>`, abbiamo dovuto
+iniziare a cercare i giusti combinatori. In questo caso, abbiamo usato
+solamente tre diversi combinatori: `and_then`, `map`, e `map_err`.
 
 `and_then` viene usato per concatenare più elaborazioni dove ogni elaorazione
 potrebbe restituire un errore. Dopo aver apert il file, ci sono die altre
@@ -1144,7 +1146,7 @@ ai due metodi defined in `Error`. Il potere di `Error` deriva dal fatto che
 tutti i tipi di errore implementano `Error`, che significa che gli errori
 possono essere quantificati esistenzialmente come un [oggetto tratto]
 (../book/trait-objects.html). Questo si manifesta come o un `Box<Error>`
-o un `&Error`. In effetti, il metodo `cause` rende un `&Error`, che è
+o un `&Error`. In effetti, il metodo `cause` restituisce un `&Error`, che è
 esso stesso un oggetto tratto. Più avanti ritorneremo sull'utilità del tratto
 `Error` come oggetto tratto.
 
@@ -1282,7 +1284,7 @@ dalla conoscenza del compilatore, in modo che veda realmente `err1` e `err2`
 come esattamente del medesimo tipo. Inoltre, abbiamo costruito `err1` e `err2`
 usando precisamente la medesima chiamata di funzione: `From::from`.
 Questo perché `From::from` è sovraccaricata sia sul suo argomento che sul suo
-tipo restituito.
+tipo del valore restituito.
 
 Questo pattern è importante perché risolve un problema che avevamo prima: ci dà
 un modo di convertire affidabilmente gli erroi al medesimo stesso tipo usando
@@ -1409,7 +1411,8 @@ enum CliError {
     Parse(num::ParseIntError),
 }
 
-fn raddoppia_file_verbose<P: AsRef<Path>>(percorso_di_file: P) -> Result<i32, CliError> {
+fn raddoppia_file_verbose<P: AsRef<Path>>(percorso_di_file: P)
+        -> Result<i32, CliError> {
     let mut file = try!(File::open(percorso_di_file).map_err(CliError::Io));
     let mut contenuto = String::new();
     try!(file.read_to_string(&mut contenuto).map_err(CliError::Io));
@@ -1466,7 +1469,8 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 
-fn raddoppia_file<P: AsRef<Path>>(percorso_di_file: P) -> Result<i32, CliError> {
+fn raddoppia_file<P: AsRef<Path>>(percorso_di_file: P)
+        -> Result<i32, CliError> {
     let mut file = try!(File::open(percorso_di_file));
     let mut contenuto = String::new();
     try!(file.read_to_string(&mut contenuto));
@@ -1777,7 +1781,8 @@ tipo soggiaciente.
 [Prima](#the-limits-of-combinators) abbiamo iniziato a rifattorizzare
 il nostro codice cambiando il tipo della nostra funzione da `T`
 a `Result<T, OurErrorType>`. In questo caso, `OurErrorType` è solamente
-`Box<Error>`. Ma cos'è `T`? E possiamo aggiungere un tipo restituito a `main`?
+`Box<Error>`. Ma cos'è `T`? E possiamo aggiungere un tipo del valore
+restituito a `main`?
 
 La risposta alla seconda domanda è: no, non possiamo. Ciò comporta che dovremo
 scrivere una nuova funzione. Ma cos'è `T`? La cosa più semplice che possiamo
@@ -1862,7 +1867,7 @@ di `unwrap`), dobbiamo ancora gestire l'assenza di risultati della ricerca.
 
 Per convertire questo a un'appropriata gestione degli errori, dobbiamo:
 
-1. Cambiare il tipo restituito di `cerca` in
+1. Cambiare il tipo del valore restituito di `cerca` in
    `Result<Vec<ConteggioPopolazione>, Box<Error>>`.
 1. Usare la [macro `try!`](#code-try-def) così che gli errori siano restituiti
    al chiamante, invece di mandare in panico il programma.
@@ -2106,8 +2111,8 @@ viene chiamata sull'errore, che in questo caso, lo convertirà al nostro tipo
 di errore `CliError`.
 
 Avendo fatto le implementazioni di `From`, dobbiamo solamente fare due ritocchi
-alla nostra funzione `cerca`: il tipo restituito e l'errore “non trovati”.
-Eccola integralmente:
+alla nostra funzione `cerca`: il tipo del valore restituito e l'errore
+“non trovati”. Eccola integralmente:
 
 ```rust,ignore
 fn cerca<P: AsRef<Path>>

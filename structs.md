@@ -37,8 +37,8 @@ L'ordine non dev'essere il medesimo della dichiarazione originale.
 Infine, siccome i campi hanno un nome, possiamo accedervi tramite la notazione
 a punto: `origine.x`.
 
-I valori nelle `struct` sono immutabile di default, come gli altri legami
-in Rust. Si usi `mut` per renderli mutabile:
+I valori nelle `struct` sono immutabili di default, come gli altri legami
+in Rust. Si deve usare `mut` per renderli mutabili:
 
 ```rust
 struct Punto {

@@ -85,11 +85,11 @@ cioè staticamente. ([altre info][link])
 ### Espressione
 
 Nella programmazione dei computer, un'espressione è una combinazione di valori,
-costanti, variabili, operatori e funzioni, la cui valutazione rende un singolo
-valore. Per esempio, `2 + 3 * 4` è un'espressione che vale 14. Vale la pena
-notare che le espressioni possono avere effetti collaterali. Per esempio,
-una chiamata di funzione all'interno di una espressione potrebbe eseguire
-delle azioni, oltre a rendere un valore.
+costanti, variabili, operatori e funzioni, la cui valutazione restituisce
+un singolo valore. Per esempio, `2 + 3 * 4` è un'espressione che vale 14.
+Vale la pena notare che le espressioni possono avere effetti collaterali.
+Per esempio, una chiamata di funzione all'interno di una espressione
+potrebbe eseguire delle azioni, oltre a restituire un valore.
 
 ### Linguaggio orientato alle espressioni
 
@@ -99,7 +99,7 @@ le espressioni avevano un valore e le istruzioni facevano delle cose.
 Tuttavia, i linguaggi successivi hanno sfumato questa distinzione, consentendo
 alle espressioni di fare delle cose e alle istruzioni di avere un valore.
 In un linguaggio orientato alle espressioni, (quasi) ogni istruzione è
-un'espressione e perciò rende un valore. Di conseguenza, queste
+un'espressione e perciò restituisce un valore. Di conseguenza, queste
 istruzioni-espressioni possono esse stesse far parte di espressioni più grandi.
 
 [espressione]: glossary.html#expression

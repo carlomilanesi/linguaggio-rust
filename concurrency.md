@@ -82,7 +82,7 @@ fn main() {
 ```
 
 Il metodo `thread::spawn()` accetta una [chiusura](closures.html), che viene
-eseguita in un nuovo thread. Tale metodo rende un handle che rappresenta
+eseguita in un nuovo thread. Tale metodo restituisce un handle che rappresenta
 il thread, e tale handle può servire ad aspettare che il thread figlio
 finisca, per poi estrarne il risultato:
 
@@ -377,10 +377,10 @@ thread::spawn(move || {
 ```
 
 Prima, chiamiamo `lock()`, che acquisisce il lock del mutex. Siccome questo
-può fallire, rende un `Result<T, E>`, e siccome questo è appena un esempio,
-eseguiamo `unwrap()` per ottenere un riferimento ai dati. Qui del codice reale
-avrebbe una gestione degli errori più robusta. Poi siamo liberi di mutarlo,
-dato che abbiamo il lock.
+può fallire, restituisce un `Result<T, E>`, e siccome questo è appena
+un esempio, eseguiamo `unwrap()` per ottenere un riferimento ai dati.
+Qui del codice reale avrebbe una gestione degli errori più robusta.
+Poi siamo liberi di mutarlo, dato che abbiamo il lock.
 
 Infine, mentre i thread secondari sono in esecuzione, il thread principale
 aspetta per 50 millisecondi. Ma questo non è certo l'ideale: possiamo aver
@@ -477,5 +477,5 @@ let result = handle.join();
 assert!(result.is_err());
 ```
 
-`Thread.join()` ci rende un `Result`, che ci consente di verificare se
+`Thread.join()` ci restituisce un `Result`, che ci consente di verificare se
 il thread ha avuto un panico o no.

@@ -40,10 +40,11 @@ Abbiamo creato una variabile mutabile al range, che è il nostro iteratore.
 Poi abbiamo eseguito un `loop`, contenente un `match`. Questo `match`
 si applica al risultato dell'espressione `range.next()`, che ci dà
 un riferimento al prossimo valofe dell'iteratore. In questo caso, il metodo
-`next` rende un oggetto di tipo `Option<i32>`, il quale sarà un `Some(i32)`
-quando viene preso un valore dalla sequenza, e un `None` quando non ci sono
-più valori nella sequenza. Se otteniamo un `Some(i32)`, lo stampiamo,
-mentre se otteniamo `None`, saltiamo fuori dal ciclo usando `break`.
+`next` restituisce un oggetto di tipo `Option<i32>`, il quale sarà
+un `Some(i32)` quando viene preso un valore dalla sequenza, e un `None` quando
+non ci sono più valori nella sequenza. Se otteniamo un `Some(i32)`,
+lo stampiamo, mentre se otteniamo `None`, saltiamo fuori dal ciclo
+usando `break`.
 
 Questa porzione di codice fa sostanzialmente lo stesso della nostra versione
 del ciclo `for`. Il ciclo `for` è un modo comodo di scrivere questo costrutto
@@ -129,7 +130,7 @@ di iteratori, i range.
 
 ## Consumatori
 
-Un *consumatore* opera su un iteratore, rendendo qualche tipo di valore
+Un *consumatore* opera su un iteratore, restituendo qualche tipo di valore
 o di valori.
 Il consumatore più comune è `collect()`. Il seguente codice non è proprio
 corretto, ma rende l'idea:
@@ -139,10 +140,10 @@ let da_uno_a_cento = (1..101).collect();
 ```
 
 Come si vede, si chiama `collect()` sul nostro iteratore. `collect()`  prende
-tanti valori quanti gliene da l'iterator, e rende una collezione dei risultati.
-Perciò questo non compila? Rust non riesce a determinare quale tipo collezione
-creare, e perciò bisogna farglielo sapere.
-Ecco la versione che compila:
+tanti valori quanti gliene da l'iteratore, e restituisce una collezione
+dei risultati. Perciò questo non compila?
+Rust non riesce a determinare quale tipo collezione
+creare, e perciò bisogna farglielo sapere. Ecco la versione che compila:
 
 ```rust
 let da_uno_a_cento = (1..101).collect::<Vec<i32>>();
@@ -174,10 +175,10 @@ match maggiore_di_quaranta_due {
 ```
 
 `find` prende una chiusura, e lavora su un riferimento a ogni elemento
-di un iteratore. Questa chiusura rende `true` se l'elemento è l'elemento
-che stiamo cercando, e `false` altrimenti. `find` rende il primo elemento
+di un iteratore. Questa chiusura restituisce `true` se l'elemento è l'elemento
+che stiamo cercando, e `false` altrimenti. `find` restituisce il primo elemento
 che soddisfa il predicato specificato. Siccome potremmo non trovare
-nessun elemento corrispondente, `find` rende un `Option` invece
+nessun elemento corrispondente, `find` restituisce una `Option` invece
 dell'elemento stesso.
 
 Un altro consumatore importante è `fold`. Ecco come si presenta:
@@ -286,7 +287,7 @@ si chiama `map` ["mappa"]:
 
 `map` viene chiamato su un altro iteratore, e produce un nuovo iteratore
 che chiama su ogni elemento la chiusura ricevuta come argomento.
-Perciò il codice sopra renderebbe i numeri da `2` a `100`. Beh, quasi!
+Perciò il codice sopra restituirebbe i numeri da `2` a `100`. Beh, quasi!
 Se si compila il programma, si ottiene un avvertenza:
 
 ```text
@@ -306,8 +307,8 @@ Questo esempio non stampa nessun numero:
 Se si vuole eseguire una chiusura su un iteratore perché si è interessati
 ai suoi effetti collaterali, si deve usare `for` invece.
 
-Ci sono tonnellate di interessanti adattatori di iteratore. `take(n)` rende
-un iteratore sui successivi `n` elementi dell'iteratore originale.
+Ci sono tonnellate di interessanti adattatori di iteratore. `take(n)`
+restituisce un iteratore sui successivi `n` elementi dell'iteratore originale.
 Proviamolo con un iteratore infinito:
 
 ```rust
@@ -327,8 +328,8 @@ che stamperà
 ```
 
 `filter()` è un adattatore che prende come argomento una chiusura.
-Questa chiusura rende `true` o `false`. Il nuovo iteratore `filter()` produce
-solamente gli elementi per cui la chiusura rende `true`:
+Questa chiusura restituisce `true` o `false`. Il nuovo iteratore `filter()`
+produce solamente gli elementi per cui la chiusura restituisce `true`:
 
 ```rust
 for i in (1..101).filter(|&x| x % 2 == 0) {
@@ -340,7 +341,7 @@ Questo stamperà tutti i numeri pari fra uno e cento.
 (Si noti che, diversamente da `map`, la chiusura passata a `filter` riceve
 un riferimento all'elemento invece dell'elemento stesso. Il predicato di filtro
 qui usa il pattern `&x` per estrarre l'intero. La chiusura del filtro riceve
-un riferimento perché rende `true` o `false` invece dell'elemento,
+un riferimento perché restituisce `true` o `false` invece dell'elemento,
 e così l'implementazione di `filter` può conservare il possesso per mettere
 gli elementi nell'iteratore da costruire.)
 

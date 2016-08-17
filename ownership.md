@@ -282,7 +282,7 @@ prendere possesso:
 fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
     // fa' qualcosa con v1 e con v2
 
-    // restituisci il possesso di v1 e v2, e rendi anche
+    // restituisci il possesso di v1 e v2, e restituisci anche
     // il risultato della nostra funzione
     (v1, v2, 42)
 }

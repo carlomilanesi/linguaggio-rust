@@ -129,7 +129,7 @@ rilevato/forzato produce un panico, è molto importante documentarlo.
 ```
 
 Se la propria funzion o il proprio metodo rene un `Result<T, E>`, allora
-descrivere le condizioni sotto le quali rende `Err(E)` è una cosa carina
+descrivere le condizioni sotto le quali restituisce `Err(E)` è una cosa carina
 da fare. Questo è leggermento meno importante del `Panics`,
 perché tale fallimento è codificato nel sistema dei tipi,
 ma è sempre una buona cosa da fare.
@@ -400,8 +400,8 @@ la gestione degli errori. Diciamo che vogliamo il codice seguente,
 /// try!(io::stdin().read_line(&mut input));
 ```
 
-Il problema è che `try!` rende un `Result<T, E>`, e dato che le funzioni
-di test non devono rendere niente, questo codice genererà un errore di tipo.
+Il problema è che `try!` restituisce un `Result<T, E>`, e dato che le funzioni
+di test non devono restituire niente, questo codice genererà un errore di tipo.
 
 ```rust,ignore
 /// Un test di documentazione che usa "try!"

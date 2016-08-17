@@ -163,7 +163,7 @@ per ignorare parti di una struttura più grande:
 
 ```rust
 fn coordinate() -> (i32, i32, i32) {
-    // genera e rendi una terna
+    // genera e restituisci una terna
 # (1, 2, 3)
 }
 

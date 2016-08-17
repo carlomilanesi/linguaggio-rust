@@ -11,7 +11,7 @@ tramite un meccanismo chiamato ‘oggetti-tratto’ ["trait object"].
 
 Per il resto di questa sezione, ci serviranno un tratto e alcune
 implementazioni. Facciamone una semplice, `Foo`. Ha un metodo che ci si
-aspetta che renda una `String`.
+aspetta che restituisca una `String`.
 
 ```rust
 trait Foo {

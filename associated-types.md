@@ -117,8 +117,9 @@ impl Grafo for IlMioGrafo {
 }
 ```
 
-Questa implementazione sciocca rende sempre `true` e un `Vec<Arco>` vuoto, ma
-dà un'idea di come implementare questo tipo di cose. Dapprima ci servono tre
+Questa implementazione sciocca restituisce sempre `true` e un `Vec<Arco>`
+vuoto, ma dà un'idea di come implementare questo tipo di cose.
+Dapprima ci servono tre
 `struct`, una per il grafo, una per il nodo, e una per l'arco. Se avesse
 più senso usare un altro tipo, quello funzionerebbe altrettanto, qui useremo
 le `struct` per tutti e tre.

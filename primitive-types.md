@@ -321,4 +321,4 @@ let x: fn(i32) -> i32 = foo;
 ```
 
 In questo caso, `x` è un ‘puntatore a funzione’ che punta a una funzione
-che prende un `i32` e rende un `i32`.
+che prende un `i32` e restituisce un `i32`.
