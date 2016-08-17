@@ -1,130 +1,156 @@
-% Choosing your Guarantees
+% Scegliere le proprie garanzie
 
-One important feature of Rust is that it lets us control the costs and guarantees
-of a program.
+Una caratteristica importante di Rust è che permette di controllare i costi
+e le garanzie del proprio programma.
 
-There are various &ldquo;wrapper type&rdquo; abstractions in the Rust standard library which embody
-a multitude of tradeoffs between cost, ergonomics, and guarantees. Many let one choose between
-run time and compile time enforcement. This section will explain a few selected abstractions in
-detail.
+Ci sono varie astrazioni "di tipo wrapper" nella libreria standard di Rust
+che impersonano una moltitudine di pro e contro riguardo il costo, l'ergonomia,
+e le garanzie. Molte permettono di scegliere se applicare le garanzie in fase
+di compilazione o in fase di esecuzione. Questa sezione spiega in dettaglio
+alcune astrazioni selezionate.
 
-Before proceeding, it is highly recommended that one reads about [ownership][ownership] and
-[borrowing][borrowing] in Rust.
+Prima di procedere, è fortemente consigliato aver letto le sezioni
+sul [possesso][ownership] e sui [prestiti][borrowing] in Rust.
 
 [ownership]: ownership.html
 [borrowing]: references-and-borrowing.html
 
-# Basic pointer types
+# I tipi puntatori di base
 
 ## `Box<T>`
 
-[`Box<T>`][box] is an &ldquo;owned&rdquo; pointer, or a &ldquo;box&rdquo;. While it can hand
-out references to the contained data, it is the only owner of the data. In particular, consider
-the following:
+[`Box<T>`][box] è un puntatore "posseduto", ossia un "box". Mentre può fornire
+riferimenti ai dati contenuti, è l'unico possessore dei dati. In particolare,
+di consideri questo:
 
 ```rust
 let x = Box::new(1);
 let y = x;
-// x no longer accessible here
+// qui x non è più accessibile
 ```
 
-Here, the box was _moved_ into `y`. As `x` no longer owns it, the compiler will no longer allow the
-programmer to use `x` after this. A box can similarly be moved _out_ of a function by returning it.
+Qui, il box è stato _spostato_ in `y`. Siccome `x` non lo possiede più,
+dopo di ciò il compilatore non consentirà più al programmatore di usare `x`.
+Analogamente, un box può essere spostato _fuori_ da una funzione
+restituendolo.
 
-When a box (that hasn't been moved) goes out of scope, destructors are run. These destructors take
-care of deallocating the inner data.
+Quando un box (che non è stato spostato) esce di ambito, vengono eseguiti
+i distruttori. Questi distruttori hanno cura di deallocare i dati interni.
 
-This is a zero-cost abstraction for dynamic allocation. If you want to allocate some memory on the
-heap and safely pass around a pointer to that memory, this is ideal. Note that you will only be
-allowed to share references to this by the regular borrowing rules, checked at compile time.
+Questa è un'astrazione a costo zero per l'allocazione dinamica.
+se si vuole allocare della memoria dallo heap e mandare in giro in sicurezza
+un puntatore a tale memoria, "box" è l'ideale. Si noti che verrà consentito
+condividere riferimenti a questo oggetto solamente tramite le normali
+regole di prestito, verificate in fase di compilazione.
 
 [box]: ../std/boxed/struct.Box.html
 
-## `&T` and `&mut T`
+## `&T` e `&mut T`
 
-These are immutable and mutable references respectively. They follow the &ldquo;read-write lock&rdquo;
-pattern, such that one may either have only one mutable reference to some data, or any number of
-immutable ones, but not both. This guarantee is enforced at compile time, and has no visible cost at
-runtime. In most cases these two pointer types suffice for sharing cheap references between sections
-of code.
+Questi sono, rispettivamente, un riferimento immutabile e
+un riferimento mutabile. Seguono il pattern "lock di lettura-scrittura",
+tale che si può o avere un solo riferimento mutabile ad alcuni dati,
+o qualunque numero di riferimenti immutabile, ma non entrambi. Questa garanzia
+è applicata in fase di compilazione, e non ha costi visibili
+in fase di esecuzione. Nella maggior parte dei casi, questi due tipi
+di puntatori bastando per condividere riferimenti poco costosi fra sezioni
+di codice.
 
-These pointers cannot be copied in such a way that they outlive the lifetime associated with them.
+Questi puntatori non possono essere copiati in modo tale da sopravvivere
+il tempo di vita associato ad essi.
 
-## `*const T` and `*mut T`
+## `*const T` e `*mut T`
 
-These are C-like raw pointers with no lifetime or ownership attached to them. They point to
-some location in memory with no other restrictions. The only guarantee that these provide is that
-they cannot be dereferenced except in code marked `unsafe`.
+Questi sono puntatori grezzi tipo-C, senza tempo di vita né possesso allegati.
+Puntano ad alcune posizioni in memoria senza altre restrizioni. L'unica
+garanzia che forniscono è che non possono essere dereferenziati eccetto
+nel codice marcato `unsafe`.
 
-These are useful when building safe, low cost abstractions like `Vec<T>`, but should be avoided in
-safe code.
+Servono per costruire astrazioni sicure e a basso costo, come `Vec<T>`,
+ma dovrebbero essere evitati nel codice sicuro.
 
 ## `Rc<T>`
 
-This is the first wrapper we will cover that has a runtime cost.
+Questo è il primo wrapper che tratteremo che ha un costo in fase di esecuzione.
 
-[`Rc<T>`][rc] is a reference counted pointer. In other words, this lets us have multiple "owning"
-pointers to the same data, and the data will be dropped (destructors will be run) when all pointers
-are out of scope.
+[`Rc<T>`][rc] è un puntatore a conteggio di riferimenti. In altri termini,
+consente di avere più puntatori "possessori" allo stesso dato, e il dato
+verrà rilasciato (con l'esecuzione dei distruttori) quando tutti i puntatori
+usciranno di ambito.
 
-Internally, it contains a shared &ldquo;reference count&rdquo; (also called &ldquo;refcount&rdquo;),
-which is incremented each time the `Rc` is cloned, and decremented each time one of the `Rc`s goes
-out of scope. The main responsibility of `Rc<T>` is to ensure that destructors are called for shared
-data.
+Internamente, contiene una "conteggio di riferimenti" condiviso (chiamato
+anche "refcount"), che viene incrementato ogni volta che l'`Rc` viene clonato,
+e decrementato ogni volta che uno degli `Rc` esce di ambito. La responsabilità
+principale di `Rc<T>` è assicurarsi che siano chiamati i distruttori per
+il dato condiviso.
 
-The internal data here is immutable, and if a cycle of references is created, the data will be
-leaked. If we want data that doesn't leak when there are cycles, we need a garbage collector.
+Qui i dati interni sono immutabili, e se viene creato un ciclo
+di riferimenti, i dati rimarranno sempre allocati ("leak").
+Se vogliamo dei dati che potranno essere deallocati anche in presenza
+di strutture cicliche, ci serve un garbage collector.
 
-#### Guarantees
+### Garanzie
 
-The main guarantee provided here is that the data will not be destroyed until all references to it
-are out of scope.
+La garanzia principale fornita qui è che i dati non saranno distrutti
+finché tutti i riferimenti ad essi escano di ambito.
 
-This should be used when we wish to dynamically allocate and share some data (read-only) between
-various portions of your program, where it is not certain which portion will finish using the pointer
-last. It's a viable alternative to `&T` when `&T` is either impossible to statically check for
-correctness, or creates extremely unergonomic code where the programmer does not wish to spend the
-development cost of working with.
+Questo si dovrebbe essere usato quando desideriamo allocare dinamicamente
+e condividere dei dati (a sola lettura) fra varie porzioni del programma,
+nel quale non è certo quale porzione finirà per ultima di usare tali dati.
+È un'alternativa praticable a `&T`, quando o è impossibile verificare
+staticamente la correttezza di `&T`, o usando `&T` si crea del codice
+estremamente non ergonomico, per il quale non vale la pena investire
+il tempo del programmatore.
 
-This pointer is _not_ thread safe, and Rust will not let it be sent or shared with other threads.
-This lets one avoid the cost of atomics in situations where they are unnecessary.
+Questo puntatore _non_ è sicuro per l'uso coi thread, e Rust non lo lascerà
+inviare o condividere con altri thread. Ciò consente di evitare il costo
+delle operazioni atomiche dove non sono necessarie.
 
-There is a sister smart pointer to this one, `Weak<T>`. This is a non-owning, but also non-borrowed,
-smart pointer. It is also similar to `&T`, but it is not restricted in lifetime&mdash;a `Weak<T>`
-can be held on to forever. However, it is possible that an attempt to access the inner data may fail
-and return `None`, since this can outlive the owned `Rc`s. This is useful for cyclic
-data structures and other things.
+C'è uno smart pointer fratello di questo, `Weak<T>`. Questo è
+uno smart pointer che non possiede, ma non è neanche preso in prestito.
+Anch'esso è simile a `&T`, ma non ha un tempo di vita limitato: un `Weak<T>`
+può essere tenuto per sempre. Però, è possibile che un tentativo di accedere
+al dato interno fallisca e restituisca `None`, dato che può sopravvivere
+gli `Rc` che possiedono il dato. Ciò è utile, tra l'altro, per creare
+strutture dati cicliche.
 
-#### Cost
+### Costo
 
-As far as memory goes, `Rc<T>` is a single allocation, though it will allocate two extra words (i.e.
-two `usize` values) as compared to a regular `Box<T>` (for "strong" and "weak" refcounts).
+Per quanto riguarda la memoria, `Rc<T>` è un'allocazione singola,
+però allocherà due word in più (cioè due valori `usize`) rispetto
+a un normale `Box<T>` (questo vale anche per i `Weak`).
 
-`Rc<T>` has the computational cost of incrementing/decrementing the refcount whenever it is cloned
-or goes out of scope respectively. Note that a clone will not do a deep copy, rather it will simply
-increment the inner reference count and return a copy of the `Rc<T>`.
+`Rc<T>` ha il costo computazionale di incrementare/decrementare il conteggio,
+rispettivamente ogni volta che viene clonato o che esce di ambito. Si noti
+che un `clone` non farà una copia profonda, ma incrementerà semplicemente
+il conteggio interno di riferimenti e restituirà una copia del `Rc<T>`.
 
 [rc]: ../std/rc/struct.Rc.html
 
-# Cell types
+# I tipi Cell
 
-`Cell`s provide interior mutability. In other words, they contain data which can be manipulated even
-if the type cannot be obtained in a mutable form (for example, when it is behind an `&`-ptr or
-`Rc<T>`).
+I `Cell` forniscono la mutabilità interna. In altri termini, contengono
+dei dati che possono essere manipolati anche se il tipo non può
+essere ottenuto in una forma mutabile (per esempio, quando è dietro
+un puntatore `&`, oppure un `Rc<T>`).
 
-[The documentation for the `cell` module has a pretty good explanation for these][cell-mod].
+[La documentazione del modulo `cell` li spiega molto bene][cell-mod].
 
-These types are _generally_ found in struct fields, but they may be found elsewhere too.
+Questi tipo _solitamente_ si trovano nei campi di struct, ma si possono
+trovare anche altrove.
 
 ## `Cell<T>`
 
-[`Cell<T>`][cell] is a type that provides zero-cost interior mutability, but only for `Copy` types.
-Since the compiler knows that all the data owned by the contained value is on the stack, there's
-no worry of leaking any data behind references (or worse!) by simply replacing the data.
+[`Cell<T>`][cell] è un tipo che fornisce mutabilità interna a costo zero,
+ma solamente per tipi `Copy`. Dato che il compilatore sa che tutti i dati
+posseduto dal valore contenuto stanno sono sullo stack, non c'è il rischio
+che la semplice sovrascrittura dei dati comporti mancate disallocazioni
+di riferimenti (o peggio!).
 
-It is still possible to violate your own invariants using this wrapper, so be careful when using it.
-If a field is wrapped in `Cell`, it's a nice indicator that the chunk of data is mutable and may not
-stay the same between the time you first read it and when you intend to use it.
+Usando questo wrapper, è ancora possibile violare le proprie invarianti,
+e quindi bisogna essere cauti nell'usarlo. Se un campo è contenuto
+in un `Cell`, è una chiara indicazione che quel dato è mutabile e potrebbe
+non rimanere invariato tra quando lo si legge e quando lo si vuole usare.
 
 ```rust
 use std::cell::Cell;
@@ -138,9 +164,10 @@ z.set(4);
 println!("{}", x.get());
 ```
 
-Note that here we were able to mutate the same value from various immutable references.
+Si noti che qui abbiamo potuto mutare il medesimo oggetto da vari
+riferimenti immutabili.
 
-This has the same runtime cost as the following:
+Questo ha lo stesso costo in fase di esecuzione del seguente:
 
 ```rust,ignore
 let mut x = 1;
@@ -152,38 +179,45 @@ x = 2;
 println!("{}", x);
 ```
 
-but it has the added benefit of actually compiling successfully.
+ma ha il beneficio non trascurabile di poter essere compilato.
 
-#### Guarantees
+### Garanzie
 
-This relaxes the &ldquo;no aliasing with mutability&rdquo; restriction in places where it's
-unnecessary. However, this also relaxes the guarantees that the restriction provides; so if your
-invariants depend on data stored within `Cell`, you should be careful.
+Questo allenta la restrizione del "nessun alias con la mutabilità" dove
+non è necessaria. Però, questo allenta che le garanzie fornite
+da tale restrizione; quindi se i propri invarianti dipendono da dati
+memorizzati in un `Cell`, si dovrebbe essere cauti.
 
-This is useful for mutating primitives and other `Copy` types when there is no easy way of
-doing it in line with the static rules of `&` and `&mut`.
+Ciò è utile per tipi primitivi mutabili e altri tipi `Copy`, quando
+non ci sono modi facili di farlo conformemente alle regole statiche
+di `&` e di `&mut`.
 
-`Cell` does not let you obtain interior references to the data, which makes it safe to freely
-mutate.
+`Cell` non consente di ottenere riferimenti al dato interno, il che rende
+sicuro mutarlo liberamente.
 
-#### Cost
+#### Costo
 
-There is no runtime cost to using `Cell<T>`, however if you are using it to wrap larger (`Copy`)
-structs, it might be worthwhile to instead wrap individual fields in `Cell<T>` since each write is
-otherwise a full copy of the struct.
-
+Non ci sono costi in fase di esecuzione a usare `Cell<T>`, però se lo
+si sta usando per avvolgere struct (`Copy`) più grandi, potrebbe invece
+essere opportuno avvolgere i singoli campi in `Cell<T>` dato che altrimenti
+ogni scrittura copia l'intera struct.
 
 ## `RefCell<T>`
 
-[`RefCell<T>`][refcell] also provides interior mutability, but isn't restricted to `Copy` types.
+Anche [`RefCell<T>`][refcell] fornisce mutabilità interna, ma non è limitata
+ai tipi `Copy`.
 
-Instead, it has a runtime cost. `RefCell<T>` enforces the read-write lock pattern at runtime (it's
-like a single-threaded mutex), unlike `&T`/`&mut T` which do so at compile time. This is done by the
-`borrow()` and `borrow_mut()` functions, which modify an internal reference count and return smart
-pointers which can be dereferenced immutably and mutably respectively. The refcount is restored when
-the smart pointers go out of scope. With this system, we can dynamically ensure that there are never
-any other borrows active when a mutable borrow is active. If the programmer attempts to make such a
-borrow, the thread will panic.
+In compenso, ha un costo in fase di esecuzione. `RefCell<T>` impone in fase
+di esecuzione il pattern del lock di lettura-scrittura (è come un mutex
+a sngolo thread), diversamente da `&T`/`&mut T` che lo fanno in fase
+di compilazione. Ciò viene fatto dalle funzioni `borrow()` e `borrow_mut()`,
+che modificano un conteggio di riferimenti interno e restituiscono degli
+smart pointers che possono essere dereferenziati, rispettivamente in modo
+immutabile e mutabile. Il refcount viene ripristinato quando
+gli smart pointer escono di ambito. Con questo sistema, possiamo assicurare
+dinamicamente che non ci sono mai altri prestiti attivi quando un prestito
+mutabile è attivo. Se il programmatore tenta di eseguire un tale prestito,
+il thread andrà in panico.
 
 ```rust
 use std::cell::RefCell;
@@ -194,165 +228,208 @@ let x = RefCell::new(vec![1,2,3,4]);
 }
 
 {
-    let mut my_ref = x.borrow_mut();
-    my_ref.push(1);
+    let mut mio_riferimento = x.borrow_mut();
+    mio_riferimento.push(1);
 }
 ```
 
-Similar to `Cell`, this is mainly useful for situations where it's hard or impossible to satisfy the
-borrow checker. Generally we know that such mutations won't happen in a nested form, but it's good
-to check.
+Simile a `Cell`, serve principalmente in situazioni in cui è difficile
+o impossibile soddisfare il verificatore dei prestiti. In generale sappiamo
+che tali mutazioni non avverranno in una forma annidata, ma è bene verificare.
 
-For large, complicated programs, it becomes useful to put some things in `RefCell`s to make things
-simpler. For example, a lot of the maps in the `ctxt` struct in the Rust compiler internals
-are inside this wrapper. These are only modified once (during creation, which is not right after
-initialization) or a couple of times in well-separated places. However, since this struct is
-pervasively used everywhere, juggling mutable and immutable pointers would be hard (perhaps
-impossible) and probably form a soup of `&`-ptrs which would be hard to extend. On the other hand,
-the `RefCell` provides a cheap (not zero-cost) way of safely accessing these. In the future, if
-someone adds some code that attempts to modify the cell when it's already borrowed, it will cause a
-(usually deterministic) panic which can be traced back to the offending borrow.
+Per programmi grandi e complicati, diventa utile mettere alcuni oggetti
+in `RefCell` per semplificare le cose. Per esempio, molte delle mappe
+nella struct `ctxt` interna al compilatore Rust sono poste dentro
+questo wrapper. Esse vengono modificate o una sola volta (durante
+la creazione, che non è subito dopo l'inizializzazione) o un paio di volte
+in luoghi bene separati. Però, siccome questa struct è usata dappertutto,
+sarebbe difficile (e forse impossibile) destreggiarsi con puntatori mutabili
+o immutabili, e probabilmente formare una zuppa di puntatori `&` che
+poi sarebbe difficile estendere. D'altra parte, `RefCell` fornisce un modo
+a basso costo di accedere con sicurezza a queste strutture. In futuro, se
+qualcuno aggiungesse del codice che tenta di modificare la cella quando è
+già stata prestata, questo provocherà un panico (solitamente deterministico)
+che può esser fatto risalire al prestito erroneo.
 
-Similarly, in Servo's DOM there is a lot of mutation, most of which is local to a DOM type, but some
-of which crisscrosses the DOM and modifies various things. Using `RefCell` and `Cell` to guard all
-mutation lets us avoid worrying about mutability everywhere, and it simultaneously highlights the
-places where mutation is _actually_ happening.
+Similmente, nel DOM di Servo ci sono molte mutazioni, per lo più locali
+a un tipo DOM, ma alcune delle quali incrociano il DOM e modificano
+varie cose. Usare `RefCell` e `Cell` per proteggere tutte le mutazioni
+consente di evitare di preoccuparsi ovunque della mutabilità,
+e simultaneamente evidenzia i posti dove la mutazione
+sta _effettivamente_ avvenendo.
 
-Note that `RefCell` should be avoided if a mostly simple solution is possible with `&` pointers.
+Si noti che `RefCell` dovrebbe essere evitato se è possibile
+una soluzione più semplice utilizzando i puntatori `&`.
 
-#### Guarantees
+### Garanzie
 
-`RefCell` relaxes the _static_ restrictions preventing aliased mutation, and replaces them with
-_dynamic_ ones. As such the guarantees have not changed.
+`RefCell` allenta le restrizioni _statiche_ che impediscono le mutazioni
+tramite alias, e le sostituisce con restrizioni _dinamiche_.
+Però tali garanzie non sono cambiate.
 
-#### Cost
+#### Costo
 
-`RefCell` does not allocate, but it contains an additional "borrow state"
-indicator (one word in size) along with the data.
+`RefCell` non alloca, ma contiene, a fianco del dato, un indicatore
+aggiuntivo di "stato di prestito" (grande una word).
 
-At runtime each borrow causes a modification/check of the refcount.
+In fase di esecuzione, ogni prestito provoca una modifica/verifica
+di tale indicatore.
 
 [cell-mod]: ../std/cell/index.html
 [cell]: ../std/cell/struct.Cell.html
 [refcell]: ../std/cell/struct.RefCell.html
 
-# Synchronous types
+# Tipi sincroni
 
-Many of the types above cannot be used in a threadsafe manner. Particularly, `Rc<T>` and
-`RefCell<T>`, which both use non-atomic reference counts (_atomic_ reference counts are those which
-can be incremented from multiple threads without causing a data race), cannot be used this way. This
-makes them cheaper to use, but we need thread safe versions of these too. They exist, in the form of
-`Arc<T>` and `Mutex<T>`/`RwLock<T>`
+Molti dei tipi di cui si è parlato non possono essere usati in modo sicuro
+per l'uso coi thread. In particolare, `Rc<T>` e `RefCell<T>`, entrambi
+i quali usano conteggi di riferimenti non atomici (i conteggi
+di riferimenti _atomici_ sono quelli che possono essere incrementati da più
+thread senza provocare una corsa ai dati), non si possono usare
+in questo modo. Ciò li rende più efficienti da usare, ma ci servono anche
+delle versioni sicure per l'uso coi thread. Esistono, sotto forma di `Arc<T>`
+e di `Mutex<T>`/`RwLock<T>`
 
-Note that the non-threadsafe types _cannot_ be sent between threads, and this is checked at compile
-time.
+Si noti che i tipi non sicuri per l'uso coi thread _non possono_ essere
+scambiati tra thread, e ciò viene verificato in fase di compilazione.
 
-There are many useful wrappers for concurrent programming in the [sync][sync] module, but only the
-major ones will be covered below.
+Nel modulo [sync][sync] ci sono molti utili wrapper per la programmazione
+concorrente, ma qui sotto verranno trattati solo i principali.
 
 [sync]: ../std/sync/index.html
 
 ## `Arc<T>`
 
-[`Arc<T>`][arc] is a version of `Rc<T>` that uses an atomic reference count (hence, "Arc").
-This can be sent freely between threads.
+[`Arc<T>`][arc] è una versione di `Rc<T>` che usa un conteggio di riferimenti
+atomico (da cui il nome, "Arc" = "Atomic Reference Count").
+Può essere scambiato liberamente fra thread.
 
-C++'s `shared_ptr` is similar to `Arc`, however in the case of C++ the inner data is always mutable.
-For semantics similar to that from C++, we should use `Arc<Mutex<T>>`, `Arc<RwLock<T>>`, or
-`Arc<UnsafeCell<T>>`[^4] (`UnsafeCell<T>` is a cell type that can be used to hold any data and has
-no runtime cost, but accessing it requires `unsafe` blocks). The last one should only be used if we
-are certain that the usage won't cause any memory unsafety. Remember that writing to a struct is not
-an atomic operation, and many functions like `vec.push()` can reallocate internally and cause unsafe
-behavior, so even monotonicity may not be enough to justify `UnsafeCell`.
+Il tipo `shared_ptr` del linguaggio C++ è simile ad `Arc`, però nel caso
+di C++ il dato interno è sempre mutabile. Per avere una semantica simile
+a quella di `shared_ptr`, si dovrebbero usare `Arc<Mutex<T>>`,
+`Arc<RwLock<T>>`, o `Arc<UnsafeCell<T>>`[^4] (`UnsafeCell<T>` è un tipo
+di cella che può essere usato per tenere qualunque dato e non ha costi
+in fase di esecuzione, ma è accessibile solamente da blocchi `unsafe`).
+L'ultimo dovrebbe essere usato solamente se si è certi che l'utilizzo non
+provocherà insicurezza nella gestione della memoria. Ricordiamo che
+scrivere una struttura non è un'operazione atomica, e moste funzioni
+come `vec.push()` possono riallocare internamente, e provocare
+un comportamento insicuro, quindi perfino la monotonicità potrebbe
+non bastare per giustificare `UnsafeCell`.
 
-[^4]: `Arc<UnsafeCell<T>>` actually won't compile since `UnsafeCell<T>` isn't `Send` or `Sync`, but we can wrap it in a type and implement `Send`/`Sync` for it manually to get `Arc<Wrapper<T>>` where `Wrapper` is `struct Wrapper<T>(UnsafeCell<T>)`.
+[^4]: `Arc<UnsafeCell<T>>` effettivamente non compilerà, siccome
+`UnsafeCell<T>` non è `Send` né `Sync`, ma possiamo avvolgerlo in un tipo
+e implementare manualmente `Send`/`Sync` per esso, così da ottenere
+`Arc<Wrapper<T>>`, dove `Wrapper` è `struct Wrapper<T>(UnsafeCell<T>)`.
 
-#### Guarantees
+### Garanzie
 
-Like `Rc`, this provides the (thread safe) guarantee that the destructor for the internal data will
-be run when the last `Arc` goes out of scope (barring any cycles).
+Come `Rc`, anche questo tipo fornisce la garanzia (sicura per l'uso
+coi thread) che il distruttore per i dati interni verrà eseguito quando
+l'ultimo `Arc` esce di ambito (eccetto in presenza di strutture cicliche).
 
-#### Cost
+### Costo
 
-This has the added cost of using atomics for changing the refcount (which will happen whenever it is
-cloned or goes out of scope). When sharing data from an `Arc` in a single thread, it is preferable
-to share `&` pointers whenever possible.
+Questo tipo ha il costo aggiuntivo di usare operazioni atomiche per modificare
+il refcount (che accadrà ogni volta che è clonato o esce di ambito). Quando
+si condividono dati da un `Arc` in un solo thread, è preferibile condividere
+puntatori `&`, quando è possibile.
 
 [arc]: ../std/sync/struct.Arc.html
 
-## `Mutex<T>` and `RwLock<T>`
+## `Mutex<T>` e `RwLock<T>`
 
-[`Mutex<T>`][mutex] and [`RwLock<T>`][rwlock] provide mutual-exclusion via RAII guards (guards are
-objects which maintain some state, like a lock, until their destructor is called). For both of
-these, the mutex is opaque until we call `lock()` on it, at which point the thread will block
-until a lock can be acquired, and then a guard will be returned. This guard can be used to access
-the inner data (mutably), and the lock will be released when the guard goes out of scope.
+[`Mutex<T>`][mutex] e [`RwLock<T>`][rwlock] forniscono la mutua-esclusione
+tramite guardie RAII (le guardie sono oggetti che mantengono un certo stato,
+come un lock, fino a quando è chiamato il loro distruttore). Per entrambe,
+il mutex è opaco finché chiamiamo `lock()` su di esso. A quel punto il thread
+si bloccherà fino a quando si potrà acquisire un lock, e poi verrà
+restituita un guardia. Questa guardia può essere usata per accedere
+(mutabilmente) al dato interno, e il lock verrà rilasciato quando la guardia
+esce di ambito.
 
 ```rust,ignore
 {
-    let guard = mutex.lock();
-    // guard dereferences mutably to the inner type
-    *guard += 1;
-} // lock released when destructor runs
+    let guardia = mutex.lock();
+    // guardia dereferenzia mutabilmente dando il tipo interno
+    *guardia += 1;
+} // lock rilasciato quando si esegue il distruttore
 ```
 
+`RwLock` ha il beneficio aggiuntivo di essere efficiente per più letture.
+È sempre sicuro avere più lettori a dati condivisi purché non ci
+siano scrittori; e `RwLock` consente ai lettori di acquisire
+un "lock di lettura". Tali lock possono essere acquisiti concorrentemente e
+se ne tiene traccia tramite un conteggio di riferimenti.
+Gli scrittori devono ottenere un "lock di scrittura" che può essere ottenuto
+solamente quando tutti i lettori sono usciti di scope.
 
-`RwLock` has the added benefit of being efficient for multiple reads. It is always safe to have
-multiple readers to shared data as long as there are no writers; and `RwLock` lets readers acquire a
-"read lock". Such locks can be acquired concurrently and are kept track of via a reference count.
-Writers must obtain a "write lock" which can only be obtained when all readers have gone out of
-scope.
+### Garanzie
 
-#### Guarantees
+Entrambi questi tipi forniscono mutabilità sicura condivisa fra thread,
+però sono soggetti a deadlock. Qualche livello aggiuntivo di sicurezza
+del protocollo può essere ottenuto tramite il sistema dei tipi.
 
-Both of these provide safe shared mutability across threads, however they are prone to deadlocks.
-Some level of additional protocol safety can be obtained via the type system.
+### Costi
 
-#### Costs
-
-These use internal atomic-like types to maintain the locks, which are pretty costly (they can block
-all memory reads across processors till they're done). Waiting on these locks can also be slow when
-there's a lot of concurrent access happening.
+Questi tipi usano tipi interni di tipo atomico per mantenere i lock,
+i quali sono parecchio costosi (possono bloccare tutte le letture in memoria
+per tutti i processori fino a quando hanno finito). Anche attendere
+questi lock può essere lento quando avvengono molti accessi concorrenti.
 
 [rwlock]: ../std/sync/struct.RwLock.html
 [mutex]: ../std/sync/struct.Mutex.html
 [sessions]: https://github.com/Munksgaard/rust-sessions
 
-# Composition
+# Composizione
 
-A common gripe when reading Rust code is with types like `Rc<RefCell<Vec<T>>>` (or even more
-complicated compositions of such types). It's not always clear what the composition does, or why the
-author chose one like this (and when one should be using such a composition in one's own code)
+Una tipica lamentela quando si legge del codice Rust è per i tipi come
+`Rc<RefCell<Vec<T>>>` (o composizioni ancora più complicate di tali tipi).
+Non è sempre chiaro che cosa faccia la composizione, o perché l'autore ne
+ha scelta una così (e quando si dovrebbe usare tale composizione
+nel proprio codice).
 
-Usually, it's a case of composing together the guarantees that you need, without paying for stuff
-that is unnecessary.
+Solitamente, si tratta comporre insieme le garanzie che servono,
+senza pagare per quello che non serve.
 
-For example, `Rc<RefCell<T>>` is one such composition. `Rc<T>` itself can't be dereferenced mutably;
-because `Rc<T>` provides sharing and shared mutability can lead to unsafe behavior, so we put
-`RefCell<T>` inside to get dynamically verified shared mutability. Now we have shared mutable data,
-but it's shared in a way that there can only be one mutator (and no readers) or multiple readers.
+Per esempio, `Rc<RefCell<T>>` è una tale composizione. `Rc<T>` stesso
+non può essere dereferenziato mutabilmente; siccome `Rc<T>` fornisce
+la condivisione, e la mutabilità condivisa può condurre a comportamento
+insicuro, mettiamo dentro `RefCell<T>` per ottenere mutabilità condivisa
+verificata dinamicamente. Adesso abbiamo un dato mutable condiviso,
+ma è condiviso in un modo che ci può essere un solo scrittore
+(e nessun lettore), oppure più lettori.
 
-Now, we can take this a step further, and have `Rc<RefCell<Vec<T>>>` or `Rc<Vec<RefCell<T>>>`. These
-are both shareable, mutable vectors, but they're not the same.
+Adesso, possiamo fare un passo avanti, e abbiamo `Rc<RefCell<Vec<T>>>` oppure
+`Rc<Vec<RefCell<T>>>`. Questi sono entrambi vettori condivisibili e mtabili,
+ma non sono la medesima cosa.
 
-With the former, the `RefCell<T>` is wrapping the `Vec<T>`, so the `Vec<T>` in its entirety is
-mutable. At the same time, there can only be one mutable borrow of the whole `Vec` at a given time.
-This means that your code cannot simultaneously work on different elements of the vector from
-different `Rc` handles. However, we are able to push and pop from the `Vec<T>` at will. This is
-similar to a `&mut Vec<T>` with the borrow checking done at runtime.
+Con il primo, il `RefCell<T>` avvolge il `Vec<T>`, e così `Vec<T>`
+nella sua interezza è mutabile. Al medesimo tempo, ci può essere
+un solo prestito mutabile per volta dell'intero `Vec`.
+Ciò comporta che il nostro codice nn può funzionare simultaneamente
+su elementi distinti del vettore da diversi handle `Rc`. Però, possiamo
+eseguire `push` e `pop` a volontà con il `Vec<T>`. Ciò è simile
+a un `&mut Vec<T>` con i prestiti verificati in fase di esecuzione.
 
-With the latter, the borrowing is of individual elements, but the overall vector is immutable. Thus,
-we can independently borrow separate elements, but we cannot push or pop from the vector. This is
-similar to a `&mut [T]`[^3], but, again, the borrow checking is at runtime.
+Con l'ultimo, il prestito è di elementi individuali, ma il vettore
+complessivo è immutabile. Così, possiamo prendere in prestito
+indipendentemente elementi distinti, ma non possiamo eseguire `push` né `pop`
+con il vettore. Ciò  è simile a un `&mut [T]`[^3], ma, anche qui,
+i prestiti sono verificati in fase di esecuzione.
 
-In concurrent programs, we have a similar situation with `Arc<Mutex<T>>`, which provides shared
-mutability and ownership.
+Nei programmi concorrenti, abbiamo una situazione simile con `Arc<Mutex<T>>`,
+che fornisce mutabilità e possesso condivisi.
 
-When reading code that uses these, go in step by step and look at the guarantees/costs provided.
+Quando si legge del codice che li usa, si proceda passo per passo,
+e si guardi alle garanzie e ai costi forniti.
 
-When choosing a composed type, we must do the reverse; figure out which guarantees we want, and at
-which point of the composition we need them. For example, if there is a choice between
-`Vec<RefCell<T>>` and `RefCell<Vec<T>>`, we should figure out the tradeoffs as done above and pick
-one.
+Quando si sceglie un tipo composito, dobbiamo fare il contrario; decidere
+quali garanzie vogliamo, e a quale punto della composizione ci servono.
+Per esempio, se c'è una scelta fra `Vec<RefCell<T>>` e `RefCell<Vec<T>>`,
+dovremmo decidere i pro e i contro come fatto prima, e sceglierne uno.
 
-[^3]: `&[T]` and `&mut [T]` are _slices_; they consist of a pointer and a length and can refer to a portion of a vector or array. `&mut [T]` can have its elements mutated, however its length cannot be touched.
+[^3]: `&[T]` e `&mut [T]` sono delle _slice_; consistono di un puntatore
+e una lunghezza, e possono far riferimento a una porzione di un vettore
+o di un array. `&mut [T]` può avere i suoi elementi mutati, però
+la sua lunghezza con può essere toccata.
