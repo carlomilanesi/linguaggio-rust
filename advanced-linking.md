@@ -30,28 +30,30 @@ direttamente LLVM per linkare librerie native, nel qual caso `link_args`
 non avrà significato. Si può ottenere lo stesso effetto dell'attributo
 `link_args` con l'argomento `-C link-args` di `rustc`.
 
-It is highly recommended to *not* use this attribute, and rather use the more
-formal `#[link(...)]` attribute on `extern` blocks instead.
+Si consiglia vivamente di *non* usare questo attributo, e invece usare
+il più formale attributo `#[link(...)]` su blocchi `extern`.
 
-# Static linking
+# Link statico
 
-Static linking refers to the process of creating output that contains all
-required libraries and so doesn't need libraries installed on every system where
-you want to use your compiled project. Pure-Rust dependencies are statically
-linked by default so you can use created binaries and libraries without
-installing Rust everywhere. By contrast, native libraries
-(e.g. `libc` and `libm`) are usually dynamically linked, but it is possible to
-change this and statically link them as well.
+Per "link statico" si intende il procedimento di creazione di un output
+che contiene tutte le librerie necessarie, e quindi non ha bisogno che
+delle librerie siano installate su ogni sistema in cui si vuole usare
+il proprio progetto compilato. Le dipendenze in puro Rust sono linkate
+staticamente di default, e quindi si possono usare i programmi e le librerie
+creati senza dover installare Rust ovunque. Al contrario, le librerie native
+(per es. `libc` e `libm`) vengono solitamente linkate dinamicamente,
+ma è possibile fare diversamente, e linkare staticamente anche loro.
 
-Linking is a very platform-dependent topic, and static linking may not even be
-possible on some platforms! This section assumes some basic familiarity with
-linking on your platform of choice.
+Linkare è un argomento molto dipendente dalla piattaforma, e il link statico
+potrebbe persino non essere disponibile su qualche piattaforma! Questa sezione
+assume una familiarità di base con il link nella propria piattaforma.
 
 ## Linux
 
-By default, all Rust programs on Linux will link to the system `libc` along with
-a number of other libraries. Let's look at an example on a 64-bit Linux machine
-with GCC and `glibc` (by far the most common `libc` on Linux):
+Di default, tutti i programmi in Rust su Linux linkeranno con la libreria
+`libc` di sistema, insieme a varie altre librerie. Guardiamo un esempio
+su una macchina Linux a 64 bit avente GCC e `glibc` (nettamente la `libc`
+più diffusa su Linux):
 
 ```text
 $ cat example.rs
@@ -68,13 +70,15 @@ $ ldd example
         libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fa817b93000)
 ```
 
-Dynamic linking on Linux can be undesirable if you wish to use new library
-features on old systems or target systems which do not have the required
-dependencies for your program to run.
+Il link dinamico su Linux può essere indesiderabile se si vogliono usare
+delle nuove caratteristiche di libreria su vecchi sistemi, o avere
+come target dei sistemi che non hanno le dipendenze necessarie per eseguire
+il proprio programma.
 
-Static linking is supported via an alternative `libc`, [`musl`](http://www.musl-libc.org). You can compile
-your own version of Rust with `musl` enabled and install it into a custom
-directory with the instructions below:
+Il link statico è supportato tramite un `libc` alternativo,
+[`musl`](http://www.musl-libc.org). Si può compilare la propria versione
+di Rust con `musl` abilitato e installarlo in una directory personalizzata
+seguendo queste istruzioni:
 
 ```text
 $ mkdir musldist
@@ -117,16 +121,17 @@ $ du -h musldist/bin/rustc
 12K     musldist/bin/rustc
 ```
 
-You now have a build of a `musl`-enabled Rust! Because we've installed it to a
-custom prefix we need to make sure our system can find the binaries and appropriate
-libraries when we try and run it:
+Adesso abbiamo una build di un Rust abilitato a `musl`! Siccome l'abbiamo
+installato a un prefisso personalizzato, dobbiamo assicurarci che il nostro
+sistema  possa trovare i programmi e le appropriate librerie quando proviamo
+a eseguirlo:
 
 ```text
 $ export PATH=$PREFIX/bin:$PATH
 $ export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
 ```
 
-Let's try it out!
+Proviamolo!
 
 ```text
 $ echo 'fn main() { println!("hi!"); panic!("failed"); }' > example.rs
@@ -138,9 +143,9 @@ hi!
 thread 'main' panicked at 'failed', example.rs:1
 ```
 
-Success! This binary can be copied to almost any Linux machine with the same
-machine architecture and run without issues.
+Successo! Questo programma può essere copiato in quasi ogni macchina Linux
+che abbia la stessa architettura di CPU ed essere eseguito senza problemi.
 
-`cargo build` also permits the `--target` option so you should be able to build
-your crates as normal. However, you may need to recompile your native libraries
-against `musl` before they can be linked against.
+Anche `cargo build` permette l'opzione `--target`, e quindi si dovrebbe
+poter costruire i propri crate normalmente. Però, potrebbe essere necessario
+recompilare le librerie native con `musl` prima di poterle usare nel link.
