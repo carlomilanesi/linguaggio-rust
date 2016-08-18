@@ -4,7 +4,8 @@
 
 `rustc` può caricare estensioni del compilatore, che sono librerie
 fornite da utenti che estendono il comportamento del compilatore con nuove
-estensioni sintattiche, verifiche di correttezza, ecc.
+estensioni sintattiche, verifiche di correttezza (d'ora in poi chiamate
+"lint"), ecc.
 
 Un'estensione ("plugin") è un crate di libreria dinamica con una funzione
 designata come *archivista* che registra le estensioni associate a `rustc`.
@@ -20,7 +21,7 @@ Nella gran maggioranza dei casi, un'estensione dovrebbe essere usata
 *solamente* tramite `#![plugin]` e non tramite un elemento `extern crate`.
 Eseguire il link con un'estensione tirerebbe dentro libsyntax e librustc
 come dipendenze del proprio crate. In gerale questo non è desiderabile
-a meno che si stia costruendo un'altra estensione. L'opzione di correttezza
+a meno che si stia costruendo un'altra estensione. L'opzione di lint
 `plugin_as_library` verifica queste linne guida.
 
 La pratica più usata è mettere le estensioni del compilatore nel loro crate,
@@ -50,7 +51,7 @@ extern crate rustc_plugin;
 use syntax::parse::token;
 use syntax::ast::TokenTree;
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
-use syntax::ext::build::AstBuilder;  // tratto per expr_usize
+use syntax::ext::build::AstBuilder; // tratto per expr_usize
 use syntax_pos::Span;
 use rustc_plugin::Registry;
 
@@ -66,14 +67,16 @@ fn espandi_rn(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
     if args.len() != 1 {
         cx.span_err(
             sp,
-            &format!("argument should be a single identifier, but got {} arguments", args.len()));
+            &format!("l'argomento dovrebbe essere un singolo identificatore, \
+                ma ci sono {} argomenti", args.len()));
         return DummyResult::any(sp);
     }
 
     let text = match args[0] {
         TokenTree::Token(_, token::Ident(s, _)) => s.to_string(),
         _ => {
-            cx.span_err(sp, "argument should be a single identifier");
+            cx.span_err(sp, "l'argomento dovrebbe essere \
+                un singolo identificatore");
             return DummyResult::any(sp);
         }
     };
@@ -87,7 +90,7 @@ fn espandi_rn(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
                 text = &text[rn.len()..];
             }
             None => {
-                cx.span_err(sp, "invalid Roman numeral");
+                cx.span_err(sp, "numero romano non valido");
                 return DummyResult::any(sp);
             }
         }
@@ -98,11 +101,11 @@ fn espandi_rn(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
 
 #[plugin_registrar]
 pub fn plugin_registrar(reg: &mut Registry) {
-    reg.register_macro("rn", expand_rn);
+    reg.register_macro("rn", espandi_rn);
 }
 ```
 
-Then we can use `rn!()` like any other macro:
+Poi si può usare `rn!()` come ogni altra macro:
 
 ```rust,ignore
 #![feature(plugin)]
@@ -166,9 +169,9 @@ Però, la loro implementazione può essere un buon punto di partenza
 per un quasiquote migliorato come un'ordinaria estensione di libreria.
 
 
-# Le estensioni di correttezza
+# Le estensioni di lint
 
-Le estensioni possono estendere [l'infrastruttura di correttezza di Rust]
+Le estensioni possono estendere [l'infrastruttura di lint di Rust]
 (../reference.html#lint-check-attributes) con verifiche aggiuntive relative
 allo stile del codice, alla sicurezza, ecc. Adesso scriviamo un'estensione
 [`lint_plugin_test.rs`]
@@ -232,13 +235,13 @@ foo.rs:4 fn lintme() { }
          ^~~~~~~~~~~~~~~
 ```
 
-I componenti di un'estensione di correttezza sono:
+I componenti di un'estensione di lint sono:
 
 * uno o più invocazioni di `declare_lint!`, che definiscono
   le struct statiche `Lint`;
 
-* una struct che tiene ogni stato che serve alla passata di analisi
-  di correttezza (nel nostro caso, nessuno);
+* una struct che tiene ogni stato che serve alla passata di lint
+  (nel nostro caso, nessuno);
 
 * una implementazione di `LintPass` che definisce come verificare
   ogni elemento sintattico. Un unico `LintPass` può chiamare `span_lint`
@@ -249,7 +252,7 @@ Le passate di Lint sono attraversamenti sintattici, ma vengono eseguite
 in una fase tardiva della compilazione, dove sono disponibili le informazioni
 sui tipi. [I lint incorporati in `rustc`]
 (https://github.com/rust-lang/rust/blob/master/src/librustc/lint/builtin.rs)
-per lo più usano la medesima infrastruttura delle estensioni di correttezza,
+per lo più usano la medesima infrastruttura delle estensioni di lint,
 e forniscono esempi di come accedere alle informazioni sui tipi.
 
 I Lint definiti dalle estensioni sono controlleti dai soliti [attributi
