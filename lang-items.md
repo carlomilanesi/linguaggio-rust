@@ -1,18 +1,19 @@
-% Lang items
+% Gli elementi "lang"
 
-> **Nota**: lang items are often provided by crates in the Rust distribution,
-> and lang items themselves have an unstable interface. It is recommended to use
-> officially distributed crates instead of defining your own lang items.
+> **Nota**: gli elementi "lang" sono spesso forniti da crate
+> nella distribuzione di Rust, e gli stessi elementi lang hanno
+> un'interfaccia instabile. Si consiglia di usare i crate distribuiti
+> ufficialmente, invece di definire i propri elementi lang.
 
 Per il compilatore `rustc` ci sono delle operazioni innestabili, cioè,
 delle funzionalità che non sono cablate nel linguaggio, ma sono implementate
 nelle librerie, con un marcatore speciale per dire al compilatore
-che esistono. Il marcatore è l'attributo `#[lang = "..."]` e ci sono
-vari diversi valori di `...`, cioè vari diversi 'lang items'.
+che esistono. Il marcatore è l'attributo `#[lang = "..."]`, e ci sono
+vari diversi valori di `...`, cioè vari diversi 'elementi lang'.
 
-Per esempio, i puntatori `Box` richiedono due elementi linguistici, uno
-per l'allocazione e uno per la deallocazione. Un programma autonomo che usa
-lo zucchero `Box` per l'allocazione dinamica tramite `malloc` e `free`:
+Per esempio, i puntatori `Box` richiedono due elementi lang, uno
+per l'allocazione e uno per la deallocazione. Ecco un programma autonomo
+che usa `Box` per l'allocazione dinamica tramite `malloc` e `free`:
 
 ```rust
 #![feature(lang_items, box_syntax, start, libc)]
@@ -31,7 +32,7 @@ pub struct Box<T>(*mut T);
 unsafe fn allocate(size: usize, _align: usize) -> *mut u8 {
     let p = libc::malloc(size as libc::size_t) as *mut u8;
 
-    // malloc failed
+    // malloc ha fallito
     if p as usize == 0 {
         abort();
     }
@@ -46,7 +47,8 @@ unsafe fn deallocate(ptr: *mut u8, _size: usize, _align: usize) {
 
 #[lang = "box_free"]
 unsafe fn box_free<T>(ptr: *mut T) {
-    deallocate(ptr as *mut u8, ::core::mem::size_of::<T>(), ::core::mem::align_of::<T>());
+    deallocate(ptr as *mut u8, ::core::mem::size_of::<T>(),
+        ::core::mem::align_of::<T>());
 }
 
 #[start]
@@ -63,24 +65,24 @@ fn main(argc: isize, argv: *const *const u8) -> isize {
 # #[no_mangle] pub extern fn rust_eh_unregister_frames () {}
 ```
 
-Note the use of `abort`: the `exchange_malloc` lang item is assumed to
-return a valid pointer, and so needs to do the check internally.
+Si noti l'uso di `abort`: si assume che l'elemento lang `exchange_malloc`
+restituisca un puntatore valido, e quindi internamente deve fare la verifica.
 
-Other features provided by lang items include:
+Tra le caratteristiche fornite dagli elementi lang si sono:
 
-- overloadable operators via traits: the traits corresponding to the
-  `==`, `<`, dereferencing (`*`) and `+` (etc.) operators are all
-  marked with lang items; those specific four are `eq`, `ord`,
-  `deref`, and `add` respectively.
-- stack unwinding and general failure; the `eh_personality`, `fail`
-  and `fail_bounds_checks` lang items.
-- the traits in `std::marker` used to indicate types of
-  various kinds; lang items `send`, `sync` and `copy`.
-- the marker types and variance indicators found in
-  `std::marker`; lang items `covariant_type`,
-  `contravariant_lifetime`, etc.
+- operatori sovraccaricabili tramite tratti: i tratti corrispondenti agli
+  operatori `==`, `<`, dereferenziazione (`*`), e `+` (ecc.) sono tutti
+  marcati con elementi lang; per questi specifici quattro, gli elementi lang
+  sono, rispettivamente: `eq`, `ord`, `deref`, e `add`.
+- svolgimento dello stacke fallimento generale; gli elementi lang
+  `eh_personality`, `fail`, e `fail_bounds_checks`.
+- i tratti in `std::marker` usati per indicare tipi di vari generi;
+  gli elementi lang `send`, `sync` e `copy`.
+- i tipi marcatori e gli indicatori di varianza trovati in `std::marker`;
+  gli elementi lang `covariant_type`, `contravariant_lifetime`, ecc.
 
-Lang items are loaded lazily by the compiler; e.g. if one never uses
-`Box` then there is no need to define functions for `exchange_malloc`
-and `exchange_free`. `rustc` will emit an error when an item is needed
-but not found in the current crate or any that it depends on.
+Gli elementi lang vengono caricati pigramente dal compilatore; per es. se
+non si usa mai `Box`, allora non c'è bisogno di definire funzioni per
+`exchange_malloc` e `exchange_free`. `rustc` emitterà un errore quando
+un elemento serve ma non viene trovato nel crate attuale né in quelli
+da cui dipende.
