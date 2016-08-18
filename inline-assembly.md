@@ -126,8 +126,8 @@ registri rimangano validi.
 # #![feature(asm)]
 # #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 # fn main() { unsafe {
-// Put the value 0x200 in eax
-asm!("mov $$0x200, %eax" : /* no outputs */ : /* no inputs */ : "eax");
+// Metti il valore 0x200 in eax
+asm!("mov $$0x200, %eax" : /* nessun output */ : /* nessun input */ : "eax");
 # } }
 ```
 
@@ -147,12 +147,12 @@ Serve a specificare alcune informazioni aggiuntive riguardo l'assembly inline:
 
 Le opzioni attualmente valide sono:
 
-1. *volatile* - specifying this is analogous to
+1. *volatile* - specificare questa è analogo a scrivere
    `__asm__ __volatile__ (...)` in gcc/clang.
-2. *alignstack* - certain instructions expect the stack to be
-   aligned a certain way (i.e. SSE) and specifying this indicates to
-   the compiler to insert its usual stack alignment code
-3. *intel* - use intel syntax instead of the default AT&T.
+2. *alignstack* - certe istruzioni si aspettano che lo stack sia
+   allineato in un certo modo (per es. SSE) e specificare questa indica al
+   compilatore di inserire il suo solito codice di allineamento dello stack
+3. *intel* - usere la sintassi Intel invece di quella AT&T, che è il default.
 
 ```rust
 # #![feature(asm)]
@@ -162,15 +162,15 @@ let result: i32;
 unsafe {
    asm!("mov eax, 2" : "={eax}"(result) : : : "intel")
 }
-println!("eax is currently {}", result);
+println!("eax è attualmente {}", result);
 # }
 ```
 
-## More Information
+## Altre informazioni
 
-The current implementation of the `asm!` macro is a direct binding to [LLVM's
-inline assembler expressions][llvm-docs], so be sure to check out [their
-documentation as well][llvm-docs] for more information about clobbers,
-constraints, etc.
+L'attuale implementazione della macro `asm!` è un legame diretto alle
+[espressioni assembler inline di LLVM][llvm-docs], quindi ci si deve
+assicurare di leggere [anche la loro documentazione][llvm-docs] per avere
+ulteriori informazioni sui clobbers, i vincoli, ecc.
 
 [llvm-docs]: http://llvm.org/docs/LangRef.html#inline-assembler-expressions
