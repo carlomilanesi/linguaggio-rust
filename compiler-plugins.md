@@ -1,41 +1,43 @@
-% Compiler Plugins
+% Estensioni del compilatore
 
-# Introduction
+# Introduzione
 
-`rustc` can load compiler plugins, which are user-provided libraries that
-extend the compiler's behavior with new syntax extensions, lint checks, etc.
+`rustc` può caricare estensioni del compilatore, che sono librerie
+fornite da utenti che estendono il comportamento del compilatore con nuove
+estensioni sintattiche, verifiche di correttezza, ecc.
 
-A plugin is a dynamic library crate with a designated *registrar* function that
-registers extensions with `rustc`. Other crates can load these extensions using
-the crate attribute `#![plugin(...)]`.  See the
-`rustc_plugin` documentation for more about the
-mechanics of defining and loading a plugin.
+Un'estensione ("plugin") è un crate di libreria dinamica con una funzione
+designata come *archivista* che registra le estensioni associate a `rustc`.
+Altri crate possono caricare queste estensioni usando l'attributo di crate
+`#![plugin(...)]`. Si veda la documentazione di `rustc_plugin` per saperne
+di più sulla meccanica della definizione e del caricamento delle estensioni.
 
-If present, arguments passed as `#![plugin(foo(... args ...))]` are not
-interpreted by rustc itself.  They are provided to the plugin through the
-`Registry`'s `args` method.
+Se presenti, gli argomenti passati come `#![plugin(foo(... args ...))]`
+non sono interpretati da rustc stesso. Sono forniti all'estensione tramite
+il metodo `args` del `Registry`.
 
-In the vast majority of cases, a plugin should *only* be used through
-`#![plugin]` and not through an `extern crate` item.  Linking a plugin would
-pull in all of libsyntax and librustc as dependencies of your crate.  This is
-generally unwanted unless you are building another plugin.  The
-`plugin_as_library` lint checks these guidelines.
+Nella gran maggioranza dei casi, un'estensione dovrebbe essere usata
+*solamente* tramite `#![plugin]` e non tramite un elemento `extern crate`.
+Eseguire il link con un'estensione tirerebbe dentro libsyntax e librustc
+come dipendenze del proprio crate. In gerale questo non è desiderabile
+a meno che si stia costruendo un'altra estensione. L'opzione di correttezza
+`plugin_as_library` verifica queste linne guida.
 
-The usual practice is to put compiler plugins in their own crate, separate from
-any `macro_rules!` macros or ordinary Rust code meant to be used by consumers
-of a library.
+La pratica più usata è mettere le estensioni del compilatore nel loro crate,
+separate da ogni macro `macro_rules!` e dal codice Rust ordinario rivolto
+ai consumatori di una libreria.
 
-# Syntax extensions
+# Estensioni di sintassi
 
-Plugins can extend Rust's syntax in various ways. One kind of syntax extension
-is the procedural macro. These are invoked the same way as [ordinary
-macros](macros.html), but the expansion is performed by arbitrary Rust
-code that manipulates syntax trees at
-compile time.
+Le estensioni possono estendere la sintassi di Rust in vari modi. Un genere
+di estensione di sintassi è la macro procedurale. Queste si invocano
+nel medesimo modo delle [macro ordinarie](macros.html), ma l'espansione
+viene eseguita da codice Rust arbitrario che manipola l'albero sintattico
+in fase di compilazione.
 
-Let's write a plugin
-[`roman_numerals.rs`](https://github.com/rust-lang/rust/blob/master/src/test/run-pass-fulldeps/auxiliary/roman_numerals.rs)
-that implements Roman numeral integer literals.
+Scriviamo un'estensione [`roman_numerals.rs`]
+(https://github.com/rust-lang/rust/blob/master/src/test/run-pass-fulldeps/auxiliary/roman_numerals.rs)
+che implementa come costanti intere i numeri romani.
 
 ```rust,ignore
 #![crate_type="dylib"]
@@ -48,11 +50,11 @@ extern crate rustc_plugin;
 use syntax::parse::token;
 use syntax::ast::TokenTree;
 use syntax::ext::base::{ExtCtxt, MacResult, DummyResult, MacEager};
-use syntax::ext::build::AstBuilder;  // trait for expr_usize
+use syntax::ext::build::AstBuilder;  // tratto per expr_usize
 use syntax_pos::Span;
 use rustc_plugin::Registry;
 
-fn expand_rn(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
+fn espandi_rn(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
         -> Box<MacResult + 'static> {
 
     static NUMERALS: &'static [(&'static str, usize)] = &[
@@ -111,26 +113,27 @@ fn main() {
 }
 ```
 
-The advantages over a simple `fn(&str) -> u32` are:
+I vantaggi rispetto a un semplice `fn(&str) -> u32` sono:
 
-* The (arbitrarily complex) conversion is done at compile time.
-* Input validation is also performed at compile time.
-* It can be extended to allow use in patterns, which effectively gives
-  a way to define new literal syntax for any data type.
+* La conversione (arbitrariamente complessa) è fatta in fase di compilazione.
+* Anche la convalida dell'input è eseguita in fase di compilazione.
+* Si può estendere per consentirne l'uso nei pattern, che effettivamente
+  dà un modo di definire una nuova sintassi delle costanti per qualunque
+  tipo di dati.
 
-In addition to procedural macros, you can define new
-[`derive`](../reference.html#derive)-like attributes and other kinds of
-extensions.  See `Registry::register_syntax_extension` and the `SyntaxExtension`
-enum.  For a more involved macro example, see
-[`regex_macros`](https://github.com/rust-lang/regex/blob/master/regex_macros/src/lib.rs).
+Oltre alle macro procedurali, si possono definire nuovi attributi
+tipo-[`derive`](../reference.html#derive) e altri generi di estensioni.
+Si veda `Registry::register_syntax_extension` e l'enum `SyntaxExtension`.
+Per un esempio di macro più complicato, si veda [`regex_macros`]
+(https://github.com/rust-lang/regex/blob/master/regex_macros/src/lib.rs).
 
+## Suggerimenti e trucchi
 
-## Tips and tricks
+Alcuni dei [suggerimenti sul debug delle macro]
+(macros.html#debugging-macro-code) sono ancora validi.
 
-Some of the [macro debugging tips](macros.html#debugging-macro-code) are applicable.
-
-You can use `syntax::parse` to turn token trees into
-higher-level syntax elements like expressions:
+Si può usare `syntax::parse` per trasformare gli alberi di token in
+elementi sintattici di livello più alto come espressioni:
 
 ```rust,ignore
 fn expand_foo(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
@@ -141,34 +144,36 @@ fn expand_foo(cx: &mut ExtCtxt, sp: Span, args: &[TokenTree])
     let expr: P<Expr> = parser.parse_expr();
 ```
 
-Looking through [`libsyntax` parser
-code](https://github.com/rust-lang/rust/blob/master/src/libsyntax/parse/parser.rs)
-will give you a feel for how the parsing infrastructure works.
+Guardare nel [codice del parser `libsyntax`]
+(https://github.com/rust-lang/rust/blob/master/src/libsyntax/parse/parser.rs)
+darà una sensazione di come funziona l'infrastruttura di parsing.
 
-Keep the `Span`s of everything you parse, for better error reporting. You can
-wrap `Spanned` around your custom data structures.
+Si mantengano gli `Span` di tutto ciò che viene analizzato, per produrre
+migliori messaggi d'errore. Si può avvolgere `Spanned` intorno alle proprie
+strutture dati personalizzate.
 
-Calling `ExtCtxt::span_fatal` will immediately abort compilation. It's better to
-instead call `ExtCtxt::span_err` and return `DummyResult` so that the compiler
-can continue and find further errors.
+Chiamare `ExtCtxt::span_fatal` abortirà immediatamente la compilazione.
+È meglio invece chiamare `ExtCtxt::span_err` e restituire `DummyResult`,
+così che il compilatore possa proseguire e trovare altri errori.
 
-To print syntax fragments for debugging, you can use `span_note` together with
-`syntax::print::pprust::*_to_string`.
+Per stampare frammenti di sintassi per debug, si può usare `span_note`
+insieme a `syntax::print::pprust::*_to_string`.
 
-The example above produced an integer literal using `AstBuilder::expr_usize`.
-As an alternative to the `AstBuilder` trait, `libsyntax` provides a set of
-quasiquote macros. They are undocumented and very rough around the edges.
-However, the implementation may be a good starting point for an improved
-quasiquote as an ordinary plugin library.
+L'esempio sopra produceva un letterale intero usando `AstBuilder::expr_usize`.
+Come alternativa al tratto `AstBuilder`, `libsyntax` fornisce un insieme
+di macro quasiquote. Non sono documentate e sono molto spigolose.
+Però, la loro implementazione può essere un buon punto di partenza
+per un quasiquote migliorato come un'ordinaria estensione di libreria.
 
 
-# Lint plugins
+# Le estensioni di correttezza
 
-Plugins can extend [Rust's lint
-infrastructure](../reference.html#lint-check-attributes) with additional checks for
-code style, safety, etc. Now let's write a plugin
-[`lint_plugin_test.rs`](https://github.com/rust-lang/rust/blob/master/src/test/run-pass-fulldeps/auxiliary/lint_plugin_test.rs)
-that warns about any item named `lintme`.
+Le estensioni possono estendere [l'infrastruttura di correttezza di Rust]
+(../reference.html#lint-check-attributes) con verifiche aggiuntive relative
+allo stile del codice, alla sicurezza, ecc. Adesso scriviamo un'estensione
+[`lint_plugin_test.rs`]
+(https://github.com/rust-lang/rust/blob/master/src/test/run-pass-fulldeps/auxiliary/lint_plugin_test.rs)
+che avverte riguardo della presenza di elementi chiamati `lintme`.
 
 ```rust,ignore
 #![feature(plugin_registrar)]
@@ -176,17 +181,18 @@ that warns about any item named `lintme`.
 
 extern crate syntax;
 
-// Load rustc as a plugin to get macros
+// Carica rustc come un'estensione per ottenere le macro
 #[macro_use]
 extern crate rustc;
 extern crate rustc_plugin;
 
 use rustc::lint::{EarlyContext, LintContext, LintPass, EarlyLintPass,
-                  EarlyLintPassObject, LintArray};
+	EarlyLintPassObject, LintArray};
 use rustc_plugin::Registry;
 use syntax::ast;
 
-declare_lint!(TEST_LINT, Warn, "Warn about items named 'lintme'");
+declare_lint!(TEST_LINT, Warn,
+    "Avverti la presenza di elementi di nome 'lintme'");
 
 struct Pass;
 
@@ -199,7 +205,7 @@ impl LintPass for Pass {
 impl EarlyLintPass for Pass {
     fn check_item(&mut self, cx: &EarlyContext, it: &ast::Item) {
         if it.ident.name.as_str() == "lintme" {
-            cx.span_lint(TEST_LINT, it.span, "item is named 'lintme'");
+            cx.span_lint(TEST_LINT, it.span, "elemento si chiama 'lintme'");
         }
     }
 }
@@ -210,7 +216,7 @@ pub fn plugin_registrar(reg: &mut Registry) {
 }
 ```
 
-Then code like
+Poi il codice come
 
 ```rust,ignore
 #![plugin(lint_plugin_test)]
@@ -218,35 +224,39 @@ Then code like
 fn lintme() { }
 ```
 
-will produce a compiler warning:
+produrrà un avvertimento del compilatore:
 
 ```txt
-foo.rs:4:1: 4:16 warning: item is named 'lintme', #[warn(test_lint)] on by default
+foo.rs:4:1: 4:16 warning: elemento si chiama 'lintme', #[warn(test_lint)] on by default
 foo.rs:4 fn lintme() { }
          ^~~~~~~~~~~~~~~
 ```
 
-The components of a lint plugin are:
+I componenti di un'estensione di correttezza sono:
 
-* one or more `declare_lint!` invocations, which define static `Lint` structs;
+* uno o più invocazioni di `declare_lint!`, che definiscono
+  le struct statiche `Lint`;
 
-* a struct holding any state needed by the lint pass (here, none);
+* una struct che tiene ogni stato che serve alla passata di analisi
+  di correttezza (nel nostro caso, nessuno);
 
-* a `LintPass`
-  implementation defining how to check each syntax element. A single
-  `LintPass` may call `span_lint` for several different `Lint`s, but should
-  register them all through the `get_lints` method.
+* una implementazione di `LintPass` che definisce come verificare
+  ogni elemento sintattico. Un unico `LintPass` può chiamare `span_lint`
+  per più diversi `Lint`, ma dovrebbe registrarli tutti tramite il metodo
+  `get_lints`.
 
-Lint passes are syntax traversals, but they run at a late stage of compilation
-where type information is available. `rustc`'s [built-in
-lints](https://github.com/rust-lang/rust/blob/master/src/librustc/lint/builtin.rs)
-mostly use the same infrastructure as lint plugins, and provide examples of how
-to access type information.
+Le passate di Lint sono attraversamenti sintattici, ma vengono eseguite
+in una fase tardiva della compilazione, dove sono disponibili le informazioni
+sui tipi. [I lint incorporati in `rustc`]
+(https://github.com/rust-lang/rust/blob/master/src/librustc/lint/builtin.rs)
+per lo più usano la medesima infrastruttura delle estensioni di correttezza,
+e forniscono esempi di come accedere alle informazioni sui tipi.
 
-Lints defined by plugins are controlled by the usual [attributes and compiler
-flags](../reference.html#lint-check-attributes), e.g. `#[allow(test_lint)]` or
-`-A test-lint`. These identifiers are derived from the first argument to
-`declare_lint!`, with appropriate case and punctuation conversion.
+I Lint definiti dalle estensioni sono controlleti dai soliti [attributi
+e opzioni del compilatore](../reference.html#lint-check-attributes),
+per es. `#[allow(test_lint)]` o `-A test-lint`. Questi identificatori
+sono derivati dal primo argomento a `declare_lint!`, con le appropriate
+conversioni di maiuscolizzazione e di punteggiatura.
 
-You can run `rustc -W help foo.rs` to see a list of lints known to `rustc`,
-including those provided by plugins loaded by `foo.rs`.
+Si può eseguire `rustc -W help foo.rs` per vedere un elenco dei lint noti
+a `rustc`, compresi quelli forniti dalle estensioni caricate da `foo.rs`.
