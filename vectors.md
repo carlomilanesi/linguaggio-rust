@@ -87,7 +87,7 @@ thread 'main' panicked at 'index out of bounds: the len is 3 but the index is 7'
 
 Se si vuole gestire gli errori di accesso fuori dai limiti senza andare
 in panico, si possono usare metodi come [`get`][get] o [`get_mut`][get_mut],
-che rendono `None` quando gli viene dato un indice invalido:
+che restituiscono `None` quando gli viene dato un indice invalido:
 
 ```rust
 let v = vec![1, 2, 3];

@@ -9,8 +9,8 @@ Ecco un rapido ripasso di quello che questi due tratti significano.
 # Borrow
 
 Il tratto `Borrow` si usa quando si sta scrivendo una struttura dati,
-e si vuole usare un tipo o posseduto o preso in prestito come sinonimo,
-per qualche scopo.
+e, per qualche scopo, si vuole usare come sinonimo un tipo o posseduto
+o preso in prestito.
 
 Per esempio, [`HashMap`][hashmap] ha un metodo [`get`][get] che usa `Borrow`:
 
@@ -30,10 +30,10 @@ il parametro `K`. Si riferisce a un parametro di `HashMap` stesso:
 struct HashMap<K, V, S = RandomState> {
 ```
 
-The `K` parameter is the type of _key_ the `HashMap` uses. So, looking at
-the signature of `get()` again, we can use `get()` when the key implements
-`Borrow<Q>`. That way, we can make a `HashMap` which uses `String` keys,
-but use `&str`s when we’re searching:
+Il parametro `K` è il tipo della _chiave_ usata da `HashMap`. Quindi,
+riguardando la firma di `get()`, vediamo che possiamo usare`get()` quando
+la chiave implementa `Borrow<Q>`. In quel modo, possiamo costruire
+un `HashMap` che usa chiavi `String`, ma usare delle `&str` quando cerchiamo:
 
 ```rust
 use std::collections::HashMap;
@@ -44,20 +44,21 @@ map.insert("Foo".to_string(), 42);
 assert_eq!(map.get("Foo"), Some(&42));
 ```
 
-This is because the standard library has `impl Borrow<str> for String`.
+Questo perché la libreria standard ha `impl Borrow<str> for String`.
 
-For most types, when you want to take an owned or borrowed type, a `&T` is
-enough. But one area where `Borrow` is effective is when there’s more than one
-kind of borrowed value. This is especially true of references and slices: you
-can have both an `&T` or a `&mut T`. If we wanted to accept both of these types,
-`Borrow` is up for it:
+Per la maggior parte dei tipi, quando si vuole prenderne un tipo posseduto
+o preso in prestito, un `&T` può bastare. Ma un'area dove `Borrow` è efficace
+è quando c'è più di un genere di valore preso in prestito. Ciò è vero
+specialmente per i riferimenti e le slice: si può avere sia un `&T`
+che un `&mut T`. Se vogliamo accettare entrambi questi tipi, `Borrow` è
+quel che ci vuole:
 
 ```rust
 use std::borrow::Borrow;
 use std::fmt::Display;
 
 fn foo<T: Borrow<i32> + Display>(a: T) {
-    println!("a is borrowed: {}", a);
+    println!("a è preso in prestito: {}", a);
 }
 
 let mut i = 5;
@@ -66,12 +67,12 @@ foo(&i);
 foo(&mut i);
 ```
 
-This will print out `a is borrowed: 5` twice.
+Questo stamperà due volte `a è preso in prestito: 5`.
 
 # AsRef
 
-The `AsRef` trait is a conversion trait. It’s used for converting some value to
-a reference in generic code. Like this:
+Il tratto `AsRef` è un tratto di conversione. Serve a convertire
+qualche valore in un riferimento nel codice generico. Così:
 
 ```rust
 let s = "Hello".to_string();
@@ -81,14 +82,15 @@ fn foo<T: AsRef<str>>(s: T) {
 }
 ```
 
-# Which should I use?
+# Quale usare?
 
-We can see how they’re kind of the same: they both deal with owned and borrowed
-versions of some type. However, they’re a bit different.
+Come si vede, sono in qualche modo uguali: entrambi trattano versioni
+possedute o prese in prestito di qualche tipo. Però, sono un po' diversi.
 
-Choose `Borrow` when you want to abstract over different kinds of borrowing, or
-when you’re building a datastructure that treats owned and borrowed values in
-equivalent ways, such as hashing and comparison.
+Si scelga `Borrow` quando si vuole astrarre su diversi generi di prestiti,
+oppure quando si sta costruendo una struttura dati che tratta i valori
+posseduti e i valori presi in prestito in modi equivalenti, come lo hashing
+e il confronto.
 
-Choose `AsRef` when you want to convert something to a reference directly, and
-you’re writing generic code.
+Si scelga `AsRef` quando si vuole convertire qualcosa direttamente
+a un riferimento, e si sta scrivendo del codice generico.

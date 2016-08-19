@@ -281,9 +281,11 @@ fn main() {
 
 Queste righe definiscono una *funzione* in Rust. La funzione `main` è speciale:
 è l'inizio di ogni programma in Rust. La prima riga dice, “Sto dichiarando
-una funzione chiamata `main` che non prende argomenti e non rende niente.”
+una funzione chiamata `main` che non prende argomenti
+e non restituisce niente.”
 Se ci fossero argomenti, andrebbero fra le parentesi (`(` e `)`), e siccome
-non stiamo rendendo niente da questa funzione, possiamo omettere il tipo reso.
+non stiamo restituendo niente da questa funzione,
+possiamo omettere il tipo reso.
 
 Si noti anche che il corpo della funzione è racchiuso da graffe (`{` e `}`).
 Rust le richiede intorno a tutti i corpi delle funzioni. Si considera buon

@@ -147,7 +147,7 @@ fn main() {
 }
 ```
 
-Verifica il tipo di ritorno:
+Verifica il tipo del valore restituito:
 
 ```rust
 # struct Cerchio;
@@ -156,7 +156,7 @@ fn grow(&self, increment: f64) -> Cerchio {
 # Cerchio } }
 ```
 
-Diciamo che stiamo rendendo un `Cerchio`. Con questo metodo, possiamo
+Diciamo che stiamo restituendo un `Cerchio`. Con questo metodo, possiamo
 far crescere un nuovo `Cerchio` a qualunque dimensione.
 
 # Funzioni associate

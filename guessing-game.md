@@ -211,7 +211,7 @@ chiamando una funzione associata a tale tipo. Comunque, se non avessimo scritto
 `use std::io`, ce la saremmo cavata scrivendo in questa riga
 `std::io::stdin()`.
 
-Questa funzione particolare ritorna un handle al flusso standard di input
+Questa funzione particolare restituisce un handle al flusso standard di input
 per la console. Più specificamente, a [std::io::Stdin][iostdin].
 
 [iostdin]: ../std/io/struct.Stdin.html
@@ -268,8 +268,8 @@ Ma sarebbe diventato più difficile da leggere. E allora l'abbiamo spezzato;
 due righe per due chiamate di metodo. Abbiamo già parlato di `read_line()`,
 ma che dire di `expect()`? Beh, abbiamo già accennato che `read_line()` mette
 ciò che viene digitato dall'utente nella `&mut String` che le passiamo.
-Ma ritorna anche un valore: in questo caso, un [`io::Result`][ioresult]. Rust
-ha vari tipi chiamati `Result` nella sua libreria standard: un [`Result`]
+Ma restituisce anche un valore: in questo caso, un [`io::Result`][ioresult].
+Rust ha vari tipi chiamati `Result` nella sua libreria standard: un [`Result`]
 [result] generico, e poi delle versioni specifiche per delle sotto-librerie,
 come `io::Result`.
 
@@ -606,7 +606,8 @@ match tentativo.cmp(&numero_segreto) {
 
 Il metodo `cmp()` può essere chiamato su qualunque oggetto che può essere
 confrontato, e prende un riferimento all'oggetto con cui lo si vuole
-confrontare. Il confronto rende il tipo `Ordering` che abbiamo importato prima. Usiamo
+confrontare. Il confronto restituisce il tipo `Ordering`
+che abbiamo importato prima. Usiamo
 un'istruzione [`match`][match] per determinare esattamente quale `Ordering`
 abbiamo ottenuto dal confronto. `Ordering` è una [`enum`][enum], abbreviazione
 di ‘enumerazione’. Le enumerazioni si presentano così:
@@ -946,13 +947,14 @@ let tentativo: u32 = match tentativo.trim().parse() {
 
 Il modo tipico per passare da un ‘crash dovuto a errore’ a una ‘gestione
 effettiva dell'errore’, è passare dall'uso del metodo `expect()` all'uso
-dell'istruzione `match`. La chiamata a `parse()` rende un `Result`; questo è
-una `enum`, come `Ordering`, ma in questo caso, ogni variante ha alcuni dati
-associati ad essa: `Ok` indica un successo, e `Err` indica un fallimento, ma
+dell'istruzione `match`. La chiamata a `parse()` restituisce un `Result`;
+questo è una `enum`, come `Ordering`, ma in questo caso,
+ogni variante ha alcuni dati associati ad essa:
+`Ok` indica un successo, e `Err` indica un fallimento, ma
 entrambi contengono ulteriori informazioni: per il primo, l'intero estratto
 con successo, e per l'altro il genere di errore. In questo caso, `match`
 proverà a far combaciare il suo argomento con `Ok(num)`, che assegnerà al nome
-il valore contenuto in `Ok` (cioè l'intero estratto), e ritornerà
+il valore contenuto in `Ok` (cioè l'intero estratto), e restituirà
 quest'ultimo nel lato destro. Nel caso `Err`, non ci interessa il genere
 di errore, e così usiamo il carattere piglia-tutto `_`, invece di un nome.
 Questo jolly combacia con qualunque codice d'errore, e poi `continue` ci

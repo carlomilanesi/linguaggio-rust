@@ -1,40 +1,44 @@
-% Using Rust Without the Standard Library
+% Usare Rust senza la libreria standard
 
-Rust’s standard library provides a lot of useful functionality, but assumes
-support for various features of its host system: threads, networking, heap
-allocation, and others. There are systems that do not have these features,
-however, and Rust can work with those too! To do so, we tell Rust that we
-don’t want to use the standard library via an attribute: `#![no_std]`.
+La libreria standard di Rust fornisce molte funzionalità utili, ma assume
+che il sistema ospitante supporti varie caratteristiche: i thread, la rete,
+l'allocazione su heap, e altre. Però, ci sono sistemi che non hanno
+queste caratteristiche, e Rust può funzionare anche per tali sistemi!
+Per farlo, diciamo a Rust che non vogliamo usare la libreria standard
+tramite un attributo: `#![no_std]`.
 
-> Note: This feature is technically stable, but there are some caveats. For
-> one, you can build a `#![no_std]` _library_ on stable, but not a _binary_.
-> For details on binaries without the standard library, see [the nightly
-> chapter on `#![no_std]`](no-stdlib.html)
+> Nota: Questa caratteristica è tecnicamente stabile, ma ci sono alcune
+> avvertenze. Per dirne una, con la versione stabile, si può costruire
+> una _libreria_ `#![no_std]`, ma non un _programma_. Per vedere i dettagli
+> su come creare programmi senza la libreria standard, si veda
+> [il capitolo della versione notturna su `#![no_std]`](no-stdlib.html)
 
-To use `#![no_std]`, add it to your crate root:
+Per usare `#![no_std]`, lo si aggiunga alla radice del proprio crate:
 
 ```rust
 #![no_std]
 
-fn plus_one(x: i32) -> i32 {
+fn piu_uno(x: i32) -> i32 {
     x + 1
 }
 ```
 
-Much of the functionality that’s exposed in the standard library is also
-available via the [`core` crate](../core/index.html). When we’re using the
-standard library, Rust automatically brings `std` into scope, allowing you to
-use its features without an explicit import. By the same token, when using
-`#![no_std]`, Rust will bring `core` into scope for you, as well as [its
-prelude](../core/prelude/v1/index.html). This means that a lot of code will Just
-Work:
+Molte delle funzionalità esposte nella libreria standard sono disponibili
+anche tramire il [crate `core`](../core/index.html). Quando usiamo
+la libreria standard, Rust automaticamente porta `std` nell'ambito corrente,
+consentendo di usare le sue caratteristiche senza importazioni esplicite.
+
+Per lo stesso motivo, quando si usa `#![no_std]`, Rust porterà `core`
+nell'ambito corrente, come pure [il suo preludio]
+(../core/prelude/v1/index.html). Ciò comporta che molto codice continuerà
+a funzionare:
 
 ```rust
 #![no_std]
 
-fn may_fail(failure: bool) -> Result<(), &'static str> {
-    if failure {
-        Err("this didn’t work!")
+fn puo_fallire(fallimento: bool) -> Result<(), &'static str> {
+    if fallimento {
+        Err("non ha funzionato!")
     } else {
         Ok(())
     }

@@ -731,7 +731,7 @@ assert_eq!(5, 3);
 
 `try!` serve alla gestione degli errori. Prende qualcosa che può rendere
 un `Result<T, E>`, e dà il `T` se il risultato è un `Ok<T>`, e altrimenti esce
-rendendo `Err(E)`. Così:
+restituendo `Err(E)`. Così:
 
 ```rust,no_run
 use std::fs::File;

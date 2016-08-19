@@ -88,9 +88,10 @@ fn somma_uno(x: i32) -> i32 {
 }
 ```
 
-Le funzioni di Rust rendono esattamente un valore, e si dichiara il tipo dopo
-una ‘freccia’, che è un trattino (`-`) seguito da un segno di maggiore (`>`).
-L'ultima riga di una funzione determina che cosa rende. Qui si noterà
+Le funzioni di Rust restituiscono esattamente un valore, e si dichiara
+il tipo dopo una ‘freccia’, che è un trattino (`-`) seguito da un segno
+di maggiore (`>`).
+L'ultima riga di una funzione determina che cosa restituisce. Qui si noterà
 la mancanza di un punto-e-virgola. Se l'avessimo aggiunto:
 
 ```rust,ignore
@@ -122,10 +123,11 @@ sono correlati.
 Rust è primariamente un linguaggio basato sulle espressioni. Ci sono solamente
 due tipi di istruzioni, e ogni altra cosa è un'espressione.
 
-E qual è la differenza? Le espressioni rendono un valore, mentre
+E qual è la differenza? Le espressioni restituiscono un valore, mentre
 le istruzioni no. Ecco perché andiamo a finire con il messaggio d'errore
-‘non tutti i percorsi di controllo rendono un valore’: l'istruzione `x + 1;`
-non ritorna un valore. Ci sono due tipi di istruzioni in Rust:
+‘non tutti i percorsi di controllo restituiscono un valore’:
+l'istruzione `x + 1;` non ritorna un valore.
+Ci sono due tipi di istruzioni in Rust:
 le ‘istruzioni di dichiarazione’ e le ‘istruzioni di espressione’. Tutto
 il resto è un'espressione. Prima parliamo delle istruzioni di dichiarazione.
 
@@ -178,10 +180,11 @@ fn somma_uno(x: i32) -> i32 {
 }
 ```
 
-La nostra funzione sostiene di rendere un `i32`, ma se ci fosse
-un punto-e-virgola, renderebbe un `()` invece. Rust si rende conto che questo
-probabilmente non è ciò che vogliamo, e, nel messaggio d'errore che abbiamo
-visto prima, consiglia di togliere il punto-e-virgola.
+La nostra funzione sostiene di restituire un `i32`, ma se ci fosse
+un punto-e-virgola, restituirebbe un `()` invece. Rust si rende conto
+che questo probabilmente non è ciò che vogliamo, e,
+nel messaggio d'errore che abbiamo visto prima,
+consiglia di togliere il punto-e-virgola.
 
 ## Uscite precoci
 
@@ -310,7 +313,7 @@ let f: fn(i32) -> i32;
 ```
 
 `f` è un legame di variabile che punta a una funzione che prende un `i32` come
-argomento e rende un `i32`. Per esempio:
+argomento e restituisce un `i32`. Per esempio:
 
 ```rust
 fn piu_uno(i: i32) -> i32 {
