@@ -1,10 +1,10 @@
-% Sintassi e semantica
+% Sintassi e Semantica
 
 Questo capitolo scompone Rust in pezzetti, uno per ogni concetto.
 
-Per chi preferisce imparare Rust dalle basi, un buon modo per farlo è
-leggere questi capitoli in sequenza.
+Per chi preferisce imparare Rust dalle basi in su, un buon modo per farlo è
+leggere questo capitolo in sequenza.
 
 Queste sezioni formano anche un riferimento per ogni concetto,
 così se leggendo un altro tutorial qualcosa non fosse chiaro, leggendo qui
-l'appropriato capitolo si può avere una spiegazione.
+l'appropriata sezione si può avere una spiegazione.

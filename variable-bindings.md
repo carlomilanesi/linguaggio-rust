@@ -2,7 +2,7 @@
 
 Praticamente qualunque programma in Rust più complesso di 'Hello World’ usa
 i *legami di variabile* ["variable binding"]. Tali istruzioni legano qualche
-valore a un nome, in modo da poter essere usato in seguito. Per introdurre
+valore ad un nome, in modo da poter essere usato in seguito. Per introdurre
 un legame, si usa la parola-chiave `let`, così:
 
 ```rust
@@ -13,9 +13,9 @@ fn main() {
 
 Mettere `fn main() {` in ogni esempio è un po' noioso, perciò in futuro
 lo ometteremo. Nel prosieguo, ci si ricordi di editare il corpo della propria
-funzion `main()`, invece di ometterla. Altrimenti, si otterrà un'errore.
+funzione `main()`, invece di ometterla. Altrimenti, si otterrà un'errore.
 
-# I pattern
+# I patterns
 
 In molti linguaggi, un legame di variabile verrebbe chiamato semplicemente
 *variabile*, ma i legami di variabile di Rust hanno alcuni assi nella manica.
@@ -26,8 +26,8 @@ non un semplice nome di variabile. Ciò significa che si può fare:
 let (x, y) = (1, 2);
 ```
 
-Dopo che questa istruzione viene eseguita, `x` varrà 1, e `y` varrà 2.
-I pattern sono veramente potenti, e hanno [una loro sezione][pattern]
+Dopo che questa istruzione viene eseguita, `x` varrà uno, e `y` varrà due.
+I pattern sono veramente vantaggiosi, e hanno [una loro sezione][pattern]
 in questo libro. Per adesso non ci servono quelle caratteristiche, e quindi
 le accantoneremo mentre proseguiamo.
 
@@ -38,10 +38,10 @@ le accantoneremo mentre proseguiamo.
 Rust è un linguaggio tipizzato staticamente, il che significa che specifichiamo
 subito i tipi, e questi vengono verificati in fase di compilazione. Allora
 perché il nostro primo esempio compilava? Beh, Rust ha una cosa chiamata
-‘inferenza dei tipi’. Se riesce a desumere qual'è il tipo di qualche oggetto,
+‘inferenza di tipo’. Se riesce a desumere qual'è il tipo di qualche dato,
 Rust non costringe a digitarlo esplicitamente.
 
-Però possiamo aggiungere il tipo, se vogliamo. I tipi si mettono dopo
+Se vogliamo, possiamo aggiungere il tipo di dato. I tipi si mettono dopo
 un punto-e-virgola (`:`):
 
 ```rust
@@ -53,10 +53,10 @@ di tipo `i32` al valore `cinque`.”
 
 In questo caso abbiamo scelto di rappresentare `x` come un intero con segno
 a 32 bit. Rust ha molti tipi interi primitivi. I loro nomi cominciano con `i`
-per gli interi con segno, e con `u` per gli interi senza segno. Le dimensioni
-intere possibili sono 8, 16, 32, e 64 bit.
+per gli interi con segno, e con `u` per gli interi senza segno (unsigned).
+Le dimensioni intere possibili sono 8, 16, 32, e 64 bit.
 
-Negli esempi futuri, possiamo annotare il tipo in un commento. Gli esempi si
+Negli esempi futuri, potremmo annotare il tipo in un commento. Gli esempi si
 presenteranno così:
 
 ```rust
@@ -106,7 +106,7 @@ ma non ne parleremo in questo libro. In generale, si può spesso evitare
 la mutazione esplicita, e quindi in Rust è preferibile evitarla. Detto questo,
 talvolta, la mutazione è quello che serve, e quindi non è proibita.
 
-# Inizializzare un legame
+# Inizializzare i legami
 
 I legami di variabile in Rust hanno un altro aspetto che differisce da altri
 linguaggi: i legami devono essere inizializzati con un valore prima di poterli
@@ -136,7 +136,7 @@ src/main.rs:2     let x: i32;
 
 Rust ci avverte che non abbiamo mai usato il legame di variabile, ma dato che
 non l'abbiamo mai usato, nessun danno, nessun fallo. Però le cose cambiano
-se proviamo a usare effettivamente questa `x`. Facciamolo. Modifichiamo
+se proviamo ad usare effettivamente questa `x`. Facciamolo. Modifichiamo
 il programma in modo che si presenti così:
 
 ```rust,ignore
@@ -165,12 +165,12 @@ Could not compile `hello_world`.
 
 Rust non ci permetterà di usare un valore che non è stato inizializzato.
 
-Prendiamo un minuto per parlare di questa roba che abbiamo aggiunto a
+Prendiamo un minuto per parlare di questa cosa che abbiamo aggiunto a
 `println!`.
 
 Se si inseriscono due graffe (`{}`, alcuni li chiamano baffi...) nella nostra
-stringa da stampare, Rust le interpreterà come una richiesta di intercalare
-al loro posto una sorta di valore. L'*interpolazione di stringhe* è un termine
+stringa da stampare, Rust le interpreterà come una richiesta di interpolare
+qualche sorta di valore. L'*interpolazione di stringa* è un termine
 informatico che significa "inserire una o più stringhe dentro un'altra stringa,
 al posto di altrettanti segnaposto." Dopo la nostra stringa, mettiamo
 una virgola, e una `x`, per indicare che vogliamo che `x` sia il valore che
@@ -185,7 +185,7 @@ molto complicati da stampare.
 
 [format]: ../std/fmt/index.html
 
-# Ambito e oscuramento
+# Ambito ed oscuramento
 
 Torniamo ai legami. I legami di variabile hanno un ambito - ossia sono
 vincolati a risiedere nel blocco in cui sono stati definiti. Un blocco è una
@@ -230,7 +230,7 @@ Could not compile `hello`.
 To learn more, run the command again with --verbose.
 ```
 
-Inoltre, i legami di variabile possono venire oscurati ["shadowed"]. Ciò
+Inoltre, i legami di variabile possono venire oscurati ("shadowed"). Ciò
 significa che un successivo legame di variabile con il medesimo nome di un
 legame attualmente nel suo ambito scavalcherà il legame precedente.
 
@@ -249,7 +249,7 @@ println!("{}", x); // Stampa "42"
 L'oscuramento e la mutabilità dei legami possono apparire come due facce
 della stessa medaglia, ma sono due concetti distinti che non sono sempre
 intercambiabili. Per dirne una, l'oscuramento ci consente di rilegare un nome
-a un valore di tipo diverso. È anche possibile cambiare la mutabilità
+ad un valore di tipo diverso. È anche possibile cambiare la mutabilità
 di un legame. Si noti che oscurare un nome non altera né distrugge il valore
 a cui era legato quel nome, e tale valore continuerà a esistere finché
 non esce di ambito, anche se non è più accessibile in nessun modo.
