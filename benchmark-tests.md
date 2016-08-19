@@ -1,14 +1,15 @@
-% Benchmark tests
+% Collaudo delle prestazioni (benchmark)
 
-Rust supports benchmark tests, which can test the performance of your
-code. Let's make our `src/lib.rs` look like this (comments elided):
+Rust supporta la creazione di benchmark, che possono collaudare
+le prestazioni del proprio codice. Rendiamo il file `src/lib.rs` come questo
+(senza commenti):
 
 ```rust,ignore
 #![feature(test)]
 
 extern crate test;
 
-pub fn add_two(a: i32) -> i32 {
+pub fn aggiungi_due(a: i32) -> i32 {
     a + 2
 }
 
@@ -18,26 +19,27 @@ mod tests {
     use test::Bencher;
 
     #[test]
-    fn it_works() {
-        assert_eq!(4, add_two(2));
+    fn funziona() {
+        assert_eq!(4, aggiungi_due(2));
     }
 
     #[bench]
-    fn bench_add_two(b: &mut Bencher) {
-        b.iter(|| add_two(2));
+    fn bench_aggiungi_due(b: &mut Bencher) {
+        b.iter(|| aggiungi_due(2));
     }
 }
 ```
 
-Note the `test` feature gate, which enables this unstable feature.
+Si noti il feature gate `test`, che abilita questa caratteristica instabile.
 
-We've imported the `test` crate, which contains our benchmarking support.
-We have a new function as well, with the `bench` attribute. Unlike regular
-tests, which take no arguments, benchmark tests take a `&mut Bencher`. This
-`Bencher` provides an `iter` method, which takes a closure. This closure
-contains the code we'd like to benchmark.
+Abbiamo importato il crate `test`, che contiene il nostro supporto
+ai benchmark. Abbiamo anche una nuova funzione, con l'attributo `bench`.
+Diversamente dai testi normali, che non prendono argomenti, i benchmark
+prendono un `&mut Bencher`. Tale `Bencher` fornisce un metodo `iter`,
+che prende una chiusura. Tale chiusura contiene il codice di cui vorremmo
+collaudare le prestazioni.
 
-We can run benchmark tests with `cargo bench`:
+I benchmark possono essere eseguiti con il comando `cargo bench`:
 
 ```bash
 $ cargo bench
@@ -45,37 +47,42 @@ $ cargo bench
      Running target/release/adder-91b3e234d4ed382a
 
 running 2 tests
-test tests::it_works ... ignored
-test tests::bench_add_two ... bench:         1 ns/iter (+/- 0)
+test tests::funziona ... ignored
+test tests::bench_aggiungi_due ... bench:         1 ns/iter (+/- 0)
 
 test result: ok. 0 passed; 0 failed; 1 ignored; 1 measured
 ```
 
-Our non-benchmark test was ignored. You may have noticed that `cargo bench`
-takes a bit longer than `cargo test`. This is because Rust runs our benchmark
-a number of times, and then takes the average. Because we're doing so little
-work in this example, we have a `1 ns/iter (+/- 0)`, but this would show
-the variance if there was one.
+Il nostro test che non è un benchmark è stato ignorato. Si potrebbe
+aver notato che `cargo bench` impiega un po' di più di `cargo test`. Questo
+è dovuto al fatto che Rust esegue i nostri benchmark numerose volte,
+e poi ne fa la media. Siccome facciamo pochissimo lavoro in questo esempio,
+otteniamo `1 ns/iter (+/- 0)`, ma verrebe mostrata la varianza,
+se ce ne fosse una.
 
-Advice on writing benchmarks:
+Consiglio sulla scrittura dei benchmark:
 
 
-* Move setup code outside the `iter` loop; only put the part you want to measure inside
-* Make the code do "the same thing" on each iteration; do not accumulate or change state
-* Make the outer function idempotent too; the benchmark runner is likely to run
-  it many times
-*  Make the inner `iter` loop short and fast so benchmark runs are fast and the
-   calibrator can adjust the run-length at fine resolution
-* Make the code in the `iter` loop do something simple, to assist in pinpointing
-  performance improvements (or regressions)
+* Spostare il codice di impostazione fuori dal ciclo `iter`;
+  mettere dentro solamente la parte che si vuole misurare.
+* Fare in modo che il codice faccia "le stesse cose" ad ogni iterazione;
+  non accumulare né cambiare stato.
+* Rendere idempotente anche la funzione esterna; l'esecutore del benchmark
+  è probabile che lo esegua molte volte.
+* Rendere breve e veloce il ciclo `iter` interno, così che le esecuzioni
+  del benchmark siano veloci, e il calibratore possa regolare finemente
+  la lunghezza dell'esecuzione.
+* Fare in modo che il codice nel ciclo `iter` faccia qualcosa di semplice,
+  per aiutare a individuare i miglioramenti (o i peggioramenti)
+  delle prestazioni.
 
-## Gotcha: optimizations
+## Tranello: ottimizzazioni
 
-There's another tricky part to writing benchmarks: benchmarks compiled with
-optimizations activated can be dramatically changed by the optimizer so that
-the benchmark is no longer benchmarking what one expects. For example, the
-compiler might recognize that some calculation has no external effects and
-remove it entirely.
+C'è un'altra parte delicata nella scrittura dei benchmark: i benchmark
+compilati attivando le ottimizzazioni possono essere talmente
+cambiati dall'ottimizzatore che il benchmark non sta più collaudando
+quello che ci si aspetta. Per esempio, il compilatore potrebbe riconoscere
+che alcuni calcoli non hanno effetti esterni, e quindi toglierli del tutto.
 
 ```rust,ignore
 #![feature(test)]
@@ -84,40 +91,40 @@ extern crate test;
 use test::Bencher;
 
 #[bench]
-fn bench_xor_1000_ints(b: &mut Bencher) {
+fn bench_xor_1000_int(b: &mut Bencher) {
     b.iter(|| {
-        (0..1000).fold(0, |old, new| old ^ new);
+        (0..1000).fold(0, |vecchio, nuovo| vecchio ^ nuovo);
     });
 }
 ```
 
-gives the following results
+dà il seguente risultato
 
 ```text
 running 1 test
-test bench_xor_1000_ints ... bench:         0 ns/iter (+/- 0)
+test bench_xor_1000_int ... bench:         0 ns/iter (+/- 0)
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 1 measured
 ```
 
-The benchmarking runner offers two ways to avoid this. Either, the closure that
-the `iter` method receives can return an arbitrary value which forces the
-optimizer to consider the result used and ensures it cannot remove the
-computation entirely. This could be done for the example above by adjusting the
-`b.iter` call to
+L'esecutore del benchmark offre due modi per evitarlo. O la chiusura
+ricevuta dal metodo `iter` può restituire un valore arbitrario
+che costringe l'ottimizzatore a considerare usato il risultato, e assicura
+che non possa togliere l'intera elaborazione. Ciò potrebbe essere fatto,
+nell'esempio sopra, modificando la chiamata a `b.iter` come:
 
 ```rust
 # struct X;
 # impl X { fn iter<T, F>(&self, _: F) where F: FnMut() -> T {} } let b = X;
 b.iter(|| {
-    // note lack of `;` (could also use an explicit `return`).
-    (0..1000).fold(0, |old, new| old ^ new)
+    // Si noti la mancanza di `;`. Si poteva anche usare un `return` esplicito.
+    (0..1000).fold(0, |vecchio, nuovo| vecchio ^ nuovo)
 });
 ```
 
-Or, the other option is to call the generic `test::black_box` function, which
-is an opaque "black box" to the optimizer and so forces it to consider any
-argument as used.
+Oppure, l'altra opzione è chiamare la funzione generica `test::black_box`,
+che è una "scatola nera" opaca all'ottimizzatore, e quindi lo costringe
+a considerare usato ogni argomento.
 
 ```rust
 #![feature(test)]
@@ -135,11 +142,12 @@ b.iter(|| {
 # }
 ```
 
-Neither of these read or modify the value, and are very cheap for small values.
-Larger values can be passed indirectly to reduce overhead (e.g.
-`black_box(&huge_struct)`).
+Nessuna di queste legge né scrive il valore, e costano pochissimo
+per piccoli valori. I valori più grandi possono essere passati
+indirettamente per ridurre lo spreco (per es. `black_box(&huge_struct)`).
 
-Performing either of the above changes gives the following benchmarking results
+Eseguire una o l'altra delle suddette modifiche dà i seguenti risultati
+di benchmark:
 
 ```text
 running 1 test
@@ -148,5 +156,5 @@ test bench_xor_1000_ints ... bench:       131 ns/iter (+/- 3)
 test result: ok. 0 passed; 0 failed; 0 ignored; 1 measured
 ```
 
-However, the optimizer can still modify a testcase in an undesirable manner
-even when using either of the above.
+Però, l'ottimizzatore può ancora modificare un test in maniera
+indesiderabile perfino quando si usa una delle tecniche suddette.
