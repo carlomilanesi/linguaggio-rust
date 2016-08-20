@@ -126,7 +126,7 @@ due tipi di istruzioni, e ogni altra cosa è un'espressione.
 E qual è la differenza? Le espressioni restituiscono un valore, mentre
 le istruzioni no. Ecco perché andiamo a finire con il messaggio d'errore
 ‘non tutti i percorsi di controllo restituiscono un valore’:
-l'istruzione `x + 1;` non ritorna un valore.
+l'istruzione `x + 1;` non restituisce un valore.
 Ci sono due tipi di istruzioni in Rust:
 le ‘istruzioni di dichiarazione’ e le ‘istruzioni di espressione’. Tutto
 il resto è un'espressione. Prima parliamo delle istruzioni di dichiarazione.
@@ -215,25 +215,25 @@ diventa intuitivo.
 ## Funzioni divergenti
 
 Rust ha alcune sintassi speciali per le ‘funzioni divergenti’, che sono
-le funzioni che non rendono nessun valore:
+le funzioni che non restituiscono mai il controllo al chiamante:
 
 ```rust
 fn diverge() -> ! {
-    panic!("Questa funzione non rende nessun valore!");
+    panic!("Questa funzione non restituisce mai il controllo al chiamante!");
 }
 ```
 
 `panic!` è una macro, come lo è `println!()` che abbiamo già visto.
 Diversamente da `println!()`, `panic!()` manda in crash il thread corrente,
 stampando il messaggio ricevuto come argomento. Dato che questa funzione
-provocherà un crash, non renderà nessun valore, e quindi ha il tipo ‘`!`’,
-che si legge ‘diverge’.
+provocherà un crash, non restituirà mai il controllo al chiamante,
+e quindi ha il tipo ‘`!`’, che si legge ‘diverge’.
 
 Se si aggiunge una funzione main che chiama `diverge()` e la si esegue,
 si otterrà un output simile a questo:
 
 ```text
-thread ‘main’ panicked at ‘Questa funzione non rende nessun valore!’, main.rs:2
+thread ‘main’ panicked at ‘Questa funzione non restituisce mai il controllo al chiamante!’, main.rs:2
 ```
 
 Se si vogliono più informazioni, si può ottenere un backtrace impostando
@@ -241,7 +241,7 @@ la variabile d'ambiente `RUST_BACKTRACE`:
 
 ```text
 $ rust_backtrace=1 ./diverge
-thread 'main' panicked at 'Questa funzione non rende nessun valore!', main.rs:2
+thread 'main' panicked at 'Questa funzione non restituisce mai il controllo al chiamante!', main.rs:2
 stack backtrace:
    1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
    2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
@@ -267,7 +267,7 @@ impostare a `0` per evitare di ottenere un backtrace. Qualunque altro valore
 $ export RUST_BACKTRACE=1
 ...
 $ RUST_BACKTRACE=0 ./diverge
-thread 'main' panicked at 'Questa funzione non rende nessun valore!', main.rs:2
+thread 'main' panicked at 'Questa funzione non restituisce mai il controllo al chiamante!', main.rs:2
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
@@ -276,7 +276,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```text
 $ RUST_BACKTRACE=1 cargo run
      Running `target/debug/diverge`
-thread 'main' panicked at 'Questa funzione non rende nessun valore!', main.rs:2
+thread 'main' panicked at 'Questa funzione non restituisce mai il controllo al chiamante!', main.rs:2
 stack backtrace:
    1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
    2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
@@ -298,7 +298,7 @@ di qualunque tipo:
 
 ```rust,should_panic
 # fn diverge() -> ! {
-#    panic!("Questa funzione non rende nessun valore!");
+#    panic!("Questa funzione non restituisce mai il controllo al chiamante!");
 # }
 let x: i32 = diverge();
 let x: String = diverge();
