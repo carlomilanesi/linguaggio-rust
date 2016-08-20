@@ -5,7 +5,7 @@
 Questa guida userà la libreria di compressione/decompressione [Snappy]
 (https://github.com/google/snappy) come introduzione alla scrittura di legami
 per il codice straniero. Rust attualmente non è in grado di chiamare
-direttamente funzioni di una libreria C++, ma Snappy comprende una interfaccia
+direttamente funzioni di una libreria C++, ma Snappy comprende un'interfaccia
 per il linguaggio C (documentata in [`snappy-c.h`]
 (https://github.com/google/snappy/blob/master/snappy-c.h)).
 
@@ -50,13 +50,14 @@ che in questo caso usa l'ABI del linguaggio della piattaforma corrente.
 L'attributo `#[link(...)]` serve a istruire il linker a collegare la libreria
 Snappy in modo da risolvere i simboli.
 
-Le funzioni straniere si presume siano insicure, e quindi le chiamate a loro
-hanno bisogno di essere avvolte da `unsafe {}` come promessa per il compilatore
-che ogni cosa contenuta entro di essa è veramente sicura. Le libreria C
-espongono spesso interacce che non sono thread-safe, e quasi ogni funzione che
-prende un argomento puntatore non è valida per tutti i possibili input
-dato che il puntatore potrebbe essere penzolante ["dangling"], e i puntatori
-grezzi cadono fuori dal modello di memoria sicuro di Rust.
+Le funzioni straniere si presume siano insicure, e quindi le loro chiamate
+hanno bisogno di essere avvolte da `unsafe {}` come promessa
+per il compilatore che ogni cosa contenuta entro di essa è veramente sicura.
+Le librerie C espongono spesso interacce che non sono sicure
+da usare coi thread, e quasi ogni funzione che prende un argomento puntatore
+non è valida per tutti i possibili input, dato che il puntatore potrebbe
+essere penzolante, e i puntatori grezzi cadono fuori dal modello
+di memoria sicuro di Rust.
 
 Quando si dichiarano i tipi degli argomenti a una funzione straniera,
 il compilatore Rust non può verificare se la dichiarazione è corretta, quindi
@@ -72,20 +73,24 @@ use libc::{c_int, size_t};
 
 #[link(name = "snappy")]
 extern {
-    fn snappy_compress(input: *const u8,
-                       input_length: size_t,
-                       compressed: *mut u8,
-                       compressed_length: *mut size_t) -> c_int;
-    fn snappy_uncompress(compressed: *const u8,
-                         compressed_length: size_t,
-                         uncompressed: *mut u8,
-                         uncompressed_length: *mut size_t) -> c_int;
+    fn snappy_compress(
+        input: *const u8,
+        input_length: size_t,
+        compressed: *mut u8,
+        compressed_length: *mut size_t) -> c_int;
+    fn snappy_uncompress(
+        compressed: *const u8,
+        compressed_length: size_t,
+        uncompressed: *mut u8,
+        uncompressed_length: *mut size_t) -> c_int;
     fn snappy_max_compressed_length(source_length: size_t) -> size_t;
-    fn snappy_uncompressed_length(compressed: *const u8,
-                                  compressed_length: size_t,
-                                  result: *mut size_t) -> c_int;
-    fn snappy_validate_compressed_buffer(compressed: *const u8,
-                                         compressed_length: size_t) -> c_int;
+    fn snappy_uncompressed_length(
+        compressed: *const u8,
+        compressed_length: size_t,
+        result: *mut size_t) -> c_int;
+    fn snappy_validate_compressed_buffer(
+        compressed: *const u8,
+        compressed_length: size_t) -> c_int;
 }
 # fn main() {}
 ```
@@ -97,8 +102,9 @@ e fornire concetti di livello più alto, come i vettori. Una libreria può
 scegliere di esporre solamente l'interfaccia sicura, ad alto livello, e
 di nascondere i dettagli interni insicuri.
 
-Avvolgere le funzioni che si aspettano delle aree comporta usare il modulo
-`slice::raw` per manipolare i vettori Rust come puntatori alla memoria.
+Avvolgere le funzioni che si aspettano di ricevere delle aree di memoria
+richiede l'uso del modulo `slice::raw` per manipolare i vettori Rust
+come puntatori alla memoria.
 I vettori di Rust sono garantiti essere un blocco contiguo di memoria
 (virtuale).
 La lunghezza di tale blocco è il numero di elementi attualmente contenuti, e
@@ -119,28 +125,28 @@ pub fn convalida_area_compressa(sorgente: &[u8]) -> bool {
 ```
 
 L'avvolgimento `convalida_area_compressa` qui sopra fa uso di un blocco
-`unsafe`, ma garantisce che chiamarlo è sicuro per tutti gli inputs
+`unsafe`, ma garantisce che chiamarlo è sicuro per tutti gli input
 escludendo la parola `unsafe` dalla firma della funzione.
 
 Le funzioni `snappy_compress` e `snappy_uncompress` sono più complesse,
-dato che un'area deve anche essere allocata per tenere l'output.
+dato che si deve anche allocata un'area di memoria per contenere l'output.
 
 La funzione `snappy_max_compressed_length` può essere usata per allocare
-un vettore con la capacità massima necessaria per tenere l'output compresso.
+un vettore con la capacità massima necessaria per contenere l'output compresso.
 Il vettore poi può essere passato alla funzione `snappy_compress`
 come argomento di output. Un argomento di output viene passato anche
-per recuperare la vera lunghezza dopo la compressione per impostare
-la lunghezza.
+per recuperare la lunghezza risultante dei dati compressi.
 
 ```rust
 # #![feature(libc)]
 # extern crate libc;
 # use libc::{size_t, c_int};
-# unsafe fn snappy_compress(a: *const u8, b: size_t, c: *mut u8,
-#                           d: *mut size_t) -> c_int { 0 }
+# unsafe fn snappy_compress(
+#     a: *const u8, b: size_t, c: *mut u8,
+#     d: *mut size_t) -> c_int { 0 }
 # unsafe fn snappy_max_compressed_length(a: size_t) -> size_t { a }
 # fn main() {}
-pub fn compress(src: &[u8]) -> Vec<u8> {
+pub fn comprimi(src: &[u8]) -> Vec<u8> {
     unsafe {
         let srclen = src.len() as size_t;
         let psrc = src.as_ptr();
@@ -157,23 +163,25 @@ pub fn compress(src: &[u8]) -> Vec<u8> {
 ```
 
 La decompressione è simile, perché Snappy immagazzina la dimensione
-non compressa come parte del formato di compressione e
-`snappy_uncompressed_length` recupererà la dimensione esatta dimensione
+non compressa come parte del formato di compressione, e
+`snappy_uncompressed_length` recupererà la dimensione esatta
 necessaria per l'area.
 
 ```rust
 # #![feature(libc)]
 # extern crate libc;
 # use libc::{size_t, c_int};
-# unsafe fn snappy_uncompress(compressed: *const u8,
-#                             compressed_length: size_t,
-#                             uncompressed: *mut u8,
-#                             uncompressed_length: *mut size_t) -> c_int { 0 }
-# unsafe fn snappy_uncompressed_length(compressed: *const u8,
-#                                      compressed_length: size_t,
-#                                      result: *mut size_t) -> c_int { 0 }
+# unsafe fn snappy_uncompress(
+#     compressed: *const u8,
+#     compressed_length: size_t,
+#     uncompressed: *mut u8,
+#     uncompressed_length: *mut size_t) -> c_int { 0 }
+# unsafe fn snappy_uncompressed_length(
+#     compressed: *const u8,
+#     compressed_length: size_t,
+# 	  result: *mut size_t) -> c_int { 0 }
 # fn main() {}
-pub fn uncompress(src: &[u8]) -> Option<Vec<u8>> {
+pub fn decomprimi(src: &[u8]) -> Option<Vec<u8>> {
     unsafe {
         let srclen = src.len() as size_t;
         let psrc = src.as_ptr();
@@ -194,30 +202,35 @@ pub fn uncompress(src: &[u8]) -> Option<Vec<u8>> {
 }
 ```
 
-Poi, possiamo aggiungere dei collaudi per mostrare come usare queste funzioni.
+Poi, possiamo aggiungere dei test per mostrare come usare queste funzioni.
 
 ```rust
 # #![feature(libc)]
 # extern crate libc;
 # use libc::{c_int, size_t};
-# unsafe fn snappy_compress(input: *const u8,
-#                           input_length: size_t,
-#                           compressed: *mut u8,
-#                           compressed_length: *mut size_t)
-#                           -> c_int { 0 }
-# unsafe fn snappy_uncompress(compressed: *const u8,
-#                             compressed_length: size_t,
-#                             uncompressed: *mut u8,
-#                             uncompressed_length: *mut size_t)
-#                             -> c_int { 0 }
-# unsafe fn snappy_max_compressed_length(source_length: size_t) -> size_t { 0 }
-# unsafe fn snappy_uncompressed_length(compressed: *const u8,
-#                                      compressed_length: size_t,
-#                                      result: *mut size_t)
-#                                      -> c_int { 0 }
-# unsafe fn snappy_validate_compressed_buffer(compressed: *const u8,
-#                                             compressed_length: size_t)
-#                                             -> c_int { 0 }
+# unsafe fn snappy_compress(
+#     input: *const u8,
+#     input_length: size_t,
+#     compressed: *mut u8,
+#     compressed_length: *mut size_t)
+#     -> c_int { 0 }
+# unsafe fn snappy_uncompress(
+#     compressed: *const u8,
+#     compressed_length: size_t,
+#     uncompressed: *mut u8,
+#     uncompressed_length: *mut size_t)
+#     -> c_int { 0 }
+# unsafe fn snappy_max_compressed_length(
+#     source_length: size_t) -> size_t { 0 }
+# unsafe fn snappy_uncompressed_length(
+#     compressed: *const u8,
+#     compressed_length: size_t,
+#     result: *mut size_t)
+#     -> c_int { 0 }
+# unsafe fn snappy_validate_compressed_buffer(
+#     compressed: *const u8,
+#     compressed_length: size_t)
+#     -> c_int { 0 }
 # fn main() { }
 
 #[cfg(test)]
@@ -225,28 +238,28 @@ mod tests {
     use super::*;
 
     #[test]
-    fn valid() {
+    fn valido() {
         let d = vec![0xde, 0xad, 0xd0, 0x0d];
-        let c: &[u8] = &compress(&d);
-        assert!(validate_compressed_buffer(c));
-        assert!(uncompress(c) == Some(d));
+        let c: &[u8] = &comprimi(&d);
+        assert!(convalida_area_compressa(c));
+        assert!(decomprimi(c) == Some(d));
     }
 
     #[test]
-    fn invalid() {
+    fn invalido() {
         let d = vec![0, 0, 0, 0];
-        assert!(!validate_compressed_buffer(&d));
-        assert!(uncompress(&d).is_none());
+        assert!(!convalida_area_compressa(&d));
+        assert!(decomprimi(&d).is_none());
     }
 
     #[test]
-    fn empty() {
+    fn vuoto() {
         let d = vec![];
-        assert!(!validate_compressed_buffer(&d));
-        assert!(uncompress(&d).is_none());
-        let c = compress(&d);
-        assert!(validate_compressed_buffer(&c));
-        assert!(uncompress(&c) == Some(d));
+        assert!(!convalida_area_compressa(&d));
+        assert!(decomprimi(&d).is_none());
+        let c = comprimi(&d);
+        assert!(convalida_area_compressa(&c));
+        assert!(decomprimi(&c) == Some(d));
     }
 }
 ```
@@ -254,24 +267,24 @@ mod tests {
 # Distruttori
 
 Le librerie straniere spesso cedono la proprietà delle risorse
-al codice chiamante. Quando questo accade, si devono usare i disrruttori
+al codice chiamante. Quando questo accade, si devono usare i distruttori
 di Rust per fornire sicurezza e garantire il rilascio di queste risorse
 (specialmente nel caso di panico).
 
 Per maggiori informazioni sui distruttori, si veda il tratto [Drop]
 (../std/ops/trait.Drop.html).
 
-# Callback da codice Ca funzioni Rust
+# Callback da codice C a funzioni Rust
 
-Alcune librerie esterne richiedono l'utilizzo di callback per riferire
-al chiamante il loro stato attuale o dei dati intermedi.
+Alcune librerie esterne richiedono l'utilizzo di callback per comunicare
+al chiamante il loro stato attuale o qualche dato intermedio.
 È possibile passare a una libreria esterna funzioni definite in Rust.
 Il requisito per poterlo fare è che la funzione callback sia marcata come
-`extern` con la corretta convenzione di chiamata così da renderla chiamabile
+`extern` con la corretta convenzione di chiamata, così da renderla chiamabile
 da codice C.
 
-Le funzioni callback possono poi essere mandate attraverso una chiamata
-di registrazione alla libreria C e poi invocate dalla libreria.
+Le funzioni callback possono poi essere comunicate alla libreria C mediante
+una chiamata di registrazione, per poi essere invocate dalla libreria.
 
 Un semplice esempio è:
 
@@ -285,13 +298,13 @@ extern fn la_mia_callback(a: i32) {
 #[link(name = "extlib")]
 extern {
    fn registra_callback(riferimento_callback: extern fn(i32)) -> i32;
-   fn scatta_callback();
+   fn invoca_callback();
 }
 
 fn main() {
     unsafe {
         registra_callback(la_mia_callback);
-        scatta_callback(); // Fa invocare la callback
+        invoca_callback(); // Fa invocare la callback
     }
 }
 ```
@@ -302,109 +315,112 @@ Codice C:
 typedef void (*callback_di_rust)(int32_t);
 callback_di_rust puntatore_cb;
 
-int32_t registra_callback(rust_callback callback) {
+int32_t registra_callback(callback_di_rust callback) {
     puntatore_cb = callback;
     return 1;
 }
 
-void scatta_callback() {
-  puntatore_cb(7); // Will call callback(7) in Rust
+void invoca_callback() {
+  puntatore_cb(7); // Chiamerà callback(7) in Rust
 }
 ```
 
-In this example Rust's `main()` will call `trigger_callback()` in C,
-which would, in turn, call back to `callback()` in Rust.
+In questo esempio, la `main()` di Rust chiamerà `invoca_callback()` in C,
+che, a sua volta, richiamerà `callback()` in Rust.
 
+## Applicare le callback a oggetti Rust
 
-## Targeting callbacks to Rust objects
+L'esempio precedente ha mostrato come una funzione globale Rust possa
+essere chiamata da codice C. Però spesso si desidera che la callback
+sia applicata ad un particolare oggetto Rust. Questo potrebbe essere
+l'oggetto che rappresenta l'avvolgimento per il rispettivo oggetto C.
 
-The former example showed how a global function can be called from C code.
-However it is often desired that the callback is targeted to a special
-Rust object. This could be the object that represents the wrapper for the
-respective C object.
+Ciò può essere fatto passando alla libreria C un puntatore grezzo
+all'oggetto. Poi la libreria C può includere nella notifica il puntatore
+all'oggetto Rust. Ciò consentirà alla callback di accedere,
+in modo _non_ sicuro, all'oggetto Rust referenziato.
 
-This can be achieved by passing an raw pointer to the object down to the
-C library. The C library can then include the pointer to the Rust object in
-the notification. This will allow the callback to unsafely access the
-referenced Rust object.
-
-Rust code:
+Codice Rust:
 
 ```rust,no_run
 #[repr(C)]
-struct RustObject {
+struct OggettoRust {
     a: i32,
-    // other members
+    // altri membri
 }
 
-extern "C" fn callback(target: *mut RustObject, a: i32) {
-    println!("I'm called from C with value {0}", a);
+extern "C" fn callback(target: *mut OggettoRust, a: i32) {
+    println!("Sono chiamata da C con valore {0}", a);
     unsafe {
-        // Update the value in RustObject with the value received from the callback
+        // Aggiorna il valore in OggettoRust
+        // con il valore ricevuto dalla callback
         (*target).a = a;
     }
 }
 
 #[link(name = "extlib")]
 extern {
-   fn register_callback(target: *mut RustObject,
-                        cb: extern fn(*mut RustObject, i32)) -> i32;
-   fn trigger_callback();
+    fn registra_callback(target: *mut OggettoRust,
+        cb: extern fn(*mut OggettoRust, i32)) -> i32;
+    fn invoca_callback();
 }
 
 fn main() {
-    // Create the object that will be referenced in the callback
-    let mut rust_object = Box::new(RustObject { a: 5 });
+    // Crea l'oggetto che verrà referenziato nella callback
+    let mut oggetto_rust = Box::new(OggettoRust { a: 5 });
 
     unsafe {
-        register_callback(&mut *rust_object, callback);
-        trigger_callback();
+        registra_callback(&mut *oggetto_rust, callback);
+        invoca_callback();
     }
 }
 ```
 
-C code:
+Codice C:
 
 ```c
-typedef void (*rust_callback)(void*, int32_t);
+typedef void (*callback_di_rust)(void*, int32_t);
 void* cb_target;
-rust_callback cb;
+callback_di_rust cb;
 
-int32_t register_callback(void* callback_target, rust_callback callback) {
+int32_t registra_callback(void* callback_target, callback_di_rust callback) {
     cb_target = callback_target;
     cb = callback;
     return 1;
 }
 
-void trigger_callback() {
-  cb(cb_target, 7); // Will call callback(&rustObject, 7) in Rust
+void invoca_callback() {
+  cb(cb_target, 7); // Chiamerà callback(&oggettoRust, 7) in Rust
 }
 ```
 
-## Asynchronous callbacks
+## Callback asincrone
 
-In the previously given examples the callbacks are invoked as a direct reaction
-to a function call to the external C library.
-The control over the current thread is switched from Rust to C to Rust for the
-execution of the callback, but in the end the callback is executed on the
-same thread that called the function which triggered the callback.
+Negli esempi precedenti, le callback sono invocate come reazione diretta
+a una chiamata di funzione alla libreria C esterna.
+Il controllo nel thread corrente passa da Rust a C e di nuovo a Rust
+per l'esecuzione della callback, ma alla fine la callback viene eseguita
+nel medesimo thread che ha chiamato la funzione
+che ha fatto invocare la callback.
 
-Things get more complicated when the external library spawns its own threads
-and invokes callbacks from there.
-In these cases access to Rust data structures inside the callbacks is
-especially unsafe and proper synchronization mechanisms must be used.
-Besides classical synchronization mechanisms like mutexes, one possibility in
-Rust is to use channels (in `std::sync::mpsc`) to forward data from the C
-thread that invoked the callback into a Rust thread.
+Le cose si complicano quando la libreria esterna genera i propri thread
+e invoca delle callback da tali thread.
+In questi casi, l'accesso alle strutture dati di Rust dall'interno
+delle callback è particolarmente insicuro, e si deve usare un appropriato
+meccanismo di sincronizzazione.
+Oltre ai classici meccanismi di sincronizzazione, come i mutex, Rust offre
+la possibilità di usare i canali (in `std::sync::mpsc`) per inoltrare dati
+al thread in Rust, dal thread in C che ha invocato la callback.
 
-If an asynchronous callback targets a special object in the Rust address space
-it is also absolutely necessary that no more callbacks are performed by the
-C library after the respective Rust object gets destroyed.
-This can be achieved by unregistering the callback in the object's
-destructor and designing the library in a way that guarantees that no
-callback will be performed after deregistration.
+Anche se una callback asincrona viene applicata a un oggetto particolare
+nello spazio degli indirizzi di Rust, è assolutamente necessario
+che nessun'altra callback sia eseguita dalla libreria C dopo che
+il rispettivo oggetto Rust sia stato distrutto.
+Ciò si può ottenere deregistrando la callback nel distruttore dell'oggetto,
+e progettando la libreria in modo che garantisca che nessuna
+callback sia eseguita dopo la deregistrazione.
 
-# Linking
+# Eseguire il link
 
 The `link` attribute on `extern` blocks provides the basic building block for
 instructing rustc how it will link to native libraries. There are two accepted
@@ -413,7 +429,7 @@ forms of the link attribute today:
 * `#[link(name = "foo")]`
 * `#[link(name = "foo", kind = "bar")]`
 
-In both of these cases, `foo` is the name of the native library that we're
+In both of these cases, `foo` is the name of the native library that we'' re
 linking to, and in the second case `bar` is the type of native library that the
 compiler is linking to. There are currently three known types of native
 libraries:
@@ -546,8 +562,8 @@ are:
 * `aapcs`
 * `cdecl`
 * `fastcall`
-* `vectorcall`
-This is currently hidden behind the `abi_vectorcall` gate and is subject to change.
+* `vectorcall` This is currently hidden behind the `abi_vectorcall`
+   gate and is subject to change.
 * `Rust`
 * `rust-intrinsic`
 * `system`
