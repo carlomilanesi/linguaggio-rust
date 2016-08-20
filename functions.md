@@ -8,9 +8,9 @@ fn main() {
 ```
 
 Questo è la dichiarazione di funzione più semplice possibile.
-Come accennato prima, c'è `fn` che dice ‘questa è una funzione’, ed è seguita
+Come accennato prima, `fn` indica che ‘questa è una funzione’, ed è seguita
 dal nome della funzione, da due parentesi vuote perché questa funzione
-non prende argomenti, e poi da graffe che contengono il corpo della funzione.
+non prende argomenti, e poi da parentesi graffe che contengono il corpo della funzione.
 Ecco una funzione chiamata `foo`:
 
 ```rust
@@ -39,10 +39,10 @@ fn stampa_numero(x: i32) {
 ```
 
 Come si vede, gli argomenti delle funzioni funzionano in modo molto simile
-alle dichiarazoni `let`:
-si aggiunge un tipo al nome dell'argomento, dopo un carattere `:`.
+alle dichiarazioni `let`:
+si aggiunge un tipo al nome dell'argomento, dopo i due punti `:`.
 
-Ecco un programma completo che addiziona due numeri e stampa il risultato:
+Ecco un programma completo che somma due numeri e stampa il risultato:
 
 ```rust
 fn main() {
@@ -73,7 +73,7 @@ expected one of `!`, `:`, or `@`, found `)`
 fn print_sum(x, y) {
 ```
 
-Questa è una precisa decisione progettuale. Per quanto sia possibile
+Questa è una ponderata decisione progettuale. Per quanto sia possibile
 l'inferenza di tipo sull'intero programma, i linguaggi che ce l'hanno,
 come Haskell, spesso suggeriscono che sia meglio documentare esplicitamente
 i propri tipi. Concordiamo che costringere le funzioni a dichiarare i tipi
@@ -108,7 +108,7 @@ fn somma_uno(x: i32) -> i32 {
      x + 1;
 }
 
-help: consider removing this punto-e-virgola:
+help: consider removing this semicolon:
      x + 1;
           ^
 ```
@@ -138,7 +138,7 @@ come espressioni, non come istruzioni. Come in Ruby:
 x = y = 5
 ```
 
-In Rust, però, l'uso di `let` per introdurre un legamo _non_ è un'espressione.
+In Rust, però, l'uso di `let` per introdurre un legame _non_ è un'espressione.
 La seguente riga produrrà un errore di compilazione:
 
 ```rust,ignore
@@ -153,7 +153,7 @@ Si noti che assegnare a una variabile già legata (per es. `y = 5`) è ancora
 un'espressione, per quanto il suo valore non sia particolarmente utile.
 Diversamente da altri linguaggi, nei quali un assegnamento ha come valore
 il valore assegnato (nell'esempio precedente, `5`), in Rust il valore
-di un assegnmento è un'ennupla vuota `()`, perché il valore assegnato può avere
+di un assegnamento è una ennupla vuota `()`, perché il valore assegnato può avere
 [solamente un possessore](ownership.html), e ogni altro valore reso sarebbe
 troppo sorprendente:
 
@@ -166,8 +166,8 @@ let x = (y = 6);  // x ha valore `()`, non `6`
 Il secondo genere di istruzioni in Rust è l'*istruzione espressione*. Il suo
 scopo è trasformare qualunque espressione in un'istruzione. In pratica,
 la grammatica di Rust si aspetta che delle istruzioni seguano altre istruzioni.
-Ciò significa che si usano punti-e-virgola per separare un'espressione
-dall'altra. Ciò significa che Rust è molto simile alla maggior parte degli
+Ciò significa che si usano punti-e-virgola per separare diverse espressioni.
+Ciò significa che Rust è molto simile alla maggior parte degli
 altri linguaggi che richiedono di usare punti-e-virgola alla fine di ogni riga,
 e si vedranno punti-e-virgola alla fine di quasi tutte le righe di codice Rust.
 
@@ -215,33 +215,33 @@ diventa intuitivo.
 ## Funzioni divergenti
 
 Rust ha alcune sintassi speciali per le ‘funzioni divergenti’, che sono
-le funzioni da cui non si esce più:
+le funzioni che non rendono nessun valore:
 
 ```rust
 fn diverge() -> ! {
-    panic!("Da questa funzione non si esce mai!");
+    panic!("Questa funzione non rende nessun valore!");
 }
 ```
 
 `panic!` è una macro, come lo è `println!()` che abbiamo già visto.
 Diversamente da `println!()`, `panic!()` manda in crash il thread corrente,
 stampando il messaggio ricevuto come argomento. Dato che questa funzione
-provocherà un crash, non si uscirà mai da essa, e quindi ha il tipo ‘`!`’,
+provocherà un crash, non renderà nessun valore, e quindi ha il tipo ‘`!`’,
 che si legge ‘diverge’.
 
 Se si aggiunge una funzione main che chiama `diverge()` e la si esegue,
 si otterrà un output simile a questo:
 
 ```text
-thread ‘main’ panicked at ‘Da questa funzione non si esce mai!’, main.rs:2
+thread ‘main’ panicked at ‘Questa funzione non rende nessun valore!’, main.rs:2
 ```
 
 Se si vogliono più informazioni, si può ottenere un backtrace impostando
 la variabile d'ambiente `RUST_BACKTRACE`:
 
 ```text
-$ RUST_BACKTRACE=1 ./diverge
-thread 'main' panicked at 'Da questa funzione non si esce mai!', main.rs:2
+$ rust_backtrace=1 ./diverge
+thread 'main' panicked at 'Questa funzione non rende nessun valore!', main.rs:2
 stack backtrace:
    1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
    2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
@@ -258,16 +258,16 @@ stack backtrace:
   13:                0x0 - <unknown>
 ```
 
-Se serve scavalcare una variabile `RUST_BACKTRACE` già impostata, nel caso
+Se serve sovrascrivere una variabile `RUST_BACKTRACE` già impostata, nel caso
 in cui non si può semplicemente disimpostare la variabile, allora la si può
 impostare a `0` per evitare di ottenere un backtrace. Qualunque altro valore
-(anche nessun valore affatto) attiva il backtrace.
+(anche nessun valore) attiva le informazioni di backtrace.
 
 ```text
 $ export RUST_BACKTRACE=1
 ...
-$ RUST_BACKTRACE=0 ./diverge 
-thread 'main' panicked at 'Da questa funzione non si esce mai!', main.rs:2
+$ RUST_BACKTRACE=0 ./diverge
+thread 'main' panicked at 'Questa funzione non rende nessun valore!', main.rs:2
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
@@ -276,7 +276,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```text
 $ RUST_BACKTRACE=1 cargo run
      Running `target/debug/diverge`
-thread 'main' panicked at 'Da questa funzione non si esce mai!', main.rs:2
+thread 'main' panicked at 'Questa funzione non rende nessun valore!', main.rs:2
 stack backtrace:
    1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
    2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
@@ -298,7 +298,7 @@ di qualunque tipo:
 
 ```rust,should_panic
 # fn diverge() -> ! {
-#    panic!("Da questa funzione non si esce mai!");
+#    panic!("Questa funzione non rende nessun valore!");
 # }
 let x: i32 = diverge();
 let x: String = diverge();
