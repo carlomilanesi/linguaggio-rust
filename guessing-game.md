@@ -8,7 +8,7 @@ un tentativo, ci dirà se siamo stati troppo bassi o troppo alti.
 Quando indoviniamo, si congratulerà con noi. Mica male, no?
 
 Lungo la strada, impareremo un pochino di Rust. Nel capitolo successivo,
-‘Sintassi e Semantica’, ci immergeremo in profondità in ogni parte.
+‘Sintassi e semantica’, ci immergeremo in profondità in ogni parte.
 
 # Impostazione
 
@@ -24,7 +24,8 @@ $ cd indovina_numero
 ```
 
 Abbiamo passato il nome del nostro progetto al comando `cargo new`, e poi
-il flag `--bin`, dato che stiamo creando un programma eseguibile, invece di una libreria.
+il flag `--bin`, dato che stiamo creando un programma eseguibile,
+invece di una libreria.
 
 Verifichiamo il file `Cargo.toml` generato:
 
@@ -72,7 +73,7 @@ Benone! Il comando `run` torna comodo quando si deve iterare rapidamente
 su un progetto. Il nostro gioco è un tale progetto, e ci serve testare
 rapidamente ogni iterazione prima di passare alla successiva.
 
-# Elaborare un Tentativo
+# Elaborare un tentativo
 
 Riprendiamo! La prima cosa che dobbiamo fare per il nostro gioco è
 consentire al giocatore di inserire un tentativo. Scriviamo questo nel file
@@ -308,14 +309,14 @@ ci sia un problema, possiamo usare `expect()`. Se possiamo recuperare
 dall'errore in qualche modo, faremo qualcosa di diverso, ma riserviamo
 l'argomento per un progetto futuro.
 
-C'è solo una linea di codice rimasta per questo primo esempio:
+C'è solo una riga di codice rimasta per questo primo esempio:
 
 ```rust,ignore
     println!("Hai digitato: {}", tentativo);
 }
 ```
 
-Questa linea stampa la stringa dove abbiamo salvato il nostro input. Le
+Questa riga stampa la stringa dove abbiamo salvato il nostro input. Le
 parentesi graffe `{}` sono dei segna-posto per passare `tentativo` come
 argomento. Se avessimo scritto diversi `{}`, avremmo passato diversi
 argomenti:
@@ -371,7 +372,7 @@ Cargo usa la sezione dependencies per sapere quali dipendenze ci sono da crate
 esterni, e quali versioni di essi sono richieste. In questo caso, abbiamo
 specificato la versione `0.3.0`, che Cargo capisce essere qualunque rilascio
 che è compatibile con questa specifica versione. Cargo capisce
-il [Versionamento Semantico][semver], che è uno standard per scrivere
+il [Versionamento semantico][semver], che è uno standard per scrivere
 numeri di versione. Un semplice numero come quello sopra è in realtà
 un'abbreviazione di `^0.3.0`, che significa "tutte le versioni compatibili
 con la versione 0.3.0".
