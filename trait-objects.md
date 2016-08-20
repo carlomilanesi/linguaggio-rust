@@ -262,8 +262,8 @@ fn call_method_on_String(x: *const ()) -> String {
 
 static Foo_for_String_vtable: FooVtable = FooVtable {
     destructor: /* magia del compilatore */,
-    // questi sono i valori per un target a 64-bit;
-    // bisogna dimezzarli per un target a 32-bit
+    // questi sono i valori per un target a 64 bit;
+    // bisogna dimezzarli per un target a 32 bit
     size: 24,
     align: 8,
 

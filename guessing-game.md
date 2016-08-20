@@ -1,7 +1,7 @@
 % Gioco-indovina
 
 Impariamo un po' di Rust! Come nostro primo progetto, implementeremo
-un classico problema di programmazione per principianti: l'indovina-numero.
+un classico problema di programmazione per principianti: il gioco-indovina.
 Ecco come funziona: Il nostro programma genererà un intero casuale compreso
 fra uno e cento. Poi ci chiederà di indovinarlo. Quando avremo inserito
 un tentativo, ci dirà se siamo stati troppo bassi o troppo alti.
@@ -19,8 +19,8 @@ da solo. Proviamolo:
 
 ```bash
 $ cd ~/projects
-$ cargo new indovina_numero --bin
-$ cd indovina_numero
+$ cargo new gioco_indovina --bin
+$ cd gioco_indovina
 ```
 
 Abbiamo passato il nome del nostro progetto al comando `cargo new`, e poi
@@ -32,7 +32,7 @@ Verifichiamo il file `Cargo.toml` generato:
 ```toml
 [package]
 
-name = "indovina_numero"
+name = "gioco_indovina"
 version = "0.1.0"
 authors = ["Your Name <you@example.com>"]
 ```
@@ -52,7 +52,7 @@ Proviamo a compilare quello che Cargo ci ha fornito:
 
 ```{bash}
 $ cargo build
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
 ```
 
 Ottimo! Riapriamo il file `src/main.rs`. Scriveremo tutto il nostro codice
@@ -64,8 +64,8 @@ Proviamolo:
 
 ```bash
 $ cargo run
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
-     Running `target/debug/indovina_numero`
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/debug/gioco_indovina`
 Hello, world!
 ```
 
@@ -293,7 +293,7 @@ ma otterremo un avvertimento:
 
 ```bash
 $ cargo build
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
 src/main.rs:10:5: 10:43 warning: unused result which must be used,
 #[warn(unused_must_use)] on by default
 src/main.rs:10     io::stdin().read_line(&mut tentativo);
@@ -334,8 +334,8 @@ Possiamo lanciare quello che abbiamo con `cargo run`:
 
 ```bash
 $ cargo run
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
-     Running `target/debug/indovina_numero`
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/debug/gioco_indovina`
 Indovina il numero!
 Prego, digita un tentativo.
 6
@@ -394,7 +394,7 @@ $ cargo build
  Downloading libc v0.1.6
    Compiling libc v0.1.6
    Compiling rand v0.3.8
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
 ```
 
 (Naturalmente, si potranno vedere diversi numeri di versione.)
@@ -428,7 +428,7 @@ salviamo di nuovo, vedremo solamente una riga:
 
 ```bash
 $ cargo build
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
 ```
 
 Perciò, abbiamo detto a Cargo che volevamo la versione `0.3.x` di `rand`, e
@@ -539,15 +539,15 @@ Proviamo a eseguire alcune volte il nostro nuovo programma:
 
 ```bash
 $ cargo run
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
-     Running `target/debug/indovina_numero`
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/debug/gioco_indovina`
 Indovina il numero!
 Il numero segreto è: 7
 Prego, digita un tentativo.
 4
 Hai digitato: 4
 $ cargo run
-     Running `target/debug/indovina_numero`
+     Running `target/debug/gioco_indovina`
 Indovina il numero!
 Il numero segreto è: 83
 Prego, digita un tentativo.
@@ -650,7 +650,7 @@ Ho già detto che questo codice non compilava, però. Proviamolo:
 
 ```bash
 $ cargo build
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
 src/main.rs:28:25: 28:40 error: mismatched types:
  expected `&collections::string::String`,
     found `&_`
@@ -659,7 +659,7 @@ src/main.rs:28:25: 28:40 error: mismatched types:
 src/main.rs:28     match tentativo.cmp(&numero_segreto) {
                                        ^~~~~~~~~~~~~~~
 error: aborting due to previous error
-Could not compile `indovina_numero`.
+Could not compile `gioco_indovina`.
 ```
 
 Urca! Questo è un grosso errore. Il sua sintesi è che abbiamo dei ‘tipi male
@@ -762,8 +762,8 @@ Proviamo il nostro programma!
 
 ```bash
 $ cargo run
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
-     Running `target/indovina_numero`
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/gioco_indovina`
 Indovina il numero!
 Il numero segreto è: 58
 Prego, digita un tentativo.
@@ -826,8 +826,8 @@ che non è un numero, andrà in `panic!` e terminerà. Osserviamo:
 
 ```bash
 $ cargo run
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
-     Running `target/indovina_numero`
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/gioco_indovina`
 Indovina il numero!
 Il numero segreto è: 59
 Prego, digita un tentativo.
@@ -966,8 +966,8 @@ Adesso dovremmo essere a posto! Proviamo:
 
 ```bash
 $ cargo run
-   Compiling indovina_numero v0.1.0 (file:///home/you/projects/indovina_numero)
-     Running `target/indovina_numero`
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/gioco_indovina`
 Indovina il numero!
 Il numero segreto è: 61
 Prego, digita un tentativo.
@@ -1034,5 +1034,5 @@ fn main() {
 Questo progetto ha mostrato parecchie cose: `let`, `match`, i metodi,
 le funzioni associate, l'uso di crate esterni, e altro.
 
-A questo punto, abbiamo costruito un gioco Gioco-Indovina funzionante!
+A questo punto, abbiamo costruito un gioco-indovina funzionante!
 Congratulazioni!
