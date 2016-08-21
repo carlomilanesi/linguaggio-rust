@@ -282,7 +282,7 @@ dato che questa informazione è incorporata nel distruttore, ma verrà usata in
 futuro, dato che gli oggetti-tratto sono resi progressivamente più flessibili.
 
 Supponiamo di avere alcuni valori che implementano `Foo`. La forma esplicita
-di costruzione e utilizzo degli oggetti-tratti di `Foo` potrebbe sembrare
+di costruzione e utilizzo degli oggetti-tratto di `Foo` potrebbe sembrare
 un po' così (ignorando gli errori di tipo: comunque sono tutti puntatori):
 
 ```rust,ignore

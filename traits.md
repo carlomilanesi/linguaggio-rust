@@ -255,7 +255,7 @@ un `File` non avrà i suoi metodi:
 
 ```rust,ignore
 let mut f = std::fs::File::open("foo.txt").expect("Fallita apertura di foo.txt");
-let buf = b"qualcosa"; // letterale di stringa di byte. buf: &[u8; 8]
+let buf = b"qualcosa"; // stringa letterale di byte. buf: &[u8; 8]
 let risultato = f.write(buf);
 # risultato.unwrap(); // ignora l'errore
 ```
@@ -274,9 +274,9 @@ Dapprima dobbiamo importare il tratto `Write` con `use`:
 use std::io::Write;
 
 let mut f = std::fs::File::open("foo.txt").expect("Fallita apertura di foo.txt");
-let buf = b"qualcosa"; // letterale di stringa di byte. buf: &[u8; 8]
+let buf = b"qualcosa"; // stringa letterale di byte. buf: &[u8; 8]
 let risultato = f.write(buf);
-# result.unwrap(); // ignore the error
+# risultato.unwrap(); // ignora l'errore
 ```
 
 Questo compilerà senza errori.
