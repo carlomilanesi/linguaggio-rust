@@ -292,7 +292,7 @@ Codice Rust:
 
 ```rust,no_run
 extern fn la_mia_callback(a: i32) {
-    println!("Sono chiamata dal C con il valore {0}", a);
+    println!("Sono chiamata da C con il valore {0}", a);
 }
 
 #[link(name = "extlib")]
@@ -422,73 +422,78 @@ callback sia eseguita dopo la deregistrazione.
 
 # Eseguire il link
 
-The `link` attribute on `extern` blocks provides the basic building block for
-instructing rustc how it will link to native libraries. There are two accepted
-forms of the link attribute today:
+L'attributo `link` sui blocchi `extern` fornisce il blocco di costruzione
+di base per istruire rustc su come collegare librerie native. Oggi ci sono
+due forme accettate dell'attributo 'link':
 
 * `#[link(name = "foo")]`
 * `#[link(name = "foo", kind = "bar")]`
 
-In both of these cases, `foo` is the name of the native library that we'' re
-linking to, and in the second case `bar` is the type of native library that the
-compiler is linking to. There are currently three known types of native
-libraries:
+In entrambi questi casi, `foo` è il nome della libreria nativa che a cui
+ci stiamo collegando, e nel secondo caso `bar` è il tipo della libreria nativa
+a cui il compilatore si sta collegando. Attualmente ci sono tre tipi noti
+di librerie native:
 
-* Dynamic - `#[link(name = "readline")]`
-* Static - `#[link(name = "my_build_dependency", kind = "static")]`
-* Frameworks - `#[link(name = "CoreFoundation", kind = "framework")]`
+* Dinamiche - `#[link(name = "readline")]`
+* Statiche - `#[link(name = "my_build_dependency", kind = "static")]`
+* Framework - `#[link(name = "CoreFoundation", kind = "framework")]`
 
-Note that frameworks are only available on OSX targets.
+Si noti che i framework sono disponibili solamente su target OSX.
 
-The different `kind` values are meant to differentiate how the native library
-participates in linkage. From a linkage perspective, the Rust compiler creates
-two flavors of artifacts: partial (rlib/staticlib) and final (dylib/binary).
-Native dynamic library and framework dependencies are propagated to the final
-artifact boundary, while static library dependencies are not propagated at
-all, because the static libraries are integrated directly into the subsequent
-artifact.
+I diversi valori di `kind` sono pensati per differenziare come
+la libreria nativa partecipa al collegamento. Per quanto riguarda
+il collegamento, il compilatore Rust crea due varietà di artefatti:
+parziale (rlib/staticlib) e finale (dylib/binary).
+Le dipendenze delle librerie dinamiche native e dei framework vengono
+propagate fino all'artefatto finale, mentre le dipendenze delle librerie
+statiche non vengono propagate affatto, perché le librerie statiche vengono
+direttamente integrate nell'artefatto prodotto.
 
-A few examples of how this model can be used are:
+Ecco alcuni esempi di come si può usare questo modello:
 
-* A native build dependency. Sometimes some C/C++ glue is needed when writing
-  some Rust code, but distribution of the C/C++ code in a library format is
-  a burden. In this case, the code will be archived into `libfoo.a` and then the
-  Rust crate would declare a dependency via `#[link(name = "foo", kind =
-  "static")]`.
+* Un dipendenza di una compilazione nativa. Talvolta della colla C/C++
+  è necessaria quando si scrive del codice Rust, ma distribuire il codice
+  C/C++ in formato di libreria è una zavorra. In questo caso, il codice
+  verrà incapsulato in un archivio `libfoo.a` e poi il crate Rust
+  dichiarerà una dipendenza tramite `#[link(name = "foo", kind = "static")]`.
 
-  Regardless of the flavor of output for the crate, the native static library
-  will be included in the output, meaning that distribution of the native static
-  library is not necessary.
+  Indipendentemente dalla varietà dell'output del crate, la libreria statica
+  nativa verrà inclusa nell'output, nel senso che non sarà necessario
+  distribuire la libreria statica nativa.
 
-* A normal dynamic dependency. Common system libraries (like `readline`) are
-  available on a large number of systems, and often a static copy of these
-  libraries cannot be found. When this dependency is included in a Rust crate,
-  partial targets (like rlibs) will not link to the library, but when the rlib
-  is included in a final target (like a binary), the native library will be
-  linked in.
+* Una dipendenza dinamica normale. Le tipiche librerie di sistema
+  (come `readline`) sono disponibili su un gran numero di sistemi, e spesso
+  non si trova una copia statica di queste librerie. Quando questa dipendenza
+  viene inclusa in un crate Rust, i target parziali (come rlibs)
+  non verranno collegati alla libreria, ma quando la rlib viene inclusa
+  in un target finale (come un programma), la libreria nativa verrà collegata.
 
-On OSX, frameworks behave with the same semantics as a dynamic library.
+Con OSX, i framework si comportano con la medesima semantica
+delle librerie dinamiche.
 
-# Unsafe blocks
+# Blocci `unsafe`
 
-Some operations, like dereferencing raw pointers or calling functions that have been marked
-unsafe are only allowed inside unsafe blocks. Unsafe blocks isolate unsafety and are a promise to
-the compiler that the unsafety does not leak out of the block.
+Alcune operazioni, come dereferenziare i puntatori grezzi o chiamare funzioni
+che sono state marcate `unsafe`, sono consentiti all'interno
+di blocchi `unsafe`. I blocchi `unsafe` isolano l'insicurezza e sono promesse
+al compilatore che l'insicurezza non travalicherà il blocco.
 
-Unsafe functions, on the other hand, advertise it to the world. An unsafe function is written like
-this:
+Le funzioni `unsafe`, d'altra parte, lo annunciano a tutto mondo.
+Una funzione `unsafe` è scritta così:
 
 ```rust
 unsafe fn kaboom(ptr: *const i32) -> i32 { *ptr }
 ```
 
-This function can only be called from an `unsafe` block or another `unsafe` function.
+Questa funzione può essere chiamata solamente da un blocco `unsafe` o
+da un'altra funzione `unsafe`.
 
-# Accessing foreign globals
+# Accedere a variabili globali straniere
 
-Foreign APIs often export a global variable which could do something like track
-global state. In order to access these variables, you declare them in `extern`
-blocks with the `static` keyword:
+Le API straniere spesso esportano una variabile globale che potrebbe fare
+qualcosa come tener traccia di uno stato globale. Per poter accedere
+a queste variabili, le si dichiara in blocchi `extern`
+con la parola-chiave `static`:
 
 ```rust,no_run
 # #![feature(libc)]
@@ -500,14 +505,14 @@ extern {
 }
 
 fn main() {
-    println!("You have readline version {} installed.",
-             rl_readline_version as i32);
+    println!("La versione di readline che hai installato è la {}.",
+        rl_readline_version as i32);
 }
 ```
 
-Alternatively, you may need to alter global state provided by a foreign
-interface. To do this, statics can be declared with `mut` so we can mutate
-them.
+Alternativamente, si può dover alterare lo stato globale fornito
+da un'interfaccia straniera. Per farlo, gli statici possono essere
+dichiarati con `mut`, così da poterli mutare.
 
 ```rust,no_run
 # #![feature(libc)]
@@ -533,14 +538,17 @@ fn main() {
 }
 ```
 
-Note that all interaction with a `static mut` is unsafe, both reading and
-writing. Trattare uno stato mutabile globale necessita di moltissima attenzione.
+Si noti che ogni interazione con una `static mut` è `unsafe`, sia
+in lettura che in scrittura. Trattare uno stato mutabile globale necessita
+di moltissima attenzione.
 
-# Foreign calling conventions
+# Convenzioni di chiamata straniera
 
-Most foreign code exposes a C ABI, and Rust uses the platform's C calling convention by default when
-calling foreign functions. Some foreign functions, most notably the Windows API, use other calling
-conventions. Rust provides a way to tell the compiler which convention to use:
+La maggior parte del codice straniero espone una ABI per C, e Rust,
+di default, usa la convenzione di chiamata del C della piattaforma, quando
+chiama funzioni straniere. Alcune funzioni straniere, in particolare l'API
+di Windows, usa altre convenzioni di chiamata. Rust fornisce un modo
+di dire al compilatore quale convenzione usare:
 
 ```rust
 # #![feature(libc)]
@@ -555,71 +563,74 @@ extern "stdcall" {
 # fn main() { }
 ```
 
-This applies to the entire `extern` block. The list of supported ABI constraints
-are:
+Ciò si applica all'intero blocco `extern`. I vincoli ABI supportati sono:
 
 * `stdcall`
 * `aapcs`
 * `cdecl`
 * `fastcall`
-* `vectorcall` This is currently hidden behind the `abi_vectorcall`
-   gate and is subject to change.
+* `vectorcall`: attualmente questo è nascosto dietro il gate `abi_vectorcall`
+   ed è soggetto a cambiamenti.
 * `Rust`
 * `rust-intrinsic`
 * `system`
 * `C`
 * `win64`
 
-Most of the abis in this list are self-explanatory, but the `system` abi may
-seem a little odd. This constraint selects whatever the appropriate ABI is for
-interoperating with the target's libraries. For example, on win32 with a x86
-architecture, this means that the abi used would be `stdcall`. On x86_64,
-however, windows uses the `C` calling convention, so `C` would be used. This
-means that in our previous example, we could have used `extern "system" { ... }`
-to define a block for all windows systems, not only x86 ones.
+La maggior parte delle ABI in questo elenco si spiegano da sole, ma
+l'ABI `system` può sembrare un po' strana. Questo vincolo seleziona
+l'ABI appropriata per comunicare con le librerie della piattaforma target.
+Per esempio, su Win32 con architettura x86, risulta che l'ABI usata sarebbe
+`stdcall`. Però su x86_64, Windows usa la convenzione di chiamata `C`,
+e quindi verrebbe usata `C`. Ciò comporta che nel nostro esempio precedente,
+avremmo potuto usare `extern "system" { ... }` per definire un blocco
+per tutti i sistemi Windows, non solo quelli per x86.
 
-# Interoperability with foreign code
+# Comunicazione con codice straniero
 
-Rust guarantees that the layout of a `struct` is compatible with the platform's
-representation in C only if the `#[repr(C)]` attribute is applied to it.
-`#[repr(C, packed)]` can be used to lay out struct members without padding.
-`#[repr(C)]` can also be applied to an enum.
+Rust garantisce che il layout di una `struct` è compatibile
+con la rappresentazione della piattaforma in C solamente se le è applicato
+l'attributo `#[repr(C)]`. Si può usare `#[repr(C, packed)]` per disporre
+i membri della struct senza padding. `#[repr(C)]` può essere applicato
+anche a una enum.
 
-Rust's owned boxes (`Box<T>`) use non-nullable pointers as handles which point
-to the contained object. However, they should not be manually created because
-they are managed by internal allocators. References can safely be assumed to be
-non-nullable pointers directly to the type.  However, breaking the borrow
-checking or mutability rules is not guaranteed to be safe, so prefer using raw
-pointers (`*`) if that's needed because the compiler can't make as many
-assumptions about them.
+I box posseduti da Rust (`Box<T>`) usano puntatori che non sono mai nulli
+come handle che puntano all'oggetto contenuto. Però, non dovrebbero essere
+creati manualmente perché sono gestiti da allocatori interni.
+Normalmente si può avere la certezza che ogni riferimento punti a un oggetto
+valido. Però, se si viola la verifica dei prestiti o le regole di mutabilità,
+tale certezza non è più garantita, e allora è meglio usare i puntatori grezzi
+(`*`), se è necessario, perché il compilatore non può fare altrettante
+assunzioni su di essi.
 
-Vectors and strings share the same basic memory layout, and utilities are
-available in the `vec` and `str` modules for working with C APIs. However,
-strings are not terminated with `\0`. If you need a NUL-terminated string for
-interoperability with C, you should use the `CString` type in the `std::ffi`
-module.
+I vettori e le stringhe condividono im medesimo layout di memoria di base,
+e sono disponibili delle utility nei moduli `vec` e `str` per lavorare con
+API in C. Però, le stringhe non sono terminate da un carattere `\0`.
+Se serve una stringa terminata da NUL per comunicare con C, si dovrebbe
+usare il tipo `CString` nel modulo `std::ffi`.
 
-The [`libc` crate on crates.io][libc] includes type aliases and function
-definitions for the C standard library in the `libc` module, and Rust links
-against `libc` and `libm` by default.
+Il [crate `libc` su crates.io][libc] comprende nel modulo `libc` degli alias
+di tipo e delle definizioni di funzioni per la libreria standard di C,
+e Rust di default collega con le librerie `libc` e `libm`.
 
-# The "nullable pointer optimization"
+# L'"ottimizzazione del puntatore annullabile"
 
-Certain types are defined to not be NULL. This includes references (`&T`,
-`&mut T`), boxes (`Box<T>`), and function pointers (`extern "abi" fn()`).
-When interfacing with C, pointers that might be NULL are often used.
-As a special case, a generic `enum` that contains exactly two variants, one of
-which contains no data and the other containing a single field, is eligible
-for the "nullable pointer optimization". When such an enum is instantiated
-with one of the non-nullable types, it is represented as a single pointer,
-and the non-data variant is represented as the NULL pointer. So
-`Option<extern "C" fn(c_int) -> c_int>` is how one represents a nullable
-function pointer using the C ABI.
+Certi tipi sono definiti in modo da non essere mai NULL. Tra di essi ci sono
+i riferimenti (`&T`, `&mut T`), i box (`Box<T>`), e i puntatori a funzione
+(`extern "abi" fn()`). Quando ci si interfaccia con C, si usano spesso
+dei puntatori che potrebbero essere NULL. Come caso particolare,
+a una `enum` generica che contiene esattamente due varianti, una delle quali
+non contiene dati e l'altra contiene un solo campo, è applicabile
+l'"ottimizzazione del puntatore annullabile". Quando una tale enum
+viene istanziata con uno dei tipi non annullabili, viene rappresentata come
+un singolo puntatore, e la variante senza dato viene rappresentata come
+un puntatore NULL. Quindi `Option<extern "C" fn(c_int) -> c_int>` è il modo
+di rappresentare un puntatore annullabile a funzione usando l'ABI di C.
 
-# Calling Rust code from C
+# Chiamare codice Rust da C
 
-You may wish to compile Rust code in a way so that it can be called from C. This is
-fairly easy, but requires a few things:
+Si può desiderare di compilare del codice Rust in un modo che possa
+essere chiamato da codice C. Ciò è abbastanza facile, ma richiede alcune cose:
 
 ```rust
 #[no_mangle]
@@ -629,17 +640,18 @@ pub extern fn hello_rust() -> *const u8 {
 # fn main() {}
 ```
 
-The `extern` makes this function adhere to the C calling convention, as
-discussed above in "[Foreign Calling
-Conventions](ffi.html#foreign-calling-conventions)". The `no_mangle`
-attribute turns off Rust's name mangling, so that it is easier to link to.
+L'`extern` fa aderire questa funzione alla convenzione di chiamata di C, come
+discusso sopra in "[Convenzioni di chiamata straniera]
+(ffi.html#foreign-calling-conventions)". L'attributo `no_mangle`
+spegne la storpiatura dei nomi fatta da Rust, così che sia più facile
+da collegare.
 
 # FFI e il panico
 
 È importante riflettere sui `panic!` quando si lavora con l'FFI. Un `panic!`
 che attraversa un confine di FFI ha un comportamento indefinito. Se stiamo
 scrivendo del codice che può andare in panico, lo dovremmo eseguire in
-un altro thread, in modo che il panico non emerga fino al C:
+un altro thread, in modo che il panico non emerga fino a C:
 
 ```rust
 use std::thread;
@@ -661,7 +673,7 @@ pub extern fn oh_no() -> i32 {
 # Rappresentare struct opache
 
 Talvolta, una libreria C vuole fornire un puntatore a qualche oggetto, ma non
-far i dettagli interni di tale oggetto. Il modo più semplice è usare
+far sapere i dettagli interni di tale oggetto. Il modo più semplice è usare
 un argomento di tipo `void *`:
 
 ```c
@@ -682,11 +694,11 @@ extern "C" {
 # fn main() {}
 ```
 
-Questo è un modo perfettamente valido di gestire la situazione. Tuttavia,
-possiamo fare un po' meglio. Per risolverlo, alcune librerie C creeranno invece
-una `struct`, nella quale i dettagli e la disposizione in memoria sono privati.
-Questo dà una certa dose di sicurezza di tipo. Queste strutture sono chiamate
-‘opache’. Ecco un esempio, in C:
+Questo è un modo perfettamente valido di gestire la situazione. Però,
+possiamo fare di meglio. In casi del genere, alcune librerie C creeranno
+una `struct`, nella quale i dettagli e la disposizione in memoria
+sono lasciati privati. Questo dà una certa dose di sicurezza di tipo.
+Queste strutture sono chiamate ‘opache’. Ecco un esempio, in C:
 
 ```c
 /* Foo è una struttura, ma il suo contenuto
