@@ -85,14 +85,14 @@ let y = &mut numero;
 Che va in errore con:
 
 ```text
-error: cannot borrow `num` as mutable because it is also borrowed as immutable
-    let y = &mut num;
-                 ^~~
-note: previous borrow of `num` occurs here due to use in closure; the immutable
-  borrow prevents subsequent moves or mutable borrows of `num` until the borrow
+error: cannot borrow `numero` as mutable because it is also borrowed as immutable
+    let y = &mut numero;
+                 ^~~~~~
+note: previous borrow of `numero` occurs here due to use in closure; the immutable
+  borrow prevents subsequent moves or mutable borrows of `numero` until the borrow
   ends
     let piu_numero = |x| x + numero;
-                   ^~~~~~~~~~~
+                   ^~~~~~~~~~~~~~~~
 note: previous borrow ends here
 fn main() {
     let mut numero = 5;
