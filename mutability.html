@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Mutabilità</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a class='active' href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Mutabilità</h1>
+    <p>La mutabilità, ossia la capacità di cambiare qualcosa, funziona in Rust un po&#39;
+diversamente che in altri linguaggi. Il primo aspetto della mutabilità in Rust
+è il fatto di non esserci per default:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5;
+x = 6; // errore!
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>6</span>; <span class='comment'>// errore!</span></pre>
+
+<p>Si può introdurre la mutabilità con la parola-chiave <code>mut</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5;
+x = 6; // non c&#39;è problema!
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>6</span>; <span class='comment'>// non c&#39;è problema!</span></pre>
+
+<p>Questo è un <a href="variable-bindings.html">legame di variabile</a> mutabile. Quando un legame è mutabile,
+significa che si può cambiare ciò a cui quel legame punta. Perciò nell&#39;esempio
+sopra, non è tanto che il valore alla posizione <code>x</code> cambia, quanto che
+il legame passa dal puntare un <code>i32</code> al puntarne un altro.</p>
+
+<p>Si può anche creare un <a href="references-and-borrowing.html">riferimento</a> ad esso, usando <code>&amp;x</code>, ma se si vuole
+usare il riferimento per cambiarlo, ci vorrà un riferimento mutabile:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5;
+let y = &amp;mut x;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>x</span>;</pre>
+
+<p><code>y</code> è un legame immutabile a un riferimento mutabile, il che significa che non
+si può legare &#39;y&#39; a qualcos&#39;altro (<code>y = &amp;mut z</code>), ma <code>y</code> può essere usato
+per legare <code>x</code> a qualcos&#39;altro (<code>*y = 5</code>). Una distinzione sottile.</p>
+
+<p>Naturalmente, se servono entrambi:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5;
+let mut y = &amp;mut x;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>x</span>;</pre>
+
+<p>Adesso <code>y</code> può essere legato a un altro valore, e inoltre il valore che sta
+referenziando può essere cambiato.</p>
+
+<p>È importante notare che <code>mut</code> fa parte di un <a href="patterns.html">pattern</a>, e perciò
+si possono fare cose come questa:</p>
+
+<span class='rusttest'>fn main() {
+    let (mut x, y) = (5, 6);
+
+fn foo(mut x: i32) {
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>x</span>, <span class='ident'>y</span>) <span class='op'>=</span> (<span class='number'>5</span>, <span class='number'>6</span>);
+
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='kw-2'>mut</span> <span class='ident'>x</span>: <span class='ident'>i32</span>) {</pre>
+
+<p>Si noti che qui la <code>x</code> è mutabile, mentre la <code>y</code> non lo è.</p>
+
+<h1 id='mutabilità-interiore-contro-mutabilità-esteriore' class='section-header'><a href='#mutabilità-interiore-contro-mutabilità-esteriore'>Mutabilità interiore contro mutabilità esteriore</a></h1>
+<p>Però, quando diciamo che qualcosa è ‘immutabile’ in Rust, non intendiamo che
+è impossibile cambiarla: ci stiamo riferendo alla sua ‘immutabilità esteriore’.
+Si consideri, per esempio, <a href="../std/sync/struct.Arc.html"><code>Arc&lt;T&gt;</code></a>:</p>
+
+<span class='rusttest'>fn main() {
+    use std::sync::Arc;
+
+let x = Arc::new(5);
+let y = x.clone();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='number'>5</span>);
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>clone</span>();</pre>
+
+<p>Quando chiamiamo <code>clone()</code>, l&#39;oggetto di tipo <code>Arc&lt;T&gt;</code> deve aggiornare
+il conteggio dei riferimenti. Però qui non abbiamo usato nessun <code>mut</code>, <code>x</code> è
+un legame immutabile, e non abbiamo preso il valore <code>&amp;mut 5</code> né altri valori.
+E allora?</p>
+
+<p>Per capirlo, dobbiamo tornare al nucleo della filosofia guida di Rust, che è
+la sicurezza di memoria, e al meccanismo col quale Rust la garantisce, che è
+il sistema di [possesso][possesso], e più specificamente,
+il [prestito][prestito]:</p>
+
+<blockquote>
+<p>Si possono avere l&#39;uno o l&#39;altro di questi due tipi di prestiti, ma non
+entrambi allo stesso tempo:</p>
+
+<ul>
+<li>uno o più riferimenti immutabili (<code>&amp;T</code>) a una risorsa,</li>
+<li>esattamente un riferimento mutabile (<code>&amp;mut T</code>).</li>
+</ul>
+</blockquote>
+
+<p>Perciò, questa è la vera definizione di ‘immutabilità’: è sicuro che ci siano
+due puntatori a questo oggetto? Nel caso di <code>Arc&lt;T&gt;</code>, sì: la mutazione è
+contenuta interamente dentro la struttura stessa. Non si presenta all&#39;utente.
+Per questa ragione, passa un <code>&amp;T</code> a <code>clone()</code>. Se gli avesse passato
+un <code>&amp;mut T</code>, però, sarebbe un errore.</p>
+
+<p>Altri tipi, come quelli nel modulo <a href="../std/cell/index.html"><code>std::cell</code></a>, sono
+nella situazione opposta: mutabilità interiore. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    use std::cell::RefCell;
+
+let x = RefCell::new(42);
+
+let y = x.borrow_mut();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='number'>42</span>);
+
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>borrow_mut</span>();</pre>
+
+<p>RefCell passa dei riferimenti <code>&amp;mut</code> a ciò che c&#39;è al suo interno usando
+il metodo <code>borrow_mut()</code>. Non è pericoloso? Che succede se facciamo:</p>
+
+<span class='rusttest'>fn main() {
+    use std::cell::RefCell;
+
+let x = RefCell::new(42);
+
+let y = x.borrow_mut();
+let z = x.borrow_mut();
+(y, z);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='number'>42</span>);
+
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>borrow_mut</span>();
+<span class='kw'>let</span> <span class='ident'>z</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>borrow_mut</span>();</pre>
+
+<p>Di fatto questo andrà in panico, in fase di esecuzione. Questo è quello che fa
+<code>RefCell</code>: forza le regole di prestito di Rust in fase di esecuzione, e va in
+<code>panic!</code> se sono violate. Questo ci consente di aggirare un altro aspetto
+delle regole di mutabilità di Rust. Prima parliamone.</p>
+
+<h2 id='mutabilità-a-livello-di-campo' class='section-header'><a href='#mutabilità-a-livello-di-campo'>Mutabilità a livello di campo</a></h2>
+<p>La mutabilità è una proprietà o di un prestito (<code>&amp;mut</code>) o di un legame
+(<code>let mut</code>). Ciò significa che, per esempio, non si può avere
+una <a href="structs.html"><code>struct</code></a> con alcuni campi mutabili e altri immutabili:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto {
+    x: i32,
+    mut y: i32, // non si può
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='kw-2'>mut</span> <span class='ident'>y</span>: <span class='ident'>i32</span>, <span class='comment'>// non si può</span>
+}</pre>
+
+<p>La mutabilità di una struct sta nel suo legame:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto {
+    x: i32,
+    y: i32,
+}
+
+let mut a = Punto { x: 5, y: 6 };
+
+a.x = 10;
+
+let b = Punto { x: 5, y: 6};
+
+b.x = 10; // errore: non si può assegnare al campo immutabile `b.x`
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>5</span>, <span class='ident'>y</span>: <span class='number'>6</span> };
+
+<span class='ident'>a</span>.<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>10</span>;
+
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>5</span>, <span class='ident'>y</span>: <span class='number'>6</span>};
+
+<span class='ident'>b</span>.<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>10</span>; <span class='comment'>// errore: non si può assegnare al campo immutabile `b.x`</span></pre>
+
+<p>Però, usando <a href="../std/cell/struct.Cell.html"><code>Cell&lt;T&gt;</code></a>, si può emulare la mutabilità a livello
+di campo:</p>
+
+<span class='rusttest'>fn main() {
+    use std::cell::Cell;
+
+struct Punto {
+    x: i32,
+    y: Cell&lt;i32&gt;,
+}
+
+let punto = Punto { x: 5, y: Cell::new(6) };
+
+punto.y.set(7);
+
+println!(&quot;y: {:?}&quot;, punto.y);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>Cell</span>;
+
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>Cell</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>punto</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>5</span>, <span class='ident'>y</span>: <span class='ident'>Cell</span>::<span class='ident'>new</span>(<span class='number'>6</span>) };
+
+<span class='ident'>punto</span>.<span class='ident'>y</span>.<span class='ident'>set</span>(<span class='number'>7</span>);
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;y: {:?}&quot;</span>, <span class='ident'>punto</span>.<span class='ident'>y</span>);</pre>
+
+<p>Questo stamperà <code>y: Cell { value: 7 }</code>. Abbiamo aggiornato <code>y</code> con successo.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Sintassi dei metodi</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a class='active' href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Sintassi dei metodi</h1>
+    <p>Le funzioni sono ottime, ma se si vuole chiamarne un po&#39; su alcuni dati, può
+diventare scomodo. Si consideri questo codice:</p>
+
+<span class='rusttest'>fn main() {
+    baz(bar(foo(x)));
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>baz</span>(<span class='ident'>bar</span>(<span class='ident'>foo</span>(<span class='ident'>x</span>)));</pre>
+
+<p>Normalmente leggiamo questo codice da sinistra a destra, e quindi diciamo
+‘baz di bar di foo di x’. Ma questo non è l&#39;ordine con cui le funzioni
+verrebbero chiamate; l&#39;ordine di chiamata è invece il contrario:
+‘applica a x prima foo, poi bar, e poi baz’.
+Non sarebbe carino se potessimo scrivere il seguente codice?</p>
+
+<span class='rusttest'>fn main() {
+    x.foo().bar().baz();
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>x</span>.<span class='ident'>foo</span>().<span class='ident'>bar</span>().<span class='ident'>baz</span>();</pre>
+
+<p>Fortunatamente, come si potrebbe immaginare, si può! Rust fornisce
+la capacità di usare questa ‘sintassi di chiamata di metodo’ tramite
+la parola-chiave <code>impl</code>.</p>
+
+<h1 id='chiamate-di-metodo' class='section-header'><a href='#chiamate-di-metodo'>Chiamate di metodo</a></h1>
+<p>Ecco come funziona:</p>
+
+<span class='rusttest'>struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn area(&amp;self) -&gt; f64 {
+        std::f64::consts::PI * (self.raggio * self.raggio)
+    }
+}
+
+fn main() {
+    let c = Cerchio { x: 0.0, y: 0.0, raggio: 2.0 };
+    println!(&quot;{}&quot;, c.area());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>raggio</span>)
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>Cerchio</span> { <span class='ident'>x</span>: <span class='number'>0.0</span>, <span class='ident'>y</span>: <span class='number'>0.0</span>, <span class='ident'>raggio</span>: <span class='number'>2.0</span> };
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>c</span>.<span class='ident'>area</span>());
+}</pre>
+
+<p>Questo stamperà <code>12.566371</code>.</p>
+
+<p>Abbiamo definito una <code>struct</code> che rappresenta un cerchio. Poi abbiamo scritto
+un blocco <code>impl</code>, e al suo interno abbiamo definito un metodo, <code>area</code>.</p>
+
+<p>I metodi prendono un primo argomento speciale, di cui ci sono tre varianti:
+<code>self</code>, <code>&amp;self</code>, e <code>&amp;mut self</code>. Si può pensare a questo primo argomento come
+se fosse il <code>foo</code> in <code>foo.bar()</code>. Le tre varianti corrispondono ai tre tipi
+di cose che <code>foo</code> potrebbe essere: <code>self</code> se è un valore sullo stack,
+<code>&amp;self</code> se è un riferimento, e <code>&amp;mut self</code> se è un riferimento mutabile.
+Siccome abbiamo preso l&#39;argomento <code>&amp;self</code> da <code>area</code>, possiamo usarlo
+come qualunque altro argomento. Siccome sappiamo che tale argomento è di tipo
+<code>Cerchio</code>, possiamo accedere al suo membro <code>raggio</code> come faremmo con qualunque
+altra <code>struct</code>.</p>
+
+<p>Di regola dovremmo usare <code>&amp;self</code>, dato che dovremmo preferire prendere
+a prestito rispetto a prendere il possesso, e pure dovremmo preferire
+prendere un riferimenti immutabili rispetto a qulli mutabili. Ecco un esempio
+di tutte e tre le varianti:</p>
+
+<span class='rusttest'>fn main() {
+    struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn riferimento(&amp;self) {
+       println!(&quot;presa di sé per riferimento!&quot;);
+    }
+
+    fn riferimento_mutabile(&amp;mut self) {
+       println!(&quot;presa di sé per riferimento mutabile!&quot;);
+    }
+
+    fn prendi_possesso(self) {
+       println!(&quot;presa di possesso di sé!&quot;);
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>riferimento</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
+       <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;presa di sé per riferimento!&quot;</span>);
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>riferimento_mutabile</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+       <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;presa di sé per riferimento mutabile!&quot;</span>);
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>prendi_possesso</span>(<span class='self'>self</span>) {
+       <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;presa di possesso di sé!&quot;</span>);
+    }
+}</pre>
+
+<p>Si possono usare tanti blocchi <code>impl</code> quanti se ne vuole. L&#39;esempio precedente
+poteva anche essere scritto così:</p>
+
+<span class='rusttest'>fn main() {
+    struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn riferimento(&amp;self) {
+       println!(&quot;presa di sé per riferimento!&quot;);
+    }
+}
+
+impl Cerchio {
+    fn riferimento_mutabile(&amp;mut self) {
+       println!(&quot;presa di sé per riferimento mutabile!&quot;);
+    }
+}
+
+impl Cerchio {
+    fn prendi_possesso(self) {
+       println!(&quot;presa di possesso di sé!&quot;);
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>riferimento</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
+       <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;presa di sé per riferimento!&quot;</span>);
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>riferimento_mutabile</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+       <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;presa di sé per riferimento mutabile!&quot;</span>);
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>prendi_possesso</span>(<span class='self'>self</span>) {
+       <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;presa di possesso di sé!&quot;</span>);
+    }
+}</pre>
+
+<h1 id='concatenamento-di-chiamate-di-metodi' class='section-header'><a href='#concatenamento-di-chiamate-di-metodi'>Concatenamento di chiamate di metodi</a></h1>
+<p>Perciò, adesso sappiamo come chiamare un metodo, come <code>foo.bar()</code>. E che dire
+del nostro esempio originale, <code>x.foo().bar().baz()</code>? Questo è chiamato
+‘concatenamento di metodi’. Vediamo un esempio:</p>
+
+<span class='rusttest'>struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn area(&amp;self) -&gt; f64 {
+        std::f64::consts::PI * (self.raggio * self.raggio)
+    }
+
+    fn cresci(&amp;self, incremento: f64) -&gt; Cerchio {
+        Cerchio { x: self.x, y: self.y, raggio: self.raggio + incremento }
+    }
+}
+
+fn main() {
+    let c = Cerchio { x: 0.0, y: 0.0, raggio: 2.0 };
+    println!(&quot;{}&quot;, c.area());
+
+    let d = c.cresci(2.0).area();
+    println!(&quot;{}&quot;, d);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>raggio</span>)
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>cresci</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>incremento</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>Cerchio</span> {
+        <span class='ident'>Cerchio</span> { <span class='ident'>x</span>: <span class='self'>self</span>.<span class='ident'>x</span>, <span class='ident'>y</span>: <span class='self'>self</span>.<span class='ident'>y</span>, <span class='ident'>raggio</span>: <span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>+</span> <span class='ident'>incremento</span> }
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>Cerchio</span> { <span class='ident'>x</span>: <span class='number'>0.0</span>, <span class='ident'>y</span>: <span class='number'>0.0</span>, <span class='ident'>raggio</span>: <span class='number'>2.0</span> };
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>c</span>.<span class='ident'>area</span>());
+
+    <span class='kw'>let</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>c</span>.<span class='ident'>cresci</span>(<span class='number'>2.0</span>).<span class='ident'>area</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>d</span>);
+}</pre>
+
+<p>Verifica il tipo del valore restituito:</p>
+
+<span class='rusttest'>fn main() {
+    struct Cerchio;
+impl Cerchio {
+fn grow(&amp;self, increment: f64) -&gt; Cerchio {
+Cerchio } }
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>grow</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>increment</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>Cerchio</span> {</pre>
+
+<p>Diciamo che stiamo restituendo un <code>Cerchio</code>. Con questo metodo, possiamo
+far crescere un nuovo <code>Cerchio</code> a qualunque dimensione.</p>
+
+<h1 id='funzioni-associate' class='section-header'><a href='#funzioni-associate'>Funzioni associate</a></h1>
+<p>Si possono anche definire funzioni associate che non prendono un argomento
+<code>self</code>. Ecco un pattern molto comune nel codice Rust:</p>
+
+<span class='rusttest'>struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn new(x: f64, y: f64, raggio: f64) -&gt; Cerchio {
+        Cerchio {
+            x: x,
+            y: y,
+            raggio: raggio,
+        }
+    }
+}
+
+fn main() {
+    let c = Cerchio::new(0.0, 0.0, 2.0);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>x</span>: <span class='ident'>f64</span>, <span class='ident'>y</span>: <span class='ident'>f64</span>, <span class='ident'>raggio</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>Cerchio</span> {
+        <span class='ident'>Cerchio</span> {
+            <span class='ident'>x</span>: <span class='ident'>x</span>,
+            <span class='ident'>y</span>: <span class='ident'>y</span>,
+            <span class='ident'>raggio</span>: <span class='ident'>raggio</span>,
+        }
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>Cerchio</span>::<span class='ident'>new</span>(<span class='number'>0.0</span>, <span class='number'>0.0</span>, <span class='number'>2.0</span>);
+}</pre>
+
+<p>Questa ‘funzione associata’ ci costruisce un nuovo <code>Cerchio</code>. Si noti che
+le funzioni associate vengono chiamate usando la sintassi <code>Struct::function()</code>,
+invece che con la sintassi <code>ref.method()</code>. In alcuni altri linguaggi,
+le funzioni associate sono chiamate ‘funzioni membro statiche’
+o ‘metodi statici’ o ‘metodi di classe’.</p>
+
+<h1 id='il-pattern-del-costruttore' class='section-header'><a href='#il-pattern-del-costruttore'>Il pattern del costruttore</a></h1>
+<p>Diciamo che vogliamo che i nostri utenti possano creare delle istanze
+di <code>Cerchio</code>, ma permetteremo loro di impostare solamente le proprietà
+a cui sono interessati. Se non specificati, gli attributi <code>x</code> e <code>y</code> varranno
+<code>0.0</code>, e l&#39;attributo <code>raggio</code> varrà <code>1.0</code>. Rust non ha il sovraccaricamento
+dei metodi, né gli argomenti con nome, né un numero variabile di argomenti.
+Invece si impiega il pattern del costruttore. Si presenta così:</p>
+
+<span class='rusttest'>struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn area(&amp;self) -&gt; f64 {
+        std::f64::consts::PI * (self.raggio * self.raggio)
+    }
+}
+
+struct CostruttoreDiCerchi {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl CostruttoreDiCerchi {
+    fn new() -&gt; CostruttoreDiCerchi {
+        CostruttoreDiCerchi { x: 0.0, y: 0.0, raggio: 1.0, }
+    }
+
+    fn x(&amp;mut self, coordinata: f64) -&gt; &amp;mut CostruttoreDiCerchi {
+        self.x = coordinata;
+        self
+    }
+
+    fn y(&amp;mut self, coordinata: f64) -&gt; &amp;mut CostruttoreDiCerchi {
+        self.y = coordinata;
+        self
+    }
+
+    fn raggio(&amp;mut self, raggio: f64) -&gt; &amp;mut CostruttoreDiCerchi {
+        self.raggio = raggio;
+        self
+    }
+
+    fn finalizza(&amp;self) -&gt; Cerchio {
+        Cerchio { x: self.x, y: self.y, raggio: self.raggio }
+    }
+}
+
+fn main() {
+    let c = CostruttoreDiCerchi::new()
+        .x(1.0)
+        .y(2.0)
+        .raggio(2.0)
+        .finalizza();
+
+    println!(&quot;area: {}&quot;, c.area());
+    println!(&quot;x: {}&quot;, c.x);
+    println!(&quot;y: {}&quot;, c.y);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>raggio</span>)
+    }
+}
+
+<span class='kw'>struct</span> <span class='ident'>CostruttoreDiCerchi</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>CostruttoreDiCerchi</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>CostruttoreDiCerchi</span> {
+        <span class='ident'>CostruttoreDiCerchi</span> { <span class='ident'>x</span>: <span class='number'>0.0</span>, <span class='ident'>y</span>: <span class='number'>0.0</span>, <span class='ident'>raggio</span>: <span class='number'>1.0</span>, }
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>x</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>coordinata</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>CostruttoreDiCerchi</span> {
+        <span class='self'>self</span>.<span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>coordinata</span>;
+        <span class='self'>self</span>
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>y</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>coordinata</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>CostruttoreDiCerchi</span> {
+        <span class='self'>self</span>.<span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>coordinata</span>;
+        <span class='self'>self</span>
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>raggio</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>raggio</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>CostruttoreDiCerchi</span> {
+        <span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>=</span> <span class='ident'>raggio</span>;
+        <span class='self'>self</span>
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>finalizza</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cerchio</span> {
+        <span class='ident'>Cerchio</span> { <span class='ident'>x</span>: <span class='self'>self</span>.<span class='ident'>x</span>, <span class='ident'>y</span>: <span class='self'>self</span>.<span class='ident'>y</span>, <span class='ident'>raggio</span>: <span class='self'>self</span>.<span class='ident'>raggio</span> }
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>CostruttoreDiCerchi</span>::<span class='ident'>new</span>()
+        .<span class='ident'>x</span>(<span class='number'>1.0</span>)
+        .<span class='ident'>y</span>(<span class='number'>2.0</span>)
+        .<span class='ident'>raggio</span>(<span class='number'>2.0</span>)
+        .<span class='ident'>finalizza</span>();
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;area: {}&quot;</span>, <span class='ident'>c</span>.<span class='ident'>area</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x: {}&quot;</span>, <span class='ident'>c</span>.<span class='ident'>x</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;y: {}&quot;</span>, <span class='ident'>c</span>.<span class='ident'>y</span>);
+}</pre>
+
+<p>Ciò che abbiamo fatto qui è creare un&#39;altra <code>struct</code>, <code>CostruttoreDiCerchi</code>.
+Su di essa abbiamo definito i nostri metodi di costruttore. Abbiamo anche
+definito il nostro metodo <code>area()</code> su <code>Cerchio</code>. Inoltre abbiamo creato
+un altro metodo su <code>CostruttoreDiCerchi</code>: <code>finalizza()</code>. Questo metodo crea
+il nostro <code>Cerchio</code> finale dal costruttore. Adesso, abbiamo usato il sistema
+dei tipi per imporre le nostre intenzioni: possiamo usare i metodi su
+<code>CostruttoreDiCerchi</code> per vincolare la costruzione di istanze di <code>Cerchio</code>
+in qualunque modo desideriamo.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

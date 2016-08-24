@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Conversione fra tipi</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a class='active' href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Conversione fra tipi</h1>
+    <p>Rust, concentrandosi sulla sicurezza, fornisce due diversi modi di convertire
+un valore in un valore di tipo diverso. Il primo, <code>as</code>, è per conversioni
+sicure. Invece, <code>transmute</code> consente conversioni arbitrarie, ed è una delle
+caratteristiche più pericolose di Rust!</p>
+
+<h1 id='la-forzatura' class='section-header'><a href='#la-forzatura'>La forzatura</a></h1>
+<p>La forzatura tra tipi è implicita e non ha una sua sintassi, ma può essere
+esplicitata usando <a href="#explicit-coercions"><code>as</code></a>.</p>
+
+<p>La forzatura può avvenire nelle istruzioni <code>let</code>, <code>const</code>, e <code>static</code>; negli
+argomenti delle chiamate di funzione; nei valori dei campi
+nell&#39;inizializzazione di struct; e nei risultati di funzioni.</p>
+
+<p>Il caso più tipico di forzatura è la rimozione della mutabilità
+da un riferimento:</p>
+
+<ul>
+<li><code>&amp;mut T</code> to <code>&amp;T</code></li>
+</ul>
+
+<p>Un&#39;analoga conversione si ha per rimuovere la mutabilità
+da un <a href="raw-pointers.html">puntatore grezzo</a>:</p>
+
+<ul>
+<li><code>*mut T</code> to <code>*const T</code></li>
+</ul>
+
+<p>I riferimenti possono anche essere forzati in puntatori grezzi:</p>
+
+<ul>
+<li><p><code>&amp;T</code> to <code>*const T</code></p></li>
+<li><p><code>&amp;mut T</code> to <code>*mut T</code></p></li>
+</ul>
+
+<p>Si possono definire delle forzature personalizzate usando
+<a href="deref-coercions.html"><code>Deref</code></a>.</p>
+
+<p>Le forzature sono transitive.</p>
+
+<h1 id='as' class='section-header'><a href='#as'><code>as</code></a></h1>
+<p>La parola-chiave <code>as</code> esegue una conversione sicura:</p>
+
+<span class='rusttest'>fn main() {
+    let x: i32 = 5;
+
+let y = x as i64;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span> <span class='kw'>as</span> <span class='ident'>i64</span>;</pre>
+
+<p>Ci sono tre categorie principali di conversioni sicure: le forzature esplicite,
+le conversioni tra tipi numerici, e le conversioni tra puntatori.</p>
+
+<p>Le conversioni non sono transitive: anche se <code>e as U1 as U2</code> è un&#39;espressione
+valida, <code>e as U2</code> non lo è necessariamente (di fatto è valida solamente se 
+<code>U1</code> può essere forzata a <code>U2</code>).</p>
+
+<h2 id='forzature-esplicite' class='section-header'><a href='#forzature-esplicite'>Forzature esplicite</a></h2>
+<p>Una conversione <code>e as U</code> è valida se <code>e</code> ha tipo <code>T</code> e <code>T</code> <em>può essere forzato</em>
+a <code>U</code>.</p>
+
+<h2 id='conversioni-numeriche' class='section-header'><a href='#conversioni-numeriche'>Conversioni numeriche</a></h2>
+<p>Una conversione <code>e as U</code> è pure valida in ognuno dei seguenti casi:</p>
+
+<ul>
+<li><code>e</code> è di tipo <code>T</code>, e <code>T</code> e <code>U</code> sono tipi numerici qualunque; <em>numeric-cast</em></li>
+<li><code>e</code> è un enum in stile C (cioò senza dati allegati alle varianti),
+e <code>U</code> è un tipo intero; <em>enum-cast</em></li>
+<li><code>e</code> è di tipo <code>bool</code> o <code>char</code>, e <code>U</code> è un tipo intero; <em>prim-int-cast</em></li>
+<li><code>e</code> è di tipo <code>u8</code>, e <code>U</code> è <code>char</code>; <em>u8-char-cast</em></li>
+</ul>
+
+<p>Per esempio</p>
+
+<span class='rusttest'>fn main() {
+    let one = true as u8;
+let at_sign = 64 as char;
+let two_hundred = -56i8 as u8;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>one</span> <span class='op'>=</span> <span class='bool-val'>true</span> <span class='kw'>as</span> <span class='ident'>u8</span>;
+<span class='kw'>let</span> <span class='ident'>at_sign</span> <span class='op'>=</span> <span class='number'>64</span> <span class='kw'>as</span> <span class='ident'>char</span>;
+<span class='kw'>let</span> <span class='ident'>two_hundred</span> <span class='op'>=</span> <span class='op'>-</span><span class='number'>56i8</span> <span class='kw'>as</span> <span class='ident'>u8</span>;</pre>
+
+<p>La semantica delle conversioni numeriche è la seguente:</p>
+
+<ul>
+<li>La conversione fra due interi della stessa dimensione (per es. i32 -&gt; u32)
+è una no-op (cioè non fa niente)</li>
+<li>La conversione da un intero più grande a un intero più piccolo (per es.
+u32 -&gt; u8) troncherà</li>
+<li>La conversione da un intero più piccolo a un intero più grande (per es.
+u8 -&gt; u32)
+
+<ul>
+<li>estenderà con zeri se l&#39;originale è senza segno</li>
+<li>estenderà con bit del segno se l&#39;originale è con segno</li>
+</ul></li>
+<li>La conversione da un numero a virgola mobile a un intero arrotonderà
+un numero a virgola mobile verso lo zero
+
+<ul>
+<li><strong><a href="https://github.com/rust-lang/rust/issues/10184">NOTA: attualmente ciò avrà comportamento indefinito se il valore
+arrotondato non può essere rappresentato dal tipo intero obiettivo</a></strong>. Sono compresi Inf e NaN. Questo difetto dovrà essere
+corretto.</li>
+</ul></li>
+<li>La conversione da un intero a un numero a virgola mobile produrrà
+la rappresentazione a virgola mobile dell&#39;intero, arrotondato se necessario
+(la strategia di arrotondamento non è specificata)</li>
+<li>La conversione da un f32 a un f64 è perfetta e senza perdite di precisione</li>
+<li>La conversione da un f64 a un f32 produrrà il valore più vicino possibile
+(la strategia di arrotondamento non è specificata)
+
+<ul>
+<li><strong><a href="https://github.com/rust-lang/rust/issues/15536">NOTA: attualmente ciò avrà comportamento indefinito se il valore è
+finito ma più grande o più piccolo del valore finito più grande o più
+piccolo rappresentabile da f32</a></strong>. Questo difetto dovrà
+essere corretto.</li>
+</ul></li>
+</ul>
+
+<h2 id='conversione-di-puntatori' class='section-header'><a href='#conversione-di-puntatori'>Conversione di puntatori</a></h2>
+<p>Forse sorprenderà qualcuno, ma è sicuro convertire <a href="raw-pointers.html">puntatori grezzi</a> in interi e interi in puntatori grezzi, e convertire
+fra puntatori che puntano a tipi diversi pur di rispettare alcuni vincoli.
+È insicuro solamente dereferenziare il puntatore:</p>
+
+<span class='rusttest'>fn main() {
+    let a = 300 as *const char; // un puntatore alla posizione 300
+let b = a as u32;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='number'>300</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>char</span>; <span class='comment'>// un puntatore alla posizione 300</span>
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>a</span> <span class='kw'>as</span> <span class='ident'>u32</span>;</pre>
+
+<p><code>e as U</code> è una valida conversione di puntatore in ognuno dei seguenti casi:</p>
+
+<ul>
+<li><p><code>e</code> è di tipo <code>*T</code>, <code>U</code> è <code>*U_0</code>, e o vale <code>U_0: Sized</code> o
+vale <code>unsize_kind(T) == unsize_kind(U_0)</code>; è un <em>ptr-ptr-cast</em></p></li>
+<li><p><code>e</code> è di tipo <code>*T</code> e <code>U</code> è un tipo numerico, mentre vale <code>T: Sized</code>;
+è un <em>ptr-addr-cast</em></p></li>
+<li><p><code>e</code> è un intero e <code>U</code> è <code>*U_0</code>, mentre vale <code>U_0: Sized</code>; è un <em>addr-ptr-cast</em></p></li>
+<li><p><code>e</code> è di tipo <code>&amp;[T; n]</code> e <code>U</code> è <code>*const T</code>; è un <em>array-ptr-cast</em></p></li>
+<li><p><code>e</code> è un puntatore a funzione e <code>U</code> è <code>*T</code>,
+mentre <code>T: Sized</code>; è un <em>fptr-ptr-cast</em></p></li>
+<li><p><code>e</code> è un puntatore a funzione e <code>U</code> è un tipo intero; è un <em>fptr-addr-cast</em></p></li>
+</ul>
+
+<h1 id='la-funzione-transmute' class='section-header'><a href='#la-funzione-transmute'>La funzione <code>transmute</code></a></h1>
+<p><code>as</code> consente solamente conversioni sicure, e per esempio respngerà
+un tentativo di convertire quattro bye in un <code>u32</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let a = [0u8, 0u8, 0u8, 0u8];
+
+let b = a as u32; // quattro u8 fanno un u32
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>0u8</span>, <span class='number'>0u8</span>, <span class='number'>0u8</span>, <span class='number'>0u8</span>];
+
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>a</span> <span class='kw'>as</span> <span class='ident'>u32</span>; <span class='comment'>// quattro u8 fanno un u32</span></pre>
+
+<p>Ciò produrrà questo errore:</p>
+
+<pre><code class="language-text">error: non-scalar cast: `[u8; 4]` as `u32`
+let b = a as u32; // quattro u8 fanno un u32
+        ^~~~~~~~
+</code></pre>
+
+<p>Questa è una conversione ’non scalare’, perché qui abbiamo più valori:
+i quattro elementi dell&#39;array. Questi generi di conversioni sono molto
+pericolose, perché fanno assunzioni sul modo in cui più strutture soggiacenti
+sono implementate. Per questo, ci serve qualcosa di più pericoloso.</p>
+
+<p>La funzione <code>transmute</code> è fornita da un <a href="intrinsics.html">intrinseco del compilatore</a>, e quello che fa è molto semplice, ma molto pauroso. Dice a Rust
+di trattare un valore di un tipo come se fosse di un altro tipo. Lo fa senza
+riguardo per il sistema di verifica dei tipi, e si fida completamente
+del programmatore.</p>
+
+<p>Nell&#39;esempio precedente, sappiamo che un array di quattro <code>u8</code> rappresenta
+appropriatamente un <code>u32</code>, e quindi vogliamo fare la conversione. Usando
+<code>transmute</code> invece di <code>as</code>, Rust ce lo lascia fare:</p>
+
+<span class='rusttest'>use std::mem;
+
+fn main() {
+    unsafe {
+        let a = [0u8, 1u8, 0u8, 0u8];
+        let b = mem::transmute::&lt;[u8; 4], u32&gt;(a);
+        println!(&quot;{}&quot;, b); // 256
+        // o, più concisamente:
+        let c: u32 = mem::transmute(a);
+        println!(&quot;{}&quot;, c); // 256
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>unsafe</span> {
+        <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>0u8</span>, <span class='number'>1u8</span>, <span class='number'>0u8</span>, <span class='number'>0u8</span>];
+        <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>4</span>], <span class='ident'>u32</span><span class='op'>&gt;</span>(<span class='ident'>a</span>);
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>b</span>); <span class='comment'>// 256</span>
+        <span class='comment'>// o, più concisamente:</span>
+        <span class='kw'>let</span> <span class='ident'>c</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>a</span>);
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>c</span>); <span class='comment'>// 256</span>
+    }
+}</pre>
+
+<p>Dobbiamo avvolgere l&#39;operazione in un blocco <code>unsafe</code> affinché compili
+con successo. Tecnicamente, solamente la chiamata <code>mem::transmute</code> stessa ha
+bisogno di essere nel blocco, ma in questo caso è carino racchiudere tutte
+le cose correlate, così da saper dove guardare. In questo caso, anche
+i dettagli su <code>a</code> sono importanti, e quindi sono nel blocco. Capiterà di vedere
+del codice in entrambi gli stili; talvolta il contesto è troppo lontano, e
+avvolgere tutto il codice in <code>unsafe</code> non è un&#39;ottima idea.</p>
+
+<p>Per quanto <code>transmute</code> faccia pochissime verifiche, almeno si assicura che
+i tipi siano della stessa dimensione. Questa codice:</p>
+
+<span class='rusttest'>fn main() {
+    use std::mem;
+
+unsafe {
+    let a = [0u8, 0u8, 0u8, 0u8];
+
+    let b = mem::transmute::&lt;[u8; 4], u64&gt;(a);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+
+<span class='kw'>unsafe</span> {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>0u8</span>, <span class='number'>0u8</span>, <span class='number'>0u8</span>, <span class='number'>0u8</span>];
+
+    <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>4</span>], <span class='ident'>u64</span><span class='op'>&gt;</span>(<span class='ident'>a</span>);
+}</pre>
+
+<p>dà il seguente errore:</p>
+
+<pre><code class="language-text">error: transmute called with differently sized types: [u8; 4] (32 bits) to u64
+(64 bits)
+</code></pre>
+
+<p>A parte quello, ci si deve arrangiare!</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Cicli</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a class='active' href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Cicli</h1>
+    <p>Attualmente Rust fornisce tre costrutti per eseguire attività iterative:
+<code>loop</code>, <code>while</code> e <code>for</code>. Ogni costrutto serve a scopi diversi.</p>
+
+<h2 id='loop' class='section-header'><a href='#loop'>loop</a></h2>
+<p>Il costrutto <code>loop</code> (&quot;ciclo&quot;) è la forma più semplice di ciclo disponibile
+in Rust. Usando la parola-chiave <code>loop</code>, Rust fornisce un modo
+di ciclare indefinitamente finché si raggiunge qualche istruzione
+di terminazione. Il ciclo infinito di Rust è fatto così:</p>
+
+<span class='rusttest'>fn main() {
+    loop {
+    println!(&quot;Cicla per sempre!&quot;);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>loop</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Cicla per sempre!&quot;</span>);
+}</pre>
+
+<h2 id='while' class='section-header'><a href='#while'>while</a></h2>
+<p>Rust ha anche un ciclo <code>while</code> (&quot;fintanto che&quot;). È fatto così:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5; // mut x: i32
+let mut fatto = false; // mut fatto: bool
+
+while !fatto {
+    x += x - 3;
+
+    println!(&quot;{}&quot;, x);
+
+    if x % 5 == 0 {
+        fatto = true;
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>; <span class='comment'>// mut x: i32</span>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fatto</span> <span class='op'>=</span> <span class='bool-val'>false</span>; <span class='comment'>// mut fatto: bool</span>
+
+<span class='kw'>while</span> <span class='op'>!</span><span class='ident'>fatto</span> {
+    <span class='ident'>x</span> <span class='op'>+=</span> <span class='ident'>x</span> <span class='op'>-</span> <span class='number'>3</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+
+    <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>5</span> <span class='op'>==</span> <span class='number'>0</span> {
+        <span class='ident'>fatto</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+    }
+}</pre>
+
+<p>I cicli <code>while</code> sono la scelta appropriata quando non si è sicuri
+di quante volte si dovrà ciclare.</p>
+
+<p>Se serve un ciclo infinito, si può essere tentati di scrivere:</p>
+
+<span class='rusttest'>fn main() {
+    while true {
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>while</span> <span class='bool-val'>true</span> {</pre>
+
+<p>Tuttavia, il costrutto <code>loop</code> è molto più adatto per gestire questo caso:</p>
+
+<span class='rusttest'>fn main() {
+    loop {
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>loop</span> {</pre>
+
+<p>L&#39;analisi del flusso di costrullo di Rust tratta questo costrutto
+diversamente da un <code>while true</code>, dato che sappiamo che ciclerà per sempre.
+In generale, più informazione possiamo dare al compilatore, meglio può fare
+con la sicurezza e la generazione del codice, e perciò si dovrebbe sempre
+preferire <code>loop</code> quando si intende ciclare indefinitamente.</p>
+
+<h2 id='for' class='section-header'><a href='#for'>for</a></h2>
+<p>Il ciclo <code>for</code> viene usato per ciclare un particolare numero di volte.
+Però i cicli <code>for</code> di Rust funzionano un po&#39; diversamente dagli altri
+linguaggi di sistema. Il ciclo <code>for</code> di Rust non somiglia al ciclo <code>for</code>
+del linguaggio C:</p>
+
+<pre><code class="language-c">for (x = 0; x &lt; 10; x++) {
+    printf( &quot;%d\n&quot;, x );
+}
+</code></pre>
+
+<p>Invece, è fatto così:</p>
+
+<span class='rusttest'>fn main() {
+    for x in 0..10 {
+    println!(&quot;{}&quot;, x); // x: i32
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>10</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>); <span class='comment'>// x: i32</span>
+}</pre>
+
+<p>o, in termini più astratti,</p>
+
+<span class='rusttest'>fn main() {
+    for var in expression {
+    code
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>var</span> <span class='kw'>in</span> <span class='ident'>expression</span> {
+    <span class='ident'>code</span>
+}</pre>
+
+<p>L&#39;espressione è un elemento che può essere convertito in un [iteratore] usando
+<a href="../std/iter/trait.IntoIterator.html"><code>IntoIterator</code></a>. L&#39;iteratore rende una serie di elementi. Ogni elemento è
+un&#39;iterazione del ciclo. Tale valore viene poi associato al nome <code>var</code>,
+che è valido solo nel corpo del ciclo. Una volta che il corpo è finito,
+il prossimo valore viene preso dall&#39;iteratore, e si esegue un&#39;altra iterazione.
+Quando non ci sono più valori, il ciclo <code>for</code> è finito.</p>
+
+<p>Nel nostro esempio, <code>0..10</code> è un&#39;espressione che prende una posizione
+di inizio e una di fine, e dà un iteratore su quei valori. Tuttavia, il limite
+superiore è escluso, così che questo ciclo stamperà i numeri da <code>0</code> a <code>9</code>,
+e non il <code>10</code>.</p>
+
+<p>Rust non ha il ciclo <code>for</code> in &quot;stile C&quot; di proposito. Controllare manualmente
+ogni elemento del ciclo è complicato e soggetto a errori, anche per
+sviluppatori esperti nel linguaggio C.</p>
+
+<h3 id='enumerazione' class='section-header'><a href='#enumerazione'>Enumerazione</a></h3>
+<p>Quando c&#39;è bisogno di tener traccia di quante volte si ha già ciclato,
+si può usare la funzione <code>.enumerate()</code>.</p>
+
+<h4 id='sui-range' class='section-header'><a href='#sui-range'>Sui range:</a></h4>
+<span class='rusttest'>fn main() {
+    for (i, j) in (5..10).enumerate() {
+    println!(&quot;i = {} e j = {}&quot;, i, j);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>j</span>) <span class='kw'>in</span> (<span class='number'>5</span>..<span class='number'>10</span>).<span class='ident'>enumerate</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;i = {} e j = {}&quot;</span>, <span class='ident'>i</span>, <span class='ident'>j</span>);
+}</pre>
+
+<p>Emette:</p>
+
+<pre><code class="language-text">i = 0 e j = 5
+i = 1 e j = 6
+i = 2 e j = 7
+i = 3 e j = 8
+i = 4 e j = 9
+</code></pre>
+
+<p>In questo caso si devono aggiungere le parentesi intorno al range.</p>
+
+<h4 id='sugli-iteratori' class='section-header'><a href='#sugli-iteratori'>Sugli iteratori:</a></h4>
+<span class='rusttest'>fn main() {
+    let linee = &quot;ciao\nmondo&quot;.lines();
+
+for (numerolinea, linea) in linee.enumerate() {
+    println!(&quot;{}: {}&quot;, numerolinea, linea);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>linee</span> <span class='op'>=</span> <span class='string'>&quot;ciao\nmondo&quot;</span>.<span class='ident'>lines</span>();
+
+<span class='kw'>for</span> (<span class='ident'>numerolinea</span>, <span class='ident'>linea</span>) <span class='kw'>in</span> <span class='ident'>linee</span>.<span class='ident'>enumerate</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>numerolinea</span>, <span class='ident'>linea</span>);
+}</pre>
+
+<p>Emette:</p>
+
+<pre><code class="language-text">0: ciao
+1: mondo
+</code></pre>
+
+<h2 id='terminare-precocemente-literazione' class='section-header'><a href='#terminare-precocemente-literazione'>Terminare precocemente l&#39;iterazione</a></h2>
+<p>Diamo un&#39;occhiata a quel ciclo <code>while</code> di prima:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5;
+let mut fatto = false;
+
+while !fatto {
+    x += x - 3;
+
+    println!(&quot;{}&quot;, x);
+
+    if x % 5 == 0 {
+        fatto = true;
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fatto</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+
+<span class='kw'>while</span> <span class='op'>!</span><span class='ident'>fatto</span> {
+    <span class='ident'>x</span> <span class='op'>+=</span> <span class='ident'>x</span> <span class='op'>-</span> <span class='number'>3</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+
+    <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>5</span> <span class='op'>==</span> <span class='number'>0</span> {
+        <span class='ident'>fatto</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+    }
+}</pre>
+
+<p>Abbiamo dovuto tenere apposta una variabile booleana, <code>fatto</code>, per sapere
+quando dovremmo uscire dal ciclo. Rust ha due parole-chiave per aiutarci
+a modificare le iterazioni: <code>break</code> (&quot;interrompi&quot;) e <code>continue</code> (&quot;continua&quot;).</p>
+
+<p>In questo caso, possiamo scrivere il ciclo in un modo migliore usando <code>break</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5;
+
+loop {
+    x += x - 3;
+
+    println!(&quot;{}&quot;, x);
+
+    if x % 5 == 0 { break; }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='kw'>loop</span> {
+    <span class='ident'>x</span> <span class='op'>+=</span> <span class='ident'>x</span> <span class='op'>-</span> <span class='number'>3</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+
+    <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>5</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>break</span>; }
+}</pre>
+
+<p>Adesso cicliamo per sempre usando <code>loop</code> e usiamo <code>break</code> per uscire
+precocemente. Anche eseguire un&#39;istruzione <code>return</code> potrebbe servire
+a terminare il ciclo precocemente.</p>
+
+<p><code>continue</code> è simile, ma invece di terminare il ciclo, passa alla prossima
+iterazione. Questo codice stamperà solamente i numeri dispari:</p>
+
+<span class='rusttest'>fn main() {
+    for x in 0..10 {
+    if x % 2 == 0 { continue; }
+
+    println!(&quot;{}&quot;, x);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>10</span> {
+    <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>2</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>continue</span>; }
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+<h2 id='etichette-dei-cicli' class='section-header'><a href='#etichette-dei-cicli'>Etichette dei cicli</a></h2>
+<p>Si potrebbero anche incontrare situazioni in cui ci sono cicli annidati
+si vuole specificare a quale ciclo si riferisce una particolare istruzione
+<code>break</code> o <code>continue</code>. Come nella maggior parte degli altri linguaggi,
+di default an&#39;istruzione <code>break</code> o <code>continue</code> si applicheranno al ciclo
+più interno. Dove si volesse applicare <code>break</code> o <code>continue</code> a uno dei cicli
+esterni, si possono usare delle etichette. Il seguente codice stamperà
+solamente quando sia <code>x</code> che <code>y</code> sono dispari:</p>
+
+<span class='rusttest'>fn main() {
+    &#39;esterno: for x in 0..10 {
+    &#39;interno: for y in 0..10 {
+        if x % 2 == 0 { continue &#39;esterno; } // continua al ciclo su x
+        if y % 2 == 0 { continue &#39;interno; } // continua al ciclo su y
+        println!(&quot;x: {}, y: {}&quot;, x, y);
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='lifetime'>&#39;esterno</span>: <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>10</span> {
+    <span class='lifetime'>&#39;interno</span>: <span class='kw'>for</span> <span class='ident'>y</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>10</span> {
+        <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>2</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>continue</span> <span class='lifetime'>&#39;esterno</span>; } <span class='comment'>// continua al ciclo su x</span>
+        <span class='kw'>if</span> <span class='ident'>y</span> <span class='op'>%</span> <span class='number'>2</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>continue</span> <span class='lifetime'>&#39;interno</span>; } <span class='comment'>// continua al ciclo su y</span>
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x: {}, y: {}&quot;</span>, <span class='ident'>x</span>, <span class='ident'>y</span>);
+    }
+}</pre>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

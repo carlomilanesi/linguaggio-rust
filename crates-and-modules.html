@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>I crate e i moduli</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a class='active' href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">I crate e i moduli</h1>
+    <p>Quando un progetto inizia a diventare grande, è considerata buona pratica
+di ingegneria del software scomporlo in un gruppo di pezzi più piccoli, e poi
+incastrarli insieme. È importante anche avere un&#39;interfaccia bene definita,
+così che parte delle proprie funzionalità siano private, e parte pubbliche.
+Per facilitare questo genere di cose, Rust ha un sistema di moduli.</p>
+
+<h1 id='terminologia-di-base-i-crate-e-i-moduli' class='section-header'><a href='#terminologia-di-base-i-crate-e-i-moduli'>Terminologia di base: i crate e i moduli</a></h1>
+<p>Rust ha due termini distinti relativi al sistema dei moduli: ‘crate’ e ‘modulo’
+[&quot;‘module’&quot;]. Un crate è sinonimo di ‘libreria’ o di ‘pacchetto’ in altri
+linguaggi. Da questo deriva il nome di “Cargo”, lo strumento di gestione
+dei pacchetti di Rust: si inviano i propri &quot;cassoni&quot; [&quot;crate&quot;] ad altri
+usando Cargo. Un crate può produrre un programma o una libreria, a seconda
+del progetto.</p>
+
+<p>Ogni crate ha un <em>modulo radice</em> implicito che contiene il codice
+per quel crate. Poi si può definire un albero di sotto-moduli sotto quel
+modulo radice. I moduli permettono di partizionare il proprio codice
+internamente allo stesso crate.</p>
+
+<p>Come esempio, creiamo un create <em>frasi</em>, che ci darà varie frasi in diverse
+lingue. Per mantenerlo semplice, ci limiteremo ai due categorie di frasi
+‘saluti’ e ‘commiati’, e useremo solamente le due lingue inglese e giapponese
+(日本語) per scrivere quelle frasi. Useremo questa organizzazione di moduli:</p>
+
+<pre><code class="language-text">                                  +--------+
+                              +---| saluti |
+                +---------+   |   +--------+
+            +---| inglese |---+
+            |   +---------+   |   +----------+
+            |                 +---| commiati |
++-------+   |                     +----------+
+| frasi |---+
++-------+   |                       +--------+
+            |                   +---| saluti |
+            |   +------------+  |   +--------+
+            +---| giapponese |--+
+                +------------+  |   +----------+
+                                +---| commiati |
+                                    +----------+
+</code></pre>
+
+<p>In questo esempio, <code>frasi</code> è il nome del nostro crate. Tutto il resto sono
+moduli. Si può vedere che formano un albero, che si dirama dal crate <em>radice</em>,
+che è la radice dell&#39;albero: <code>frasi</code>.</p>
+
+<p>Adesso che abbiamo un piano, definiamo questi moduli nel codice. Per iniziare,
+generiamo un nuovo crate usando Cargo:</p>
+
+<pre><code class="language-bash">$ cargo new frasi
+$ cd frasi
+</code></pre>
+
+<p>Come già detto, questo genera un semplice progetto:</p>
+
+<pre><code class="language-bash">$ tree .
+.
+├── Cargo.toml
+└── src
+    └── lib.rs
+
+1 directory, 2 files
+</code></pre>
+
+<p><code>src/lib.rs</code> è la radice del nostro crate, corrispondente al <code>frasi</code> nello
+schema disegnato prima.</p>
+
+<h1 id='definire-i-moduli' class='section-header'><a href='#definire-i-moduli'>Definire i moduli</a></h1>
+<p>Per definire ogni modulo, usiamo la parola-chiave <code>mod</code>. Facciamo che il nostro
+<code>src/lib.rs</code> si presenti così:</p>
+
+<span class='rusttest'>fn main() {
+    mod inglese {
+    mod saluti {
+    }
+
+    mod commiati {
+    }
+}
+
+mod giapponese {
+    mod saluti {
+    }
+
+    mod commiati {
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>mod</span> <span class='ident'>inglese</span> {
+    <span class='kw'>mod</span> <span class='ident'>saluti</span> {
+    }
+
+    <span class='kw'>mod</span> <span class='ident'>commiati</span> {
+    }
+}
+
+<span class='kw'>mod</span> <span class='ident'>giapponese</span> {
+    <span class='kw'>mod</span> <span class='ident'>saluti</span> {
+    }
+
+    <span class='kw'>mod</span> <span class='ident'>commiati</span> {
+    }
+}</pre>
+
+<p>Dopo la parola-chiave <code>mod</code>, si mette il nome del modulo. I nomi dei moduli
+seguono le convenzioni degli altri identificatori di Rust: <code>minuscolo a serpente</code>. Il contenuto di ogni modulo sta entro graffe (<code>{}</code>).</p>
+
+<p>Entro un dato <code>mod</code>, si possono dichiarare dei sotto-<code>mod</code>. Si può far
+riferimento a sotto-moduli usando la notazione (<code>::</code>): i nostri quattro moduli
+annidati sono <code>inglese::saluti</code>, <code>inglese::commiati</code>, <code>giapponese::saluti</code>, e
+<code>giapponese::commiati</code>. Siccome questi sotto-moduli sono definiti all&#39;interno
+dei loro moduli genitore, i loro nomi non sono ambigui: <code>inglese::saluti</code> e
+<code>giapponese::saluti</code> sono distinti, anche se i loro nomi sono entrambi
+<code>saluti</code>.</p>
+
+<p>Siccome questo crate non ha una funzione <code>main()</code>, e si chiama <code>lib.rs</code>,
+Cargo costruirà questo crate come libreria:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+$ ls target/debug
+build  deps  examples  libfrasi-a7448e02a0468eaa.rlib  native
+</code></pre>
+
+<p><code>libfrasi-&lt;hash&gt;.rlib</code> è il crate compilato. Prima di vedere come usare
+questo crate da un altro crate, scomponiamolo in più file.</p>
+
+<h1 id='crate-aventi-più-file' class='section-header'><a href='#crate-aventi-più-file'>Crate aventi più file</a></h1>
+<p>Se ogni crate stesse in un solo file, questo file diventerebbe molto grande.
+Spesso è più facile scomporre i crate in più file, e Rust supporta
+questa operazione in due modi.</p>
+
+<p>Invece di dichiarare un modulo così:</p>
+
+<span class='rusttest'>fn main() {
+    mod inglese {
+    // il contenuto del modulo va qui
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>mod</span> <span class='ident'>inglese</span> {
+    <span class='comment'>// il contenuto del modulo va qui</span>
+}</pre>
+
+<p>Si può invece dichiarare il modulo così:</p>
+
+<span class='rusttest'>fn main() {
+    mod inglese;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>mod</span> <span class='ident'>inglese</span>;</pre>
+
+<p>Se facciamo così, Rust si aspetterà di trovare o un file <code>inglese.rs</code>, o
+un file <code>inglese/mod.rs</code> con il contenuto del modulo.</p>
+
+<p>Si noti che in questi file, non c&#39;è bisogno di ri-dichiarare il modulo:
+è già stato fatto con la dichiarazione <code>mod</code> iniziale.</p>
+
+<p>Usando queste due tecniche, possiamo scomporre il nostro crate
+in due directory e sette file:</p>
+
+<pre><code class="language-bash">$ tree .
+.
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   ├── inglese
+│   │   ├── commiati.rs
+│   │   ├── saluti.rs
+│   │   └── mod.rs
+│   ├── giapponese
+│   │   ├── commiati.rs
+│   │   ├── saluti.rs
+│   │   └── mod.rs
+│   └── lib.rs
+└── target
+    └── debug
+        ├── build
+        ├── deps
+        ├── examples
+        ├── libfrasi-a7448e02a0468eaa.rlib
+        └── native
+</code></pre>
+
+<p><code>src/lib.rs</code> è la radice del nostro crate, e si presenta così:</p>
+
+<span class='rusttest'>fn main() {
+    mod inglese;
+mod giapponese;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>mod</span> <span class='ident'>inglese</span>;
+<span class='kw'>mod</span> <span class='ident'>giapponese</span>;</pre>
+
+<p>Queste due dichiarazioni dicono a Rust di cercare o <code>src/inglese.rs</code> e
+<code>src/giapponese.rs</code>, oppure <code>src/inglese/mod.rs</code> e <code>src/giapponese/mod.rs</code>,
+a seconda della nostra preferenza. In questo caso, siccome i nostri moduli
+hanno dei sotto-moduli, abbiamo scelto la seconda possibilità.
+Sia <code>src/inglese/mod.rs</code> che <code>src/giapponese/mod.rs</code> si presentano così:</p>
+
+<span class='rusttest'>fn main() {
+    mod saluti;
+mod commiati;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>mod</span> <span class='ident'>saluti</span>;
+<span class='kw'>mod</span> <span class='ident'>commiati</span>;</pre>
+
+<p>Di nuovo, queste dichiarazioni dicono a Rust di cercare o
+<code>src/inglese/saluti.rs</code>, <code>src/inglese/commiati.rs</code>,
+<code>src/giapponese/saluti.rs</code> e <code>src/giapponese/commiati.rs</code> oppure
+<code>src/inglese/saluti/mod.rs</code>, <code>src/inglese/commiati/mod.rs</code>,
+<code>src/giapponese/saluti/mod.rs</code> e <code>src/giapponese/commiati/mod.rs</code>.
+Siccome questi sotto-moduli non hanno i loro sotto-moduli, abbiamo scelto
+la prima possibilità. Urca!</p>
+
+<p>I file <code>src/inglese/saluti.rs</code>, <code>src/inglese/commiati.rs</code>,
+<code>src/giapponese/saluti.rs</code> e <code>src/giapponese/commiati.rs</code> al momento sono
+vuoti. Aggiungiamoci alcune funzioni.</p>
+
+<p>Nel file <code>src/inglese/saluti.rs</code> si metta questa:</p>
+
+<span class='rusttest'>fn main() {
+    fn ciao() -&gt; String {
+    &quot;Hello!&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>ciao</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;Hello!&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>Nel file <code>src/inglese/commiati.rs</code> si metta questa:</p>
+
+<span class='rusttest'>fn main() {
+    fn arrivederci() -&gt; String {
+    &quot;Goodbye.&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>arrivederci</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;Goodbye.&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>Nel file <code>src/giapponese/saluti.rs</code> si metta questa:</p>
+
+<span class='rusttest'>fn main() {
+    fn ciao() -&gt; String {
+    &quot;こんにちは&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>ciao</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;こんにちは&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>Naturalmente, lo si può copiare e incollare da questa pagina web, oppure
+digitare qualcos&#39;altro. Non è importante mettere proprio ‘konnichiwa’
+per imparare il sistema dei moduli.</p>
+
+<p>E nel file <code>src/giapponese/commiati.rs</code> si metta questa:</p>
+
+<span class='rusttest'>fn main() {
+    fn arrivederci() -&gt; String {
+    &quot;さようなら&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>arrivederci</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;さようなら&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>(Questo commiato è ‘Sayōnara’, per chi interessasse.)</p>
+
+<p>Adesso che abbiamo un po&#39; di funzionalità nel nostro crate, proviamo a usarlo
+da un altro crate.</p>
+
+<h1 id='importare-crate-esterni' class='section-header'><a href='#importare-crate-esterni'>Importare crate esterni</a></h1>
+<p>Abbiamo un crate di libreria. Creaiamo un crate di programma che importa e usa
+la nostra libreria.</p>
+
+<p>Creiamo il file <code>src/main.rs</code> e mettiamoci dentro questo (anche se
+non compilerà ancora):</p>
+
+<span class='rusttest'>extern crate frasi;
+
+fn main() {
+    println!(&quot;Ciao in inglese: {}&quot;, frasi::inglese::saluti::ciao());
+    println!(&quot;Arrivederci in inglese: {}&quot;, frasi::inglese::commiati::arrivederci());
+
+    println!(&quot;Ciao in giapponese: {}&quot;, frasi::giapponese::saluti::ciao());
+    println!(&quot;Arrivederci in giapponese: {}&quot;, frasi::giapponese::commiati::arrivederci());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese: {}&quot;</span>, <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in inglese: {}&quot;</span>, <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>());
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in giapponese: {}&quot;</span>, <span class='ident'>frasi</span>::<span class='ident'>giapponese</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in giapponese: {}&quot;</span>, <span class='ident'>frasi</span>::<span class='ident'>giapponese</span>::<span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>());
+}</pre>
+
+<p>La dichiarazione <code>extern crate</code> dice a Rust che deve linkare il programma
+con il crate <code>frasi</code>. Poi possiamo usare il modulo <code>frasi</code>’ in tale crate.
+Come detto prima, si possono usare i doppi due-punti per riferirsi
+ai sotto-moduli e alle funzioni al loro interno.</p>
+
+<p>(Nota: quando si importa un crate che ha trattini nel suo nome &quot;come-questo&quot;,
+che non è un identificatore Rust valido, tale nome verrà convertito sostituendo
+i trattini con underscore (&quot;_&quot;), e quindi si dovrà scrivere
+<code>extern crate come_questo;</code>.)</p>
+
+<p>Inoltre, Cargo assume che il file <code>src/main.rs</code> sia il crate radice di
+un crate di programma, invece che un crate di libreria. Il nostro pacchetto
+adesso contiene due crate: <code>src/lib.rs</code> e <code>src/main.rs</code>. Questo pattern è
+parecchio tipico per i crate di programma: la maggior parte della funzionalità
+sta in un crate di libreria, e il crate di programma usa quella libreria.
+In questo modo, anche altri programmi possono usare il crate di libreria,
+ed è anche una bella separazione di compiti.</p>
+
+<p>Però quello che abbiamo scritto finora non funziona ancora. Otteniamo quattro
+errori analoghi al seguente:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+src/main.rs:4:37: 4:65 error: function `ciao` is private
+src/main.rs:4     println!(&quot;Ciao in inglese: {}&quot;, frasi::inglese::saluti::ciao());
+                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+note: in expansion of format_args!
+&lt;std macros&gt;:2:25: 2:58 note: expansion site
+&lt;std macros&gt;:1:1: 2:62 note: in expansion of print!
+&lt;std macros&gt;:3:1: 3:54 note: expansion site
+&lt;std macros&gt;:1:1: 3:58 note: in expansion of println!
+frasi/src/main.rs:4:5: 4:69 note: expansion site
+</code></pre>
+
+<p>Di default, tutto è privato in Rust. Parliamone un po&#39; più in profondità.</p>
+
+<h1 id='exportare-uninterfaccia-pubblica' class='section-header'><a href='#exportare-uninterfaccia-pubblica'>Exportare un&#39;interfaccia pubblica</a></h1>
+<p>Rust consente di controllare con precisione quali aspetti della propria
+interfaccia sono pubblici, e quindi il default è essere privato. Per rendere
+pubbliche le cose, si usa la parola-chiave <code>pub</code>. Prima concentriamoci
+sul modulo <code>inglese</code>, e perciò riduciamo il file <code>src/main.rs</code> a questo:</p>
+
+<span class='rusttest'>extern crate frasi;
+
+fn main() {
+    println!(&quot;Ciao in inglese: {}&quot;, frasi::inglese::saluti::ciao());
+    println!(&quot;Arrivederci in inglese: {}&quot;, frasi::inglese::commiati::arrivederci());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese: {}&quot;</span>, <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in inglese: {}&quot;</span>, <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>());
+}</pre>
+
+<p>Nel file <code>src/lib.rs</code>, aggiungiamo <code>pub</code> alla dichiarazione del modulo
+<code>inglese</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub mod inglese;
+mod giapponese;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>inglese</span>;
+<span class='kw'>mod</span> <span class='ident'>giapponese</span>;</pre>
+
+<p>E nel file <code>src/inglese/mod.rs</code>, rendiamo entrambi <code>pub</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub mod saluti;
+pub mod commiati;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>saluti</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>commiati</span>;</pre>
+
+<p>Nel file <code>src/inglese/saluti.rs</code>, aggiungiamo <code>pub</code> alla dichiarazione <code>fn</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub fn ciao() -&gt; String {
+    &quot;Hello!&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ciao</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;Hello!&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>E anche nel file <code>src/inglese/commiati.rs</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub fn arrivederci() -&gt; String {
+    &quot;Goodbye.&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>arrivederci</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;Goodbye.&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>Adesso, il nostro crate compila, sebbene con degli avvertimenti su fatto che
+non stiamo usando le funzioni del modulo <code>giapponese</code>:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+src/giapponese/saluti.rs:1:1: 3:2 warning: function is never used: `ciao`, #[warn(dead_code)] on by default
+src/giapponese/saluti.rs:1 fn ciao() -&gt; String {
+src/giapponese/saluti.rs:2     &quot;こんにちは&quot;.to_string()
+src/giapponese/saluti.rs:3 }
+src/giapponese/commiati.rs:1:1: 3:2 warning: function is never used: `arrivederci`, #[warn(dead_code)] on by default
+src/giapponese/commiati.rs:1 fn arrivederci() -&gt; String {
+src/giapponese/commiati.rs:2     &quot;さようなら&quot;.to_string()
+src/giapponese/commiati.rs:3 }
+     Running `target/debug/frasi`
+Ciao in inglese: Hello!
+Arrivederci in inglese: Goodbye.
+</code></pre>
+
+<p><code>pub</code> si applica anche alle <code>struct</code> e ai loro campi. Rispettando la tendenza
+di Rust verso la sicurezza, semplicemente rendendo pubblica una <code>struct</code> non
+rende automaticamente pubblici i suoi membri: i campi devono essere marcati
+individualmente con <code>pub</code>.</p>
+
+<p>Adesso che le nostre funzioni sono pubbliche, possiamo usarle. Ottimo! Però,
+digitare <code>frasi::inglese::saluti::ciao()</code> è molto lungo e ripetitivo. Rust ha
+un&#39;altra parola-chiave per importare i nomi nell&#39;ambito corrente, così che
+ci si possa riferire ad essi con nomi più brevi. Parliamo di <code>use</code>.</p>
+
+<h1 id='importare-modulo-usando-use' class='section-header'><a href='#importare-modulo-usando-use'>Importare modulo usando <code>use</code></a></h1>
+<p>Rust ha la parola-chiave <code>use</code>, che ci consente di importare dei nomi
+nel nostro ambito locale. Modifichiamo il file <code>src/main.rs</code> così:</p>
+
+<span class='rusttest'>extern crate frasi;
+
+use frasi::inglese::saluti;
+use frasi::inglese::commiati;
+
+fn main() {
+    println!(&quot;Ciao in inglese: {}&quot;, saluti::ciao());
+    println!(&quot;Arrivederci in inglese: {}&quot;, commiati::arrivederci());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span>;
+
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span>;
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>commiati</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese: {}&quot;</span>, <span class='ident'>saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in inglese: {}&quot;</span>, <span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>());
+}</pre>
+
+<p>Le due righe <code>use</code> importano ogni modulo nell&#39;ambito locale, e quindi possiamo
+far riferimento alle funzioni con un nome molto più breve. Per convenzione,
+quando si importano funzioni, la pratica migliore è considerata importare
+il modulo, invece che direttamente la funzione. In altre parole, si <em>può</em> fare
+così:</p>
+
+<span class='rusttest'>extern crate frasi;
+
+use frasi::inglese::saluti::ciao;
+use frasi::inglese::commiati::arrivederci;
+
+fn main() {
+    println!(&quot;Ciao in inglese: {}&quot;, ciao());
+    println!(&quot;Arrivederci in inglese: {}&quot;, arrivederci());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span>;
+
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>;
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese: {}&quot;</span>, <span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in inglese: {}&quot;</span>, <span class='ident'>arrivederci</span>());
+}</pre>
+
+<p>Ma non è tipico. Così è significativamente più probabile che si verifichi
+un conflitto di nomi. Nel nostro breve programma, non è una grossa questione,
+ma man mano che cresce, diventa un problema. Se abbiamo nomi in conflitto,
+Rust darà un errore di compilazione. Per esempio, se avessimo reso pubbliche
+le funzioni del modulo <code>giapponese</code>, e provassimo a fare così:</p>
+
+<span class='rusttest'>extern crate frasi;
+
+use frasi::inglese::saluti::ciao;
+use frasi::giapponese::saluti::ciao;
+
+fn main() {
+    println!(&quot;Ciao in inglese: {}&quot;, ciao());
+    println!(&quot;Ciao in giapponese: {}&quot;, ciao());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span>;
+
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>;
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>giapponese</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese: {}&quot;</span>, <span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in giapponese: {}&quot;</span>, <span class='ident'>ciao</span>());
+}</pre>
+
+<p>Rust ci darà un errore di compilazione:</p>
+
+<pre><code class="language-text">   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+src/main.rs:4:5: 4:36 error: a value named `ciao` has already been imported in this module [E0252]
+src/main.rs:4 use frasi::giapponese::saluti::ciao;
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to previous error
+Could not compile `frasi`.
+</code></pre>
+
+<p>Se stiamo importando più nomi dallo stesso modulo, non dobbiamo digitarlo
+due volte. Invece di questo:</p>
+
+<span class='rusttest'>fn main() {
+    use frasi::inglese::saluti;
+use frasi::inglese::commiati;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span>;
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::<span class='ident'>commiati</span>;</pre>
+
+<p>Possiamo usare questa abbreviazione:</p>
+
+<span class='rusttest'>fn main() {
+    use frasi::inglese::{saluti, commiati};
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::{<span class='ident'>saluti</span>, <span class='ident'>commiati</span>};</pre>
+
+<h2 id='ri-esportare-usando-pub-use' class='section-header'><a href='#ri-esportare-usando-pub-use'>Ri-esportare usando <code>pub use</code></a></h2>
+<p>Non si usa <code>use</code> solamente per abbreviare gli identificatori. Lo si può anche
+usare dentro il proprio crate per ri-esportare una funzione all&#39;interno
+di un altro modulo. Ciò consente di presentare un&#39;interfaccia esterna che
+può non mapparsi direttamente all&#39;organizzazione interna del proprio codice.</p>
+
+<p>Guardiamo un esempio. Modifichiamo il file <code>src/main.rs</code> così:</p>
+
+<span class='rusttest'>extern crate frasi;
+
+use frasi::inglese::{saluti,commiati};
+use frasi::giapponese;
+
+fn main() {
+    println!(&quot;Ciao in inglese: {}&quot;, saluti::ciao());
+    println!(&quot;Arrivederci in inglese: {}&quot;, commiati::arrivederci());
+
+    println!(&quot;Ciao in giapponese: {}&quot;, giapponese::ciao());
+    println!(&quot;Arrivederci in giapponese: {}&quot;, giapponese::arrivederci());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span>;
+
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>inglese</span>::{<span class='ident'>saluti</span>,<span class='ident'>commiati</span>};
+<span class='kw'>use</span> <span class='ident'>frasi</span>::<span class='ident'>giapponese</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese: {}&quot;</span>, <span class='ident'>saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in inglese: {}&quot;</span>, <span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>());
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in giapponese: {}&quot;</span>, <span class='ident'>giapponese</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in giapponese: {}&quot;</span>, <span class='ident'>giapponese</span>::<span class='ident'>arrivederci</span>());
+}</pre>
+
+<p>Poi, modifichiamo il file <code>src/lib.rs</code> per rendere pubblico il modulo
+<code>giapponese</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub mod inglese;
+pub mod giapponese;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>inglese</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>giapponese</span>;</pre>
+
+<p>Poi, rendiamo pubbliche le due funzioni, prima nel file
+<code>src/giapponese/saluti.rs</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub fn ciao() -&gt; String {
+    &quot;こんにちは&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ciao</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;こんにちは&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>E poi nel file <code>src/giapponese/commiati.rs</code>:</p>
+
+<span class='rusttest'>fn main() {
+    pub fn arrivederci() -&gt; String {
+    &quot;さようなら&quot;.to_string()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>arrivederci</span>() <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='string'>&quot;さようなら&quot;</span>.<span class='ident'>to_string</span>()
+}</pre>
+
+<p>Infine, modifichiamo il file <code>src/giapponese/mod.rs</code> così:</p>
+
+<span class='rusttest'>fn main() {
+    pub use self::saluti::ciao;
+pub use self::commiati::arrivederci;
+
+mod saluti;
+mod commiati;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>saluti</span>::<span class='ident'>ciao</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>;
+
+<span class='kw'>mod</span> <span class='ident'>saluti</span>;
+<span class='kw'>mod</span> <span class='ident'>commiati</span>;</pre>
+
+<p>La dichiarazione <code>pub use</code> porta la funzione nell&#39;ambito di questa parte
+della gerarchia di moduli. Siccome abbiamo inserito l&#39;istruzione <code>pub use</code>
+nel modulo <code>giapponese</code>, adesso abbiamo a disposizione la funzione
+<code>frasi::giapponese::ciao()</code> e la funzione <code>frasi::giapponese::arrivederci()</code>,
+anche se il loro codice risiede rispettivamente in
+<code>frasi::giapponese::saluti::ciao()</code> and in
+<code>frasi::giapponese::commiati::arrivederci()</code>. La nostra organizzazione interna
+non definisce la nostra interfaccia esterna.</p>
+
+<p>Qui abbiamo un <code>pub use</code> per ogni funzione che vogliamo portare nell&#39;ambito di
+<code>giapponese</code>. Alternativamente potevamo usare la sintassi jolly per includere
+nell&#39;ambito corrente tutto il contenuto di <code>saluti</code>: <code>pub use self::saluti::*</code>.</p>
+
+<p>Che dire di <code>self</code>? Beh, di default, le dichiarazioni <code>use</code> sono percorsi
+assoluti, che iniziano dal crate radice. <code>self</code> invece fa sì che il percorso
+sia relativo alla posizione corrente nella gerarchia. C&#39;è un&#39;altra forma
+speciale di <code>use</code>: si può scrivere <code>use super::</code> per salire di un livello
+nell&#39;albero dalla posizione attuale. Ad alcuni piace pensare a <code>self</code> come
+alla directory <code>.</code>, e a <code>super</code> come alla directory <code>..</code>.</p>
+
+<p>Fuori dalle istruzioni <code>use</code>, i percorsi sono normalmente relativi:
+<code>foo::bar()</code> si referisce a una funzione interna a <code>foo</code>, relativo a dove
+siamo. Se viene preceduto da <code>::</code>, come in <code>::foo::bar()</code>, allora si riferisce
+a un diverso <code>foo</code>, inquanto è un percorso assoluto dal crate radice.</p>
+
+<p>Questo verrà compilato ed eseguito così:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling frasi v0.0.1 (file:///home/you/projects/frasi)
+     Running `target/debug/frasi`
+Ciao in inglese: Hello!
+Arrivederci in inglese: Goodbye.
+Ciao in giapponese: こんにちは
+Arrivederci in giapponese: さようなら
+</code></pre>
+
+<h2 id='importazioni-complesse' class='section-header'><a href='#importazioni-complesse'>Importazioni complesse</a></h2>
+<p>Rust offre varie opzioni avanzate che possono aggiungere compattezza e comodità
+alle istruzioni <code>extern crate</code> e <code>use</code>. Ecco un esempio:</p>
+
+<span class='rusttest'>extern crate frasi as detti;
+
+use detti::giapponese::saluti as ja_saluti;
+use detti::giapponese::commiati::*;
+use detti::inglese::{self, saluti as en_saluti, commiati as en_commiati};
+
+fn main() {
+    println!(&quot;Ciao in inglese; {}&quot;, en_saluti::ciao());
+    println!(&quot;E in giapponese: {}&quot;, ja_saluti::ciao());
+    println!(&quot;Arrivederci in inglese: {}&quot;, inglese::commiati::arrivederci());
+    println!(&quot;Ancora: {}&quot;, en_commiati::arrivederci());
+    println!(&quot;E in giapponese: {}&quot;, arrivederci());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>frasi</span> <span class='kw'>as</span> <span class='ident'>detti</span>;
+
+<span class='kw'>use</span> <span class='ident'>detti</span>::<span class='ident'>giapponese</span>::<span class='ident'>saluti</span> <span class='kw'>as</span> <span class='ident'>ja_saluti</span>;
+<span class='kw'>use</span> <span class='ident'>detti</span>::<span class='ident'>giapponese</span>::<span class='ident'>commiati</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>detti</span>::<span class='ident'>inglese</span>::{<span class='self'>self</span>, <span class='ident'>saluti</span> <span class='kw'>as</span> <span class='ident'>en_saluti</span>, <span class='ident'>commiati</span> <span class='kw'>as</span> <span class='ident'>en_commiati</span>};
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao in inglese; {}&quot;</span>, <span class='ident'>en_saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;E in giapponese: {}&quot;</span>, <span class='ident'>ja_saluti</span>::<span class='ident'>ciao</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Arrivederci in inglese: {}&quot;</span>, <span class='ident'>inglese</span>::<span class='ident'>commiati</span>::<span class='ident'>arrivederci</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ancora: {}&quot;</span>, <span class='ident'>en_commiati</span>::<span class='ident'>arrivederci</span>());
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;E in giapponese: {}&quot;</span>, <span class='ident'>arrivederci</span>());
+}</pre>
+
+<p>Cosa succede qui?</p>
+
+<p>Primo, sia <code>extern crate</code> che <code>use</code> consentono di rinominare la cosa che viene
+importata. Quindi il crate si chiama ancora &quot;frasi&quot;, ma qui ci riferiremo
+ad esso come a &quot;detti&quot;. Analogamente, la prima istruzione <code>use</code> tira dentro
+il modulo <code>giapponese::saluti</code> dal crate, ma lo rende disponibile come
+<code>ja_saluti</code> invece che semplicemente <code>saluti</code>. Ciò può aiutare a evitare
+ambiguità quando si importano elementi con nomi simili da altri posti.</p>
+
+<p>La seconda istruzione <code>use</code> usa un asterisco jolly per portare dentro tutti
+i simboli pubblici dal modulo <code>detti::giapponese::commiati</code>. Come si vede,
+poi possiamo far riferimento alla funzione giapponese <code>arrivederci</code> senza
+qualificatori di modulo. Questo genere di jolly dovrebbe essere usato
+con parsimonia. Vale la pena notare che importa solamente i simboli pubblici,
+anche se il codice che usa il jolly è nel medesimo modulo.</p>
+
+<p>La terza istruzione <code>use</code> porta più spiegazioni. Usa l&#39;&quot;espansione a graffa&quot;
+per comprimere tre istruzioni <code>use</code> in una sola (questo genere di sintassi
+può essere familiare a chi ha già scritto script di shell Linux). La forma
+non compressa di questa istruzione sarebbe:</p>
+
+<span class='rusttest'>fn main() {
+    use detti::inglese;
+use detti::inglese::saluti as en_saluti;
+use detti::inglese::commiati as en_commiati;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>detti</span>::<span class='ident'>inglese</span>;
+<span class='kw'>use</span> <span class='ident'>detti</span>::<span class='ident'>inglese</span>::<span class='ident'>saluti</span> <span class='kw'>as</span> <span class='ident'>en_saluti</span>;
+<span class='kw'>use</span> <span class='ident'>detti</span>::<span class='ident'>inglese</span>::<span class='ident'>commiati</span> <span class='kw'>as</span> <span class='ident'>en_commiati</span>;</pre>
+
+<p>Come si vede, le graffe comprimono le istruzioni <code>use</code> di varie voci
+sotto il medesimo percorso, e in questo contesto <code>self</code> si riferisce
+a quel percorso.
+Nota: Le graffe non possono essere annidate né mescolate con asterischi jolly.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

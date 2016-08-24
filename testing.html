@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Collaudo [&quot;Testing&quot;]</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a class='active' href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Collaudo [&quot;Testing&quot;]</h1>
+    <blockquote>
+<p>Il collaudo dei programmi può essere un modo molto efficace per mostrare
+la presenza di difetti, ma è disperatamente inadeguato a mostrare
+la loro assenza.</p>
+
+<p>Edsger W. Dijkstra, &quot;The Humble Programmer&quot; (1972)</p>
+</blockquote>
+
+<p>Parliamo di come collaudare il codice Rust. Ciò di cui non parleremo è il modo
+giusto di collaudare il codice Rust. Ci sono molte scuole di pensiero
+riguardo il modo giusto o sbagliato di eseguire collaudi. Però, tutti questi
+approcci usano gli stessi strumenti di base, e quindi mostreremo la sintassi
+per usarli.</p>
+
+<h1 id='lattributo-test' class='section-header'><a href='#lattributo-test'>L&#39;attributo <code>test</code></a></h1>
+<p>Nel caso più semplice, un collaudo in Rust ha un solo test, che è una funzione
+annotata con l&#39;attributo <code>test</code>. Usando Cargo, facciamo un nuovo progetto
+chiamato <code>sommatore</code>:</p>
+
+<pre><code class="language-bash">$ cargo new sommatore
+$ cd sommatore
+</code></pre>
+
+<p>Cargo genera automaticamente un semplice test quando si crea un nuovo progetto.
+Ecco il contenuto di <code>src/lib.rs</code>:</p>
+
+<span class='rusttest'>fn main() {}
+#[test]
+fn it_works() {
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+}</pre>
+
+<p>Si noti il <code>#[test]</code>. Questo attributo indica che questa è una funzione
+di collaudo. Attualmente ha il corpo vuoto. È abbastanza buono per passare!
+Possiamo eseguire i test con il comando <code>cargo test</code>:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Cargo ha compilato ed eseguito il nostro test. Qui ci sono due insiemi
+di output: uno per il test che abbiamo scritto, e un altro per i test
+della documentazione. Di quelli ne parleremo dopo. Per adesso, vediamo
+questa riga:</p>
+
+<pre><code class="language-text">test it_works ... ok
+</code></pre>
+
+<p>Si noti il <code>it_works</code> (&quot;funziona&quot;). Deriva dal nome della nostra funzione:</p>
+
+<span class='rusttest'>fn main() {
+    fn it_works() {
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {</pre>
+
+<p>Abbiamo anche una riga riassuntiva:</p>
+
+<pre><code class="language-text">test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Quindi perché il nostro test non-fare-niente è passato? Qualunque test
+che non va in <code>panic!</code> passa, e qualunque test che va in <code>panic!</code> fallisce.
+Facciamo fallire il nostro test:</p>
+
+<span class='rusttest'>fn main() {}
+#[test]
+fn it_works() {
+    assert!(false);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='bool-val'>false</span>);
+}</pre>
+
+<p><code>assert!</code> è una macro fornita da Rust che prende un argomento: se l&#39;argomento
+è <code>true</code>, non succede niente. Se l&#39;argomento è <code>false</code>, va in <code>panic!</code>.
+Rieseguiamo i nostri test:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test it_works ... FAILED
+
+failures:
+
+---- it_works stdout ----
+        thread &#39;it_works&#39; panicked at &#39;assertion failed: false&#39;, /home/steve/tmp/sommatore/src/lib.rs:3
+
+
+
+failures:
+    it_works
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured
+
+thread &#39;main&#39; panicked at &#39;Some tests failed&#39;, /home/steve/src/rust/src/libtest/lib.rs:247
+</code></pre>
+
+<p>Rust indica che il nostro test è fallito:</p>
+
+<pre><code class="language-text">test it_works ... FAILED
+</code></pre>
+
+<p>E si riflette nella riga riassuntiva:</p>
+
+<pre><code class="language-text">test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Otteniamo anche un codice di stato non-nullo. Possiamo usare <code>$?</code> su OS X
+o su Linux:</p>
+
+<pre><code class="language-bash">$ echo $?
+101
+</code></pre>
+
+<p>Su Windows, se si usa <code>cmd</code>:</p>
+
+<pre><code class="language-bash">&gt; echo %ERRORLEVEL%
+</code></pre>
+
+<p>Mentre se si usa PowerShell:</p>
+
+<pre><code class="language-bash">&gt; echo $LASTEXITCODE # il codice stesso
+&gt; echo $? # un booleano, fallimento o successo
+</code></pre>
+
+<p>Questo è utile se si vuole integrare <code>cargo test</code> con altre utility.</p>
+
+<p>Possiamo invertire il fallimento del nostro test usando un altro attributo:
+<code>should_panic</code>:</p>
+
+<span class='rusttest'>fn main() {}
+#[test]
+#[should_panic]
+fn it_works() {
+    assert!(false);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='bool-val'>false</span>);
+}</pre>
+
+<p>Questo test adesso ha successo se va in <code>panic!</code> e fallisce
+termina normalmente. Proviamolo:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Rust fornisce un&#39;altra macro, <code>assert_eq!</code>, che verifica l&#39;uguaglianza tra
+due argomenti:</p>
+
+<span class='rusttest'>fn main() {}
+#[test]
+#[should_panic]
+fn it_works() {
+    assert_eq!(&quot;Ciao&quot;, &quot;mondo&quot;);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;Ciao&quot;</span>, <span class='string'>&quot;mondo&quot;</span>);
+}</pre>
+
+<p>Questo test passerà o fallirà? A causa dell&#39;attribute <code>should_panic</code>, passerà:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Però, i test <code>should_panic</code> possono essere fragili, dato che è difficile
+garantire che il test non è fallito per una ragione inattesa. Per aiutare
+in questa difficoltà, un argomento facoltativo <code>expected</code> può essere aggiunto
+all&#39;attributo <code>should_panic</code>. L&#39;ambiente di collaudo assicuererà che
+il messaggio di fallimento contenga il testo fornito. Una versione più sicura
+dell&#39;esempio precedente sarebbe:</p>
+
+<span class='rusttest'>fn main() {}
+#[test]
+#[should_panic(expected = &quot;asserzione fallita&quot;)]
+fn it_works() {
+    assert_eq!(&quot;Hello&quot;, &quot;world&quot;);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='attribute'>#[<span class='ident'>should_panic</span>(<span class='ident'>expected</span> <span class='op'>=</span> <span class='string'>&quot;asserzione fallita&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;Hello&quot;</span>, <span class='string'>&quot;world&quot;</span>);
+}</pre>
+
+<p>E questo è tutto per i fondamenti! Scriviamo un test &#39;vero&#39;:</p>
+
+<span class='rusttest'>fn main() {}
+pub fn somma_due(a: i32) -&gt; i32 {
+    a + 2
+}
+
+#[test]
+fn it_works() {
+    assert_eq!(4, somma_due(2));
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>somma_due</span>(<span class='ident'>a</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>a</span> <span class='op'>+</span> <span class='number'>2</span>
+}
+
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>, <span class='ident'>somma_due</span>(<span class='number'>2</span>));
+}</pre>
+
+<p>Questo è un uso molto comune di <code>assert_eq!</code>: chiamare una funzione
+con alcuni argomenti noti, e confrontarne l&#39;esito con l&#39;output atteso.</p>
+
+<h1 id='lattributo-ignore' class='section-header'><a href='#lattributo-ignore'>L&#39;attributo <code>ignore</code></a></h1>
+<p>Talvolta alcuni test specifici possono richiedere molto tempo per essere
+eseguiti. Questi possono essere disabilitati di default usando l&#39;attributo
+<code>ignore</code>:</p>
+
+<span class='rusttest'>fn main() {}
+#[test]
+fn it_works() {
+    assert_eq!(4, somma_due(2));
+}
+
+#[test]
+#[ignore]
+fn test_costoso() {
+    // codice che impiega un&#39;ora
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>, <span class='ident'>somma_due</span>(<span class='number'>2</span>));
+}
+
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='attribute'>#[<span class='ident'>ignore</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>test_costoso</span>() {
+    <span class='comment'>// codice che impiega un&#39;ora</span>
+}</pre>
+
+<p>Adesso eseguiamo i nostri test e vediamo che <code>it_works</code> viene eseguito,
+ma <code>test_costoso</code> no:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 2 tests
+test expensive_test ... ignored
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>I test costosi possono essere eseguiti esplicitamente usando
+<code>cargo test -- --ignored</code>:</p>
+
+<pre><code class="language-bash">$ cargo test -- --ignored
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test expensive_test ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>L&#39;argomento <code>--ignored</code> è un argomento per il programma di collaudo, e non
+per Cargo, e per questo motivo il comando è <code>cargo test -- --ignored</code>.</p>
+
+<h1 id='il-modulo-tests' class='section-header'><a href='#il-modulo-tests'>Il modulo <code>tests</code></a></h1>
+<p>C&#39;è un solo aspetto per cui il nostro esempio esistente non è tipico di Rust:
+gli manca il modulo <code>tests</code>. Il modo tipico di scrivere il nostro esempio
+è il seguente:</p>
+
+<span class='rusttest'>fn main() {}
+pub fn somma_due(a: i32) -&gt; i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::somma_due;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(4, somma_due(2));
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>somma_due</span>(<span class='ident'>a</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>a</span> <span class='op'>+</span> <span class='number'>2</span>
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>tests</span> {
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>somma_due</span>;
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>, <span class='ident'>somma_due</span>(<span class='number'>2</span>));
+    }
+}</pre>
+
+<p>Qui ci sono alcuni cambiamenti. Il primo è l&#39;introduzione di un <code>mod tests</code>
+con un attributo <code>cfg</code>. Il modulo ci consente di raggruppare insieme
+tutti i nostri test, e anche di definire delle funzioni ausiliare,
+se servono, le quali non diventano parte del resto del nostro crate.
+L&#39;attributo <code>cfg</code> compila il nostro codice di collaudo solamente se
+attualmente stiamo provando a eseguire i test. Questo può far risparmiare
+tempo di compilazione, e inoltre assicura che i nostri test siano
+interamente lasciati fuori da una build normale.</p>
+
+<p>Il secondo cambiamento è la dichiarazione <code>use</code>. Siccome siamo in un modulo
+interno, dobbiamo portare la nostra funzione di test nell&#39;ambito. Ciò può
+essere seccante in un grande modulo, e perciò questo è un uso tipico
+dei globali. Modifichiamo il nostro <code>src/lib.rs</code> per farne uso:</p>
+
+<span class='rusttest'>fn main() {}
+pub fn somma_due(a: i32) -&gt; i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(4, somma_due(2));
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>somma_due</span>(<span class='ident'>a</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>a</span> <span class='op'>+</span> <span class='number'>2</span>
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>tests</span> {
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>, <span class='ident'>somma_due</span>(<span class='number'>2</span>));
+    }
+}</pre>
+
+<p>Si noti la dversa riga <code>use</code>. Adesso esuiamo i nostri test:</p>
+
+<pre><code class="language-bash">$ cargo test
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Funziona!</p>
+
+<p>La convenzione attuale è usare il modulo <code>tests</code> per tenere i propri test
+di unità. Ogni cosa che collauda un pezzettino di funzionalità
+ha senso che vada qui. Ma che dire invece dei test di integrazione?
+Per quelli c&#39;è la directory <code>tests</code>.</p>
+
+<h1 id='la-directory-tests' class='section-header'><a href='#la-directory-tests'>La directory <code>tests</code></a></h1>
+<p>Ogni file <code>*.rs</code> nella directory <code>tests</code> viene trattato come un crate
+individuale. Perciò, per scrivere un test di integrazione, creiamo
+la directory <code>tests</code>, e ci mettiamo dentro il file <code>integration_test.rs</code>,
+avente il seguente contenuto:</p>
+
+<span class='rusttest'>extern crate sommatore;
+
+fn main() {}
+#[test]
+fn it_works() {
+    assert_eq!(4, sommatore::somma_due(2));
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>sommatore</span>;
+
+<span class='attribute'>#[<span class='ident'>test</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>, <span class='ident'>sommatore</span>::<span class='ident'>somma_due</span>(<span class='number'>2</span>));
+}</pre>
+
+<p>Questo appare simile ai nostri test precedenti, ma è leggermente diverso.
+Adesso abbiamo in cima l&#39;istruzione <code>extern crate sommatore</code>. Questo perché
+ogni test della directory <code>tests</code> è un crate completamente separato, e quindi
+dobbiamo importare la nostra libreria.
+Questo spiega anche perché <code>tests</code> è un posto adatto per metterci i test
+di integrazione: tali test usano la libreria come lo farebbe qualunque altro
+consumatore.</p>
+
+<p>Eseguiamoli:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/you/projects/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+     Running target/lib-c18e7d3494509e74
+
+running 1 test
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Adesso abbiamo tre sezioni: anche il nostro test precedente viene eseguito,
+così come quello nuovo.</p>
+
+<p>Cargo ignorerà i file nelle sottodirectory della directory <code>tests</code>.
+Perciò in tali sottodirectory si potranno mettere i moduli condivisi dai
+test di integrazione.
+Per esempio, il file <code>tests/common/mod.rs</code> non verrà compilato separatamente
+da Cargo ma potrà essere importato in ogni test con l&#39;istruzione <code>mod common;</code></p>
+
+<p>Questo è tutto quel che c&#39;è da dire sulla directory <code>tests</code>. Qui non serve
+il modulo <code>tests</code>, dato che il tutto si incentra sui test.</p>
+
+<p>Infine andiamo a vedere quella terza sezione: i test della documentazione.</p>
+
+<h1 id='i-test-della-documentazione' class='section-header'><a href='#i-test-della-documentazione'>I test della documentazione</a></h1>
+<p>Non c&#39;è niente di meglio che della documentazione con degli esempi.
+E non c&#39;è niente di peggio che degli esempi che in realtà non funzionano,
+perché il codice è cambiato da quando la documentazione è stata scritta.
+A questo scopo, Rust supporta l&#39;esecuzione automatica degli esempi contenuti
+nella documentazione del codice (<strong>nota:</strong> questo funziona solamente
+nei crate di libreria, non nei crate di programma). Ecco un <code>src/lib.rs</code>
+concretizzato con degli esempi:</p>
+
+<span class='rusttest'>fn main() {}
+//! Il crate `sommatore` fornisce delle funzioni
+//! che sommano numeri ad altri numeri.
+//!
+//! # Esempi
+//!
+//! ```
+//! assert_eq!(4, sommatore::somma_due(2));
+//! ```
+
+/// Questa funzione somma due al suo argomento.
+///
+/// # Esempi
+///
+/// ```
+/// use sommatore::somma_due;
+///
+/// assert_eq!(4, somma_due(2));
+/// ```
+pub fn somma_due(a: i32) -&gt; i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(4, somma_due(2));
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='doccomment'>//! Il crate `sommatore` fornisce delle funzioni</span>
+<span class='doccomment'>//! che sommano numeri ad altri numeri.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Esempi</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! assert_eq!(4, sommatore::somma_due(2));</span>
+<span class='doccomment'>//! ```</span>
+
+<span class='doccomment'>/// Questa funzione somma due al suo argomento.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// # Esempi</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```</span>
+<span class='doccomment'>/// use sommatore::somma_due;</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// assert_eq!(4, somma_due(2));</span>
+<span class='doccomment'>/// ```</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>somma_due</span>(<span class='ident'>a</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>a</span> <span class='op'>+</span> <span class='number'>2</span>
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>tests</span> {
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>it_works</span>() {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>, <span class='ident'>somma_due</span>(<span class='number'>2</span>));
+    }
+}</pre>
+
+<p>Si noti che la documentazione a livello di modulo è marcata con <code>//!</code>, mentre
+la documentazione a livello di funzione è marcata con <code>///</code>. La documentazione
+di Rust supporta il linguaggio Markdown nei commenti, e quindi i blocchi
+di codice nei commenti sono marcati da terne di accenti gravi.
+Si usa aggiungere la sezione <code># Esempi</code>, proprio come sopra, seguita
+da uno o più esempi.</p>
+
+<p>Eseguiamo nuovamente i test:</p>
+
+<pre><code class="language-bash">$ cargo test
+   Compiling sommatore v0.0.1 (file:///home/steve/tmp/sommatore)
+     Running target/sommatore-91b3e234d4ed382a
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+     Running target/lib-c18e7d3494509e74
+
+running 1 test
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+
+   Doc-tests sommatore
+
+running 2 tests
+test somma_due_0 ... ok
+test _0 ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured
+</code></pre>
+
+<p>Adesso abbiamo eseguito realmente tutti e tre i tipi di test! Si notino i nomi
+dei test di documentazione: il nome <code>_0</code> viene generato per il test di modulo,
+e il nome <code>somma_due_0</code> per il test di funzione. Questi si autoincrementeranno,
+producendo nomi come <code>somma_due_1</code> quando si aggiungono altri esempi.</p>
+
+<p>Non abbiamo trattato tutti i dettagli della scrittura dei test
+della documentazione. Per saperne di più, si veda
+il <a href="documentation.html">capitolo della documentazione</a>.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

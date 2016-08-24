@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Lo stack e lo heap</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a class='active' href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Lo stack e lo heap</h1>
+    <p>Come linguaggio di sistema, Rust opera a basso livello. Per chi viene da
+un linguaggio ad alto livello, ci sono alcuni aspetti della programmazione di
+sistema con cui potrebbe non essere familiare. Quello più importante è come
+funziona la memoria, con lo stack e lo heap. Per chi è familiare con
+i linguaggi simili al C, e con il modo in cui usano l&#39;allocazione su stack,
+questa sezione sarà un ripasso. Chi non lo fosse, imparerà questo concetto
+generale, ma focalizzato su Rust.</p>
+
+<p>Come quando si imparano molte altre cose, per iniziare useremo un modello
+semplificato. Ciò consente di afferrare le basi, senza essere sopraffati
+dai dettagli. Gli esempi che useremo non saranno perfettamente accurati, ma
+rappresentativi di quello che adesso vogliamo imparare. Dopo aver appreso
+le basi, con questa particolare astrazione, se ne potranno rimuovere le pecche
+quando si impareranno gli allocatori, la memoria virtuale e
+altri argomenti avanzati.</p>
+
+<h1 id='la-gestione-della-memoria' class='section-header'><a href='#la-gestione-della-memoria'>La gestione della memoria</a></h1>
+<p>Questi due termini riguardano la gestione della memoria. Lo stack e lo heap
+sono astrazioni che aiutano a determinare quando allocare e deallocare memoria.</p>
+
+<p>Ecco un confronto ad alto livello:</p>
+
+<p>Lo stack è molto veloce, ed è dove la memoria è allocata di default in Rust.
+Ma l&#39;allocazione è locale a una chiamata di funzione, ed è di dimensione
+limitata. Lo heap, d&#39;altro canto, è più lento, ed è esplicitamente allocato
+dal programma. Ma è di dimensione illimitata, ed è accessibile a tutto
+il programma.</p>
+
+<h1 id='lo-stack' class='section-header'><a href='#lo-stack'>Lo stack</a></h1>
+<p>Parliamo di questo programma in Rust:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 42;
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>42</span>;
+}</pre>
+
+<p>Questo programma ha un solo legame di variabile, <code>x</code>. Questa memoria deve
+essere allocata da qualche parte. Rust di default ‘alloca sullo stack’, il che
+significa che i valori di base ‘vanno sullo stack’. Che cosa significa?</p>
+
+<p>Beh, quando una funzione viene chiamata, viene allocata della memoria per tutte
+le sue variabili locali e alcune altre informazioni. Questa memoria si chiama
+‘stack frame’, e per lo scopo di  questa sezione, ignoreremo le informazioni
+aggiuntive e considereremo solamente le variabili locali che stiamo allocando.
+Perciò in questo caso, quando viene eseguito <code>main()</code>, allocheremo un solo
+intero a 32 bit per il nostro stack frame. Questo viene gestito
+automaticamente, come si vede; non abbiamo dovuto scrivere nessun codice Rust
+speciale.</p>
+
+<p>Quando la funzione esce, il suo stack frame viene deallocato. Anche questo
+avviene automaticamente.</p>
+
+<p>Questo è tutto per questo semplice programma. La cosa chiave da capire qui
+è che l&#39;allocazione su stack è velocissima. Dato che il compilatore conosce
+tutte le variabili locali, può afferrare la memoria necessaria in un colpo
+solo. E dato che le butterà via tutte nello stesso istante, può sbarazzarsene
+pue in un colpo solo.</p>
+
+<p>Lo svantaggio è che non si possono tenere in giro valori se ci servono per
+un tempo più lungo di una singola funzione. Inoltre non abbiamo ancora detto
+che cosa significa la parola ‘stack’. Per farlo, ci serve un esempio
+leggermente più complicato:</p>
+
+<span class='rusttest'>fn foo() {
+    let y = 5;
+    let z = 100;
+}
+
+fn main() {
+    let x = 42;
+
+    foo();
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>() {
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class='kw'>let</span> <span class='ident'>z</span> <span class='op'>=</span> <span class='number'>100</span>;
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>42</span>;
+
+    <span class='ident'>foo</span>();
+}</pre>
+
+<p>Questo programma ha in totale tre variabili: due in <code>foo()</code>, e una in <code>main()</code>.
+Come prima, quando <code>main()</code> viene chiamata, un solo intero viene allocato
+per il suo stack frame. Ma prima di poter mostrare ciò che accade quando
+<code>foo()</code> viene chiamato, dobbiamo visualizzare cosa succede con la memoria.
+Il sistema operativo presenta al programma un&#39;immagine molto semplice
+della memoria: un&#39;enorme array di byte, accessibile tramite il loro indirizzo,
+da 0 a un grande numero, che rappresenta quanta RAM il sistema operativo
+concede al processo. Per esempio, se il processo ha un gigabyte di spazio di
+indirizzamento, gli indirizzi vanno da <code>0</code> a <code>1,073,741,823</code>. Quel numero
+equivale a 2<sup>30</sup>, cioè il numero di byte in un gigabyte. <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<p>Perciò ecco un diagramma del nostro primo stack frame:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>Abbiamo che <code>x</code> si trova all&#39;indirizzo <code>0</code>, con il valore <code>42</code>.</p>
+
+<p>Quando <code>foo()</code> viene chiamata, viene allocato un nuovo stack frame:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>2</td>
+<td>z</td>
+<td>100</td>
+</tr>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>5</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>Siccome <code>0</code> è stato preso dal primo frame, <code>1</code> e <code>2</code> sono usati dallo stack
+frame di <code>foo()</code>. Cresce in su, man mano che chiamiamo funzioni.</p>
+
+<p>Qui ci sono alcune cose importanti di cui dobbiamo prendere nota. I numeri 0,
+1, e 2 sono a solo scopo illustrativo, e non hanno relazione con i valori degli
+indirizzi che il computer userà in realtà. In particolare, le serie
+di indirizzi in realtà saranno separati da un certo numero di byte che separano
+ogni indirizzo dal successivo, e quella separazione può superare persino
+da dimensione del valore memorizzato.</p>
+
+<p>Dopo che <code>foo()</code> è finito, il suo frame viene deallocato:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>E poi, dopo <code>main()</code>, perfino quest&#39;ultimo valore va via. Facile!</p>
+
+<p>Si chiama ‘stack’ (che in italiano significa, &quot;pila&quot;, &quot;catasta&quot;) perché
+funziona come una catasta di vassoi da cena: il primo vassoio che sia appoggia
+sarà l&#39;ultimo vassoio che si riprende. Per questa ragione, gli stack sono
+talvolta chiamati ‘code di tipo ultimo dentro, primo fuori‘ [&quot;Last In First
+Out&quot;], dato che l&#39;ultimo valore messo sullo stack è il primo che ne verrà
+preso.</p>
+
+<p>Proviamo un esempio di profondità tre:</p>
+
+<span class='rusttest'>fn corsivo() {
+    let i = 6;
+}
+
+fn grassetto() {
+    let a = 5;
+    let b = 100;
+    let c = 1;
+
+    corsivo();
+}
+
+fn main() {
+    let x = 42;
+
+    grassetto();
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>corsivo</span>() {
+    <span class='kw'>let</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>6</span>;
+}
+
+<span class='kw'>fn</span> <span class='ident'>grassetto</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='number'>100</span>;
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='number'>1</span>;
+
+    <span class='ident'>corsivo</span>();
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>42</span>;
+
+    <span class='ident'>grassetto</span>();
+}</pre>
+
+<p>Abbiamo dato alle funzioni alcuni nomi strani per rendere più chiaro lo schema.</p>
+
+<p>Bene, prima chiamiamo <code>main()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>Poi, <code>main()</code> chiama <code>grassetto()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>c</strong></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>b</strong></td>
+<td><strong>100</strong></td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td><strong>a</strong></td>
+<td><strong>5</strong></td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>E poi <code>grassetto()</code> chiama <code>corsivo()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><em>4</em></td>
+<td><em>i</em></td>
+<td><em>6</em></td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>c</strong></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>b</strong></td>
+<td><strong>100</strong></td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td><strong>a</strong></td>
+<td><strong>5</strong></td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>Urca! Il nostro stack sta diventando alto.</p>
+
+<p>Dopo che <code>italic()</code> è finita, il suo frame viene deallocato, lasciando
+solamente <code>grassetto()</code> e <code>main()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>c</strong></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>b</strong></td>
+<td><strong>100</strong></td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td><strong>a</strong></td>
+<td><strong>5</strong></td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>E poi <code>grassetto()</code> finisce, lasciando solamente <code>main()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+
+<p>E poi abbiamo finito. Ci state prendendo mano? È come impilare dei piatti:
+si aggiunge in cima, si toglie dalla cima.</p>
+
+<h1 id='lo-heap' class='section-header'><a href='#lo-heap'>Lo Heap</a></h1>
+<p>Adesso, questo funziona bene, ma non tutto può funzionare così. Talvolta,
+si deve passare della memoria fra diverse funzioni, o tenerla viva più a lungo
+dell&#39;esecuzione di una sola funzione. Per questo, si può usare lo heap.</p>
+
+<p>In Rust, si può allocare memoria sullo heap con il <a href="../std/boxed/index.html">tipo <code>Box&lt;T&gt;</code></a>.
+Ecco un esempio:</p>
+
+<span class='rusttest'>fn main() {
+    let x = Box::new(5);
+    let y = 42;
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>5</span>);
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>42</span>;
+}</pre>
+
+<p>Ecco quello che succede in memoria quando si chiama <code>main()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>42</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>??????</td>
+</tr>
+</tbody>
+</table>
+
+<p>Allochiamo spazio per due variabili sullo stack. <code>y</code> vale <code>42</code>, come sempre,
+ma che dire di <code>x</code>? Beh, <code>x</code> è un <code>Box&lt;i32&gt;</code>, e i box allocano memoria sullo
+heap. L&#39;effettivo valore del box è una struttura che ha un puntatore allo
+‘heap’. Quando iniziamo a eseguire la funzione, e <code>Box::new()</code> viene chiamato,
+alloca della memoria dallo heap, e ci mette <code>5</code>. La memoria adesso appare così:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>42</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+</tbody>
+</table>
+
+<p>Nel nostro ipotetico processo con 1GB of RAM abbiamo (2<sup>30</sup>) - 1
+possibili indirizzi. E dato che il nostro stack cresce da zero, il luogo
+più facile per allocare memoria è dall&#39;altra estremità. Perciò il nostro primo
+valore è nel posto più alto della memoria. E il valore della struttura
+legata a <code>x</code> ha un <a href="raw-pointers.html">puntatore grezzo</a> che punta al posto che
+abbiamo allocato sullo heap, perciò il valore di <code>x</code> è (2<sup>30</sup>) - 1,
+cioè la posizione che abbiamo richiesto.</p>
+
+<p>In realtà non abbiamo parlato troppo di ciò che effettivamente significa
+allocare e deallocare memoria in questi contesti. In questo libro non si
+scenderà in dettagli molto approfonditi, ma ciò che è importante
+evidenziare qui è che lo heap non è uno stack che cresce dall&#39;estremità
+opposta. Più avanti ne faremo un esempio, ma siccome lo heap può essere
+allocato e deallocato in qualunque ordine, può finire per avere dei ‘buchi’.
+Ecco uno schema della disposizione di memoria di un programma che è stato
+in esecuzione per un po&#39; di tempo:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td>(2<sup>30</sup>) - 2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(2<sup>30</sup>) - 3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(2<sup>30</sup>) - 4</td>
+<td></td>
+<td>42</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>2</td>
+<td>z</td>
+<td>→ (2<sup>30</sup>) - 4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>42</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+</tbody>
+</table>
+
+<p>In questo caso, abbiamo allocato quattro oggetti sullo heap, ma ne abbiamo poi
+deallocati due di essi. Fra (2<sup>30</sup>) - 1 e (2<sup>30</sup>) - 4 c&#39;è
+dello spazio di memoria che al momento non è utilizzato. I dettagli specifici
+di come e perché questo accada dipendono dalla strategia usata per gestire
+lo heap. Diversi programmi possono usare diversi ‘allocatori di memoria’, che
+sono librerie che implementano queste strategie. Normalmente, i programmi
+in Rust usano <a href="http://www.canonware.com/jemalloc/">jemalloc</a> a questo scopo.</p>
+
+<p>Comunque, torniamo al nostro esempio. Dato che questa memoria sta nello heap,
+può rimanere viva più a lungo della funzione che alloca il box. In questo caso,
+però, non lo fa.<sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup> Quando la funzione è finita, dobbiamo deallocare
+lo stack frame di <code>main()</code>. <code>Box&lt;T&gt;</code>, però, ha un asso nella manica:
+<a href="drop.html">Drop</a>. L&#39;implementazione di <code>Drop</code> per <code>Box</code> dealloca la memoria che
+è stata allocata quando è stato creato. Ottimo! Perciò, quando <code>x</code> se ne va,
+prima dealloca la memoria che ha allocato sullo heap:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>42</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>??????</td>
+</tr>
+</tbody>
+</table>
+
+<p>E poi lo stack frame se ne va, rilasciando tutta la sua memoria.</p>
+
+<h1 id='argomenti-e-prestiti' class='section-header'><a href='#argomenti-e-prestiti'>Argomenti e prestiti</a></h1>
+<p>Abbiamo visto alcuni semplici esempi che usano lo stack e lo heap, ma che dire
+degli argomenti di funzione e dei prestiti? Ecco un piccolo programma in Rust:</p>
+
+<span class='rusttest'>fn foo(i: &amp;i32) {
+    let z = 42;
+}
+
+fn main() {
+    let x = 5;
+    let y = &amp;x;
+
+    foo(y);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>i</span>: <span class='kw-2'>&amp;</span><span class='ident'>i32</span>) {
+    <span class='kw'>let</span> <span class='ident'>z</span> <span class='op'>=</span> <span class='number'>42</span>;
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>x</span>;
+
+    <span class='ident'>foo</span>(<span class='ident'>y</span>);
+}</pre>
+
+<p>Quando entriamo in <code>main()</code>, la memoria si presenta così:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>x</code> è un semplice <code>5</code>, mentre <code>y</code> è un riferimento a <code>x</code>. Perciò il suo valore
+è la posizione di memoria in cui risiede <code>x</code>, che in questo caso è <code>0</code>.</p>
+
+<p>E che succede quando chiamiamo <code>foo()</code>, passandogli <code>y</code> come argomento?</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>3</td>
+<td>z</td>
+<td>42</td>
+</tr>
+<tr>
+<td>2</td>
+<td>i</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>x</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+
+<p>Gli stack frame non servono solamente ai legami locali, servono anche
+agli argomenti. Perciò in questo caso, dobbiamo avere sia <code>i</code>, che è il nostro
+argomento, che <code>z</code>, che è il nostro legame locale a variabile. <code>i</code> è una copia
+dell&#39;argomento, <code>y</code>. Dato che il valore di <code>y</code> è <code>0</code>, lo è anche di <code>i</code>.</p>
+
+<p>Questa è una ragione per cui prestare una variabile non dealloca memoria:
+il valore di un riferimento è un puntatore a una posizione in memoria. Se ci
+fossimo sbarazzati della memoria soggiaciente, le cose non potrebbero
+funzionare.</p>
+
+<h1 id='un-esempio-complesso' class='section-header'><a href='#un-esempio-complesso'>Un esempio complesso</a></h1>
+<p>Bene, adesso esaminiamo passo per passo questo programma complesso:</p>
+
+<span class='rusttest'>fn foo(x: &amp;i32) {
+    let y = 10;
+    let z = &amp;y;
+
+    baz(z);
+    bar(x, z);
+}
+
+fn bar(a: &amp;i32, b: &amp;i32) {
+    let c = 5;
+    let d = Box::new(5);
+    let e = &amp;d;
+
+    baz(e);
+}
+
+fn baz(f: &amp;i32) {
+    let g = 100;
+}
+
+fn main() {
+    let h = 3;
+    let i = Box::new(20);
+    let j = &amp;h;
+
+    foo(j);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>i32</span>) {
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>10</span>;
+    <span class='kw'>let</span> <span class='ident'>z</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>y</span>;
+
+    <span class='ident'>baz</span>(<span class='ident'>z</span>);
+    <span class='ident'>bar</span>(<span class='ident'>x</span>, <span class='ident'>z</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>bar</span>(<span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='ident'>i32</span>, <span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>i32</span>) {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class='kw'>let</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>5</span>);
+    <span class='kw'>let</span> <span class='ident'>e</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>d</span>;
+
+    <span class='ident'>baz</span>(<span class='ident'>e</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>baz</span>(<span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='ident'>i32</span>) {
+    <span class='kw'>let</span> <span class='ident'>g</span> <span class='op'>=</span> <span class='number'>100</span>;
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>h</span> <span class='op'>=</span> <span class='number'>3</span>;
+    <span class='kw'>let</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>20</span>);
+    <span class='kw'>let</span> <span class='ident'>j</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>h</span>;
+
+    <span class='ident'>foo</span>(<span class='ident'>j</span>);
+}</pre>
+
+<p>Prima, chiamiamo <code>main()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Allochiamo memoria per <code>j</code>, <code>i</code>, e <code>h</code>. <code>i</code> è sullo heap, e quindi ha un valore
+che punta là.</p>
+
+<p>Poi, alla fine di <code>main()</code>, viene chiamata <code>foo()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>si alloca dello spazio per <code>x</code>, <code>y</code>, e <code>z</code>. L&#39;argomento <code>x</code> ha lo stesso valore
+di <code>j</code>, dato che è quello che gli abbiamo passato. È un puntatore all&#39;indirizzo
+<code>0</code>, dato che <code>j</code> punta ad <code>h</code>.</p>
+
+<p>Poi, <code>foo()</code> chiama <code>baz()</code>, passandogli <code>z</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>7</td>
+<td>g</td>
+<td>100</td>
+</tr>
+<tr>
+<td>6</td>
+<td>f</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Abbiamo allocato memoria per <code>f</code> e per <code>g</code>. <code>baz()</code> è molto breve, perciò
+quando è finita, ci sbarazziamo del suo stack frame:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Poi, <code>foo()</code> chiama <code>bar()</code> con <code>x</code> e <code>z</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>(2<sup>30</sup>) - 2</td>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>10</td>
+<td>e</td>
+<td>→ 9</td>
+</tr>
+<tr>
+<td>9</td>
+<td>d</td>
+<td>→ (2<sup>30</sup>) - 2</td>
+</tr>
+<tr>
+<td>8</td>
+<td>c</td>
+<td>5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>b</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>6</td>
+<td>a</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Finiamo con l&#39;allocare un altro valore sullo heap, e quindi dobbiamo sottrarre
+uno da (2<sup>30</sup>) - 1. È più facile da scrivere che <code>1.073.741.822</code>.
+In ogni caso, impostiamo le variabili come al solito.</p>
+
+<p><code>bar()</code>, alla fine, chiama <code>baz()</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>(2<sup>30</sup>) - 2</td>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>12</td>
+<td>g</td>
+<td>100</td>
+</tr>
+<tr>
+<td>11</td>
+<td>f</td>
+<td>→ 9</td>
+</tr>
+<tr>
+<td>10</td>
+<td>e</td>
+<td>→ 9</td>
+</tr>
+<tr>
+<td>9</td>
+<td>d</td>
+<td>→ (2<sup>30</sup>) - 2</td>
+</tr>
+<tr>
+<td>8</td>
+<td>c</td>
+<td>5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>b</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>6</td>
+<td>a</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Con questo, siamo arrivati al punto più profondo! Urca! Congratulazioni
+essere arrivati fino a questo punto.</p>
+
+<p>Dopo che <code>baz()</code> è finita, ci sbarazziamo di <code>f</code> e di <code>g</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>(2<sup>30</sup>) - 2</td>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>10</td>
+<td>e</td>
+<td>→ 9</td>
+</tr>
+<tr>
+<td>9</td>
+<td>d</td>
+<td>→ (2<sup>30</sup>) - 2</td>
+</tr>
+<tr>
+<td>8</td>
+<td>c</td>
+<td>5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>b</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>6</td>
+<td>a</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>Poi, ritorniamo da <code>bar()</code>. <code>d</code> in questo caso è un <code>Box&lt;T&gt;</code>, quindi dealloca
+anche quello a cui punta: (2<sup>30</sup>) - 2.</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>5</td>
+<td>z</td>
+<td>→ 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>E dopo di quello, <code>foo()</code> termina:</p>
+
+<table>
+<thead>
+<tr>
+<th>Indirizzo</th>
+<th>Nome</th>
+<th>Valore</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>(2<sup>30</sup>) - 1</td>
+<td></td>
+<td>20</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>2</td>
+<td>j</td>
+<td>→ 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>→ (2<sup>30</sup>) - 1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>h</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+<p>e poi, finalmente, anche <code>main()</code>, che ripulisce tutto lo stack. Quando <code>i</code>
+esegue <code>Drop</code>, ripulirà anche tutto lo heap.</p>
+
+<h1 id='che-cosa-fanno-gli-altri-linguaggi' class='section-header'><a href='#che-cosa-fanno-gli-altri-linguaggi'>Che cosa fanno gli altri linguaggi?</a></h1>
+<p>La maggior parte dei linguaggi che usano un garbage collector allocano
+sullo heap di default. Ciò significa che ogni valore è racchiuso in un boxed.
+Ci sono varie ragioni per cui viene fatto, ma non ne parlermo. Però sono
+possibili alcune ottimizzazioni che non lo rendono sempre vero. Invece
+di affidarsi allo stack ed eseguire <code>Drop</code> per rilasciare la memoria,
+il garbage collector gestisce direttamente lo heap.</p>
+
+<h1 id='quale-usare' class='section-header'><a href='#quale-usare'>Quale usare?</a></h1>
+<p>Dunque se lo stack è più veloce e più facile da gestire, che bisogno abbiamo
+dello heap? Una grossa ragione è che avere solamente l&#39;allocazione su stack
+significa avere solmente una semantica di tipo &#39;ultimo dentro primo fuori&#39;
+per recuperare la memoria. L&#39;allocazione su heap è più generale, consentendo
+di rilasciare pezzi di memoria in ordine arbitrario, ma al costo di maggiore
+complessità.</p>
+
+<p>In generale, si dovrebbe preferire l&#39;allocazione su stack, e quindi, Rust
+alloca su stack di default. Il modello LIFO dello stack è più semplice, ad
+un livello fondamentale. Ciò ha due grossi impatti: efficienza in fase
+di esecuzione e impatto semantico.</p>
+
+<h2 id='efficienza-in-fase-di-esecuzione' class='section-header'><a href='#efficienza-in-fase-di-esecuzione'>Efficienza in fase di esecuzione</a></h2>
+<p>Gestire la memoria sullo stack è banale: la macchina incrementa o decrementa
+un singolo valore, il cosiddetto “puntatore allo stack”.
+Gestire la memoria sullo heap non è affatto banale: la memoria allocata
+sullo heap viene rilasciata in punti arbitrari, e ogni blocco di memoria
+allocata sullo heap può essere di dimensione arbitraria, e quindi il gestore
+della memoria in generale deve fare un lavoro molto più difficile per trovare
+gli spazi di memoria da riutilizzare.</p>
+
+<p>Per chi volesse approfondire questo argomento, <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.143.4688">questo articolo</a>
+è un&#39;ottima introduzione.</p>
+
+<h2 id='impatto-semantico' class='section-header'><a href='#impatto-semantico'>Impatto semantico</a></h2>
+<p>L&#39;allocazione su stack ha un impatto sullo stesso linguaggio Rust, e così
+sul modello mentale dello sviluppatore. La semantica LIFO è ciò che guida
+come il linguaggio Rust gestisce automaticamente la memoria. Perfino
+la deallocazione di un box allocato sullo heap e avente un solo possessore
+può essere guidata dalla semantica LIFO basata su stack, come ampiamente
+discusso in questa sezione. La flessibilità (cioè l&#39;espressività) della
+semantica LIFO significa che in generale il compilatore non può automaticamente
+inferire in fase di compilazione dove dovrebbe essere deallocata la memoria;
+deve affidarsi su protocolli dinamici, potenzialmente esterni al linguaggio
+stesso, per guidare la deallocazione (il conteggio dei riferimenti, usato da
+<code>Rc&lt;T&gt;</code> e da <code>Arc&lt;T&gt;</code>, ne è un esempio).</p>
+
+<p>Se portato all&#39;estremo, l&#39;accresciuto potere espressivo dell&#39;allocazione
+su heap allocation comporta o il costo di un significativo supporto di fase
+di esecuzione (per es. sotto forma di un garbage collector) o un significativo
+sforzo del programmatore (sotto forma di chiamate esplicite di gestione
+della memoria che richiedono verifiche non fornite dal compilatore).</p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>La parola ‘gigabyte’ viene usata con due possibili significati:
+10<sup>9,</sup> o 2<sup>30.</sup> Lo standard SI ha risolto l&#39;ambiguità affermando che
+‘gigabyte’ è 10<sup>9,</sup> e ‘gibibyte’ è 2<sup>30.</sup> Però, pochissima gente usa
+quest&#39;ultima parola, e si affida al contesto per disambiguare.
+Qui seguiamo la tradizione.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p>Possiamo fare in modo che la memoria viva più a lungo tramite
+       il traferimento del possesso, talvolta chiamato ‘spostare fuori
+       dal box’. Esempi più complessi verranno trattati più avanti.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

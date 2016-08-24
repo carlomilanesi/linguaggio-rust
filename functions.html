@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Funzioni</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a class='active' href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Funzioni</h1>
+    <p>Ogni programma Rust ha almeno una funzione, la funzione <code>main</code>:</p>
+
+<span class='rusttest'>fn main() {
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+}</pre>
+
+<p>Questo è la dichiarazione di funzione più semplice possibile.
+Come accennato prima, <code>fn</code> indica che ‘questa è una funzione’, ed è seguita
+dal nome della funzione, da due parentesi vuote perché questa funzione
+non prende argomenti, e poi da parentesi graffe che contengono il corpo della funzione.
+Ecco una funzione chiamata <code>foo</code>:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo() {
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>() {
+}</pre>
+
+<p>E per quanto riguarda gli argomenti? Ecco una funzione che stampa un numero:</p>
+
+<span class='rusttest'>fn main() {
+    fn stampa_numero(x: i32) {
+    println!(&quot;x is: {}&quot;, x);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>stampa_numero</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x is: {}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+<p>Ecco un programma completo che usa <code>stampa_numero</code>:</p>
+
+<span class='rusttest'>fn main() {
+    stampa_numero(5);
+}
+
+fn stampa_numero(x: i32) {
+    println!(&quot;x is: {}&quot;, x);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>stampa_numero</span>(<span class='number'>5</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>stampa_numero</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x is: {}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+<p>Come si vede, gli argomenti delle funzioni funzionano in modo molto simile
+alle dichiarazioni <code>let</code>:
+si aggiunge un tipo al nome dell&#39;argomento, dopo i due punti <code>:</code>.</p>
+
+<p>Ecco un programma completo che somma due numeri e stampa il risultato:</p>
+
+<span class='rusttest'>fn main() {
+    stampa_somma(5, 6);
+}
+
+fn stampa_somma(x: i32, y: i32) {
+    println!(&quot;la somma è: {}&quot;, x + y);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>stampa_somma</span>(<span class='number'>5</span>, <span class='number'>6</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>stampa_somma</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;la somma è: {}&quot;</span>, <span class='ident'>x</span> <span class='op'>+</span> <span class='ident'>y</span>);
+}</pre>
+
+<p>Si separano gli argomenti usando una virgola, sia quando si chiama la funzione,
+che quando la si dichiara.</p>
+
+<p>Diversamente dall&#39;istruzione <code>let</code>, i tipi degli argomenti delle funzioni
+<em>devono</em> essere dichiarati. Pertanto questo non funziona:</p>
+
+<span class='rusttest'>fn main() {
+    fn stampa_somma(x, y) {
+    println!(&quot;la somma è: {}&quot;, x + y);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>stampa_somma</span>(<span class='ident'>x</span>, <span class='ident'>y</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;la somma è: {}&quot;</span>, <span class='ident'>x</span> <span class='op'>+</span> <span class='ident'>y</span>);
+}</pre>
+
+<p>Si ottiene l&#39;errore:</p>
+
+<pre><code class="language-text">expected one of `!`, `:`, or `@`, found `)`
+fn print_sum(x, y) {
+</code></pre>
+
+<p>Questa è una ponderata decisione progettuale. Per quanto sia possibile
+l&#39;inferenza di tipo sull&#39;intero programma, i linguaggi che ce l&#39;hanno,
+come Haskell, spesso suggeriscono che sia meglio documentare esplicitamente
+i propri tipi. Concordiamo che costringere le funzioni a dichiarare i tipi
+mentre consentire l&#39;inferenza all&#39;interno dei corpi delle funzioni sia
+un punto di equilibrio perfetto tra l&#39;inferenza completa e nessuna inferenza.</p>
+
+<p>Che dire del valore reso? Ecco una funzione che somma uno a un intero:</p>
+
+<span class='rusttest'>fn main() {
+    fn somma_uno(x: i32) -&gt; i32 {
+    x + 1
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>somma_uno</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>
+}</pre>
+
+<p>Le funzioni di Rust restituiscono esattamente un valore, e si dichiara
+il tipo dopo una ‘freccia’, che è un trattino (<code>-</code>) seguito da un segno
+di maggiore (<code>&gt;</code>).
+L&#39;ultima riga di una funzione determina che cosa restituisce. Qui si noterà
+la mancanza di un punto-e-virgola. Se l&#39;avessimo aggiunto:</p>
+
+<span class='rusttest'>fn main() {
+    fn somma_uno(x: i32) -&gt; i32 {
+    x + 1;
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>somma_uno</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>;
+}</pre>
+
+<p>Avremmo ottenuto un errore:</p>
+
+<pre><code class="language-text">error: not all control paths return a value
+fn somma_uno(x: i32) -&gt; i32 {
+     x + 1;
+}
+
+help: consider removing this semicolon:
+     x + 1;
+          ^
+</code></pre>
+
+<p>Questo rivela due cose interessanti di Rust: è un linguaggio basato
+sulle espressioni, e i punto-e-virgola sono diversi dai punto-e-virgola
+in altri linguaggi basati su ‘graffe e punto-e-virgola’. Questi due aspetti
+sono correlati.</p>
+
+<h2 id='espressioni-contro-istruzioni' class='section-header'><a href='#espressioni-contro-istruzioni'>Espressioni contro istruzioni</a></h2>
+<p>Rust è primariamente un linguaggio basato sulle espressioni. Ci sono solamente
+due tipi di istruzioni, e ogni altra cosa è un&#39;espressione.</p>
+
+<p>E qual è la differenza? Le espressioni restituiscono un valore, mentre
+le istruzioni no. Ecco perché andiamo a finire con il messaggio d&#39;errore
+‘non tutti i percorsi di controllo restituiscono un valore’:
+l&#39;istruzione <code>x + 1;</code> non restituisce un valore.
+Ci sono due tipi di istruzioni in Rust:
+le ‘istruzioni di dichiarazione’ e le ‘istruzioni di espressione’. Tutto
+il resto è un&#39;espressione. Prima parliamo delle istruzioni di dichiarazione.</p>
+
+<p>In alcuni linguaggi, i legami delle variabili possono essere scritti
+come espressioni, non come istruzioni. Come in Ruby:</p>
+
+<pre><code class="language-ruby">x = y = 5
+</code></pre>
+
+<p>In Rust, però, l&#39;uso di <code>let</code> per introdurre un legame <em>non</em> è un&#39;espressione.
+La seguente riga produrrà un errore di compilazione:</p>
+
+<span class='rusttest'>fn main() {
+    let x = (let y = 5); // atteso un identificatore, trovata la parola-chiave `let`
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> (<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>5</span>); <span class='comment'>// atteso un identificatore, trovata la parola-chiave `let`</span></pre>
+
+<p>Qui il compilatore ci sta dicendo che si stava aspettando di vedere l&#39;inizio
+di una espressione, mentre un <code>let</code> può iniziare solamente un&#39;istruzione,
+non un&#39;espressione.</p>
+
+<p>Si noti che assegnare a una variabile già legata (per es. <code>y = 5</code>) è ancora
+un&#39;espressione, per quanto il suo valore non sia particolarmente utile.
+Diversamente da altri linguaggi, nei quali un assegnamento ha come valore
+il valore assegnato (nell&#39;esempio precedente, <code>5</code>), in Rust il valore
+di un assegnamento è una ennupla vuota <code>()</code>, perché il valore assegnato può avere
+<a href="ownership.html">solamente un possessore</a>, e ogni altro valore reso sarebbe
+troppo sorprendente:</p>
+
+<span class='rusttest'>fn main() {
+    let mut y = 5;
+
+let x = (y = 6);  // x ha valore `()`, non `6`
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> (<span class='ident'>y</span> <span class='op'>=</span> <span class='number'>6</span>);  <span class='comment'>// x ha valore `()`, non `6`</span></pre>
+
+<p>Il secondo genere di istruzioni in Rust è l&#39;*istruzione espressione*. Il suo
+scopo è trasformare qualunque espressione in un&#39;istruzione. In pratica,
+la grammatica di Rust si aspetta che delle istruzioni seguano altre istruzioni.
+Ciò significa che si usano punti-e-virgola per separare diverse espressioni.
+Ciò significa che Rust è molto simile alla maggior parte degli
+altri linguaggi che richiedono di usare punti-e-virgola alla fine di ogni riga,
+e si vedranno punti-e-virgola alla fine di quasi tutte le righe di codice Rust.</p>
+
+<p>Cos&#39;è questa eccezione che ci fa dire &quot;quasi&quot;? L&#39;abbiamo già visto prima,
+in questo codice:</p>
+
+<span class='rusttest'>fn main() {
+    fn somma_uno(x: i32) -&gt; i32 {
+    x + 1
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>somma_uno</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>
+}</pre>
+
+<p>La nostra funzione sostiene di restituire un <code>i32</code>, ma se ci fosse
+un punto-e-virgola, restituirebbe un <code>()</code> invece. Rust si rende conto
+che questo probabilmente non è ciò che vogliamo, e,
+nel messaggio d&#39;errore che abbiamo visto prima,
+consiglia di togliere il punto-e-virgola.</p>
+
+<h2 id='uscite-precoci' class='section-header'><a href='#uscite-precoci'>Uscite precoci</a></h2>
+<p>E che dire delle uscite precoci? Rust ha una parola-chiave farle, <code>return</code>:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo(x: i32) -&gt; i32 {
+    return x;
+
+    // non si eseguirà mai questo codice!
+    x + 1
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='kw'>return</span> <span class='ident'>x</span>;
+
+    <span class='comment'>// non si eseguirà mai questo codice!</span>
+    <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>
+}</pre>
+
+<p>Usare un <code>return</code> come ultima riga di una funzione è corretto, ma è
+considerato stile mediocre:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo(x: i32) -&gt; i32 {
+    return x + 1;
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='kw'>return</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>;
+}</pre>
+
+<p>La precedente definizione senza <code>return</code> può sembrare un po&#39; strana a chi non
+avesse mai lavorato con un linguaggio basato su espressioni, ma col tempo
+diventa intuitivo.</p>
+
+<h2 id='funzioni-divergenti' class='section-header'><a href='#funzioni-divergenti'>Funzioni divergenti</a></h2>
+<p>Rust ha alcune sintassi speciali per le ‘funzioni divergenti’, che sono
+le funzioni che non restituiscono mai il controllo al chiamante:</p>
+
+<span class='rusttest'>fn main() {
+    fn diverge() -&gt; ! {
+    panic!(&quot;Questa funzione non restituisce mai il controllo al chiamante!&quot;);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>diverge</span>() <span class='op'>-&gt;</span> <span class='op'>!</span> {
+    <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Questa funzione non restituisce mai il controllo al chiamante!&quot;</span>);
+}</pre>
+
+<p><code>panic!</code> è una macro, come lo è <code>println!()</code> che abbiamo già visto.
+Diversamente da <code>println!()</code>, <code>panic!()</code> manda in crash il thread corrente,
+stampando il messaggio ricevuto come argomento. Dato che questa funzione
+provocherà un crash, non restituirà mai il controllo al chiamante,
+e quindi ha il tipo ‘<code>!</code>’, che si legge ‘diverge’.</p>
+
+<p>Se si aggiunge una funzione main che chiama <code>diverge()</code> e la si esegue,
+si otterrà un output simile a questo:</p>
+
+<pre><code class="language-text">thread ‘main’ panicked at ‘Questa funzione non restituisce mai il controllo al chiamante!’, main.rs:2
+</code></pre>
+
+<p>Se si vogliono più informazioni, si può ottenere un backtrace impostando
+la variabile d&#39;ambiente <code>RUST_BACKTRACE</code>:</p>
+
+<pre><code class="language-text">$ rust_backtrace=1 ./diverge
+thread &#39;main&#39; panicked at &#39;Questa funzione non restituisce mai il controllo al chiamante!&#39;, main.rs:2
+stack backtrace:
+   1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
+   2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
+   3:     0x7f402773960e - rt::unwind::begin_unwind_inner::h2844b8c5e81e79558Bw
+   4:     0x7f4027738893 - rt::unwind::begin_unwind::h4375279447423903650
+   5:     0x7f4027738809 - diverge::h2266b4c4b850236beaa
+   6:     0x7f40277389e5 - main::h19bb1149c2f00ecfBaa
+   7:     0x7f402773f514 - rt::unwind::try::try_fn::h13186883479104382231
+   8:     0x7f402773d1d8 - __rust_try
+   9:     0x7f402773f201 - rt::lang_start::ha172a3ce74bb453aK5w
+  10:     0x7f4027738a19 - main
+  11:     0x7f402694ab44 - __libc_start_main
+  12:     0x7f40277386c8 - &lt;unknown&gt;
+  13:                0x0 - &lt;unknown&gt;
+</code></pre>
+
+<p>Se serve sovrascrivere una variabile <code>RUST_BACKTRACE</code> già impostata, nel caso
+in cui non si può semplicemente disimpostare la variabile, allora la si può
+impostare a <code>0</code> per evitare di ottenere un backtrace. Qualunque altro valore
+(anche nessun valore) attiva le informazioni di backtrace.</p>
+
+<pre><code class="language-text">$ export RUST_BACKTRACE=1
+...
+$ RUST_BACKTRACE=0 ./diverge
+thread &#39;main&#39; panicked at &#39;Questa funzione non restituisce mai il controllo al chiamante!&#39;, main.rs:2
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+</code></pre>
+
+<p><code>RUST_BACKTRACE</code> funziona anche con il comando <code>run</code> di Cargo:</p>
+
+<pre><code class="language-text">$ RUST_BACKTRACE=1 cargo run
+     Running `target/debug/diverge`
+thread &#39;main&#39; panicked at &#39;Questa funzione non restituisce mai il controllo al chiamante!&#39;, main.rs:2
+stack backtrace:
+   1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
+   2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
+   3:     0x7f402773960e - rt::unwind::begin_unwind_inner::h2844b8c5e81e79558Bw
+   4:     0x7f4027738893 - rt::unwind::begin_unwind::h4375279447423903650
+   5:     0x7f4027738809 - diverge::h2266b4c4b850236beaa
+   6:     0x7f40277389e5 - main::h19bb1149c2f00ecfBaa
+   7:     0x7f402773f514 - rt::unwind::try::try_fn::h13186883479104382231
+   8:     0x7f402773d1d8 - __rust_try
+   9:     0x7f402773f201 - rt::lang_start::ha172a3ce74bb453aK5w
+  10:     0x7f4027738a19 - main
+  11:     0x7f402694ab44 - __libc_start_main
+  12:     0x7f40277386c8 - &lt;unknown&gt;
+  13:                0x0 - &lt;unknown&gt;
+</code></pre>
+
+<p>Una funzione divergente può essere usata dove ci si aspetta un&#39;espressione
+di qualunque tipo:</p>
+
+<span class='rusttest'>fn main() {
+    fn diverge() -&gt; ! {
+   panic!(&quot;Questa funzione non restituisce mai il controllo al chiamante!&quot;);
+}
+let x: i32 = diverge();
+let x: String = diverge();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='ident'>diverge</span>();
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='ident'>diverge</span>();</pre>
+
+<h2 id='puntatori-di-funzione' class='section-header'><a href='#puntatori-di-funzione'>Puntatori di funzione</a></h2>
+<p>Possiamo anche creare legami di variabili che puntano a funzioni:</p>
+
+<span class='rusttest'>fn main() {
+    let f: fn(i32) -&gt; i32;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>f</span>: <span class='kw'>fn</span>(<span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span>;</pre>
+
+<p><code>f</code> è un legame di variabile che punta a una funzione che prende un <code>i32</code> come
+argomento e restituisce un <code>i32</code>. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    fn piu_uno(i: i32) -&gt; i32 {
+    i + 1
+}
+
+// senza l&#39;inferenza di tipo
+let f: fn(i32) -&gt; i32 = piu_uno;
+
+// con l&#39;inferenza di tipo
+let f = piu_uno;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>piu_uno</span>(<span class='ident'>i</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>
+}
+
+<span class='comment'>// senza l&#39;inferenza di tipo</span>
+<span class='kw'>let</span> <span class='ident'>f</span>: <span class='kw'>fn</span>(<span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> <span class='op'>=</span> <span class='ident'>piu_uno</span>;
+
+<span class='comment'>// con l&#39;inferenza di tipo</span>
+<span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>piu_uno</span>;</pre>
+
+<p>Poi possiamo usare <code>f</code> per chiamare la funzione:</p>
+
+<span class='rusttest'>fn main() {
+    fn piu_uno(i: i32) -&gt; i32 { i + 1 }
+let f = piu_uno;
+let sei = f(5);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>sei</span> <span class='op'>=</span> <span class='ident'>f</span>(<span class='number'>5</span>);</pre>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

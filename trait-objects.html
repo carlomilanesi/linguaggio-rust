@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Gli oggetti-tratto</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a class='active' href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Gli oggetti-tratto</h1>
+    <p>Quando del codice coinvolge del polimorfismo, serve un meccanismo
+per determinare quale specifica versione viene effettivamente eseguita.
+Questo si chiama ‘dispatch’ (in italiano, &quot;disbrigo&quot;). Ci sono due forme
+principali di dispatch: il dispatch statico e il dispatch dinamico. Rust
+favorisce il dispatch statico, ma supporta anche il dispatch dinamico
+tramite un meccanismo chiamato ‘oggetti-tratto’ [&quot;trait object&quot;].</p>
+
+<h2 id='premesse' class='section-header'><a href='#premesse'>Premesse</a></h2>
+<p>Per il resto di questa sezione, ci serviranno un tratto e alcune
+implementazioni. Facciamone una semplice, <code>Foo</code>. Ha un metodo che ci si
+aspetta che restituisca una <code>String</code>.</p>
+
+<span class='rusttest'>fn main() {
+    trait Foo {
+    fn metodo(&amp;self) -&gt; String;
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>trait</span> <span class='ident'>Foo</span> {
+    <span class='kw'>fn</span> <span class='ident'>metodo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span>;
+}</pre>
+
+<p>Implementeremo anche questo tratto per <code>u8</code> e <code>String</code>:</p>
+
+<span class='rusttest'>fn main() {
+    trait Foo { fn metodo(&amp;self) -&gt; String; }
+impl Foo for u8 {
+    fn metodo(&amp;self) -&gt; String { format!(&quot;u8: {}&quot;, *self) }
+}
+
+impl Foo for String {
+    fn metodo(&amp;self) -&gt; String { format!(&quot;string: {}&quot;, *self) }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>Foo</span> <span class='kw'>for</span> <span class='ident'>u8</span> {
+    <span class='kw'>fn</span> <span class='ident'>metodo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> { <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;u8: {}&quot;</span>, <span class='op'>*</span><span class='self'>self</span>) }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Foo</span> <span class='kw'>for</span> <span class='ident'>String</span> {
+    <span class='kw'>fn</span> <span class='ident'>metodo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> { <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;string: {}&quot;</span>, <span class='op'>*</span><span class='self'>self</span>) }
+}</pre>
+
+<h2 id='dispatch-statico' class='section-header'><a href='#dispatch-statico'>Dispatch statico</a></h2>
+<p>Possiamo usare questo tratto per eseguire un dispatch static con i legami
+dei tratti:</p>
+
+<span class='rusttest'>trait Foo { fn metodo(&amp;self) -&gt; String; }
+impl Foo for u8 { fn metodo(&amp;self) -&gt; String { format!(&quot;u8: {}&quot;, *self) } }
+impl Foo for String { fn metodo(&amp;self) -&gt; String { format!(&quot;string: {}&quot;, *self) } }
+fn fai_qualcosa&lt;T: Foo&gt;(x: T) {
+    x.metodo();
+}
+
+fn main() {
+    let x = 5u8;
+    let y = &quot;Hello&quot;.to_string();
+
+    fai_qualcosa(x);
+    fai_qualcosa(y);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>fai_qualcosa</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Foo</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>) {
+    <span class='ident'>x</span>.<span class='ident'>metodo</span>();
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5u8</span>;
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
+
+    <span class='ident'>fai_qualcosa</span>(<span class='ident'>x</span>);
+    <span class='ident'>fai_qualcosa</span>(<span class='ident'>y</span>);
+}</pre>
+
+<p>Qui Rust usa la ‘monomorfizzazione’ per eseguire il dispatch statico. Questo
+significa che Rust creerà una versione speciale di <code>fai_qualcosa()</code> sia
+per <code>u8</code> che per <code>String</code>, e poi sostituirà i punti di chiamata con chiamate
+a queste funzioni specializzate. In altre parole, Rust genera qualcosa così:</p>
+
+<span class='rusttest'>trait Foo { fn metodo(&amp;self) -&gt; String; }
+impl Foo for u8 { fn metodo(&amp;self) -&gt; String { format!(&quot;u8: {}&quot;, *self) } }
+impl Foo for String { fn metodo(&amp;self) -&gt; String { format!(&quot;string: {}&quot;, *self) } }
+fn fai_qualcosa_u8(x: u8) {
+    x.metodo();
+}
+
+fn fai_qualcosa_string(x: String) {
+    x.metodo();
+}
+
+fn main() {
+    let x = 5u8;
+    let y = &quot;Hello&quot;.to_string();
+
+    fai_qualcosa_u8(x);
+    fai_qualcosa_string(y);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>fai_qualcosa_u8</span>(<span class='ident'>x</span>: <span class='ident'>u8</span>) {
+    <span class='ident'>x</span>.<span class='ident'>metodo</span>();
+}
+
+<span class='kw'>fn</span> <span class='ident'>fai_qualcosa_string</span>(<span class='ident'>x</span>: <span class='ident'>String</span>) {
+    <span class='ident'>x</span>.<span class='ident'>metodo</span>();
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5u8</span>;
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
+
+    <span class='ident'>fai_qualcosa_u8</span>(<span class='ident'>x</span>);
+    <span class='ident'>fai_qualcosa_string</span>(<span class='ident'>y</span>);
+}</pre>
+
+<p>Questo ha un aspetto molto positivo: il dispatch statico consente che
+le chiamate di funzione siano espanse in linea, perché il chiamato è noto
+in fase di compilazione, e l&#39;espansione in linea è la chiave per una buona
+ottimizzazione. Il dispatch statico è veloce, ma si paga: il gonfiore
+del codice [&quot;‘code bloat’&quot;], dovuto alle numerose copie della stessa funzione
+esistente nel binario, uno per ogni tipo.</p>
+
+<p>Inoltre, i compilatori non sono perfetti e possono “ottimizzare” il codice
+fino a farlo diventare più lento. Per esempio, le funzioni espanse in linea
+troppo avidamente riempiranno la cache delle istruzioni (le cache governano
+le prestazioni). Questo fa parte della ragione per cui <code>#[inline]</code>
+e <code>#[inline(always)]</code> dovrebbero essere usati attentamente, e una ragione
+per cui usare un dispatch in alcuni casi è più efficiente.</p>
+
+<p>Però, il caso più tipico è quello che è più efficiente usare il dispatch
+statico, e si può sempre avere una piccola funzione chiamata con dispatch
+statico che esegue il dispatch dinamico, mentre non è possibile il contrario,
+ossia trasformate il dispatch dinamico in statico, il che significa che
+le chiamate statiche sono più flessibili. Per questo ragione, la libreria
+standard cerca di usare il dispatch statico il più possibile.</p>
+
+<h2 id='dispatch-dinamico' class='section-header'><a href='#dispatch-dinamico'>Dispatch dinamico</a></h2>
+<p>Rust fornisce il dispatch dinamico tramite una caratteristica chiamata
+‘oggetti-tratto’. Gli oggetti-tratto, come <code>&amp;Foo</code> o <code>Box&lt;Foo&gt;</code>, sono valori
+normali che immagazzinano un valore di <em>qualunque</em> tipo che implementa il dato
+tratto, dove il preciso tipo può essere noto solo in fase di esecuzione.</p>
+
+<p>Un oggetto-tratto può essere ottenuto da un puntatore a un tipo concreto che
+implementa il tratto, <em>convertendolo</em> (per es. <code>&amp;x as &amp;Foo</code>) o <em>forzandolo</em>
+(per es. usando <code>&amp;x</code> come argomento a una funzione che prende un <code>&amp;Foo</code>).</p>
+
+<p>Queste forzature e conversioni di oggetti-tratto funzionano anche per
+i puntatori come <code>&amp;mut T</code> convertito in <code>&amp;mut Foo</code>, e per <code>Box&lt;T&gt;</code>
+convertito in <code>Box&lt;Foo&gt;</code>, e per il momento per nient&#39;altro. Le forzature e
+le conversioni sono identiche.</p>
+
+<p>Questa operazione può essere vista come un ‘cancellare’ la conoscenza che
+il compilatore ha sullo specifico tipo del puntatore, e quindi talvolta si fa
+riferimento agli oggetti-tratto come a ’cancellazioni di tipo’.</p>
+
+<p>Tornando all&#39;esempio di prima, possiamo usare il medesimo tratto per eseguire
+un dispatch dinamico con gli oggetti-tratto, sia tramite la conversione:</p>
+
+<span class='rusttest'>trait Foo { fn metodo(&amp;self) -&gt; String; }
+impl Foo for u8 { fn metodo(&amp;self) -&gt; String { format!(&quot;u8: {}&quot;, *self) } }
+impl Foo for String { fn metodo(&amp;self) -&gt; String { format!(&quot;string: {}&quot;, *self) } }
+
+fn fai_qualcosa(x: &amp;Foo) {
+    x.metodo();
+}
+
+fn main() {
+    let x = 5u8;
+    fai_qualcosa(&amp;x as &amp;Foo);
+}
+</span><pre class='rust rust-example-rendered'>
+
+<span class='kw'>fn</span> <span class='ident'>fai_qualcosa</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>Foo</span>) {
+    <span class='ident'>x</span>.<span class='ident'>metodo</span>();
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5u8</span>;
+    <span class='ident'>fai_qualcosa</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span><span class='ident'>Foo</span>);
+}</pre>
+
+<p>che tramite la forzatura:</p>
+
+<span class='rusttest'>trait Foo { fn metodo(&amp;self) -&gt; String; }
+impl Foo for u8 { fn metodo(&amp;self) -&gt; String { format!(&quot;u8: {}&quot;, *self) } }
+impl Foo for String { fn metodo(&amp;self) -&gt; String { format!(&quot;string: {}&quot;, *self) } }
+
+fn fai_qualcosa(x: &amp;Foo) {
+    x.metodo();
+}
+
+fn main() {
+    let x = &quot;Hello&quot;.to_string();
+    fai_qualcosa(&amp;x);
+}
+</span><pre class='rust rust-example-rendered'>
+
+<span class='kw'>fn</span> <span class='ident'>fai_qualcosa</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>Foo</span>) {
+    <span class='ident'>x</span>.<span class='ident'>metodo</span>();
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
+    <span class='ident'>fai_qualcosa</span>(<span class='kw-2'>&amp;</span><span class='ident'>x</span>);
+}</pre>
+
+<p>Una funzione che prende un oggetto-tratto non è specializzata per ognuno
+dei tipi che implementano <code>Foo</code>: ne viene generata solamente una copia, con
+la conseguenza che spesso (ma non sempre) si riduce il gonfiore di codice.
+Però, ciò comporta il costo di richiedere le più lente chiamate di funzioni
+virtuali, e di inibire ogni possibilità di espandere in linea e di applicare
+le relative ottimizzazioni.</p>
+
+<h3 id='perché-i-puntatori' class='section-header'><a href='#perché-i-puntatori'>Perché i puntatori?</a></h3>
+<p>Rust non mette le cose dietro un puntatore di default, diversamente da molti
+linguaggi gestiti [&quot;managed&quot;], e quindi i tipi possono avere dimensioni
+diverse. Conoscere la dimensione del valore in fase di compilazione è
+importante per cose come passarlo come argomento a una funzione, spostarlo
+in giro per lo stack, e allocare (e deallocare) spazio sullo heap
+per immagazzinarlo.</p>
+
+<p>Per <code>Foo</code>, avrebbo bisogno di avere un valore che potesse rappresentare almeno
+una <code>String</code> (24 byte) o un <code>u8</code> (1 byte), e così puro qualunque altro tipo
+per cui i crate dipendenti possono implementare <code>Foo</code> (assolutamente qualunque
+numero di bytes). Non c&#39;è modo di garantire che quest&#39;ultimo punto possa
+funzionare se i valori vengono immagazzinati senza un puntatore, perché
+quegli altri tipi possono essere arbitrariamente grandi.</p>
+
+<p>Mettere il valore dietro un puntatore significa che la dimensione di tale
+valore non è rilevante quando si maneggia un oggetto-tratto, e importa solo
+la dimensione del puntatore stesso.</p>
+
+<h3 id='rappresentazione' class='section-header'><a href='#rappresentazione'>Rappresentazione</a></h3>
+<p>I metodi del tratto possono essere chiamati su un oggetto-tratto tramite
+uno speciale record di puntatori di funzione tradizionalmente chiamato ‘vtable’
+(creato e gestito dal compilatore).</p>
+
+<p>Gli oggetti-tratto sono sia semplici che complicati: la loro rappresentazione e
+disposizione interna è davvero immediata, ma ci sono da scoprire
+alcuni messaggi d&#39;errore contorti e alcuni comportamenti sorprendenti.</p>
+
+<p>Iniziamo dal facile, con la rappresentazione in fase di esecuzione di un
+oggetto-tratto. Il modulo <code>std::raw</code> contiene le struct con le disposizioni
+che sono le medesime dei complicati tipi incorporati, <a href="../std/raw/struct.TraitObject.html">compresi
+gli oggetti-tratto</a>:</p>
+
+<span class='rusttest'>fn main() {
+    mod foo {
+pub struct TraitObject {
+    pub data: *mut (),
+    pub vtable: *mut (),
+}
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TraitObject</span> {
+    <span class='kw'>pub</span> <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> (),
+    <span class='kw'>pub</span> <span class='ident'>vtable</span>: <span class='op'>*</span><span class='kw-2'>mut</span> (),
+}</pre>
+
+<p>Cioè, un oggetto-tratto come <code>&amp;Foo</code> consiste in un puntatore ‘data’
+e un puntatore ‘vtable’.</p>
+
+<p>Il puntatore data indirizza i dati (di qualche tipo sconosciuto <code>T</code>)
+che l&#39;oggetto-tratto sta immagazzinando, e il puntatore vtable punta
+alla vtable (‘tabella dei metodi virtuali’) corrispondente all&#39;implementazione
+di <code>Foo</code> per <code>T</code>.</p>
+
+<p>Una vtable è essenzialmente una struct di puntatori a funzione, che puntano
+al pezzo concreto di codice macchina per ogni metodo nell&#39;implementazione.
+Una chiamata di metodo come <code>oggetto_tratto.metodo()</code> recupererà il puntatore
+corretto dalla vtable e poi farà una chiamata dinamica ad esso. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    struct FooVtable {
+    destructor: fn(*mut ()),
+    size: usize,
+    align: usize,
+    method: fn(*const ()) -&gt; String,
+}
+
+// u8:
+
+fn call_method_on_u8(x: *const ()) -&gt; String {
+    // il compilatore garantisce che questa funzione è chiamata solamente
+    // con `x` che punta a un u8
+    let byte: &amp;u8 = unsafe { &amp;*(x as *const u8) };
+
+    byte.method()
+}
+
+static Foo_for_u8_vtable: FooVtable = FooVtable {
+    destructor: /* magia del compilatore */,
+    size: 1,
+    align: 1,
+
+    // cast a un puntatore a funzione
+    method: call_method_on_u8 as fn(*const ()) -&gt; String,
+};
+
+
+// String:
+
+fn call_method_on_String(x: *const ()) -&gt; String {
+    // il compilatore garantisce che questa funzione è chiamata solamente
+    // con `x` che punta a una String
+    let string: &amp;String = unsafe { &amp;*(x as *const String) };
+
+    string.method()
+}
+
+static Foo_for_String_vtable: FooVtable = FooVtable {
+    destructor: /* magia del compilatore */,
+    // questi sono i valori per un target a 64 bit;
+    // bisogna dimezzarli per un target a 32 bit
+    size: 24,
+    align: 8,
+
+    method: call_method_on_String as fn(*const ()) -&gt; String,
+};
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>FooVtable</span> {
+    <span class='ident'>destructor</span>: <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> ()),
+    <span class='ident'>size</span>: <span class='ident'>usize</span>,
+    <span class='ident'>align</span>: <span class='ident'>usize</span>,
+    <span class='ident'>method</span>: <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw'>const</span> ()) <span class='op'>-&gt;</span> <span class='ident'>String</span>,
+}
+
+<span class='comment'>// u8:</span>
+
+<span class='kw'>fn</span> <span class='ident'>call_method_on_u8</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw'>const</span> ()) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='comment'>// il compilatore garantisce che questa funzione è chiamata solamente</span>
+    <span class='comment'>// con `x` che punta a un u8</span>
+    <span class='kw'>let</span> <span class='ident'>byte</span>: <span class='kw-2'>&amp;</span><span class='ident'>u8</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span>(<span class='ident'>x</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) };
+
+    <span class='ident'>byte</span>.<span class='ident'>method</span>()
+}
+
+<span class='kw'>static</span> <span class='ident'>Foo_for_u8_vtable</span>: <span class='ident'>FooVtable</span> <span class='op'>=</span> <span class='ident'>FooVtable</span> {
+    <span class='ident'>destructor</span>: <span class='comment'>/* magia del compilatore */</span>,
+    <span class='ident'>size</span>: <span class='number'>1</span>,
+    <span class='ident'>align</span>: <span class='number'>1</span>,
+
+    <span class='comment'>// cast a un puntatore a funzione</span>
+    <span class='ident'>method</span>: <span class='ident'>call_method_on_u8</span> <span class='kw'>as</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw'>const</span> ()) <span class='op'>-&gt;</span> <span class='ident'>String</span>,
+};
+
+
+<span class='comment'>// String:</span>
+
+<span class='kw'>fn</span> <span class='ident'>call_method_on_String</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw'>const</span> ()) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='comment'>// il compilatore garantisce che questa funzione è chiamata solamente</span>
+    <span class='comment'>// con `x` che punta a una String</span>
+    <span class='kw'>let</span> <span class='ident'>string</span>: <span class='kw-2'>&amp;</span><span class='ident'>String</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span>(<span class='ident'>x</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>String</span>) };
+
+    <span class='ident'>string</span>.<span class='ident'>method</span>()
+}
+
+<span class='kw'>static</span> <span class='ident'>Foo_for_String_vtable</span>: <span class='ident'>FooVtable</span> <span class='op'>=</span> <span class='ident'>FooVtable</span> {
+    <span class='ident'>destructor</span>: <span class='comment'>/* magia del compilatore */</span>,
+    <span class='comment'>// questi sono i valori per un target a 64 bit;</span>
+    <span class='comment'>// bisogna dimezzarli per un target a 32 bit</span>
+    <span class='ident'>size</span>: <span class='number'>24</span>,
+    <span class='ident'>align</span>: <span class='number'>8</span>,
+
+    <span class='ident'>method</span>: <span class='ident'>call_method_on_String</span> <span class='kw'>as</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw'>const</span> ()) <span class='op'>-&gt;</span> <span class='ident'>String</span>,
+};</pre>
+
+<p>Il campo <code>destructor</code> in ogni vtable punta a una funzione che rilascerà
+qualunque risorsa del tipo vtable: per <code>u8</code> è banale, ma per <code>String</code> libererà
+della memoria. Questo è necessario per gli oggetti-tratto che possiedono, come
+<code>Box&lt;Foo&gt;</code>, che ha bisogno di rilasciare sia l&#39;allocazione di <code>Box</code> che
+il tipo interno, quando escono dall&#39;ambito. I campi <code>size</code> e <code>align</code>
+immagazzinano la dimensione del tipo cancellato, nonché i suoi requisiti
+di allineamento; questi campi sono essenzialmente inutilizzati al momento,
+dato che questa informazione è incorporata nel distruttore, ma verrà usata in
+futuro, dato che gli oggetti-tratto sono resi progressivamente più flessibili.</p>
+
+<p>Supponiamo di avere alcuni valori che implementano <code>Foo</code>. La forma esplicita
+di costruzione e utilizzo degli oggetti-tratto di <code>Foo</code> potrebbe sembrare
+un po&#39; così (ignorando gli errori di tipo: comunque sono tutti puntatori):</p>
+
+<span class='rusttest'>fn main() {
+    let a: String = &quot;foo&quot;.to_string();
+let x: u8 = 1;
+
+// let b: &amp;Foo = &amp;a;
+let b = TraitObject {
+    // immagazzina i dati
+    data: &amp;a,
+    // immagazzina i metodi
+    vtable: &amp;Foo_for_String_vtable
+};
+
+// let y: &amp;Foo = x;
+let y = TraitObject {
+    // immagazzina i dati
+    data: &amp;x,
+    // immagazzina i metodi
+    vtable: &amp;Foo_for_u8_vtable
+};
+
+// b.method();
+(b.vtable.method)(b.data);
+
+// y.method();
+(y.vtable.method)(y.data);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>();
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>1</span>;
+
+<span class='comment'>// let b: &amp;Foo = &amp;a;</span>
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>TraitObject</span> {
+    <span class='comment'>// immagazzina i dati</span>
+    <span class='ident'>data</span>: <span class='kw-2'>&amp;</span><span class='ident'>a</span>,
+    <span class='comment'>// immagazzina i metodi</span>
+    <span class='ident'>vtable</span>: <span class='kw-2'>&amp;</span><span class='ident'>Foo_for_String_vtable</span>
+};
+
+<span class='comment'>// let y: &amp;Foo = x;</span>
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>TraitObject</span> {
+    <span class='comment'>// immagazzina i dati</span>
+    <span class='ident'>data</span>: <span class='kw-2'>&amp;</span><span class='ident'>x</span>,
+    <span class='comment'>// immagazzina i metodi</span>
+    <span class='ident'>vtable</span>: <span class='kw-2'>&amp;</span><span class='ident'>Foo_for_u8_vtable</span>
+};
+
+<span class='comment'>// b.method();</span>
+(<span class='ident'>b</span>.<span class='ident'>vtable</span>.<span class='ident'>method</span>)(<span class='ident'>b</span>.<span class='ident'>data</span>);
+
+<span class='comment'>// y.method();</span>
+(<span class='ident'>y</span>.<span class='ident'>vtable</span>.<span class='ident'>method</span>)(<span class='ident'>y</span>.<span class='ident'>data</span>);</pre>
+
+<h2 id='sicurezza-come-oggetto' class='section-header'><a href='#sicurezza-come-oggetto'>Sicurezza come oggetto</a></h2>
+<p>Non tutti i tratti possono essere usati per costruire un oggetto-tratto.
+Per esempio, i vettori implementano <code>Clone</code>, ma se proviamo a costruirne
+un oggetto-tratto:</p>
+
+<span class='rusttest'>fn main() {
+    let v = vec![1, 2, 3];
+let o = &amp;v as &amp;Clone;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> <span class='ident'>o</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>v</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span><span class='ident'>Clone</span>;</pre>
+
+<p>Otteniamo un errore:</p>
+
+<pre><code class="language-text">error: cannot convert to a trait object because trait `core::clone::Clone` is not object-safe [E0038]
+let o = &amp;v as &amp;Clone;
+        ^~
+note: the trait cannot require that `Self : Sized`
+let o = &amp;v as &amp;Clone;
+        ^~
+</code></pre>
+
+<p>L&#39;errore dice che <code>Clone</code> non è ‘object-safe’, cioè ’sicuro come oggetto’.
+Solamente i tratti che sono sicuri come oggetti possono essere trasformati
+in oggetti-tratto. Un tratto è sicuro come oggetto se sono vere entrambe
+le seguenti proprietà:</p>
+
+<ul>
+<li>il tratto non richiede che valga <code>Self: Sized</code></li>
+<li>tutti i suoi metodi sono sicuri come oggetti</li>
+</ul>
+
+<p>Ma che cosa rende un metodo sicuro come oggetto? Ogni metodo
+deve richiedere che valga <code>Self: Sized</code> oppure che valga tutto il seguente:</p>
+
+<ul>
+<li>deve non avere parametri di tipo</li>
+<li>deve non usare <code>Self</code></li>
+</ul>
+
+<p>Urca! Come si può vedere, quasi tutte queste regole parlano di <code>Self</code>.
+Una buona intuizione è “eccetto in circostanze speciali, se il metodo
+del tratto usa <code>Self</code>, non è object-safe.”</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

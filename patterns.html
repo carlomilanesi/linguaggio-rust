@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>I pattern</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a class='active' href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">I pattern</h1>
+    <p>I pattern sono molto comuni in Rust. Li usiamo nei <a href="variable-bindings.html">legami di variabile</a>, nelle <a href="match.html">espressioni match</a>, e anche in altri posti. Facciamo
+una carrellata di tutte le cose che i pattern possono fare!</p>
+
+<p>Un rapido ripasso: si può far combaciare direttamente con letterali, e
+il carattere <code>_</code> agisce come caso ‘qualunque’:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 1;
+
+match x {
+    1 =&gt; println!(&quot;uno&quot;),
+    2 =&gt; println!(&quot;due&quot;),
+    3 =&gt; println!(&quot;tre&quot;),
+    _ =&gt; println!(&quot;qualunque cosa&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>1</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='number'>1</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;uno&quot;</span>),
+    <span class='number'>2</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;due&quot;</span>),
+    <span class='number'>3</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;tre&quot;</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;qualunque cosa&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>uno</code>.</p>
+
+<p>C&#39;è un trabocchetto con i pattern: come ogni cosa che introduce
+un nuovo legame, anche i pattern possono introdurre l&#39;oscuramento. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 1;
+let c = &#39;c&#39;;
+
+match c {
+    x =&gt; println!(&quot;x: {} c: {}&quot;, x, c),
+}
+
+println!(&quot;x: {}&quot;, x)
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='string'>&#39;c&#39;</span>;
+
+<span class='kw'>match</span> <span class='ident'>c</span> {
+    <span class='ident'>x</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x: {} c: {}&quot;</span>, <span class='ident'>x</span>, <span class='ident'>c</span>),
+}
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x: {}&quot;</span>, <span class='ident'>x</span>)</pre>
+
+<p>Questo stampa:</p>
+
+<pre><code class="language-text">x: c c: c
+x: 1
+</code></pre>
+
+<p>In altre parole, <code>x =&gt;</code> combacia con il valore di <code>c</code> e introduce un nuovo
+legame avente nome <code>x</code>. Questo nuovo legame è ha come ambito il braccio
+di match e prende il valore di <code>c</code>. Si noti che il valore di <code>x</code> all&#39;esterno
+dell&#39;ambito di match è ininfluente sul valore <code>x</code> al suo interno. Siccome
+avevamo già un legame chiamato <code>x</code>, questo nuovo <code>x</code> lo oscura.</p>
+
+<h1 id='pattern-multipli' class='section-header'><a href='#pattern-multipli'>Pattern multipli</a></h1>
+<p>Possiamo far combaciare più pattern usando <code>|</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 1;
+
+match x {
+    1 | 2 =&gt; println!(&quot;uno o due&quot;),
+    3 =&gt; println!(&quot;tre&quot;),
+    _ =&gt; println!(&quot;qualunque cosa&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>1</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='number'>1</span> <span class='op'>|</span> <span class='number'>2</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;uno o due&quot;</span>),
+    <span class='number'>3</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;tre&quot;</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;qualunque cosa&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>uno o due</code>.</p>
+
+<h1 id='destrutturazione' class='section-header'><a href='#destrutturazione'>Destrutturazione</a></h1>
+<p>Se si ha un tipo di dati composito, come una <a href="structs.html"><code>struct</code></a>, lo si può
+destrutturare dentro un pattern:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto {
+    x: i32,
+    y: i32,
+}
+
+let origine = Punto { x: 0, y: 0 };
+
+match origine {
+    Punto { x, y } =&gt; println!(&quot;({},{})&quot;, x, y),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>origine</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>0</span>, <span class='ident'>y</span>: <span class='number'>0</span> };
+
+<span class='kw'>match</span> <span class='ident'>origine</span> {
+    <span class='ident'>Punto</span> { <span class='ident'>x</span>, <span class='ident'>y</span> } <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;({},{})&quot;</span>, <span class='ident'>x</span>, <span class='ident'>y</span>),
+}</pre>
+
+<p>Possiamo usare <code>:</code> per dare un altro nome a un valore.</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto {
+    x: i32,
+    y: i32,
+}
+
+let origine = Punto { x: 0, y: 0 };
+
+match origine {
+    Punto { x: x1, y: y1 } =&gt; println!(&quot;({},{})&quot;, x1, y1),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>origine</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>0</span>, <span class='ident'>y</span>: <span class='number'>0</span> };
+
+<span class='kw'>match</span> <span class='ident'>origine</span> {
+    <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='ident'>x1</span>, <span class='ident'>y</span>: <span class='ident'>y1</span> } <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;({},{})&quot;</span>, <span class='ident'>x1</span>, <span class='ident'>y1</span>),
+}</pre>
+
+<p>Se ci interessano solamente alcuni valori, non dobbiamo dare dei nomi a tutti:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto {
+    x: i32,
+    y: i32,
+}
+
+let origine = Punto { x: 0, y: 0 };
+
+match origine {
+    Punto { x, .. } =&gt; println!(&quot;x is {}&quot;, x),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>origine</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>0</span>, <span class='ident'>y</span>: <span class='number'>0</span> };
+
+<span class='kw'>match</span> <span class='ident'>origine</span> {
+    <span class='ident'>Punto</span> { <span class='ident'>x</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x is {}&quot;</span>, <span class='ident'>x</span>),
+}</pre>
+
+<p>Questo stampa <code>x è 0</code>.</p>
+
+<p>si può fare questo genere di match su qualunque membro, non solamente il primo:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto {
+    x: i32,
+    y: i32,
+}
+
+let origine = Punto { x: 0, y: 0 };
+
+match origine {
+    Punto { y, .. } =&gt; println!(&quot;y is {}&quot;, y),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>origine</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>0</span>, <span class='ident'>y</span>: <span class='number'>0</span> };
+
+<span class='kw'>match</span> <span class='ident'>origine</span> {
+    <span class='ident'>Punto</span> { <span class='ident'>y</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;y is {}&quot;</span>, <span class='ident'>y</span>),
+}</pre>
+
+<p>Questo stampa <code>y è 0</code>.</p>
+
+<p>Questo comportamento ‘destrutturante’ funziona su qualunque tipo di dati
+composito, come le <a href="primitive-types.html#tuples">ennuple</a> o le <a href="enums.html">enum</a>.</p>
+
+<h1 id='ignorare-i-legami' class='section-header'><a href='#ignorare-i-legami'>Ignorare i legami</a></h1>
+<p>Si può usare <code>_</code> in un pattern per non tener conto del tipo e del valore.
+Per esempio, ecco un <code>match</code> con un <code>Result&lt;T, E&gt;</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let qualche_valore: Result&lt;i32, &amp;&#39;static str&gt; = Err(&quot;C&#39;era un errore&quot;);
+match qualche_valore {
+    Ok(valore) =&gt; println!(&quot;preso un valore: {}&quot;, valore),
+    Err(_) =&gt; println!(&quot;è avvenuto un errore&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>qualche_valore</span> {
+    <span class='prelude-val'>Ok</span>(<span class='ident'>valore</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;preso un valore: {}&quot;</span>, <span class='ident'>valore</span>),
+    <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;è avvenuto un errore&quot;</span>),
+}</pre>
+
+<p>Nel primo braccio, leghiamo il valore dentro la variante <code>Ok</code> a <code>valore</code>. Ma
+nel braccio <code>Err</code>, usiamo <code>_</code> per non tener conto dello specifico errore, e
+stampiamo un messaggio d&#39;errore generico.</p>
+
+<p><code>_</code> è valido in qualunque pattern che crea un legame. Ciò può essere utile
+per ignorare parti di una struttura più grande:</p>
+
+<span class='rusttest'>fn main() {
+    fn coordinate() -&gt; (i32, i32, i32) {
+    // genera e restituisci una terna
+(1, 2, 3)
+}
+
+let (x, _, z) = coordinate();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>coordinate</span>() <span class='op'>-&gt;</span> (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>) {
+    <span class='comment'>// genera e restituisci una terna</span>
+}
+
+<span class='kw'>let</span> (<span class='ident'>x</span>, _, <span class='ident'>z</span>) <span class='op'>=</span> <span class='ident'>coordinate</span>();</pre>
+
+<p>Qui, leghiamo il primo e l&#39;ultimo elemento dell&#39;ennupla a <code>x</code> e a <code>z</code>, ma
+ignoriamo l&#39;elemento di mezzo.</p>
+
+<p>Vale la pena notare che usando <code>_</code> il valore combaciante non viene affatto
+legato, il che comporta che tale valore non viene spostato:</p>
+
+<span class='rusttest'>fn main() {
+    let ennupla: (u32, String) = (5, String::from(&quot;cinque&quot;));
+
+// Qui, ennupla viene spostata, perché l&#39;oggetto String è stato spostato:
+let (x, _s) = ennupla;
+
+// La prossima riga darebbe &quot;error: use of partially moved value: `ennupla`&quot;
+// println!(&quot;L&#39;ennupla è: {:?}&quot;, ennupla);
+
+// Però,
+
+let ennupla = (5, String::from(&quot;five&quot;));
+
+// Qui, ennupla _non_ vien spostata, dato che l&#39;oggetto String non è
+// mai stato spostato, e l&#39;oggetto u32 è Copy:
+let (x, _) = ennupla;
+
+// Ciò comporta che questo funziona:
+println!(&quot;L&#39;ennupla è: {:?}&quot;, ennupla);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>ennupla</span>: (<span class='ident'>u32</span>, <span class='ident'>String</span>) <span class='op'>=</span> (<span class='number'>5</span>, <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;cinque&quot;</span>));
+
+<span class='comment'>// Qui, ennupla viene spostata, perché l&#39;oggetto String è stato spostato:</span>
+<span class='kw'>let</span> (<span class='ident'>x</span>, <span class='ident'>_s</span>) <span class='op'>=</span> <span class='ident'>ennupla</span>;
+
+<span class='comment'>// La prossima riga darebbe &quot;error: use of partially moved value: `ennupla`&quot;</span>
+<span class='comment'>// println!(&quot;L&#39;ennupla è: {:?}&quot;, ennupla);</span>
+
+<span class='comment'>// Però,</span>
+
+<span class='kw'>let</span> <span class='ident'>ennupla</span> <span class='op'>=</span> (<span class='number'>5</span>, <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;five&quot;</span>));
+
+<span class='comment'>// Qui, ennupla _non_ vien spostata, dato che l&#39;oggetto String non è</span>
+<span class='comment'>// mai stato spostato, e l&#39;oggetto u32 è Copy:</span>
+<span class='kw'>let</span> (<span class='ident'>x</span>, _) <span class='op'>=</span> <span class='ident'>ennupla</span>;
+
+<span class='comment'>// Ciò comporta che questo funziona:</span>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;L&#39;ennupla è: {:?}&quot;</span>, <span class='ident'>ennupla</span>);</pre>
+
+<p>Ciò comporta anche che ogni variabile temporanea verrà distrutta alla fine
+dell&#39;istruzione:</p>
+
+<span class='rusttest'>fn main() {
+    // Qui, la String creata verrà distrutta immediatamente, dato che non è legata:
+let _ = String::from(&quot;  hello  &quot;).trim();
+}</span><pre class='rust rust-example-rendered'>
+<span class='comment'>// Qui, la String creata verrà distrutta immediatamente, dato che non è legata:</span>
+<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;  hello  &quot;</span>).<span class='ident'>trim</span>();</pre>
+
+<p>Si può usare anche <code>..</code> in un pattern per ignorare più valori:</p>
+
+<span class='rusttest'>fn main() {
+    enum EnnuplaOpzionale {
+    Valore(i32, i32, i32),
+    Mancante,
+}
+
+let x = EnnuplaOpzionale::Valore(5, -2, 3);
+
+match x {
+    EnnuplaOpzionale::Valore(..) =&gt; println!(&quot;Ho un&#39;ennupla!&quot;),
+    EnnuplaOpzionale::Mancante =&gt; println!(&quot;Non ho tale fortuna.&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='ident'>EnnuplaOpzionale</span> {
+    <span class='ident'>Valore</span>(<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>),
+    <span class='ident'>Mancante</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>EnnuplaOpzionale</span>::<span class='ident'>Valore</span>(<span class='number'>5</span>, <span class='op'>-</span><span class='number'>2</span>, <span class='number'>3</span>);
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='ident'>EnnuplaOpzionale</span>::<span class='ident'>Valore</span>(..) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ho un&#39;ennupla!&quot;</span>),
+    <span class='ident'>EnnuplaOpzionale</span>::<span class='ident'>Mancante</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Non ho tale fortuna.&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>Ho un&#39;ennupla!</code>.</p>
+
+<h1 id='ref-e-ref-mut' class='section-header'><a href='#ref-e-ref-mut'><code>ref</code> e <code>ref mut</code></a></h1>
+<p>Se si vuole ottenere un <a href="references-and-borrowing.html">riferimento</a>, si usi la parola-chiave <code>ref</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5;
+
+match x {
+    ref r =&gt; println!(&quot;Ho un riferimento a {}&quot;, r),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='kw-2'>ref</span> <span class='ident'>r</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ho un riferimento a {}&quot;</span>, <span class='ident'>r</span>),
+}</pre>
+
+<p>Questo stampa <code>Ho un riferimento a 5</code>.</p>
+
+<p>Qui, la <code>r</code> dentro il <code>match</code> ha il tipo <code>&amp;i32</code>. In altre parole,
+la parola-chiave <code>ref</code> <em>crea</em> un riferimento, da usare nel pattern. Se serve
+un riferimento mutabile, <code>ref mut</code> funzionerà allo stesso modo:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5;
+
+match x {
+    ref mut mr =&gt; println!(&quot;Ho un riferimento mutabile a {}&quot;, mr),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>mr</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ho un riferimento mutabile a {}&quot;</span>, <span class='ident'>mr</span>),
+}</pre>
+
+<h1 id='gamme' class='section-header'><a href='#gamme'>Gamme</a></h1>
+<p>Si può far combaciare una gamma di valori usando <code>...</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 1;
+
+match x {
+    1 ... 5 =&gt; println!(&quot;da uno a cinque&quot;),
+    _ =&gt; println!(&quot;qualunque cosa&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>1</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='number'>1</span> ... <span class='number'>5</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;da uno a cinque&quot;</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;qualunque cosa&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>da uno a cinque</code>.</p>
+
+<p>Le gamme sono usate per lo più con gli interi e i <code>char</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let x = &#39;💅&#39;;
+
+match x {
+    &#39;a&#39; ... &#39;j&#39; =&gt; println!(&quot;lettera precoce&quot;),
+    &#39;k&#39; ... &#39;z&#39; =&gt; println!(&quot;lettera tardiva&quot;),
+    _ =&gt; println!(&quot;qualcos&#39;altro&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='string'>&#39;💅&#39;</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='string'>&#39;a&#39;</span> ... <span class='string'>&#39;j&#39;</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;lettera precoce&quot;</span>),
+    <span class='string'>&#39;k&#39;</span> ... <span class='string'>&#39;z&#39;</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;lettera tardiva&quot;</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;qualcos&#39;altro&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>qualcos&#39;altro</code>.</p>
+
+<h1 id='legami' class='section-header'><a href='#legami'>Legami</a></h1>
+<p>Si possono legare valori a nomi usando <code>@</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 1;
+
+match x {
+    e @ 1 ... 5 =&gt; println!(&quot;ho un elemento della gamma: {}&quot;, e),
+    _ =&gt; println!(&quot;qualunque cosa&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>1</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='ident'>e</span> @ <span class='number'>1</span> ... <span class='number'>5</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;ho un elemento della gamma: {}&quot;</span>, <span class='ident'>e</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;qualunque cosa&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>ho un elemento della gamma: 1</code>. Questo operatore serve anche
+quando si vuole estrarre una parte di una struttura dati complicata:</p>
+
+<span class='rusttest'>fn main() {
+    #[derive(Debug)]
+struct Persona {
+    nome: Option&lt;String&gt;,
+}
+
+let nome = &quot;Steve&quot;.to_string();
+let x: Option&lt;Persona&gt; = Some(Persona { nome: Some(nome) });
+match x {
+    Some(Persona { nome: ref a @ Some(_), .. }) =&gt; println!(&quot;{:?}&quot;, a),
+    _ =&gt; {}
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>struct</span> <span class='ident'>Persona</span> {
+    <span class='ident'>nome</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>nome</span> <span class='op'>=</span> <span class='string'>&quot;Steve&quot;</span>.<span class='ident'>to_string</span>();
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Persona</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>Persona</span> { <span class='ident'>nome</span>: <span class='prelude-val'>Some</span>(<span class='ident'>nome</span>) });
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='prelude-val'>Some</span>(<span class='ident'>Persona</span> { <span class='ident'>nome</span>: <span class='kw-2'>ref</span> <span class='ident'>a</span> @ <span class='prelude-val'>Some</span>(_), .. }) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>a</span>),
+    _ <span class='op'>=&gt;</span> {}
+}</pre>
+
+<p>Questo stampa <code>Some(&quot;Steve&quot;)</code>: abbiamo legato il <code>nome</code> interno ad <code>a</code>.</p>
+
+<p>Se si usa <code>@</code> con <code>|</code>, bisogna assicurarsi che il nome sia legato in ogni
+parte del pattern:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5;
+
+match x {
+    e @ 1 ... 5 | e @ 8 ... 10 =&gt; println!(&quot;ho un elemento della gamma: {}&quot;, e),
+    _ =&gt; println!(&quot;qualunque cosa&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='ident'>e</span> @ <span class='number'>1</span> ... <span class='number'>5</span> <span class='op'>|</span> <span class='ident'>e</span> @ <span class='number'>8</span> ... <span class='number'>10</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;ho un elemento della gamma: {}&quot;</span>, <span class='ident'>e</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;qualunque cosa&quot;</span>),
+}</pre>
+
+<h1 id='guardie' class='section-header'><a href='#guardie'>Guardie</a></h1>
+<p>Si possono introdurre le ‘guardie di match’ usando <code>if</code>:</p>
+
+<span class='rusttest'>fn main() {
+    enum OptionalInt {
+    Valore(i32),
+    Mancante,
+}
+
+let x = OptionalInt::Valore(5);
+
+match x {
+    OptionalInt::Valore(i) if i &gt; 5 =&gt; println!(&quot;Ho un int maggiore di cinque!&quot;),
+    OptionalInt::Valore(..) =&gt; println!(&quot;Ho un int!&quot;),
+    OptionalInt::Mancante =&gt; println!(&quot;Non ho tale fortuna.&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='ident'>OptionalInt</span> {
+    <span class='ident'>Valore</span>(<span class='ident'>i32</span>),
+    <span class='ident'>Mancante</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>OptionalInt</span>::<span class='ident'>Valore</span>(<span class='number'>5</span>);
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='ident'>OptionalInt</span>::<span class='ident'>Valore</span>(<span class='ident'>i</span>) <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&gt;</span> <span class='number'>5</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ho un int maggiore di cinque!&quot;</span>),
+    <span class='ident'>OptionalInt</span>::<span class='ident'>Valore</span>(..) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Ho un int!&quot;</span>),
+    <span class='ident'>OptionalInt</span>::<span class='ident'>Mancante</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Non ho tale fortuna.&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>Ho un int!</code>.</p>
+
+<p>Se si sta usando <code>if</code> con più pattern, la <code>if</code> si applica a entrambi i lati:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 4;
+let y = false;
+
+match x {
+    4 | 5 if y =&gt; println!(&quot;sì&quot;),
+    _ =&gt; println!(&quot;no&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>4</span>;
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='number'>4</span> <span class='op'>|</span> <span class='number'>5</span> <span class='kw'>if</span> <span class='ident'>y</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;sì&quot;</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;no&quot;</span>),
+}</pre>
+
+<p>Questo stampa <code>no</code>, perché la <code>if</code> si applica a tutta l&#39;espressione <code>4 | 5</code>, e
+non solamente al <code>5</code>. In altre parole, la precedenza di <code>if</code> si comporta così:</p>
+
+<pre><code class="language-text">(4 | 5) if y =&gt; ...
+</code></pre>
+
+<p>non così:</p>
+
+<pre><code class="language-text">4 | (5 if y) =&gt; ...
+</code></pre>
+
+<h1 id='mescolare-e-abbinare' class='section-header'><a href='#mescolare-e-abbinare'>Mescolare e abbinare</a></h1>
+<p>Urca! Ci sono molti modi diversi di far combaciare le cose, e tutti quanti
+possono essere mescolati e abbinati, a seconda di ciò che si sta facendo:</p>
+
+<span class='rusttest'>fn main() {
+    match x {
+    Foo { x: Some(ref nome), y: None } =&gt; ...
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>x</span> {
+    <span class='ident'>Foo</span> { <span class='ident'>x</span>: <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>nome</span>), <span class='ident'>y</span>: <span class='prelude-val'>None</span> } <span class='op'>=&gt;</span> ...
+}</pre>
+
+<p>I pattern sono molto potenti. Facciamone buon uso.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

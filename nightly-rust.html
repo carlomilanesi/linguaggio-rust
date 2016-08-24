@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Rust notturno</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a class='active' href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Rust notturno</h1>
+    <p>Rust fornisce tre canali di distribuzione per Rust: notturno, beta, e stabile.
+Le caratteristiche instabili sono disponibli solamente su Rust notturno.
+Per altri dettagli su questo procedimento, si veda ‘<a href="http://blog.rust-lang.org/2014/10/30/Stability.html">La stabilità
+come prodotto consegnabile</a>’.</p>
+
+<p>Per installare Rust notturno, si può usare <code>rustup.sh</code>:</p>
+
+<pre><code class="language-bash">$ curl -s https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly
+</code></pre>
+
+<p>Se si è preoccupati per la <a href="http://curlpipesh.tumblr.com">potenziale vulnerabilità</a> dell&#39;uso
+di <code>curl | sh</code>, si continui a leggere e si veda il disclaimer sotto. E ci
+si senta liberi di usare una versione in due passi dell&#39;installazione
+e si esamini lo script di installazione:</p>
+
+<pre><code class="language-bash">$ curl -f -L https://static.rust-lang.org/rustup.sh -O
+$ sh rustup.sh --channel=nightly
+</code></pre>
+
+<p>Se si è su Windows, si scarichi o il <a href="https://static.rust-lang.org/dist/rust-nightly-i686-pc-windows-gnu.msi">pacchetto di installazione a 32 bit</a> o il <a href="https://static.rust-lang.org/dist/rust-nightly-x86_64-pc-windows-gnu.msi">pacchetto di installazione a 64 bit</a>, e lo si esegua.</p>
+
+<h2 id='disinstallazione' class='section-header'><a href='#disinstallazione'>Disinstallazione</a></h2>
+<p>Se si decide di non voler più Rust, basta lanciare lo script
+di disintallazione:</p>
+
+<pre><code class="language-bash">$ sudo /usr/local/lib/rustlib/uninstall.sh
+</code></pre>
+
+<p>Se è stato usato un pacchetto di installazione di Windows, si ri-esegua
+il file <code>.msi</code>, e si scelga l&#39;opzione di disintallazione che compare.</p>
+
+<p>Alcune persone, e un po&#39; giustamente, si sconvolgono quando le diciamo
+di eseguire <code>curl | sh</code>. Di base, quando lo si fa, ci si sta fidando che
+le persone che mantengono Rust non stiano per acquisire il controllo
+del computer per fare brutte cose.
+È un buon istinto! Se si è una di tali persone, si consulti la documentazione
+su <a href="https://github.com/rust-lang/rust#building-from-source">costruire Rust dai sorgenti</a>, oppure
+<a href="https://www.rust-lang.org/install.html">i download binari ufficiali</a>.</p>
+
+<p>Le piattaforme di sviluppo ufficialmente supportate sono:</p>
+
+<ul>
+<li>Windows (7, 8, Server 2008 R2)</li>
+<li>Linux (2.6.18 o successivo, varie distribuzioni), x86 e x86-64</li>
+<li>OSX 10.7 (Lion) o maggiore, x86 e x86-64</li>
+</ul>
+
+<p>Rust è ampiamente testato su queste piattaforme, e anche su alcune altre,
+come Android. Ma queste sono quelle che più probabilmente funzionano,
+dato che hanno il collaudo più intenso.</p>
+
+<p>Infine, un commento su Windows. Rust considera Windows una piattaforma
+di prima-classe dopo il rilascio, ma onestamente, l&#39;utilizzo in ambiente
+Windows non è così integrato come negli ambienti Linux/OS X. Ci si sta
+lavorando! Se qualcosa non funziona, è un difetto. Se accade, dovrebbe essere
+comunicato. Ogni commit viene collaudata su Windows come ogni
+altra piattaforma.</p>
+
+<p>Se Rust è installato, si può aprire un terminale (o &quot;shell&quot;), e digitare:</p>
+
+<pre><code class="language-bash">$ rustc --version
+</code></pre>
+
+<p>Si dovrebbe vedere il numero di versione, lo hash di commit, la data
+di commit, e la data di build. Per esempio:</p>
+
+<pre><code class="language-bash">rustc 1.0.0-nightly (f11f3e7ba 2015-01-04) (built 2015-01-06)
+</code></pre>
+
+<p>Se appaiono, allora Rust è stato installato correttamente!</p>
+
+<p>Questo pacchetto di installazione installa anche localmente una copia
+della documentazione, così da poterla leggere offline. Sui sistemi tipo-UNIX,
+si trova in <code>/usr/local/share/doc/rust</code>. Su Windows, è in una cartella
+<code>share/doc</code>, dentro la cartella dove è stato installato Rust.</p>
+
+<p>Se non ha funzionato, ci sono vari posti dove si può ottenere aiuto. Il più
+facile è <a href="irc://irc.mozilla.org/#rust">il canale IRC #rust on irc.mozilla.org</a>, a cui si può
+accedere tramite <a href="http://chat.mibbit.com/?server=irc.mozilla.org&amp;channel=%23rust">Mibbit</a>. Cliccando quel link, si potrà chattare
+in inglese con altri Rustacei (un soprannome per i programmatori in Rust),
+e si potrà ricevere consigli per risolvere i problemi. Altre ottime
+risorse in inglese sono <a href="https://users.rust-lang.org/">il forum degli utenti</a>,
+e <a href="http://stackoverflow.com/questions/tagged/rust">Stack Overflow</a>.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

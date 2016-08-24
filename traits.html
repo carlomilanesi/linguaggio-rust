@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Tratti [&quot;trait&quot;]</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a class='active' href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Tratti [&quot;trait&quot;]</h1>
+    <p>Un tratto è una caratteristica del linguaggio che dice al compilatore Rust
+quali funzionalità un tipo deve fornire.</p>
+
+<p>Ricordiamo la parola-chiave <code>impl</code>, usata per chiamare una funzione con
+la <a href="method-syntax.html">sintassi dei metodi</a>:</p>
+
+<span class='rusttest'>fn main() {
+    struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl Cerchio {
+    fn area(&amp;self) -&gt; f64 {
+        std::f64::consts::PI * (self.raggio * self.raggio)
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>raggio</span>)
+    }
+}</pre>
+
+<p>I tratti sono simili, eccetto che dapprima si definisce un tratto con
+una firma di metodo, e poi si implementa il tratto per un tipo. In questo
+esempio, implementiamo il tratto <code>HaArea</code> per <code>Cerchio</code>:</p>
+
+<span class='rusttest'>fn main() {
+    struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+trait HaArea {
+    fn area(&amp;self) -&gt; f64;
+}
+
+impl HaArea for Cerchio {
+    fn area(&amp;self) -&gt; f64 {
+        std::f64::consts::PI * (self.raggio * self.raggio)
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>trait</span> <span class='ident'>HaArea</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span>;
+}
+
+<span class='kw'>impl</span> <span class='ident'>HaArea</span> <span class='kw'>for</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>raggio</span>)
+    }
+}</pre>
+
+<p>Come si può vedere, il blocco <code>trait</code> appare molto simile al blocco <code>impl</code>,
+ma non contiene il corpo della funzione, solamente una firma di tipo.
+Quando si implementa un tratto, si usa la formula <code>impl Trait for Item</code>,
+invece della più semplice <code>impl Item</code>.</p>
+
+<h2 id='legami-del-tratto-sulle-funzioni-generiche' class='section-header'><a href='#legami-del-tratto-sulle-funzioni-generiche'>Legami del tratto sulle funzioni generiche</a></h2>
+<p>I tratti sono utili perché consentono a un tipo di fare certe promesse sul suo
+comportamento. Le funzioni generiche possono sfruttare questo per vincolare, o
+<a href="glossary.html#bounds">legare</a>, i tipi che accettano. Si consideri questa funzione,
+che non compila:</p>
+
+<span class='rusttest'>fn main() {
+    fn stampa_area&lt;T&gt;(figura: T) {
+    println!(&quot;Questa figura ha un&#39;area di {}&quot;, figura.area());
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>stampa_area</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>figura</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Questa figura ha un&#39;area di {}&quot;</span>, <span class='ident'>figura</span>.<span class='ident'>area</span>());
+}</pre>
+
+<p>Rust si lamenta:</p>
+
+<pre><code class="language-text">error: no method named `area` found for type `T` in the current scope
+</code></pre>
+
+<p>Siccome <code>T</code> può essere qualunque tipo, non possiamo essere sicuri
+che implementi il metodo <code>area</code>. Ma possiamo aggiungere un tratto legato
+al nostro <code>T</code> generico, assicurando che lo faccia:</p>
+
+<span class='rusttest'>fn main() {
+    trait HaArea {
+    fn area(&amp;self) -&gt; f64;
+}
+fn stampa_area&lt;T: HaArea&gt;(figura: T) {
+    println!(&quot;Questa figura ha un&#39;area di {}&quot;, figura.area());
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>stampa_area</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>HaArea</span><span class='op'>&gt;</span>(<span class='ident'>figura</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Questa figura ha un&#39;area di {}&quot;</span>, <span class='ident'>figura</span>.<span class='ident'>area</span>());
+}</pre>
+
+<p>La sintassi <code>&lt;T: HaArea&gt;</code> significa “qualunque tipo che implementa il tratto
+<code>HaArea</code>.” Siccome i tratti definiscono delle firme di tipo di funzione,
+possiamo star sicuri che qualunque tipo che implementa <code>HaArea</code> avrà un metodo
+<code>.area()</code>.</p>
+
+<p>Ecco un esempio esteso di come funziona questa cosa:</p>
+
+<span class='rusttest'>trait HaArea {
+    fn area(&amp;self) -&gt; f64;
+}
+
+struct Cerchio {
+    x: f64,
+    y: f64,
+    raggio: f64,
+}
+
+impl HaArea for Cerchio {
+    fn area(&amp;self) -&gt; f64 {
+        std::f64::consts::PI * (self.raggio * self.raggio)
+    }
+}
+
+struct Quadrato {
+    x: f64,
+    y: f64,
+    lato: f64,
+}
+
+impl HaArea for Quadrato {
+    fn area(&amp;self) -&gt; f64 {
+        self.lato * self.lato
+    }
+}
+
+fn stampa_area&lt;T: HaArea&gt;(figura: T) {
+    println!(&quot;Questa figura ha un&#39;area di {}&quot;, figura.area());
+}
+
+fn main() {
+    let c = Cerchio {
+        x: 0.0f64,
+        y: 0.0f64,
+        raggio: 1.0f64,
+    };
+
+    let q = Quadrato {
+        x: 0.0f64,
+        y: 0.0f64,
+        lato: 1.0f64,
+    };
+
+    stampa_area(c);
+    stampa_area(q);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>trait</span> <span class='ident'>HaArea</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span>;
+}
+
+<span class='kw'>struct</span> <span class='ident'>Cerchio</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>raggio</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>HaArea</span> <span class='kw'>for</span> <span class='ident'>Cerchio</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>raggio</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>raggio</span>)
+    }
+}
+
+<span class='kw'>struct</span> <span class='ident'>Quadrato</span> {
+    <span class='ident'>x</span>: <span class='ident'>f64</span>,
+    <span class='ident'>y</span>: <span class='ident'>f64</span>,
+    <span class='ident'>lato</span>: <span class='ident'>f64</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>HaArea</span> <span class='kw'>for</span> <span class='ident'>Quadrato</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='self'>self</span>.<span class='ident'>lato</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>lato</span>
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>stampa_area</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>HaArea</span><span class='op'>&gt;</span>(<span class='ident'>figura</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Questa figura ha un&#39;area di {}&quot;</span>, <span class='ident'>figura</span>.<span class='ident'>area</span>());
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>Cerchio</span> {
+        <span class='ident'>x</span>: <span class='number'>0.0f64</span>,
+        <span class='ident'>y</span>: <span class='number'>0.0f64</span>,
+        <span class='ident'>raggio</span>: <span class='number'>1.0f64</span>,
+    };
+
+    <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Quadrato</span> {
+        <span class='ident'>x</span>: <span class='number'>0.0f64</span>,
+        <span class='ident'>y</span>: <span class='number'>0.0f64</span>,
+        <span class='ident'>lato</span>: <span class='number'>1.0f64</span>,
+    };
+
+    <span class='ident'>stampa_area</span>(<span class='ident'>c</span>);
+    <span class='ident'>stampa_area</span>(<span class='ident'>q</span>);
+}</pre>
+
+<p>Questo programma emette:</p>
+
+<pre><code class="language-text">Questa figura ha un&#39;area di 3.141593
+Questa figura ha un&#39;area di 1
+</code></pre>
+
+<p>Da come si vede, <code>stampa_area</code> adesso è generica, ma assicura anche che le
+abbiamo passato i tipi corretti. Se le passiamo un tipo scorretto:</p>
+
+<span class='rusttest'>fn main() {
+    stampa_area(5);
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>stampa_area</span>(<span class='number'>5</span>);</pre>
+
+<p>Otteniamo un errore in fase di compilazione:</p>
+
+<pre><code class="language-text">error: the trait bound `_ : HasArea` is not satisfied [E0277]
+</code></pre>
+
+<h2 id='legami-di-tratto-su-struct-generiche' class='section-header'><a href='#legami-di-tratto-su-struct-generiche'>Legami di tratto su struct generiche</a></h2>
+<p>Anche le proprie struct generiche possono trarre beneficio dai legami
+dei tratti. L&#39;unica cosa da fare è attaccare il legame quando si dichiarano
+i parametri di tipo. Ecco un nuovo tipo <code>Rettangolo&lt;T&gt;</code> e la sua operazione
+<code>e_quadrato()</code>:</p>
+
+<span class='rusttest'>struct Rettangolo&lt;T&gt; {
+    x: T,
+    y: T,
+    larghezza: T,
+    altezza: T,
+}
+
+impl&lt;T: PartialEq&gt; Rettangolo&lt;T&gt; {
+    fn e_quadrato(&amp;self) -&gt; bool {
+        self.larghezza == self.altezza
+    }
+}
+
+fn main() {
+    let mut r = Rettangolo {
+        x: 0,
+        y: 0,
+        larghezza: 47,
+        altezza: 47,
+    };
+
+    assert!(r.e_quadrato());
+
+    r.altezza = 42;
+    assert!(!r.e_quadrato());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Rettangolo</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='ident'>T</span>,
+    <span class='ident'>y</span>: <span class='ident'>T</span>,
+    <span class='ident'>larghezza</span>: <span class='ident'>T</span>,
+    <span class='ident'>altezza</span>: <span class='ident'>T</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>Rettangolo</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>e_quadrato</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='self'>self</span>.<span class='ident'>larghezza</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>altezza</span>
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Rettangolo</span> {
+        <span class='ident'>x</span>: <span class='number'>0</span>,
+        <span class='ident'>y</span>: <span class='number'>0</span>,
+        <span class='ident'>larghezza</span>: <span class='number'>47</span>,
+        <span class='ident'>altezza</span>: <span class='number'>47</span>,
+    };
+
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>e_quadrato</span>());
+
+    <span class='ident'>r</span>.<span class='ident'>altezza</span> <span class='op'>=</span> <span class='number'>42</span>;
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>r</span>.<span class='ident'>e_quadrato</span>());
+}</pre>
+
+<p><code>e_quadrato()</code> ha bisogno di verificare che i lati siano uguali, perciò i lati
+devono essere di un tipo che implementa il tratto
+<a href="../core/cmp/trait.PartialEq.html"><code>core::cmp::PartialEq</code></a>:</p>
+
+<span class='rusttest'>fn main() {
+    impl&lt;T: PartialEq&gt; Rettangolo&lt;T&gt; { ... }
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>Rettangolo</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> { ... }</pre>
+
+<p>Adesso, un rettangolo può essere definito in termini di ogni tipo che può
+essere confrontato per l&#39;uguaglianza.</p>
+
+<p>Qui abbiamo definito una nuova struct <code>Rettangolo</code> che accetta dei numeri
+di qualunque precisione — in realtà, oggetti quasi di qualunque tipo — purché
+possano essere confrontati per l&#39;uguaglianza. Potremmo fare lo stesso
+per le nostre struct <code>HaArea</code>, cioè <code>Quadrato</code> e <code>Cerchio</code>? Sì, ma hanno
+bisogno della moltiplicazione, e per lavorarci ci serve saperne di più
+riguardo ai <a href="operators-and-overloading.html">tratti di operatore</a>.</p>
+
+<h1 id='regole-per-implementare-i-tratti' class='section-header'><a href='#regole-per-implementare-i-tratti'>Regole per implementare i tratti</a></h1>
+<p>Finora, abbiamo aggiunto implementazioni di tratti solamente a delle struct,
+ma un tratto può essere implementato per qualunque tipo. Perciò tecnicamente,
+<em>potremmo</em> implementare <code>HaArea</code> anche per il tipo <code>i32</code>:</p>
+
+<span class='rusttest'>fn main() {
+    trait HaArea {
+    fn area(&amp;self) -&gt; f64;
+}
+
+impl HaArea for i32 {
+    fn area(&amp;self) -&gt; f64 {
+        println!(&quot;questo è sciocco&quot;);
+
+        *self as f64
+    }
+}
+
+5.area();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>trait</span> <span class='ident'>HaArea</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span>;
+}
+
+<span class='kw'>impl</span> <span class='ident'>HaArea</span> <span class='kw'>for</span> <span class='ident'>i32</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;questo è sciocco&quot;</span>);
+
+        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='ident'>f64</span>
+    }
+}
+
+<span class='number'>5</span>.<span class='ident'>area</span>();</pre>
+
+<p>È considerato stile scadente implementare dei metodi su tali tipi primitivi,
+anche se è possibile.</p>
+
+<p>Questo può sembrare come il Far West, ma ci sono due restrizioni riguardo
+l&#39;implementazione dei tratti che prevengono che la cosa ci sfugga di mano.
+La prima è che se il tratto non è definito nel nostro ambito, non si applica.
+Ecco un esempio: la libreria standard fornisce un tratto <a href="../std/io/trait.Write.html"><code>Write</code></a>
+che aggiunge delle funzionalità ai <code>File</code>, per fare I/O su file. Di default,
+un <code>File</code> non avrà i suoi metodi:</p>
+
+<span class='rusttest'>fn main() {
+    let mut f = std::fs::File::open(&quot;foo.txt&quot;).expect(&quot;Fallita apertura di foo.txt&quot;);
+let buf = b&quot;qualcosa&quot;; // stringa letterale di byte. buf: &amp;[u8; 8]
+let risultato = f.write(buf);
+risultato.unwrap(); // ignora l&#39;errore
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='string'>&quot;foo.txt&quot;</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Fallita apertura di foo.txt&quot;</span>);
+<span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='string'>b&quot;qualcosa&quot;</span>; <span class='comment'>// stringa letterale di byte. buf: &amp;[u8; 8]</span>
+<span class='kw'>let</span> <span class='ident'>risultato</span> <span class='op'>=</span> <span class='ident'>f</span>.<span class='ident'>write</span>(<span class='ident'>buf</span>);</pre>
+
+<p>Ecco l&#39;errore:</p>
+
+<pre><code class="language-text">error: type `std::fs::File` does not implement any method in scope named `write`
+let result = f.write(buf);
+               ^~~~~~~~~~
+</code></pre>
+
+<p>Dapprima dobbiamo importare il tratto <code>Write</code> con <code>use</code>:</p>
+
+<span class='rusttest'>fn main() {
+    use std::io::Write;
+
+let mut f = std::fs::File::open(&quot;foo.txt&quot;).expect(&quot;Fallita apertura di foo.txt&quot;);
+let buf = b&quot;qualcosa&quot;; // stringa letterale di byte. buf: &amp;[u8; 8]
+let risultato = f.write(buf);
+risultato.unwrap(); // ignora l&#39;errore
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='string'>&quot;foo.txt&quot;</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Fallita apertura di foo.txt&quot;</span>);
+<span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='string'>b&quot;qualcosa&quot;</span>; <span class='comment'>// stringa letterale di byte. buf: &amp;[u8; 8]</span>
+<span class='kw'>let</span> <span class='ident'>risultato</span> <span class='op'>=</span> <span class='ident'>f</span>.<span class='ident'>write</span>(<span class='ident'>buf</span>);</pre>
+
+<p>Questo compilerà senza errori.</p>
+
+<p>Ciò significa che anche se qualcuno fa qualcosa di male come implementare
+un tratto per <code>i32</code>, questo non ci toccherà, a meno che importiamo quel tratto.</p>
+
+<p>C&#39;è un&#39;altra restrizione sull&#39;implementare i tratti: o il tratto
+o il tipo per cui lo stiamo implementando, devono essere definiti da noi.
+O per meglio dire, almeno uno di essi deve essere definito nello stesso crate
+in cui si trova l&#39;<code>impl</code> che stiamo scrivendo. Per saperne di più sul sistema
+dei moduli e dei pacchetti di Rust, si veda la sezione su <a href="crates-and-modules.html">crate e moduli</a>.</p>
+
+<p>Perciò, potremmo implementare il tratto <code>HasArea</code> per <code>i32</code>, dato che abbiamo
+definito <code>HaArea</code> nel nostro codice. Ma se provassimo a implementare
+<code>ToString</code>, un tratto fornito da Rust, per <code>i32</code>, non potremmo, perché né
+il tratto né il tipo sono definiti nel nostro crate.</p>
+
+<p>Un&#39;ultima cosa sui tratti: le funzioni generiche con un legame di tratto usano
+la ‘monomorfizzazione’ (dal greco &quot;mono&quot;=&quot;uno&quot; e &quot;morfo&quot;=&quot;forma&quot;), e quindi
+sono smistati staticamente.
+Che significa? Si guardi la sezione sugli <a href="trait-objects.html">oggetti-tratto</a> per avere
+maggiori dettagli.</p>
+
+<h1 id='legami-di-tratto-multipli' class='section-header'><a href='#legami-di-tratto-multipli'>Legami di tratto multipli</a></h1>
+<p>Abbiamo visto che si può legare un parametro generico di tipo a un tratto:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo&lt;T: Clone&gt;(x: T) {
+    x.clone();
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Clone</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>) {
+    <span class='ident'>x</span>.<span class='ident'>clone</span>();
+}</pre>
+
+<p>Se serve più di un legame, si può usare <code>+</code>:</p>
+
+<span class='rusttest'>fn main() {
+    use std::fmt::Debug;
+
+fn foo&lt;T: Clone + Debug&gt;(x: T) {
+    x.clone();
+    println!(&quot;{:?}&quot;, x);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
+
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>) {
+    <span class='ident'>x</span>.<span class='ident'>clone</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+<p><code>T</code> adesso ha bisogno di essere sia <code>Clone</code> che <code>Debug</code>.</p>
+
+<h1 id='la-clausola-where' class='section-header'><a href='#la-clausola-where'>La clausola Where</a></h1>
+<p>Scrivere funzioni con solamente alcuni tipi generici e un piccolo numero
+di legami di tratto non è malaccio, ma man mano che il loro numero si accresce,
+la sintassi divenga sempre più goffa:</p>
+
+<span class='rusttest'>fn main() {
+    use std::fmt::Debug;
+
+fn foo&lt;T: Clone, K: Clone + Debug&gt;(x: T, y: K) {
+    x.clone();
+    y.clone();
+    println!(&quot;{:?}&quot;, y);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
+
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Clone</span>, <span class='ident'>K</span>: <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>, <span class='ident'>y</span>: <span class='ident'>K</span>) {
+    <span class='ident'>x</span>.<span class='ident'>clone</span>();
+    <span class='ident'>y</span>.<span class='ident'>clone</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>y</span>);
+}</pre>
+
+<p>Il nome della funzione è all&#39;estrema sinistra, e la lista degli argomenti è
+all&#39;estrema destra. I legami stanno diventando d&#39;intralcio.</p>
+
+<p>Rust ha una soluzione, e si chiama ‘clausola <code>where</code>’:</p>
+
+<span class='rusttest'>use std::fmt::Debug;
+
+fn foo&lt;T: Clone, K: Clone + Debug&gt;(x: T, y: K) {
+    x.clone();
+    y.clone();
+    println!(&quot;{:?}&quot;, y);
+}
+
+fn bar&lt;T, K&gt;(x: T, y: K) where T: Clone, K: Clone + Debug {
+    x.clone();
+    y.clone();
+    println!(&quot;{:?}&quot;, y);
+}
+
+fn main() {
+    foo(&quot;Ciao&quot;, &quot;mondo&quot;);
+    bar(&quot;Ciao&quot;, &quot;mondo&quot;);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
+
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Clone</span>, <span class='ident'>K</span>: <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>, <span class='ident'>y</span>: <span class='ident'>K</span>) {
+    <span class='ident'>x</span>.<span class='ident'>clone</span>();
+    <span class='ident'>y</span>.<span class='ident'>clone</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>y</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>bar</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>K</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>, <span class='ident'>y</span>: <span class='ident'>K</span>) <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Clone</span>, <span class='ident'>K</span>: <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span> {
+    <span class='ident'>x</span>.<span class='ident'>clone</span>();
+    <span class='ident'>y</span>.<span class='ident'>clone</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>y</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>foo</span>(<span class='string'>&quot;Ciao&quot;</span>, <span class='string'>&quot;mondo&quot;</span>);
+    <span class='ident'>bar</span>(<span class='string'>&quot;Ciao&quot;</span>, <span class='string'>&quot;mondo&quot;</span>);
+}</pre>
+
+<p><code>foo()</code> usa la sintassi che abbiamo mostrato prima, e <code>bar()</code> usa una clausola
+<code>where</code>. Si devono solo omettere i vincoli quando si definiscono i propri
+parametri di tipo, e poi aggiungere <code>where</code> dopo l&#39;elenco degli argomenti.
+Per liste più lunghe, si possono aggiungere spaziature:</p>
+
+<span class='rusttest'>fn main() {
+    use std::fmt::Debug;
+
+fn bar&lt;T, K&gt;(x: T, y: K)
+    where T: Clone,
+          K: Clone + Debug {
+
+    x.clone();
+    y.clone();
+    println!(&quot;{:?}&quot;, y);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
+
+<span class='kw'>fn</span> <span class='ident'>bar</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>K</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>, <span class='ident'>y</span>: <span class='ident'>K</span>)
+    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Clone</span>,
+          <span class='ident'>K</span>: <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span> {
+
+    <span class='ident'>x</span>.<span class='ident'>clone</span>();
+    <span class='ident'>y</span>.<span class='ident'>clone</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>y</span>);
+}</pre>
+
+<p>Questa flessibilità può aumentare la chiarezza in situazioni complesse.</p>
+
+<p><code>where</code> è anche più potente della sintassi più semplice. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    trait ConvertiIn&lt;Output&gt; {
+    fn converti(&amp;self) -&gt; Output;
+}
+
+impl ConvertiIn&lt;i64&gt; for i32 {
+    fn converti(&amp;self) -&gt; i64 { *self as i64 }
+}
+
+// si può chiamare con T == i32
+fn normale&lt;T: ConvertiIn&lt;i64&gt;&gt;(x: &amp;T) -&gt; i64 {
+    x.converti()
+}
+
+// si può chiamare con T == i64
+fn inversa&lt;T&gt;(x: i32) -&gt; T
+        // sta usando ConvertiIn come se fosse &quot;ConvertiIn&lt;i64&gt;&quot;
+        where i32: ConvertiIn&lt;T&gt; {
+    x.converti()
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>trait</span> <span class='ident'>ConvertiIn</span><span class='op'>&lt;</span><span class='ident'>Output</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>converti</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Output</span>;
+}
+
+<span class='kw'>impl</span> <span class='ident'>ConvertiIn</span><span class='op'>&lt;</span><span class='ident'>i64</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>i32</span> {
+    <span class='kw'>fn</span> <span class='ident'>converti</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i64</span> { <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='ident'>i64</span> }
+}
+
+<span class='comment'>// si può chiamare con T == i32</span>
+<span class='kw'>fn</span> <span class='ident'>normale</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ConvertiIn</span><span class='op'>&lt;</span><span class='ident'>i64</span><span class='op'>&gt;&gt;</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>i64</span> {
+    <span class='ident'>x</span>.<span class='ident'>converti</span>()
+}
+
+<span class='comment'>// si può chiamare con T == i64</span>
+<span class='kw'>fn</span> <span class='ident'>inversa</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span>
+        <span class='comment'>// sta usando ConvertiIn come se fosse &quot;ConvertiIn&lt;i64&gt;&quot;</span>
+        <span class='kw'>where</span> <span class='ident'>i32</span>: <span class='ident'>ConvertiIn</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>.<span class='ident'>converti</span>()
+}</pre>
+
+<p>Questo codice esibisce la caratteristica aggiuntiva delle clausole <code>where</code>:
+tali clausole consentono legami sul lato sinistro, non solamente dei parametri
+di tipo, ma anche dei tipi (in questo caso, il tipo <code>i32</code>). In questo esempio,
+<code>i32</code> deve implementare <code>ConvertiIn&lt;T&gt;</code>. Invece di definire cos&#39;è <code>i32</code>
+(dato che è ovvio), qui la clausola <code>where</code> vincola <code>T</code>.</p>
+
+<h1 id='i-metodi-di-default' class='section-header'><a href='#i-metodi-di-default'>I metodi di default</a></h1>
+<p>Un metodo di default può essere aggiunto a una definizione di tratto
+se è già noto come un implementatore tipico definirà un metodo. Per esempio,
+<code>e_invalido()</code> è definito come l&#39;oppost di <code>e_valido()</code>:</p>
+
+<span class='rusttest'>fn main() {
+    trait Foo {
+    fn e_valido(&amp;self) -&gt; bool;
+
+    fn e_invalido(&amp;self) -&gt; bool { !self.e_valido() }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>trait</span> <span class='ident'>Foo</span> {
+    <span class='kw'>fn</span> <span class='ident'>e_valido</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>e_invalido</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>e_valido</span>() }
+}</pre>
+
+<p>Gli implementatori del tratto <code>Foo</code> devono implementare <code>e_valido()</code>, ma
+possono non implementare <code>e_invalido()</code>, dato che ha già un comportamento di
+default. Questo comportamento di default può sempre essere scavalcato, come in:</p>
+
+<span class='rusttest'>fn main() {
+    trait Foo {
+    fn e_valido(&amp;self) -&gt; bool;
+
+    fn e_invalido(&amp;self) -&gt; bool { !self.e_valido() }
+}
+struct UsaDefault;
+
+impl Foo for UsaDefault {
+    fn e_valido(&amp;self) -&gt; bool {
+        println!(&quot;Chiamato UsaDefault.e_valido.&quot;);
+        true
+    }
+}
+
+struct ScavalcaDefault;
+
+impl Foo for ScavalcaDefault {
+    fn e_valido(&amp;self) -&gt; bool {
+        println!(&quot;Chiamato ScavalcaDefault.e_valido.&quot;);
+        true
+    }
+
+    fn e_invalido(&amp;self) -&gt; bool {
+        println!(&quot;Chiamato ScavalcaDefault.e_invalido!&quot;);
+        true // Scavalca il valore atteso di e_invalido()
+    }
+}
+
+let default = UsaDefault;
+assert!(!default.e_invalido()); // stampa &quot;Chiamato UsaDefault.e_valido.&quot;
+
+let scavalca = ScavalcaDefault;
+assert!(scavalca.e_invalido()); // stampa &quot;Chiamato ScavalcaDefault.e_invalido!&quot;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>UsaDefault</span>;
+
+<span class='kw'>impl</span> <span class='ident'>Foo</span> <span class='kw'>for</span> <span class='ident'>UsaDefault</span> {
+    <span class='kw'>fn</span> <span class='ident'>e_valido</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Chiamato UsaDefault.e_valido.&quot;</span>);
+        <span class='bool-val'>true</span>
+    }
+}
+
+<span class='kw'>struct</span> <span class='ident'>ScavalcaDefault</span>;
+
+<span class='kw'>impl</span> <span class='ident'>Foo</span> <span class='kw'>for</span> <span class='ident'>ScavalcaDefault</span> {
+    <span class='kw'>fn</span> <span class='ident'>e_valido</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Chiamato ScavalcaDefault.e_valido.&quot;</span>);
+        <span class='bool-val'>true</span>
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>e_invalido</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Chiamato ScavalcaDefault.e_invalido!&quot;</span>);
+        <span class='bool-val'>true</span> <span class='comment'>// Scavalca il valore atteso di e_invalido()</span>
+    }
+}
+
+<span class='kw'>let</span> <span class='ident'>default</span> <span class='op'>=</span> <span class='ident'>UsaDefault</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>default</span>.<span class='ident'>e_invalido</span>()); <span class='comment'>// stampa &quot;Chiamato UsaDefault.e_valido.&quot;</span>
+
+<span class='kw'>let</span> <span class='ident'>scavalca</span> <span class='op'>=</span> <span class='ident'>ScavalcaDefault</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>scavalca</span>.<span class='ident'>e_invalido</span>()); <span class='comment'>// stampa &quot;Chiamato ScavalcaDefault.e_invalido!&quot;</span></pre>
+
+<h1 id='ereditarietà' class='section-header'><a href='#ereditarietà'>Ereditarietà</a></h1>
+<p>Talvolta, implementare un tratto richiede implentare un altro tratto:</p>
+
+<span class='rusttest'>fn main() {
+    trait Foo {
+    fn foo(&amp;self);
+}
+
+trait FooBar : Foo {
+    fn foobar(&amp;self);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>trait</span> <span class='ident'>Foo</span> {
+    <span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>);
+}
+
+<span class='kw'>trait</span> <span class='ident'>FooBar</span> : <span class='ident'>Foo</span> {
+    <span class='kw'>fn</span> <span class='ident'>foobar</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>);
+}</pre>
+
+<p>Gli implementatori di <code>FooBar</code> devono implementare anche <code>Foo</code>, così:</p>
+
+<span class='rusttest'>fn main() {
+    trait Foo {
+    fn foo(&amp;self);
+}
+trait FooBar : Foo {
+    fn foobar(&amp;self);
+}
+struct Baz;
+
+impl Foo for Baz {
+    fn foo(&amp;self) { println!(&quot;foo&quot;); }
+}
+
+impl FooBar for Baz {
+    fn foobar(&amp;self) { println!(&quot;foobar&quot;); }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Baz</span>;
+
+<span class='kw'>impl</span> <span class='ident'>Foo</span> <span class='kw'>for</span> <span class='ident'>Baz</span> {
+    <span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) { <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;foo&quot;</span>); }
+}
+
+<span class='kw'>impl</span> <span class='ident'>FooBar</span> <span class='kw'>for</span> <span class='ident'>Baz</span> {
+    <span class='kw'>fn</span> <span class='ident'>foobar</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) { <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;foobar&quot;</span>); }
+}</pre>
+
+<p>Se tralasciamo di implementare <code>Foo</code>, Rust ce lo dirà:</p>
+
+<pre><code class="language-text">error: the trait bound `main::Baz : main::Foo` is not satisfied [E0277]
+</code></pre>
+
+<h1 id='derivazione' class='section-header'><a href='#derivazione'>Derivazione</a></h1>
+<p>Implementare ripetutamente i tratti come <code>Debug</code> e <code>Default</code> può diventare
+parecchio noioso. Per tale ragione, Rust fornisce un <a href="attributes.html">attributo</a>
+che consente di far implementare automaticamente dei tratti a Rust:</p>
+
+<span class='rusttest'>#[derive(Debug)]
+struct Foo;
+
+fn main() {
+    println!(&quot;{:?}&quot;, Foo);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>struct</span> <span class='ident'>Foo</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>Foo</span>);
+}</pre>
+
+<p>Però, la derivazione è limitata a un certo insieme di tratti. Eccoli:</p>
+
+<ul>
+<li><a href="../core/clone/trait.Clone.html"><code>Clone</code></a></li>
+<li><a href="../core/marker/trait.Copy.html"><code>Copy</code></a></li>
+<li><a href="../core/fmt/trait.Debug.html"><code>Debug</code></a></li>
+<li><a href="../core/default/trait.Default.html"><code>Default</code></a></li>
+<li><a href="../core/cmp/trait.Eq.html"><code>Eq</code></a></li>
+<li><a href="../core/hash/trait.Hash.html"><code>Hash</code></a></li>
+<li><a href="../core/cmp/trait.Ord.html"><code>Ord</code></a></li>
+<li><a href="../core/cmp/trait.PartialEq.html"><code>PartialEq</code></a></li>
+<li><a href="../core/cmp/trait.PartialOrd.html"><code>PartialOrd</code></a></li>
+</ul>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

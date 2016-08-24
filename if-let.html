@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>if let</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a class='active' href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">if let</h1>
+    <p>Il costrutto <code>if let</code> consente di combinare i costrutti <code>if</code> e <code>let</code>,
+per migliorare efficienza di certi tipi di pattern match.</p>
+
+<p>Per esempio, diciamo che abbiamo un certo <code>Option&lt;T&gt;</code>. Vogliamo chiamare una
+funzione su di esso, ma solo se vale <code>Some&lt;T&gt;</code>, e non fare niente se vale
+<code>None</code>. Si potrebbe fare così:</p>
+
+<span class='rusttest'>fn main() {
+    let opzione = Some(5);
+fn foo(x: i32) { }
+match opzione {
+    Some(x) =&gt; { foo(x) },
+    None =&gt; {},
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>opzione</span> {
+    <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> { <span class='ident'>foo</span>(<span class='ident'>x</span>) },
+    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {},
+}</pre>
+
+<p>Qui non è necessario usare un <code>match</code>, perché potremmo anche usare un <code>if</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let opzione = Some(5);
+fn foo(x: i32) { }
+if opzione.is_some() {
+    foo(opzione.unwrap());
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>if</span> <span class='ident'>opzione</span>.<span class='ident'>is_some</span>() {
+    <span class='ident'>foo</span>(<span class='ident'>opzione</span>.<span class='ident'>unwrap</span>());
+}</pre>
+
+<p>Però nessuna delle due soluzioni è particolarmente soddisfacente.
+Invece si può usare un <code>if let</code> per fare la stessa cosa in un modo più carino:</p>
+
+<span class='rusttest'>fn main() {
+    let opzione = Some(5);
+fn foo(x: i32) { }
+if let Some(x) = opzione {
+    foo(x);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=</span> <span class='ident'>opzione</span> {
+    <span class='ident'>foo</span>(<span class='ident'>x</span>);
+}</pre>
+
+<p>Se un <a href="patterns.html">pattern</a> combacia con successo, lega tutte le parti
+appropriate del valore agli identificatori del pattern, e poi valuta
+l&#39;espressione. Se il pattern non combacia, non succede niente.</p>
+
+<p>Se si vuole fare qualcos&#39;altro quando il patter non combacia, si può usare
+un <code>else</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let opzione = Some(5);
+fn foo(x: i32) { }
+fn bar() { }
+if let Some(x) = opzione {
+    foo(x);
+} else {
+    bar();
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=</span> <span class='ident'>opzione</span> {
+    <span class='ident'>foo</span>(<span class='ident'>x</span>);
+} <span class='kw'>else</span> {
+    <span class='ident'>bar</span>();
+}</pre>
+
+<h2 id='while-let' class='section-header'><a href='#while-let'><code>while let</code></a></h2>
+<p>Similmente, il costrutto <code>while let</code> può essere usato quando si vuole ciclare
+condizionalmente fin tanto che un valore combacia con un certo pattern.
+Trasforma il seguente codice:</p>
+
+<span class='rusttest'>fn main() {
+    let mut v = vec![1, 3, 5, 7, 11];
+loop {
+    match v.pop() {
+        Some(x) =&gt;  println!(&quot;{}&quot;, x),
+        None =&gt; break,
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>3</span>, <span class='number'>5</span>, <span class='number'>7</span>, <span class='number'>11</span>];
+<span class='kw'>loop</span> {
+    <span class='kw'>match</span> <span class='ident'>v</span>.<span class='ident'>pop</span>() {
+        <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span>  <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>),
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>break</span>,
+    }
+}</pre>
+
+<p>nel seguente codice:</p>
+
+<span class='rusttest'>fn main() {
+    let mut v = vec![1, 3, 5, 7, 11];
+while let Some(x) = v.pop() {
+    println!(&quot;{}&quot;, x);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>3</span>, <span class='number'>5</span>, <span class='number'>7</span>, <span class='number'>11</span>];
+<span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>pop</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

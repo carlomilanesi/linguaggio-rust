@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Gli elementi &quot;lang&quot;</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a class='active' href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Gli elementi &quot;lang&quot;</h1>
+    <blockquote>
+<p><strong>Nota</strong>: gli elementi &quot;lang&quot; sono spesso forniti da crate
+nella distribuzione di Rust, e gli stessi elementi lang hanno
+un&#39;interfaccia instabile. Si consiglia di usare i crate distribuiti
+ufficialmente, invece di definire i propri elementi lang.</p>
+</blockquote>
+
+<p>Per il compilatore <code>rustc</code> ci sono delle operazioni innestabili, cioè,
+delle funzionalità che non sono cablate nel linguaggio, ma sono implementate
+nelle librerie, con un marcatore speciale per dire al compilatore
+che esistono. Il marcatore è l&#39;attributo <code>#[lang = &quot;...&quot;]</code>, e ci sono
+vari diversi valori di <code>...</code>, cioè vari diversi &#39;elementi lang&#39;.</p>
+
+<p>Per esempio, i puntatori <code>Box</code> richiedono due elementi lang, uno
+per l&#39;allocazione e uno per la deallocazione. Ecco un programma autonomo
+che usa <code>Box</code> per l&#39;allocazione dinamica tramite <code>malloc</code> e <code>free</code>:</p>
+
+<span class='rusttest'>#![feature(lang_items, box_syntax, start, libc)]
+#![no_std]
+
+extern crate libc;
+
+extern {
+    fn abort() -&gt; !;
+}
+
+#[lang = &quot;owned_box&quot;]
+pub struct Box&lt;T&gt;(*mut T);
+
+#[lang = &quot;exchange_malloc&quot;]
+unsafe fn allocate(size: usize, _align: usize) -&gt; *mut u8 {
+    let p = libc::malloc(size as libc::size_t) as *mut u8;
+
+    // malloc ha fallito
+    if p as usize == 0 {
+        abort();
+    }
+
+    p
+}
+
+#[lang = &quot;exchange_free&quot;]
+unsafe fn deallocate(ptr: *mut u8, _size: usize, _align: usize) {
+    libc::free(ptr as *mut libc::c_void)
+}
+
+#[lang = &quot;box_free&quot;]
+unsafe fn box_free&lt;T&gt;(ptr: *mut T) {
+    deallocate(ptr as *mut u8, ::core::mem::size_of::&lt;T&gt;(),
+        ::core::mem::align_of::&lt;T&gt;());
+}
+
+#[start]
+fn main(argc: isize, argv: *const *const u8) -&gt; isize {
+    let x = box 1;
+
+    0
+}
+
+#[lang = &quot;eh_personality&quot;] extern fn eh_personality() {}
+#[lang = &quot;panic_fmt&quot;] fn panic_fmt() -&gt; ! { loop {} }
+#[lang = &quot;eh_unwind_resume&quot;] extern fn rust_eh_unwind_resume() {}
+#[no_mangle] pub extern fn rust_eh_register_frames () {}
+#[no_mangle] pub extern fn rust_eh_unregister_frames () {}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>lang_items</span>, <span class='ident'>box_syntax</span>, <span class='ident'>start</span>, <span class='ident'>libc</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>no_std</span>]</span>
+
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+
+<span class='kw'>extern</span> {
+    <span class='kw'>fn</span> <span class='ident'>abort</span>() <span class='op'>-&gt;</span> <span class='op'>!</span>;
+}
+
+<span class='attribute'>#[<span class='ident'>lang</span> <span class='op'>=</span> <span class='string'>&quot;owned_box&quot;</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>);
+
+<span class='attribute'>#[<span class='ident'>lang</span> <span class='op'>=</span> <span class='string'>&quot;exchange_malloc&quot;</span>]</span>
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>allocate</span>(<span class='ident'>size</span>: <span class='ident'>usize</span>, <span class='ident'>_align</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> {
+    <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>malloc</span>(<span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>;
+
+    <span class='comment'>// malloc ha fallito</span>
+    <span class='kw'>if</span> <span class='ident'>p</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>==</span> <span class='number'>0</span> {
+        <span class='ident'>abort</span>();
+    }
+
+    <span class='ident'>p</span>
+}
+
+<span class='attribute'>#[<span class='ident'>lang</span> <span class='op'>=</span> <span class='string'>&quot;exchange_free&quot;</span>]</span>
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>deallocate</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>_size</span>: <span class='ident'>usize</span>, <span class='ident'>_align</span>: <span class='ident'>usize</span>) {
+    <span class='ident'>libc</span>::<span class='ident'>free</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>c_void</span>)
+}
+
+<span class='attribute'>#[<span class='ident'>lang</span> <span class='op'>=</span> <span class='string'>&quot;box_free&quot;</span>]</span>
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>box_free</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
+    <span class='ident'>deallocate</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, ::<span class='ident'>core</span>::<span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(),
+        ::<span class='ident'>core</span>::<span class='ident'>mem</span>::<span class='ident'>align_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>());
+}
+
+<span class='attribute'>#[<span class='ident'>start</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>main</span>(<span class='ident'>argc</span>: <span class='ident'>isize</span>, <span class='ident'>argv</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>isize</span> {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='kw'>box</span> <span class='number'>1</span>;
+
+    <span class='number'>0</span>
+}
+
+<span class='attribute'>#[<span class='ident'>lang</span> <span class='op'>=</span> <span class='string'>&quot;eh_personality&quot;</span>]</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>eh_personality</span>() {}
+<span class='attribute'>#[<span class='ident'>lang</span> <span class='op'>=</span> <span class='string'>&quot;panic_fmt&quot;</span>]</span> <span class='kw'>fn</span> <span class='ident'>panic_fmt</span>() <span class='op'>-&gt;</span> <span class='op'>!</span> { <span class='kw'>loop</span> {} }</pre>
+
+<p>Si noti l&#39;uso di <code>abort</code>: si assume che l&#39;elemento lang <code>exchange_malloc</code>
+restituisca un puntatore valido, e quindi internamente deve fare la verifica.</p>
+
+<p>Tra le caratteristiche fornite dagli elementi lang si sono:</p>
+
+<ul>
+<li>operatori sovraccaricabili tramite tratti: i tratti corrispondenti agli
+operatori <code>==</code>, <code>&lt;</code>, dereferenziazione (<code>*</code>), e <code>+</code> (ecc.) sono tutti
+marcati con elementi lang; per questi specifici quattro, gli elementi lang
+sono, rispettivamente: <code>eq</code>, <code>ord</code>, <code>deref</code>, e <code>add</code>.</li>
+<li>svolgimento dello stacke fallimento generale; gli elementi lang
+<code>eh_personality</code>, <code>fail</code>, e <code>fail_bounds_checks</code>.</li>
+<li>i tratti in <code>std::marker</code> usati per indicare tipi di vari generi;
+gli elementi lang <code>send</code>, <code>sync</code> e <code>copy</code>.</li>
+<li>i tipi marcatori e gli indicatori di varianza trovati in <code>std::marker</code>;
+gli elementi lang <code>covariant_type</code>, <code>contravariant_lifetime</code>, ecc.</li>
+</ul>
+
+<p>Gli elementi lang vengono caricati pigramente dal compilatore; per es. se
+non si usa mai <code>Box</code>, allora non c&#39;è bisogno di definire funzioni per
+<code>exchange_malloc</code> e <code>exchange_free</code>. <code>rustc</code> emitterà un errore quando
+un elemento serve ma non viene trovato nel crate attuale né in quelli
+da cui dipende.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

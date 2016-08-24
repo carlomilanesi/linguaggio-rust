@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Borrow e AsRef</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a class='active' href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Borrow e AsRef</h1>
+    <p>I tratti <a href="../std/borrow/trait.Borrow.html"><code>Borrow</code></a> e <a href="../std/convert/trait.AsRef.html"><code>AsRef</code></a> sono molto simili, ma diversi.
+Ecco un rapido ripasso di quello che questi due tratti significano.</p>
+
+<h1 id='borrow' class='section-header'><a href='#borrow'>Borrow</a></h1>
+<p>Il tratto <code>Borrow</code> si usa quando si sta scrivendo una struttura dati,
+e, per qualche scopo, si vuole usare come sinonimo un tipo o posseduto
+o preso in prestito.</p>
+
+<p>Per esempio, <a href="../std/collections/struct.HashMap.html"><code>HashMap</code></a> ha un metodo <a href="../std/collections/struct.HashMap.html#method.get"><code>get</code></a> che usa <code>Borrow</code>:</p>
+
+<span class='rusttest'>fn main() {
+    fn get&lt;Q: ?Sized&gt;(&amp;self, k: &amp;Q) -&gt; Option&lt;&amp;V&gt;
+    where K: Borrow&lt;Q&gt;,
+          Q: Hash + Eq
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='ident'>Q</span>: ?<span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>k</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>V</span><span class='op'>&gt;</span>
+    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
+          <span class='ident'>Q</span>: <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>Eq</span></pre>
+
+<p>Questa firma è parecchio complicata. Quello che ci interessa qui è
+il parametro <code>K</code>. Si riferisce a un parametro di <code>HashMap</code> stesso:</p>
+
+<span class='rusttest'>fn main() {
+    struct HashMap&lt;K, V, S = RandomState&gt; {
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>S</span> <span class='op'>=</span> <span class='ident'>RandomState</span><span class='op'>&gt;</span> {</pre>
+
+<p>Il parametro <code>K</code> è il tipo della <em>chiave</em> usata da <code>HashMap</code>. Quindi,
+riguardando la firma di <code>get()</code>, vediamo che possiamo usare<code>get()</code> quando
+la chiave implementa <code>Borrow&lt;Q&gt;</code>. In quel modo, possiamo costruire
+un <code>HashMap</code> che usa chiavi <code>String</code>, ma usare delle <code>&amp;str</code> quando cerchiamo:</p>
+
+<span class='rusttest'>fn main() {
+    use std::collections::HashMap;
+
+let mut map = HashMap::new();
+map.insert(&quot;Foo&quot;.to_string(), 42);
+
+assert_eq!(map.get(&quot;Foo&quot;), Some(&amp;42));
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='string'>&quot;Foo&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>42</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get</span>(<span class='string'>&quot;Foo&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>42</span>));</pre>
+
+<p>Questo perché la libreria standard ha <code>impl Borrow&lt;str&gt; for String</code>.</p>
+
+<p>Per la maggior parte dei tipi, quando si vuole prenderne un tipo posseduto
+o preso in prestito, un <code>&amp;T</code> può bastare. Ma un&#39;area dove <code>Borrow</code> è efficace
+è quando c&#39;è più di un genere di valore preso in prestito. Ciò è vero
+specialmente per i riferimenti e le slice: si può avere sia un <code>&amp;T</code>
+che un <code>&amp;mut T</code>. Se vogliamo accettare entrambi questi tipi, <code>Borrow</code> è
+quel che ci vuole:</p>
+
+<span class='rusttest'>fn main() {
+    use std::borrow::Borrow;
+use std::fmt::Display;
+
+fn foo&lt;T: Borrow&lt;i32&gt; + Display&gt;(a: T) {
+    println!(&quot;a è preso in prestito: {}&quot;, a);
+}
+
+let mut i = 5;
+
+foo(&amp;i);
+foo(&amp;mut i);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span>;
+
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Display</span><span class='op'>&gt;</span>(<span class='ident'>a</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;a è preso in prestito: {}&quot;</span>, <span class='ident'>a</span>);
+}
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='ident'>i</span>);
+<span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>i</span>);</pre>
+
+<p>Questo stamperà due volte <code>a è preso in prestito: 5</code>.</p>
+
+<h1 id='asref' class='section-header'><a href='#asref'>AsRef</a></h1>
+<p>Il tratto <code>AsRef</code> è un tratto di conversione. Serve a convertire
+qualche valore in un riferimento nel codice generico. Così:</p>
+
+<span class='rusttest'>fn main() {
+    let s = &quot;Hello&quot;.to_string();
+
+fn foo&lt;T: AsRef&lt;str&gt;&gt;(s: T) {
+    let slice = s.as_ref();
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
+
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>s</span>: <span class='ident'>T</span>) {
+    <span class='kw'>let</span> <span class='ident'>slice</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>as_ref</span>();
+}</pre>
+
+<h1 id='quale-usare' class='section-header'><a href='#quale-usare'>Quale usare?</a></h1>
+<p>Come si vede, sono in qualche modo uguali: entrambi trattano versioni
+possedute o prese in prestito di qualche tipo. Però, sono un po&#39; diversi.</p>
+
+<p>Si scelga <code>Borrow</code> quando si vuole astrarre su diversi generi di prestiti,
+oppure quando si sta costruendo una struttura dati che tratta i valori
+posseduti e i valori presi in prestito in modi equivalenti, come lo hashing
+e il confronto.</p>
+
+<p>Si scelga <code>AsRef</code> quando si vuole convertire qualcosa direttamente
+a un riferimento, e si sta scrivendo del codice generico.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

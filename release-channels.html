@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Canali di rilascio</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a class='active' href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Canali di rilascio</h1>
+    <p>Il progetto Rust usa un concetto chiamato ‘canali di rilascio’ per gestire
+i rilasci. È importante capire questo procedimento per scegliere
+quale versione di Rust è meglio usare.</p>
+
+<h1 id='panoramica' class='section-header'><a href='#panoramica'>Panoramica</a></h1>
+<p>Ci sono tre canali per i rilasci di Rust:</p>
+
+<ul>
+<li>Notturno [&quot;Nightly&quot;]</li>
+<li>Beta</li>
+<li>Stabile [&quot;Stable&quot;]</li>
+</ul>
+
+<p>I nuovi rilasci notturni vengono creati una volta al giorno. Ogni sei
+settimane, l&#39;ultimo rilascio notturno viene promosso a ‘Beta’. Da questo
+momento, riceverà solamente pezze per correggere gravi errori. Sei settimane
+dopo, la beta viene promossa a ‘Stabile’, e diventa la versione <code>1.x</code>.</p>
+
+<p>Questo procedimento avviene in parallelo. Quindi ogni sei settimane,
+nel medesimo giorno, la beta diventa la nuova stable, e la notturna diventa
+la nuova beta. Quando la versione <code>1.x</code> viene rilasciata, nello stesso tempo,
+anche la versione <code>1.(x + 1)-beta</code> viene rilasciata, e le ultime aggiunte al
+sistema entrano a far parte della prima versione di <code>1.(x + 2)-nightly</code>.</p>
+
+<h1 id='scegliere-una-versione' class='section-header'><a href='#scegliere-una-versione'>Scegliere una versione</a></h1>
+<p>In generale, a meno di avere una ragione specifica, si dovrebbe usare il canale
+del rilascio stabile. Questi rilasci sono rivolti al pubblico generale.</p>
+
+<p>Però, a seconda dell&#39;interesse che si ha verso Rust, si può scegliere invece
+di usare la versione notturna. I pro e contro di base sono questi: usando
+il canale notturno, si possono usare caratteristiche nuove di Rust,
+ma instabili. Queste caratteristiche instabili sono soggette a modifiche, e
+così ogni nuovo rilascio notturno potrebbe essere incompatibile con il proprio
+codice. Se si usa il rilascio stabile, non si possono usare le caratteristiche
+sperimentali, ma il nuovo rilascio di Rust non provocherà problemi
+significativi a causa di modifiche incompatibili.</p>
+
+<h1 id='aiutare-lecosistema-tramite-ci' class='section-header'><a href='#aiutare-lecosistema-tramite-ci'>Aiutare l&#39;ecosistema tramite CI</a></h1>
+<p>E che dire della beta? Incoraggiamo tutti gli utenti di Rust che usano
+il canale di rilascio stabile a collaudare anche rispetto al canale beta
+nei loro sistemi di integrazione continua.
+Questo aiuterà ad allertare la squadra nel caso ci sia una regressione
+accidentale.</p>
+
+<p>In aggiunta, collaudare rispetto alla versione beta può rilevare
+delle regressioni ancora prima, e quindi un terzo build non crea troppo
+fastidio, apprezziamo il collaudo rispetto tutti i canali.</p>
+
+<p>Come esempio, molti programmatori Rust, per collaudare i loro crate, usano
+<a href="https://travis-ci.org/">Travis</a> che è gratuito per progetti open source.
+Travis <a href="http://docs.travis-ci.com/user/languages/rust/">supporta Rust direttamente</a>, e per collaudare su tutti
+i canali, si può usare un file <code>.travis.yml</code> come questo:</p>
+
+<pre><code class="language-yaml">language: rust
+rust:
+  - nightly
+  - beta
+  - stable
+
+matrix:
+  allow_failures:
+    - rust: nightly
+</code></pre>
+
+<p>Con questa configurazione, Travis collauderà tutte e tre i canali, ma se
+qualcosa va storto sul canale notturno, non fallirà la costruzione.
+Una configurazione simile è consigliata per ogni sistema CI. Si cosnulti
+la documentazione di quella che si sta usando per avere più dettagli.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Le forzature `Deref`</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a class='active' href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Le forzature `Deref`</h1>
+    <p>La libreria standard fornisce un tratto speciale, <a href="../std/ops/trait.Deref.html"><code>Deref</code></a>.
+Normalmente lo si usa per sovraccaricare <code>*</code>, l&#39;operatore di dereferenziazione:</p>
+
+<span class='rusttest'>use std::ops::Deref;
+
+struct EsempioDeref&lt;T&gt; {
+    valore: T,
+}
+
+impl&lt;T&gt; Deref for EsempioDeref&lt;T&gt; {
+    type Target = T;
+
+    fn deref(&amp;self) -&gt; &amp;T {
+        &amp;self.valore
+    }
+}
+
+fn main() {
+    let x = EsempioDeref { valore: &#39;a&#39; };
+    assert_eq!(&#39;a&#39;, *x);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span>;
+
+<span class='kw'>struct</span> <span class='ident'>EsempioDeref</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='ident'>valore</span>: <span class='ident'>T</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>EsempioDeref</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>T</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
+        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>valore</span>
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>EsempioDeref</span> { <span class='ident'>valore</span>: <span class='string'>&#39;a&#39;</span> };
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&#39;a&#39;</span>, <span class='op'>*</span><span class='ident'>x</span>);
+}</pre>
+
+<p>Questo è utile per scrivere dei tipi puntatore personalizzati. Però, c&#39;è
+una caratteristica del linguaggio correlata a <code>Deref</code>: le ‘forzature deref’.
+Ecco la regola: Se si ha un tipo <code>U</code>, che implementa <code>Deref&lt;Target=T&gt;</code>,
+i valori di tipo <code>&amp;U</code> automaticamente potranno essere forzati al tipo <code>&amp;T</code>.
+Ecco un esempio:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo(s: &amp;str) {
+    // prendi in prestito una stringa per un secondo
+}
+
+// String implementa Deref&lt;Target=str&gt;
+let posseduta = &quot;Hello&quot;.to_string();
+
+// perciò, questo funziona:
+foo(&amp;posseduta);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
+    <span class='comment'>// prendi in prestito una stringa per un secondo</span>
+}
+
+<span class='comment'>// String implementa Deref&lt;Target=str&gt;</span>
+<span class='kw'>let</span> <span class='ident'>posseduta</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
+
+<span class='comment'>// perciò, questo funziona:</span>
+<span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='ident'>posseduta</span>);</pre>
+
+<p>Usare una e-commerciale davanti a un valore prende un riferimento ad esso.
+Perciò <code>posseduta</code> è una <code>String</code>, <code>&amp;posseduta</code> è un <code>&amp;String</code>, e dato che
+esiste <code>impl Deref&lt;Target=str&gt; for String</code>, si potrà chiamare <code>deref</code> su
+<code>&amp;String</code>, ottenendo un <code>&amp;str</code>, che è accettato da <code>foo()</code>.</p>
+
+<p>Ecco. Questa regola è un dei soli posti in cui Rust fa una conversione
+automatica, ma ciò aggiunge molta flessibilità. Per esempio,
+il tipo <code>Rc&lt;T&gt;</code> implementa <code>Deref&lt;Target=T&gt;</code>, e quindi questo funziona:</p>
+
+<span class='rusttest'>fn main() {
+    use std::rc::Rc;
+
+fn foo(s: &amp;str) {
+    // prende in prestito una stringa per un secondo
+}
+
+// String implementa Deref&lt;Target=str&gt;
+let posseduta = &quot;Hello&quot;.to_string();
+let contata = Rc::new(posseduta);
+
+// perciò, questo funziona:
+foo(&amp;counted);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
+
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
+    <span class='comment'>// prende in prestito una stringa per un secondo</span>
+}
+
+<span class='comment'>// String implementa Deref&lt;Target=str&gt;</span>
+<span class='kw'>let</span> <span class='ident'>posseduta</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
+<span class='kw'>let</span> <span class='ident'>contata</span> <span class='op'>=</span> <span class='ident'>Rc</span>::<span class='ident'>new</span>(<span class='ident'>posseduta</span>);
+
+<span class='comment'>// perciò, questo funziona:</span>
+<span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='ident'>counted</span>);</pre>
+
+<p>Quel che abbiamo fatto è avvolgere la nostra <code>String</code> in un <code>Rc&lt;T&gt;</code>. Ma adesso
+possiamo passare in giro la <code>Rc&lt;String&gt;</code> ovunque sia accettata una <code>String</code>.
+La firma di <code>foo</code> non è cambiata, ma funziona altrettanto con entrambi i tipi.
+Questo esempio esegue due conversioni: da <code>Rc&lt;String&gt;</code> a <code>String</code>, e poi
+da <code>String</code> a <code>&amp;str</code>. Rust lo farà tante volte quanto possibile, fino a che
+i tipi combaciano.</p>
+
+<p>Un&#39;altra implementazione molto tipica fornita dalla libreria standard è:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo(s: &amp;[i32]) {
+    // prende in prestito una slice per un secondo
+}
+
+// Vec&lt;T&gt; implementa Deref&lt;Target=[T]&gt;
+let posseduta = vec![1, 2, 3];
+
+foo(&amp;posseduta);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>i32</span>]) {
+    <span class='comment'>// prende in prestito una slice per un secondo</span>
+}
+
+<span class='comment'>// Vec&lt;T&gt; implementa Deref&lt;Target=[T]&gt;</span>
+<span class='kw'>let</span> <span class='ident'>posseduta</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+
+<span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='ident'>posseduta</span>);</pre>
+
+<p>I vettori possono essere convertiti da <code>Deref</code> in una slice.</p>
+
+<h2 id='deref-e-le-chiamate-di-metodo' class='section-header'><a href='#deref-e-le-chiamate-di-metodo'>Deref e le chiamate di metodo</a></h2>
+<p><code>Deref</code> scatterà anche quando si chiama un metodo. Si consideri il seguente
+esempio.</p>
+
+<span class='rusttest'>fn main() {
+    struct Foo;
+
+impl Foo {
+    fn foo(&amp;self) { println!(&quot;Foo&quot;); }
+}
+
+let f = &amp;&amp;Foo;
+
+f.foo();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Foo</span>;
+
+<span class='kw'>impl</span> <span class='ident'>Foo</span> {
+    <span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) { <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Foo&quot;</span>); }
+}
+
+<span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='op'>&amp;&amp;</span><span class='ident'>Foo</span>;
+
+<span class='ident'>f</span>.<span class='ident'>foo</span>();</pre>
+
+<p>Anche se <code>f</code> è un <code>&amp;&amp;Foo</code> e <code>foo</code> prende invece un <code>&amp;self</code>, questo funziona.
+È perché le seguenti espressioni sono equivalenti:</p>
+
+<span class='rusttest'>fn main() {
+    f.foo();
+(&amp;f).foo();
+(&amp;&amp;f).foo();
+(&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;f).foo();
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>f</span>.<span class='ident'>foo</span>();
+(<span class='kw-2'>&amp;</span><span class='ident'>f</span>).<span class='ident'>foo</span>();
+(<span class='op'>&amp;&amp;</span><span class='ident'>f</span>).<span class='ident'>foo</span>();
+(<span class='op'>&amp;&amp;</span><span class='op'>&amp;&amp;</span><span class='op'>&amp;&amp;</span><span class='op'>&amp;&amp;</span><span class='ident'>f</span>).<span class='ident'>foo</span>();</pre>
+
+<p>Si possono chiamare su valore di tipo <code>&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;Foo</code> anche metodi
+definiti per <code>Foo</code>, perché il compilatore inserià tante operazioni <code>*</code>
+quante ne servono per avere il tipo appropriato. E dato che sta inserendo
+operatori <code>*</code>, usa <code>Deref</code>.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>La sintassi e i pattern di Box</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a class='active' href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">La sintassi e i pattern di Box</h1>
+    <p>Attualmente, l&#39;unico modo stabile di creare un <code>Box</code> è tramite il metodo
+<code>Box::new</code>. Inoltre, nella versione stabile di Rust, non è possibile
+destrutturare un <code>Box</code> in un pattern di <code>match</code>. La parola-chiave instabile
+<code>box</code> si può usare sia per creare che per destrutturare un <code>Box</code>.
+Un esempio di utilizzo sarebbe:</p>
+
+<span class='rusttest'>#![feature(box_syntax, box_patterns)]
+
+fn main() {
+    let b = Some(box 5);
+    match b {
+        Some(box n) if n &lt; 0 =&gt; {
+            println!(&quot;Il box contiene il numero negativo {}&quot;, n);
+        },
+        Some(box n) if n &gt;= 0 =&gt; {
+            println!(&quot;Il box contiene il numero non negativo {}&quot;, n);
+        },
+        None =&gt; {
+            println!(&quot;Nessun box&quot;);
+        },
+        _ =&gt; unreachable!()
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>box_syntax</span>, <span class='ident'>box_patterns</span>)]</span>
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='kw'>box</span> <span class='number'>5</span>);
+    <span class='kw'>match</span> <span class='ident'>b</span> {
+        <span class='prelude-val'>Some</span>(<span class='kw'>box</span> <span class='ident'>n</span>) <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>&lt;</span> <span class='number'>0</span> <span class='op'>=&gt;</span> {
+            <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il box contiene il numero negativo {}&quot;</span>, <span class='ident'>n</span>);
+        },
+        <span class='prelude-val'>Some</span>(<span class='kw'>box</span> <span class='ident'>n</span>) <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>&gt;=</span> <span class='number'>0</span> <span class='op'>=&gt;</span> {
+            <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il box contiene il numero non negativo {}&quot;</span>, <span class='ident'>n</span>);
+        },
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
+            <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Nessun box&quot;</span>);
+        },
+        _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
+    }
+}</pre>
+
+<p>Si noti che queste caratteristiche sono attualmente nascoste dietro i gate
+<code>box_syntax</code> (per la creazione dei box) e <code>box_patterns</code>
+(per la destrutturazione e il pattern matching), perché la sintassi
+può ancora cambiare in futuro.</p>
+
+<h1 id='restituire-puntatori' class='section-header'><a href='#restituire-puntatori'>Restituire puntatori</a></h1>
+<p>In molti linguaggi dotati di puntatori, si restituirebbe un puntatore
+da una funzione per evitare di copiare una grande struttura dati. Per esempio:</p>
+
+<span class='rusttest'>struct GrossaStruct {
+    uno: i32,
+    due: i32,
+    // ecc
+    cento: i32,
+}
+
+fn foo(x: Box&lt;GrossaStruct&gt;) -&gt; Box&lt;GrossaStruct&gt; {
+    Box::new(*x)
+}
+
+fn main() {
+    let x = Box::new(GrossaStruct {
+        uno: 1,
+        due: 2,
+        cento: 100,
+    });
+
+    let y = foo(x);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>GrossaStruct</span> {
+    <span class='ident'>uno</span>: <span class='ident'>i32</span>,
+    <span class='ident'>due</span>: <span class='ident'>i32</span>,
+    <span class='comment'>// ecc</span>
+    <span class='ident'>cento</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>x</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>GrossaStruct</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>GrossaStruct</span><span class='op'>&gt;</span> {
+    <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='op'>*</span><span class='ident'>x</span>)
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>GrossaStruct</span> {
+        <span class='ident'>uno</span>: <span class='number'>1</span>,
+        <span class='ident'>due</span>: <span class='number'>2</span>,
+        <span class='ident'>cento</span>: <span class='number'>100</span>,
+    });
+
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>foo</span>(<span class='ident'>x</span>);
+}</pre>
+
+<p>L&#39;idea è che passando un box, sia sta solo copiando un puntatore, invece
+dei cento <code>i32</code> che costituiscono la <code>GrossaStruct</code>.</p>
+
+<p>Questo in Rust è un antipattern. Invece, si scrive così:</p>
+
+<span class='rusttest'>#![feature(box_syntax)]
+
+struct GrossaStruct {
+    uno: i32,
+    due: i32,
+    // ecc
+    cento: i32,
+}
+
+fn foo(x: Box&lt;GrossaStruct&gt;) -&gt; GrossaStruct {
+    *x
+}
+
+fn main() {
+    let x = Box::new(GrossaStruct {
+        uno: 1,
+        due: 2,
+        cento: 100,
+    });
+
+    let y: Box&lt;GrossaStruct&gt; = box foo(x);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>box_syntax</span>)]</span>
+
+<span class='kw'>struct</span> <span class='ident'>GrossaStruct</span> {
+    <span class='ident'>uno</span>: <span class='ident'>i32</span>,
+    <span class='ident'>due</span>: <span class='ident'>i32</span>,
+    <span class='comment'>// ecc</span>
+    <span class='ident'>cento</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>x</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>GrossaStruct</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>GrossaStruct</span> {
+    <span class='op'>*</span><span class='ident'>x</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>GrossaStruct</span> {
+        <span class='ident'>uno</span>: <span class='number'>1</span>,
+        <span class='ident'>due</span>: <span class='number'>2</span>,
+        <span class='ident'>cento</span>: <span class='number'>100</span>,
+    });
+
+    <span class='kw'>let</span> <span class='ident'>y</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>GrossaStruct</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='kw'>box</span> <span class='ident'>foo</span>(<span class='ident'>x</span>);
+}</pre>
+
+<p>Ciò fornisce flessibilità senza sacrificare le prestazioni.</p>
+
+<p>Si potrebbe pensare che così si otterrebbero prestazioni terribili:
+restituire un valore e poi inscatolarlo immediatamente?! Questo pattern
+non è il peggio di entrambi i mondi? Ma Rust è più scaltro.
+In questo codice non si fanno copie. <code>main</code> alloca abbastanza spazio
+per il <code>box</code>, passa a <code>foo</code>, col nome di <code>x</code>, l&#39;indirizzo di tale spazio,
+e poi <code>foo</code> scrive il valore direttamente nel <code>Box&lt;T&gt;</code>.</p>
+
+<p>Ciò è abbastanza importante che vale la pena ripeterlo: i puntatori
+non sono da usare per ottimizzare la restituzione di valori
+dal proprio codice. Si consenta al chiamante di scegliere come vuole usare
+l&#39;output della funzione.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

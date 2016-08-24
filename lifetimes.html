@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Tempi di vita</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a class='active' href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Tempi di vita</h1>
+    <p>Questa è l&#39;ultima delle tre sezioni che presentano il sistema di possesso
+di Rust. Qui si assume che siano già state lette le altre due:</p>
+
+<ul>
+<li>Il <a href="ownership.html">possesso</a>, il concetto chiave</li>
+<li>I <a href="references-and-borrowing.html">prestiti</a>, e le loro caratteristiche associate, i ‘riferimenti’</li>
+</ul>
+
+<h1 id='i-tempi-di-vita' class='section-header'><a href='#i-tempi-di-vita'>I tempi di vita</a></h1>
+<p>Prestare un riferimento a una risorsa posseduta da qualcun altro può essere
+complicato. Per esempio, immaginiamo questa sequenza di operazioni:</p>
+
+<ol>
+<li>Acquisisco un riferimento a una risorsa di qualche tipo.</li>
+<li>Ti presto un riferimento a tale risorsa.</li>
+<li>Decido di aver finito di lavorare con quella risorsa, e quindi la rilascio,
+mentre tu hai ancora il tuo riferimento a tale risorsa.</li>
+<li>Tu decidi di usare quella risorsa.</li>
+</ol>
+
+<p>Ahi, ahi! Il tuo riferimento sta puntando a una risorsa non più valida.
+Questo difetto si chiama ‘puntatore penzolante‘ o ‘utilizzo dopo il rilascio’.</p>
+
+<p>Per correggerlo, dobbiamo assicurarci che il passo 4 non avvenga mai dopo
+il passo 3. Il sistema di possesso in Rust lo fa tramite un concetto chiamato
+&quot;tempo di vita&quot; [&quot;lifetime&quot;], che descrive l&#39;ambito in cui un riferimento
+è valido. Nel nostro caso, o decidiamo che il tempo di vita vale solamente
+fino al passo 3, e in tal caso il passo 4 darà errore di compilazione,
+o decidiamo che il tempo di vita vale fino al passo 4,
+e in tal caso la risorsa dovrà essere rilasciata al passo 5.</p>
+
+<p>Quando abbiamo una funzione che prende un argomento per riferimento,
+possiamo essere impliciti o espliciti riguardo al tempo di vita di tale
+riferimento:</p>
+
+<span class='rusttest'>fn main() {
+    // implicito
+fn foo(x: &amp;i32) {
+}
+
+// esplicito
+fn bar&lt;&#39;a&gt;(x: &amp;&#39;a i32) {
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='comment'>// implicito</span>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>i32</span>) {
+}
+
+<span class='comment'>// esplicito</span>
+<span class='kw'>fn</span> <span class='ident'>bar</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>) {
+}</pre>
+
+<p>L&#39;<code>&#39;a</code> si legge ‘il tempo di vita a’. Tecnicamente, ogni riferimento
+ha qualche tempo di vita associato ad esso, ma il compilatore consente
+di eliderlo (cioè ometterlo, si veda la sezione [&quot;Elisione del tempo di vita&quot;]
+[elisione del tempo di vita] più avanti) nei casi più tipici.
+Però, prima di arrivarci, scomponiamo l&#39;esempio esplicito:</p>
+
+<span class='rusttest'>fn main() {
+    fn bar&lt;&#39;a&gt;(...)
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>bar</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(...)</pre>
+
+<p>Precedentemente abbiamo parlato un po&#39; della <a href="functions.html">sintassi delle funzioni</a>, ma non abbiamo discusso dei <code>&lt;&gt;</code> dopo il nome della funzione.
+Una funzione può avere dei ‘parametri generici’ fra le <code>&lt;&gt;</code>, dei quali
+i tempi di vita sono un tipo. Discuteremo altri tipi di generici
+<a href="generics.html">più avanti nel libro</a>, ma per adesso, focalizziamoci sull&#39;aspetto
+dei tempi di vita.</p>
+
+<p>Usiamo le <code>&lt;&gt;</code> per dichiarare i nostri tempi di vita. Questo dice che <code>bar</code>
+ha un solo tempo di vita, <code>&#39;a</code>. Se avessimo dei parametri riferimento,
+si presenterebbe così:</p>
+
+<span class='rusttest'>fn main() {
+    fn bar&lt;&#39;a, &#39;b&gt;(...)
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>bar</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(...)</pre>
+
+<p>Poi nel nostro elenco di argomenti, usiamo i tempi di vita che abbiamo
+nominato:</p>
+
+<span class='rusttest'>fn main() {
+    ...(x: &amp;&#39;a i32)
+}</span><pre class='rust rust-example-rendered'>
+...(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>)</pre>
+
+<p>Se avessimo voluto un riferimento <code>&amp;mut</code>, avremmo scritto:</p>
+
+<span class='rusttest'>fn main() {
+    ...(x: &amp;&#39;a mut i32)
+}</span><pre class='rust rust-example-rendered'>
+...(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>i32</span>)</pre>
+
+<p>Confrontando <code>&amp;mut i32</code> con <code>&amp;&#39;a mut i32</code>, si nota che l&#39;unica differenza
+è che il tempo di vita <code>&#39;a</code> si è intrufolato fra il <code>&amp;</code> il <code>mut i32</code>.
+La clausola <code>&amp;mut i32</code> va letta come ‘un riferimento mutabile a un <code>i32</code>’,
+mentre la clausola <code>&amp;&#39;a mut i32</code> va letta come ‘un riferimento mutabile
+a un <code>i32</code> con tempo di vita <code>&#39;a</code>’.</p>
+
+<h1 id='nelle-struct' class='section-header'><a href='#nelle-struct'>Nelle <code>struct</code></a></h1>
+<p>C&#39;è bisogno dei tempi di vita espliciti anche quando si lavora come le
+<a href="structs.html"><code>struct</code></a> che contengono riferimenti:</p>
+
+<span class='rusttest'>struct Foo&lt;&#39;a&gt; {
+    x: &amp;&#39;a i32,
+}
+
+fn main() {
+    let y = &amp;5; // questo è lo stesso che `let _y = 5; let y = &amp;_y;`
+    let f = Foo { x: y };
+    println!(&quot;{}&quot;, f.x);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>,
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>5</span>; <span class='comment'>// questo è lo stesso che `let _y = 5; let y = &amp;_y;`</span>
+    <span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>Foo</span> { <span class='ident'>x</span>: <span class='ident'>y</span> };
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>f</span>.<span class='ident'>x</span>);
+}</pre>
+
+<p>Come si vede, anche le <code>struct</code> possono avere tempi di vita. In modo simile
+alle funzioni,</p>
+
+<span class='rusttest'>fn main() {
+    struct Foo&lt;&#39;a&gt; {
+x: &amp;&#39;a i32,
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {</pre>
+
+<p>dichiara un tempo di vita, e</p>
+
+<span class='rusttest'>fn main() {
+    struct Foo&lt;&#39;a&gt; {
+x: &amp;&#39;a i32,
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>,</pre>
+
+<p>lo usa. Allora perché qui ci serve un tempo di vita? Ci serve per assicurare
+che ogni riferimento a un <code>Foo</code> non possa sopravvivere al riferimento
+a un <code>i32</code> che contiene.</p>
+
+<h2 id='i-blocchi-impl' class='section-header'><a href='#i-blocchi-impl'>I blocchi <code>impl</code></a></h2>
+<p>Implementiamo un metodo su <code>Foo</code>:</p>
+
+<span class='rusttest'>struct Foo&lt;&#39;a&gt; {
+    x: &amp;&#39;a i32,
+}
+
+impl&lt;&#39;a&gt; Foo&lt;&#39;a&gt; {
+    fn x(&amp;self) -&gt; &amp;&#39;a i32 { self.x }
+}
+
+fn main() {
+    let y = &amp;5; // questo è lo stesso che `let _y = 5; let y = &amp;_y;`
+    let f = Foo { x: y };
+    println!(&quot;x is: {}&quot;, f.x());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>x</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span> { <span class='self'>self</span>.<span class='ident'>x</span> }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>5</span>; <span class='comment'>// questo è lo stesso che `let _y = 5; let y = &amp;_y;`</span>
+    <span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>Foo</span> { <span class='ident'>x</span>: <span class='ident'>y</span> };
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x is: {}&quot;</span>, <span class='ident'>f</span>.<span class='ident'>x</span>());
+}</pre>
+
+<p>Come si vede, dobbiamo dichiarare un tempo di vita per <code>Foo</code> nella riga
+di <code>impl</code>. <code>&#39;a</code> viene ripetuto, come per le funzioni: <code>impl&lt;&#39;a&gt;</code> definisce
+un tempo di vita <code>&#39;a</code>, e <code>Foo&lt;&#39;a&gt;</code> lo usa.</p>
+
+<h2 id='tempi-di-vita-multipli' class='section-header'><a href='#tempi-di-vita-multipli'>Tempi di vita multipli</a></h2>
+<p>Se si hanno riferimenti multipli, si può usare lo stesso tempo di vita
+più volte:</p>
+
+<span class='rusttest'>fn main() {
+    fn x_o_y&lt;&#39;a&gt;(x: &amp;&#39;a str, y: &amp;&#39;a str) -&gt; &amp;&#39;a str {
+   x
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>x_o_y</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>y</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {</pre>
+
+<p>Questo dice che sia <code>x</code> che <code>y</code> sono vivi per lo stesso ambito, e che anche
+il valore reso è vivo per lo stesso ambito. Se si voless che <code>x</code> e <code>y</code> avessero
+tempi di vita diversi, si possono usare più parametri di tempo di vita:</p>
+
+<span class='rusttest'>fn main() {
+    fn x_o_y&lt;&#39;a, &#39;b&gt;(x: &amp;&#39;a str, y: &amp;&#39;b str) -&gt; &amp;&#39;a str {
+   x
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>x_o_y</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>y</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {</pre>
+
+<p>In questo esempio, <code>x</code> e <code>y</code> hanno diversi ambiti validi, ma il valore reso ha
+lo stesso tempo di vita di <code>x</code>.</p>
+
+<h2 id='pensare-agli-ambiti' class='section-header'><a href='#pensare-agli-ambiti'>Pensare agli ambiti</a></h2>
+<p>Un modo di pensare ai tempi di vita è visualizzare l&#39;ambito per cui
+un riferimento rimane valido. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    let y = &amp;5;    // -+ y entra nell&#39;ambito
+                   //  |
+    // roba        //  |
+                   //  |
+}                  // -+ y esce dall&#39;ambito
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>5</span>;    <span class='comment'>// -+ y entra nell&#39;ambito</span>
+                   <span class='comment'>//  |</span>
+    <span class='comment'>// roba        //  |</span>
+                   <span class='comment'>//  |</span>
+}                  <span class='comment'>// -+ y esce dall&#39;ambito</span></pre>
+
+<p>Aggiungendo il nostro <code>Foo</code>:</p>
+
+<span class='rusttest'>struct Foo&lt;&#39;a&gt; {
+    x: &amp;&#39;a i32,
+}
+
+fn main() {
+    let y = &amp;5;           // -+ y entra nell&#39;ambito
+    let f = Foo { x: y }; // -+ f entra nell&#39;ambito
+    // roba               //  |
+                          //  |
+}                         // -+ prima f e poi y escono dall&#39;ambito
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>,
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>5</span>;           <span class='comment'>// -+ y entra nell&#39;ambito</span>
+    <span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>Foo</span> { <span class='ident'>x</span>: <span class='ident'>y</span> }; <span class='comment'>// -+ f entra nell&#39;ambito</span>
+    <span class='comment'>// roba               //  |</span>
+                          <span class='comment'>//  |</span>
+}                         <span class='comment'>// -+ prima f e poi y escono dall&#39;ambito</span></pre>
+
+<p>Il nostro <code>f</code> vive entro l&#39;ambito di <code>y</code>, perciò tutto funziona. E non fosse
+così? Questo codice non funziona:</p>
+
+<span class='rusttest'>struct Foo&lt;&#39;a&gt; {
+    x: &amp;&#39;a i32,
+}
+
+fn main() {
+    let x;                    // -+ x entra nell&#39;ambito
+                              //  |
+    {                         //  |
+        let y = &amp;5;           // ---+ y entra nell&#39;ambito
+        let f = Foo { x: y }; // ---+ f entra nell&#39;ambito
+        x = &amp;f.x;             //  | | errore qui
+    }                         // ---+ prima f e poi y escono dall&#39;ambito
+                              //  |
+    println!(&quot;{}&quot;, x);        //  |
+}                             // -+ x esce dall&#39;ambito
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>i32</span>,
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span>;                    <span class='comment'>// -+ x entra nell&#39;ambito</span>
+                              <span class='comment'>//  |</span>
+    {                         <span class='comment'>//  |</span>
+        <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='number'>5</span>;           <span class='comment'>// ---+ y entra nell&#39;ambito</span>
+        <span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>Foo</span> { <span class='ident'>x</span>: <span class='ident'>y</span> }; <span class='comment'>// ---+ f entra nell&#39;ambito</span>
+        <span class='ident'>x</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>f</span>.<span class='ident'>x</span>;             <span class='comment'>//  | | errore qui</span>
+    }                         <span class='comment'>// ---+ prima f e poi y escono dall&#39;ambito</span>
+                              <span class='comment'>//  |</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);        <span class='comment'>//  |</span>
+}                             <span class='comment'>// -+ x esce dall&#39;ambito</span></pre>
+
+<p>Whew! Come si vede, gli ambiti di <code>f</code> e <code>y</code> sono più piccoli dell&#39;ambito
+di <code>x</code>. Ma quando facciamo <code>x = &amp;f.x</code>, rendiamo <code>x</code> un riferimento a qualcosa
+che sta per uscire dal suo ambito.</p>
+
+<p>I tempi di vita con nome sono un modo di dare un nome a questi ambiti.
+Dare un nome a qualcosa è il primo passo verso l&#39;essere capaci di parlarne.</p>
+
+<h2 id='static' class='section-header'><a href='#static'>&#39;static</a></h2>
+<p>Il tempo di vita chiamato ‘static’ è un tempo di vita speciale. Segnala che
+qualcosa ha il tempo di vita dell&#39;intero programma. La maggior parte
+dei programmatori Rust si imbatto per la prima volta in <code>&#39;static</code>
+quando trattano le stringhe:</p>
+
+<span class='rusttest'>fn main() {
+    let x: &amp;&#39;static str = &quot;Ciao, mondo.&quot;;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;Ciao, mondo.&quot;</span>;</pre>
+
+<p>I letterali di stringa sono di tipo <code>&amp;&#39;static str</code> perché il riferimento è
+sempre vivo: vengono depositati nel segmento dati del file binario finale.
+Un altro esempio sono i globali:</p>
+
+<span class='rusttest'>fn main() {
+    static FOO: i32 = 5;
+let x: &amp;&#39;static i32 = &amp;FOO;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>static</span> <span class='ident'>FOO</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>i32</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>FOO</span>;</pre>
+
+<p>Questo aggiunge un <code>i32</code> al segmento dati del file binario, e <code>x</code> è
+un riferimento a esso.</p>
+
+<h2 id='elisione-del-tempo-di-vita' class='section-header'><a href='#elisione-del-tempo-di-vita'>Elisione del tempo di vita</a></h2>
+<p>Rust supporta una potente inferenza di tipo locale nei corpi delle funzioni
+ma non nelle firme dei loro elementi. È vietato consentire di ragionare
+sui tipi a seconda della sola firma degli elementi.  Però, per ragioni
+di comodità, un algoritmo di inferenza secondaria molto ristretto chiamato
+“elisione del tempo di vita” si applica quando si giudicano i tempi di vita.
+L&#39;elisione dei tempi di vita viene considerata solamente per inferire
+i parametri del tempo di vita usando tre regole facilmente memorizzabili e
+non ambigue. Ciò significa che l&#39;elisione del tempo di vita agisce
+da abbreviazione per scrivere una firma di un elemento, mentre non nasconde
+i tipi effettivamente coinvolti, come avverrebbe se fosse applicata una
+una completa inferenza locale.</p>
+
+<p>Quando si parla dell&#39;elisione del tempo di vita, usiamo i termini
+<em>tempo di vita di input</em> e <em>tempo di vita di output</em>. Un <em>tempo di vita
+di input</em> è un tempo di vita associato a un argomento di una funzione, mentre
+un <em>tempo di vita di output</em> è un tempo di vita associato a un valore
+reso da una funzione. Per esempio, questa funzione ha un tempo di vita
+di input:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo&lt;&#39;a&gt;(bar: &amp;&#39;a str)
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>bar</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>)</pre>
+
+<p>Quest&#39;altra ha un tempo di vita di output:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo&lt;&#39;a&gt;() -&gt; &amp;&#39;a str
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span></pre>
+
+<p>E questa ha un tempo di vita in entrambe le posizioni:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo&lt;&#39;a&gt;(bar: &amp;&#39;a str) -&gt; &amp;&#39;a str
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>bar</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span></pre>
+
+<p>Ecco le tre regole:</p>
+
+<ul>
+<li><p>Ogni tempo di vita eliso tra gli argomenti di una funzione diventa un
+un distinto parametro tempo di vita.</p></li>
+<li><p>Se c&#39;è esattamente un tempo di vita di input, eliso o no, quel tempo di vita
+è assegnato a tutti i tempi di vita elisi nei valori resi di quella funzione.</p></li>
+<li><p>Se ci sono più tempo di vita di input, ma uno di essi è <code>&amp;self</code> o
+<code>&amp;mut self</code>, il tempo di vita di <code>self</code> viene assegnato a tutti i tempi
+di vita di output elisi.</p></li>
+</ul>
+
+<p>Altrimenti, è un errore elidere un tempo di vita di output.</p>
+
+<h3 id='esempi' class='section-header'><a href='#esempi'>Esempi</a></h3>
+<p>Ecco alcuni esempi di funzioni con tempi di vita elisi. Abbiamo accoppiato
+ogni esempio di un tempo di vita eliso con la sua forma espansa.</p>
+
+<span class='rusttest'>fn main() {
+    fn stampa(s: &amp;str); // eliso
+fn stampa&lt;&#39;a&gt;(s: &amp;&#39;a str); // espanso
+
+fn debug(lvl: u32, s: &amp;str); // eliso
+fn debug&lt;&#39;a&gt;(lvl: u32, s: &amp;&#39;a str); // espanso
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>stampa</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>); <span class='comment'>// eliso</span>
+<span class='kw'>fn</span> <span class='ident'>stampa</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>); <span class='comment'>// espanso</span>
+
+<span class='kw'>fn</span> <span class='ident'>debug</span>(<span class='ident'>lvl</span>: <span class='ident'>u32</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>); <span class='comment'>// eliso</span>
+<span class='kw'>fn</span> <span class='ident'>debug</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>lvl</span>: <span class='ident'>u32</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>); <span class='comment'>// espanso</span></pre>
+
+<p>Nell&#39;esempio precedente, <code>lvl</code> non ha bisogno di un tempo di vita, perché non è
+un riferimento (<code>&amp;</code>). Solamente oggetti riferiti a riferimenti (come
+uno <code>struct</code> che contiene un riferimento) hanno bisogno di tempi di vita.</p>
+
+<span class='rusttest'>fn main() {
+    fn substr(s: &amp;str, until: u32) -&gt; &amp;str; // eliso
+fn substr&lt;&#39;a&gt;(s: &amp;&#39;a str, until: u32) -&gt; &amp;&#39;a str; // espanso
+
+fn get_str() -&gt; &amp;str; // ILLEGALE, nessun input
+
+fn frob(s: &amp;str, t: &amp;str) -&gt; &amp;str; // ILLEGALE, due input
+// espanso: il tempo di vita di output è ambiguo
+fn frob&lt;&#39;a, &#39;b&gt;(s: &amp;&#39;a str, t: &amp;&#39;b str) -&gt; &amp;str;
+
+fn get_mut(&amp;mut self) -&gt; &amp;mut T; // eliso
+fn get_mut&lt;&#39;a&gt;(&amp;&#39;a mut self) -&gt; &amp;&#39;a mut T; // espanso
+
+fn argomenti&lt;T: ToCStr&gt;(&amp;mut self, args: &amp;[T]) -&gt; &amp;mut Command; // eliso
+fn argomenti&lt;&#39;a, &#39;b, T: ToCStr&gt;(&amp;&#39;a mut self, args: &amp;&#39;b [T])
+-&gt; &amp;&#39;a mut Command; // espanso
+
+fn new(buf: &amp;mut [u8]) -&gt; BufWriter; // eliso
+fn new&lt;&#39;a&gt;(buf: &amp;&#39;a mut [u8]) -&gt; BufWriter&lt;&#39;a&gt;; // espanso
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>substr</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>until</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span>; <span class='comment'>// eliso</span>
+<span class='kw'>fn</span> <span class='ident'>substr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>until</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>; <span class='comment'>// espanso</span>
+
+<span class='kw'>fn</span> <span class='ident'>get_str</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span>; <span class='comment'>// ILLEGALE, nessun input</span>
+
+<span class='kw'>fn</span> <span class='ident'>frob</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>t</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span>; <span class='comment'>// ILLEGALE, due input</span>
+<span class='comment'>// espanso: il tempo di vita di output è ambiguo</span>
+<span class='kw'>fn</span> <span class='ident'>frob</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>t</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span>;
+
+<span class='kw'>fn</span> <span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>T</span>; <span class='comment'>// eliso</span>
+<span class='kw'>fn</span> <span class='ident'>get_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span>; <span class='comment'>// espanso</span>
+
+<span class='kw'>fn</span> <span class='ident'>argomenti</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToCStr</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>args</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Command</span>; <span class='comment'>// eliso</span>
+<span class='kw'>fn</span> <span class='ident'>argomenti</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span>, <span class='ident'>T</span>: <span class='ident'>ToCStr</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>args</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> [<span class='ident'>T</span>])
+<span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Command</span>; <span class='comment'>// espanso</span>
+
+<span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>BufWriter</span>; <span class='comment'>// eliso</span>
+<span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>BufWriter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>; <span class='comment'>// espanso</span></pre>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

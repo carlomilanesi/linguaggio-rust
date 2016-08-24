@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Scegliere le proprie garanzie</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a class='active' href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Scegliere le proprie garanzie</h1>
+    <p>Una caratteristica importante di Rust è che permette di controllare i costi
+e le garanzie del proprio programma.</p>
+
+<p>Ci sono varie astrazioni &quot;di tipo wrapper&quot; nella libreria standard di Rust
+che impersonano una moltitudine di pro e contro riguardo il costo, l&#39;ergonomia,
+e le garanzie. Molte permettono di scegliere se applicare le garanzie in fase
+di compilazione o in fase di esecuzione. Questa sezione spiega in dettaglio
+alcune astrazioni selezionate.</p>
+
+<p>Prima di procedere, è fortemente consigliato aver letto le sezioni
+sul <a href="ownership.html">possesso</a> e sui <a href="references-and-borrowing.html">prestiti</a> in Rust.</p>
+
+<h1 id='i-tipi-puntatori-di-base' class='section-header'><a href='#i-tipi-puntatori-di-base'>I tipi puntatori di base</a></h1>
+<h2 id='boxt' class='section-header'><a href='#boxt'><code>Box&lt;T&gt;</code></a></h2>
+<p><a href="../std/boxed/struct.Box.html"><code>Box&lt;T&gt;</code></a> è un puntatore &quot;posseduto&quot;, ossia un &quot;box&quot;. Mentre può fornire
+riferimenti ai dati contenuti, è l&#39;unico possessore dei dati. In particolare,
+di consideri questo:</p>
+
+<span class='rusttest'>fn main() {
+    let x = Box::new(1);
+let y = x;
+// qui x non è più accessibile
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>1</span>);
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span>;
+<span class='comment'>// qui x non è più accessibile</span></pre>
+
+<p>Qui, il box è stato <em>spostato</em> in <code>y</code>. Siccome <code>x</code> non lo possiede più,
+dopo di ciò il compilatore non consentirà più al programmatore di usare <code>x</code>.
+Analogamente, un box può essere spostato <em>fuori</em> da una funzione
+restituendolo.</p>
+
+<p>Quando un box (che non è stato spostato) esce di ambito, vengono eseguiti
+i distruttori. Questi distruttori hanno cura di deallocare i dati interni.</p>
+
+<p>Questa è un&#39;astrazione a costo zero per l&#39;allocazione dinamica.
+se si vuole allocare della memoria dallo heap e mandare in giro in sicurezza
+un puntatore a tale memoria, &quot;box&quot; è l&#39;ideale. Si noti che verrà consentito
+condividere riferimenti a questo oggetto solamente tramite le normali
+regole di prestito, verificate in fase di compilazione.</p>
+
+<h2 id='t-e-mut-t' class='section-header'><a href='#t-e-mut-t'><code>&amp;T</code> e <code>&amp;mut T</code></a></h2>
+<p>Questi sono, rispettivamente, un riferimento immutabile e
+un riferimento mutabile. Seguono il pattern &quot;lock di lettura-scrittura&quot;,
+tale che si può o avere un solo riferimento mutabile ad alcuni dati,
+o qualunque numero di riferimenti immutabile, ma non entrambi. Questa garanzia
+è applicata in fase di compilazione, e non ha costi visibili
+in fase di esecuzione. Nella maggior parte dei casi, questi due tipi
+di puntatori bastando per condividere riferimenti poco costosi fra sezioni
+di codice.</p>
+
+<p>Questi puntatori non possono essere copiati in modo tale da sopravvivere
+il tempo di vita associato ad essi.</p>
+
+<h2 id='const-t-e-mut-t' class='section-header'><a href='#const-t-e-mut-t'><code>*const T</code> e <code>*mut T</code></a></h2>
+<p>Questi sono puntatori grezzi tipo-C, senza tempo di vita né possesso allegati.
+Puntano ad alcune posizioni in memoria senza altre restrizioni. L&#39;unica
+garanzia che forniscono è che non possono essere dereferenziati eccetto
+nel codice marcato <code>unsafe</code>.</p>
+
+<p>Servono per costruire astrazioni sicure e a basso costo, come <code>Vec&lt;T&gt;</code>,
+ma dovrebbero essere evitati nel codice sicuro.</p>
+
+<h2 id='rct' class='section-header'><a href='#rct'><code>Rc&lt;T&gt;</code></a></h2>
+<p>Questo è il primo wrapper che tratteremo che ha un costo in fase di esecuzione.</p>
+
+<p><a href="../std/rc/struct.Rc.html"><code>Rc&lt;T&gt;</code></a> è un puntatore a conteggio di riferimenti. In altri termini,
+consente di avere più puntatori &quot;possessori&quot; allo stesso dato, e il dato
+verrà rilasciato (con l&#39;esecuzione dei distruttori) quando tutti i puntatori
+usciranno di ambito.</p>
+
+<p>Internamente, contiene una &quot;conteggio di riferimenti&quot; condiviso (chiamato
+anche &quot;refcount&quot;), che viene incrementato ogni volta che l&#39;<code>Rc</code> viene clonato,
+e decrementato ogni volta che uno degli <code>Rc</code> esce di ambito. La responsabilità
+principale di <code>Rc&lt;T&gt;</code> è assicurarsi che siano chiamati i distruttori per
+il dato condiviso.</p>
+
+<p>Qui i dati interni sono immutabili, e se viene creato un ciclo
+di riferimenti, i dati rimarranno sempre allocati (&quot;leak&quot;).
+Se vogliamo dei dati che potranno essere deallocati anche in presenza
+di strutture cicliche, ci serve un garbage collector.</p>
+
+<h3 id='garanzie' class='section-header'><a href='#garanzie'>Garanzie</a></h3>
+<p>La garanzia principale fornita qui è che i dati non saranno distrutti
+finché tutti i riferimenti ad essi escano di ambito.</p>
+
+<p>Questo si dovrebbe essere usato quando desideriamo allocare dinamicamente
+e condividere dei dati (a sola lettura) fra varie porzioni del programma,
+nel quale non è certo quale porzione finirà per ultima di usare tali dati.
+È un&#39;alternativa praticable a <code>&amp;T</code>, quando o è impossibile verificare
+staticamente la correttezza di <code>&amp;T</code>, o usando <code>&amp;T</code> si crea del codice
+estremamente non ergonomico, per il quale non vale la pena investire
+il tempo del programmatore.</p>
+
+<p>Questo puntatore <em>non</em> è sicuro per l&#39;uso coi thread, e Rust non lo lascerà
+inviare o condividere con altri thread. Ciò consente di evitare il costo
+delle operazioni atomiche dove non sono necessarie.</p>
+
+<p>C&#39;è uno smart pointer fratello di questo, <code>Weak&lt;T&gt;</code>. Questo è
+uno smart pointer che non possiede, ma non è neanche preso in prestito.
+Anch&#39;esso è simile a <code>&amp;T</code>, ma non ha un tempo di vita limitato: un <code>Weak&lt;T&gt;</code>
+può essere tenuto per sempre. Però, è possibile che un tentativo di accedere
+al dato interno fallisca e restituisca <code>None</code>, dato che può sopravvivere
+gli <code>Rc</code> che possiedono il dato. Ciò è utile, tra l&#39;altro, per creare
+strutture dati cicliche.</p>
+
+<h3 id='costo' class='section-header'><a href='#costo'>Costo</a></h3>
+<p>Per quanto riguarda la memoria, <code>Rc&lt;T&gt;</code> è un&#39;allocazione singola,
+però allocherà due word in più (cioè due valori <code>usize</code>) rispetto
+a un normale <code>Box&lt;T&gt;</code> (questo vale anche per i <code>Weak</code>).</p>
+
+<p><code>Rc&lt;T&gt;</code> ha il costo computazionale di incrementare/decrementare il conteggio,
+rispettivamente ogni volta che viene clonato o che esce di ambito. Si noti
+che un <code>clone</code> non farà una copia profonda, ma incrementerà semplicemente
+il conteggio interno di riferimenti e restituirà una copia del <code>Rc&lt;T&gt;</code>.</p>
+
+<h1 id='i-tipi-cell' class='section-header'><a href='#i-tipi-cell'>I tipi Cell</a></h1>
+<p>I <code>Cell</code> forniscono la mutabilità interna. In altri termini, contengono
+dei dati che possono essere manipolati anche se il tipo non può
+essere ottenuto in una forma mutabile (per esempio, quando è dietro
+un puntatore <code>&amp;</code>, oppure un <code>Rc&lt;T&gt;</code>).</p>
+
+<p><a href="../std/cell/index.html">La documentazione del modulo <code>cell</code> li spiega molto bene</a>.</p>
+
+<p>Questi tipo <em>solitamente</em> si trovano nei campi di struct, ma si possono
+trovare anche altrove.</p>
+
+<h2 id='cellt' class='section-header'><a href='#cellt'><code>Cell&lt;T&gt;</code></a></h2>
+<p><a href="../std/cell/struct.Cell.html"><code>Cell&lt;T&gt;</code></a> è un tipo che fornisce mutabilità interna a costo zero,
+ma solamente per tipi <code>Copy</code>. Dato che il compilatore sa che tutti i dati
+posseduto dal valore contenuto stanno sono sullo stack, non c&#39;è il rischio
+che la semplice sovrascrittura dei dati comporti mancate disallocazioni
+di riferimenti (o peggio!).</p>
+
+<p>Usando questo wrapper, è ancora possibile violare le proprie invarianti,
+e quindi bisogna essere cauti nell&#39;usarlo. Se un campo è contenuto
+in un <code>Cell</code>, è una chiara indicazione che quel dato è mutabile e potrebbe
+non rimanere invariato tra quando lo si legge e quando lo si vuole usare.</p>
+
+<span class='rusttest'>fn main() {
+    use std::cell::Cell;
+
+let x = Cell::new(1);
+let y = &amp;x;
+let z = &amp;x;
+x.set(2);
+y.set(3);
+z.set(4);
+println!(&quot;{}&quot;, x.get());
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>Cell</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Cell</span>::<span class='ident'>new</span>(<span class='number'>1</span>);
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>x</span>;
+<span class='kw'>let</span> <span class='ident'>z</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>x</span>;
+<span class='ident'>x</span>.<span class='ident'>set</span>(<span class='number'>2</span>);
+<span class='ident'>y</span>.<span class='ident'>set</span>(<span class='number'>3</span>);
+<span class='ident'>z</span>.<span class='ident'>set</span>(<span class='number'>4</span>);
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>.<span class='ident'>get</span>());</pre>
+
+<p>Si noti che qui abbiamo potuto mutare il medesimo oggetto da vari
+riferimenti immutabili.</p>
+
+<p>Questo ha lo stesso costo in fase di esecuzione del seguente:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 1;
+let y = &amp;mut x;
+let z = &amp;mut x;
+x = 2;
+*y = 3;
+*z = 4;
+println!(&quot;{}&quot;, x);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>x</span>;
+<span class='kw'>let</span> <span class='ident'>z</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>x</span>;
+<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>2</span>;
+<span class='op'>*</span><span class='ident'>y</span> <span class='op'>=</span> <span class='number'>3</span>;
+<span class='op'>*</span><span class='ident'>z</span> <span class='op'>=</span> <span class='number'>4</span>;
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);</pre>
+
+<p>ma ha il beneficio non trascurabile di poter essere compilato.</p>
+
+<h3 id='garanzie-1' class='section-header'><a href='#garanzie-1'>Garanzie</a></h3>
+<p>Questo allenta la restrizione del &quot;nessun alias con la mutabilità&quot; dove
+non è necessaria. Però, questo allenta che le garanzie fornite
+da tale restrizione; quindi se i propri invarianti dipendono da dati
+memorizzati in un <code>Cell</code>, si dovrebbe essere cauti.</p>
+
+<p>Ciò è utile per tipi primitivi mutabili e altri tipi <code>Copy</code>, quando
+non ci sono modi facili di farlo conformemente alle regole statiche
+di <code>&amp;</code> e di <code>&amp;mut</code>.</p>
+
+<p><code>Cell</code> non consente di ottenere riferimenti al dato interno, il che rende
+sicuro mutarlo liberamente.</p>
+
+<h4 id='costo-1' class='section-header'><a href='#costo-1'>Costo</a></h4>
+<p>Non ci sono costi in fase di esecuzione a usare <code>Cell&lt;T&gt;</code>, però se lo
+si sta usando per avvolgere struct (<code>Copy</code>) più grandi, potrebbe invece
+essere opportuno avvolgere i singoli campi in <code>Cell&lt;T&gt;</code> dato che altrimenti
+ogni scrittura copia l&#39;intera struct.</p>
+
+<h2 id='refcellt' class='section-header'><a href='#refcellt'><code>RefCell&lt;T&gt;</code></a></h2>
+<p>Anche <a href="../std/cell/struct.RefCell.html"><code>RefCell&lt;T&gt;</code></a> fornisce mutabilità interna, ma non è limitata
+ai tipi <code>Copy</code>.</p>
+
+<p>In compenso, ha un costo in fase di esecuzione. <code>RefCell&lt;T&gt;</code> impone in fase
+di esecuzione il pattern del lock di lettura-scrittura (è come un mutex
+a sngolo thread), diversamente da <code>&amp;T</code>/<code>&amp;mut T</code> che lo fanno in fase
+di compilazione. Ciò viene fatto dalle funzioni <code>borrow()</code> e <code>borrow_mut()</code>,
+che modificano un conteggio di riferimenti interno e restituiscono degli
+smart pointers che possono essere dereferenziati, rispettivamente in modo
+immutabile e mutabile. Il refcount viene ripristinato quando
+gli smart pointer escono di ambito. Con questo sistema, possiamo assicurare
+dinamicamente che non ci sono mai altri prestiti attivi quando un prestito
+mutabile è attivo. Se il programmatore tenta di eseguire un tale prestito,
+il thread andrà in panico.</p>
+
+<span class='rusttest'>fn main() {
+    use std::cell::RefCell;
+
+let x = RefCell::new(vec![1,2,3,4]);
+{
+    println!(&quot;{:?}&quot;, *x.borrow())
+}
+
+{
+    let mut mio_riferimento = x.borrow_mut();
+    mio_riferimento.push(1);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>,<span class='number'>2</span>,<span class='number'>3</span>,<span class='number'>4</span>]);
+{
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='op'>*</span><span class='ident'>x</span>.<span class='ident'>borrow</span>())
+}
+
+{
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>mio_riferimento</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>borrow_mut</span>();
+    <span class='ident'>mio_riferimento</span>.<span class='ident'>push</span>(<span class='number'>1</span>);
+}</pre>
+
+<p>Simile a <code>Cell</code>, serve principalmente in situazioni in cui è difficile
+o impossibile soddisfare il verificatore dei prestiti. In generale sappiamo
+che tali mutazioni non avverranno in una forma annidata, ma è bene verificare.</p>
+
+<p>Per programmi grandi e complicati, diventa utile mettere alcuni oggetti
+in <code>RefCell</code> per semplificare le cose. Per esempio, molte delle mappe
+nella struct <code>ctxt</code> interna al compilatore Rust sono poste dentro
+questo wrapper. Esse vengono modificate o una sola volta (durante
+la creazione, che non è subito dopo l&#39;inizializzazione) o un paio di volte
+in luoghi bene separati. Però, siccome questa struct è usata dappertutto,
+sarebbe difficile (e forse impossibile) destreggiarsi con puntatori mutabili
+o immutabili, e probabilmente formare una zuppa di puntatori <code>&amp;</code> che
+poi sarebbe difficile estendere. D&#39;altra parte, <code>RefCell</code> fornisce un modo
+a basso costo di accedere con sicurezza a queste strutture. In futuro, se
+qualcuno aggiungesse del codice che tenta di modificare la cella quando è
+già stata prestata, questo provocherà un panico (solitamente deterministico)
+che può esser fatto risalire al prestito erroneo.</p>
+
+<p>Similmente, nel DOM di Servo ci sono molte mutazioni, per lo più locali
+a un tipo DOM, ma alcune delle quali incrociano il DOM e modificano
+varie cose. Usare <code>RefCell</code> e <code>Cell</code> per proteggere tutte le mutazioni
+consente di evitare di preoccuparsi ovunque della mutabilità,
+e simultaneamente evidenzia i posti dove la mutazione
+sta <em>effettivamente</em> avvenendo.</p>
+
+<p>Si noti che <code>RefCell</code> dovrebbe essere evitato se è possibile
+una soluzione più semplice utilizzando i puntatori <code>&amp;</code>.</p>
+
+<h3 id='garanzie-2' class='section-header'><a href='#garanzie-2'>Garanzie</a></h3>
+<p><code>RefCell</code> allenta le restrizioni <em>statiche</em> che impediscono le mutazioni
+tramite alias, e le sostituisce con restrizioni <em>dinamiche</em>.
+Però tali garanzie non sono cambiate.</p>
+
+<h4 id='costo-2' class='section-header'><a href='#costo-2'>Costo</a></h4>
+<p><code>RefCell</code> non alloca, ma contiene, a fianco del dato, un indicatore
+aggiuntivo di &quot;stato di prestito&quot; (grande una word).</p>
+
+<p>In fase di esecuzione, ogni prestito provoca una modifica/verifica
+di tale indicatore.</p>
+
+<h1 id='tipi-sincroni' class='section-header'><a href='#tipi-sincroni'>Tipi sincroni</a></h1>
+<p>Molti dei tipi di cui si è parlato non possono essere usati in modo sicuro
+per l&#39;uso coi thread. In particolare, <code>Rc&lt;T&gt;</code> e <code>RefCell&lt;T&gt;</code>, entrambi
+i quali usano conteggi di riferimenti non atomici (i conteggi
+di riferimenti <em>atomici</em> sono quelli che possono essere incrementati da più
+thread senza provocare una corsa ai dati), non si possono usare
+in questo modo. Ciò li rende più efficienti da usare, ma ci servono anche
+delle versioni sicure per l&#39;uso coi thread. Esistono, sotto forma di <code>Arc&lt;T&gt;</code>
+e di <code>Mutex&lt;T&gt;</code>/<code>RwLock&lt;T&gt;</code></p>
+
+<p>Si noti che i tipi non sicuri per l&#39;uso coi thread <em>non possono</em> essere
+scambiati tra thread, e ciò viene verificato in fase di compilazione.</p>
+
+<p>Nel modulo <a href="../std/sync/index.html">sync</a> ci sono molti utili wrapper per la programmazione
+concorrente, ma qui sotto verranno trattati solo i principali.</p>
+
+<h2 id='arct' class='section-header'><a href='#arct'><code>Arc&lt;T&gt;</code></a></h2>
+<p><a href="../std/sync/struct.Arc.html"><code>Arc&lt;T&gt;</code></a> è una versione di <code>Rc&lt;T&gt;</code> che usa un conteggio di riferimenti
+atomico (da cui il nome, &quot;Arc&quot; = &quot;Atomic Reference Count&quot;).
+Può essere scambiato liberamente fra thread.</p>
+
+<p>Il tipo <code>shared_ptr</code> del linguaggio C++ è simile ad <code>Arc</code>, però nel caso
+di C++ il dato interno è sempre mutabile. Per avere una semantica simile
+a quella di <code>shared_ptr</code>, si dovrebbero usare <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>,
+<code>Arc&lt;RwLock&lt;T&gt;&gt;</code>, o <code>Arc&lt;UnsafeCell&lt;T&gt;&gt;</code><sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup> (<code>UnsafeCell&lt;T&gt;</code> è un tipo
+di cella che può essere usato per tenere qualunque dato e non ha costi
+in fase di esecuzione, ma è accessibile solamente da blocchi <code>unsafe</code>).
+L&#39;ultimo dovrebbe essere usato solamente se si è certi che l&#39;utilizzo non
+provocherà insicurezza nella gestione della memoria. Ricordiamo che
+scrivere una struttura non è un&#39;operazione atomica, e moste funzioni
+come <code>vec.push()</code> possono riallocare internamente, e provocare
+un comportamento insicuro, quindi perfino la monotonicità potrebbe
+non bastare per giustificare <code>UnsafeCell</code>.</p>
+
+<p><code>UnsafeCell&lt;T&gt;</code> non è <code>Send</code> né <code>Sync</code>, ma possiamo avvolgerlo in un tipo
+e implementare manualmente <code>Send</code>/<code>Sync</code> per esso, così da ottenere
+<code>Arc&lt;Wrapper&lt;T&gt;&gt;</code>, dove <code>Wrapper</code> è <code>struct Wrapper&lt;T&gt;(UnsafeCell&lt;T&gt;)</code>.</p>
+
+<h3 id='garanzie-3' class='section-header'><a href='#garanzie-3'>Garanzie</a></h3>
+<p>Come <code>Rc</code>, anche questo tipo fornisce la garanzia (sicura per l&#39;uso
+coi thread) che il distruttore per i dati interni verrà eseguito quando
+l&#39;ultimo <code>Arc</code> esce di ambito (eccetto in presenza di strutture cicliche).</p>
+
+<h3 id='costo-3' class='section-header'><a href='#costo-3'>Costo</a></h3>
+<p>Questo tipo ha il costo aggiuntivo di usare operazioni atomiche per modificare
+il refcount (che accadrà ogni volta che è clonato o esce di ambito). Quando
+si condividono dati da un <code>Arc</code> in un solo thread, è preferibile condividere
+puntatori <code>&amp;</code>, quando è possibile.</p>
+
+<h2 id='mutext-e-rwlockt' class='section-header'><a href='#mutext-e-rwlockt'><code>Mutex&lt;T&gt;</code> e <code>RwLock&lt;T&gt;</code></a></h2>
+<p><a href="../std/sync/struct.Mutex.html"><code>Mutex&lt;T&gt;</code></a> e <a href="../std/sync/struct.RwLock.html"><code>RwLock&lt;T&gt;</code></a> forniscono la mutua-esclusione
+tramite guardie RAII (le guardie sono oggetti che mantengono un certo stato,
+come un lock, fino a quando è chiamato il loro distruttore). Per entrambe,
+il mutex è opaco finché chiamiamo <code>lock()</code> su di esso. A quel punto il thread
+si bloccherà fino a quando si potrà acquisire un lock, e poi verrà
+restituita un guardia. Questa guardia può essere usata per accedere
+(mutabilmente) al dato interno, e il lock verrà rilasciato quando la guardia
+esce di ambito.</p>
+
+<span class='rusttest'>fn main() {
+    {
+    let guardia = mutex.lock();
+    // guardia dereferenzia mutabilmente dando il tipo interno
+    *guardia += 1;
+} // lock rilasciato quando si esegue il distruttore
+}</span><pre class='rust rust-example-rendered'>
+{
+    <span class='kw'>let</span> <span class='ident'>guardia</span> <span class='op'>=</span> <span class='ident'>mutex</span>.<span class='ident'>lock</span>();
+    <span class='comment'>// guardia dereferenzia mutabilmente dando il tipo interno</span>
+    <span class='op'>*</span><span class='ident'>guardia</span> <span class='op'>+=</span> <span class='number'>1</span>;
+} <span class='comment'>// lock rilasciato quando si esegue il distruttore</span></pre>
+
+<p><code>RwLock</code> ha il beneficio aggiuntivo di essere efficiente per più letture.
+È sempre sicuro avere più lettori a dati condivisi purché non ci
+siano scrittori; e <code>RwLock</code> consente ai lettori di acquisire
+un &quot;lock di lettura&quot;. Tali lock possono essere acquisiti concorrentemente e
+se ne tiene traccia tramite un conteggio di riferimenti.
+Gli scrittori devono ottenere un &quot;lock di scrittura&quot; che può essere ottenuto
+solamente quando tutti i lettori sono usciti di scope.</p>
+
+<h3 id='garanzie-4' class='section-header'><a href='#garanzie-4'>Garanzie</a></h3>
+<p>Entrambi questi tipi forniscono mutabilità sicura condivisa fra thread,
+però sono soggetti a deadlock. Qualche livello aggiuntivo di sicurezza
+del protocollo può essere ottenuto tramite il sistema dei tipi.</p>
+
+<h3 id='costi' class='section-header'><a href='#costi'>Costi</a></h3>
+<p>Questi tipi usano tipi interni di tipo atomico per mantenere i lock,
+i quali sono parecchio costosi (possono bloccare tutte le letture in memoria
+per tutti i processori fino a quando hanno finito). Anche attendere
+questi lock può essere lento quando avvengono molti accessi concorrenti.</p>
+
+<h1 id='composizione' class='section-header'><a href='#composizione'>Composizione</a></h1>
+<p>Una tipica lamentela quando si legge del codice Rust è per i tipi come
+<code>Rc&lt;RefCell&lt;Vec&lt;T&gt;&gt;&gt;</code> (o composizioni ancora più complicate di tali tipi).
+Non è sempre chiaro che cosa faccia la composizione, o perché l&#39;autore ne
+ha scelta una così (e quando si dovrebbe usare tale composizione
+nel proprio codice).</p>
+
+<p>Solitamente, si tratta comporre insieme le garanzie che servono,
+senza pagare per quello che non serve.</p>
+
+<p>Per esempio, <code>Rc&lt;RefCell&lt;T&gt;&gt;</code> è una tale composizione. <code>Rc&lt;T&gt;</code> stesso
+non può essere dereferenziato mutabilmente; siccome <code>Rc&lt;T&gt;</code> fornisce
+la condivisione, e la mutabilità condivisa può condurre a comportamento
+insicuro, mettiamo dentro <code>RefCell&lt;T&gt;</code> per ottenere mutabilità condivisa
+verificata dinamicamente. Adesso abbiamo un dato mutable condiviso,
+ma è condiviso in un modo che ci può essere un solo scrittore
+(e nessun lettore), oppure più lettori.</p>
+
+<p>Adesso, possiamo fare un passo avanti, e abbiamo <code>Rc&lt;RefCell&lt;Vec&lt;T&gt;&gt;&gt;</code> oppure
+<code>Rc&lt;Vec&lt;RefCell&lt;T&gt;&gt;&gt;</code>. Questi sono entrambi vettori condivisibili e mtabili,
+ma non sono la medesima cosa.</p>
+
+<p>Con il primo, il <code>RefCell&lt;T&gt;</code> avvolge il <code>Vec&lt;T&gt;</code>, e così <code>Vec&lt;T&gt;</code>
+nella sua interezza è mutabile. Al medesimo tempo, ci può essere
+un solo prestito mutabile per volta dell&#39;intero <code>Vec</code>.
+Ciò comporta che il nostro codice nn può funzionare simultaneamente
+su elementi distinti del vettore da diversi handle <code>Rc</code>. Però, possiamo
+eseguire <code>push</code> e <code>pop</code> a volontà con il <code>Vec&lt;T&gt;</code>. Ciò è simile
+a un <code>&amp;mut Vec&lt;T&gt;</code> con i prestiti verificati in fase di esecuzione.</p>
+
+<p>Con l&#39;ultimo, il prestito è di elementi individuali, ma il vettore
+complessivo è immutabile. Così, possiamo prendere in prestito
+indipendentemente elementi distinti, ma non possiamo eseguire <code>push</code> né <code>pop</code>
+con il vettore. Ciò  è simile a un <code>&amp;mut [T]</code><sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>, ma, anche qui,
+i prestiti sono verificati in fase di esecuzione.</p>
+
+<p>Nei programmi concorrenti, abbiamo una situazione simile con <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>,
+che fornisce mutabilità e possesso condivisi.</p>
+
+<p>Quando si legge del codice che li usa, si proceda passo per passo,
+e si guardi alle garanzie e ai costi forniti.</p>
+
+<p>Quando si sceglie un tipo composito, dobbiamo fare il contrario; decidere
+quali garanzie vogliamo, e a quale punto della composizione ci servono.
+Per esempio, se c&#39;è una scelta fra <code>Vec&lt;RefCell&lt;T&gt;&gt;</code> e <code>RefCell&lt;Vec&lt;T&gt;&gt;</code>,
+dovremmo decidere i pro e i contro come fatto prima, e sceglierne uno.</p>
+
+<p>e una lunghezza, e possono far riferimento a una porzione di un vettore
+o di un array. <code>&amp;mut [T]</code> può avere i suoi elementi mutati, però
+la sua lunghezza con può essere toccata.</p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p><code>Arc&lt;UnsafeCell&lt;T&gt;&gt;</code> effettivamente non compilerà, siccome&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p><code>&amp;[T]</code> e <code>&amp;mut [T]</code> sono delle <em>slice</em>; consistono di un puntatore&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

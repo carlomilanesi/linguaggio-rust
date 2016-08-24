@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Gioco-indovina</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a class='active' href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Gioco-indovina</h1>
+    <p>Impariamo un po&#39; di Rust! Come nostro primo progetto, implementeremo
+un classico problema di programmazione per principianti: il gioco-indovina.
+Ecco come funziona: Il nostro programma genererà un intero casuale compreso
+fra uno e cento. Poi ci chiederà di indovinarlo. Quando avremo inserito
+un tentativo, ci dirà se siamo stati troppo bassi o troppo alti.
+Quando indoviniamo, si congratulerà con noi. Mica male, no?</p>
+
+<p>Lungo la strada, impareremo un pochino di Rust. Nel capitolo successivo,
+‘Sintassi e semantica’, ci immergeremo in profondità in ogni parte.</p>
+
+<h1 id='impostazione' class='section-header'><a href='#impostazione'>Impostazione</a></h1>
+<p>Impostiamo un nuovo progetto. Andiamo nella directory dei progetti.
+Per il progetto <code>hello_world</code> abbiamo creato manualmente una struttura
+di directory e il file <code>Cargo.toml</code>. Ma Cargo ha un comando che fa tutto
+da solo. Proviamolo:</p>
+
+<pre><code class="language-bash">$ cd ~/projects
+$ cargo new gioco_indovina --bin
+$ cd gioco_indovina
+</code></pre>
+
+<p>Abbiamo passato il nome del nostro progetto al comando <code>cargo new</code>, e poi
+il flag <code>--bin</code>, dato che stiamo creando un programma eseguibile,
+invece di una libreria.</p>
+
+<p>Verifichiamo il file <code>Cargo.toml</code> generato:</p>
+
+<pre><code class="language-toml">[package]
+
+name = &quot;gioco_indovina&quot;
+version = &quot;0.1.0&quot;
+authors = [&quot;Your Name &lt;you@example.com&gt;&quot;]
+</code></pre>
+
+<p>Cargo ricava queste informazioni dall&#39;ambiente. Se non vanno bene, possono
+sempre essere corrette.</p>
+
+<p>Infine, Cargo ha generato un file ‘Hello, world!’. Verifichiamo <code>src/main.rs</code>:</p>
+
+<span class='rusttest'>fn main() {
+    println!(&quot;Hello, world!&quot;);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello, world!&quot;</span>);
+}</pre>
+
+<p>Proviamo a compilare quello che Cargo ci ha fornito:</p>
+
+<pre><code class="language-{bash}">$ cargo build
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+</code></pre>
+
+<p>Ottimo! Riapriamo il file <code>src/main.rs</code>. Scriveremo tutto il nostro codice
+in questo file.</p>
+
+<p>Prima di procedere, vediamo un altro comando di Cargo: <code>run</code>. <code>cargo run</code>
+è un po&#39; come <code>cargo build</code>, ma inoltre lancia l&#39;eseguibile prodotto.
+Proviamolo:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/debug/gioco_indovina`
+Hello, world!
+</code></pre>
+
+<p>Benone! Il comando <code>run</code> torna comodo quando si deve iterare rapidamente
+su un progetto. Il nostro gioco è un tale progetto, e ci serve testare
+rapidamente ogni iterazione prima di passare alla successiva.</p>
+
+<h1 id='elaborare-un-tentativo' class='section-header'><a href='#elaborare-un-tentativo'>Elaborare un tentativo</a></h1>
+<p>Riprendiamo! La prima cosa che dobbiamo fare per il nostro gioco è
+consentire al giocatore di inserire un tentativo. Scriviamo questo nel file
+<code>src/main.rs</code>:</p>
+
+<span class='rusttest'>use std::io;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    println!(&quot;Prego, digita un tentativo.&quot;);
+
+    let mut tentativo = String::new();
+
+    io::stdin().read_line(&amp;mut tentativo)
+        .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+    println!(&quot;Hai digitato: {}&quot;, tentativo);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+    <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+}</pre>
+
+<p>C&#39;è parecchio qui! Esaminiamolo un pezzo alla volta.</p>
+
+<span class='rusttest'>fn main() {
+    use std::io;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;</pre>
+
+<p>Ci servirà prendere l&#39;input dell&#39;utente, e poi stampare il risultato in output.
+Pertanto, abbiamo bisogno della libreria <code>io</code> presa dalla libreria standard.
+Di default, Rust importa solamente un po&#39; di cose in ogni programma,
+<a href="../std/prelude/index.html">il ‘preludio’</a>. Se non è nel preludio, dovremo importarlo
+direttamente, tramite <code>use</code>. C&#39;è anche un secondo ‘preludio’, il
+<a href="../std/io/prelude/index.html">preludio <code>io</code></a>, che serve per uno scopo simile: lo importi, ed
+esso importa varie cose utili relative all&#39;<code>io</code> (operazioni di input-output).</p>
+
+<span class='rusttest'>fn main() {
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {</pre>
+
+<p>Come abbiamo visto prima, la funzione <code>main()</code> è il punto di ingresso
+del programma. La sintassi <code>fn</code> dichiara una nuova funzione, le <code>()</code> indicano
+che non ci sono argomenti, e <code>{</code> inizia il corpo della funzione. Siccome non
+abbiamo specificato un tipo reso, questo si assume essere <code>()</code>,
+cioè un&#39;<a href="primitive-types.html#tuples">ennupla</a> vuota.</p>
+
+<span class='rusttest'>fn main() {
+        println!(&quot;Indovina il numero!&quot;);
+
+    println!(&quot;Prego, digita un tentativo.&quot;);
+}</span><pre class='rust rust-example-rendered'>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);</pre>
+
+<p>Prima abbiamo imparato che <code>println!()</code> è una <a href="macros.html">macro</a> che stampa
+una <a href="strings.html">stringa</a> sullo schermo.</p>
+
+<span class='rusttest'>fn main() {
+        let mut tentativo = String::new();
+}</span><pre class='rust rust-example-rendered'>
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();</pre>
+
+<p>Adesso si fa interessante! Succedono molte cose in questa breve riga.
+La prima cosa da notare è che questa è un&#39;istruzione <a href="variable-bindings.html">istruzione let</a>,
+che viene usata per creare ‘legami a variabili’ [variable bindings].
+Questi ultimi assumono la forma:</p>
+
+<span class='rusttest'>fn main() {
+    let foo = bar;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>foo</span> <span class='op'>=</span> <span class='ident'>bar</span>;</pre>
+
+<p>Questa istruzione crea un nuovo legame chiamato <code>foo</code>, e lo lega al valore
+<code>bar</code>. In molti linguaggi, questo si chiama ‘variabile’, ma i legami
+di variabile di Rust hanno alcuni assi nella manica.</p>
+
+<p>Per esempio, di default sono immutabili <a href="mutability.html">immutabile</a>. Ecco perché
+il nostro esempio usa <code>mut</code>: rende mutabile il legame, invece che immutabile.
+<code>let</code> non prende un nome sul lato sinistro dell&#39;assegnamento, in realtà
+accetta un ‘<a href="patterns.html">pattern</a>’. Useremo i pattern più avanti. Per adesso è
+abbastanza facile da usare:</p>
+
+<span class='rusttest'>fn main() {
+    let foo = 5; // immutabile.
+let mut bar = 5; // mutabile
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>foo</span> <span class='op'>=</span> <span class='number'>5</span>; <span class='comment'>// immutabile.</span>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bar</span> <span class='op'>=</span> <span class='number'>5</span>; <span class='comment'>// mutabile</span></pre>
+
+<p>Oh, e <code>//</code> inizia un commento, che finisce col finire della riga. Rust ignora
+tutto il contenuto dei [commenti][commenti].</p>
+
+<p>Perciò adesso sappiamo che <code>let mut tentativo</code> introduce un legame mutabile
+di nome <code>tentativo</code>, ma dobbiamo guardare dall&#39;altra parte dell&#39;<code>=</code> per sapere
+a che cosa è legato: <code>String::new()</code>.</p>
+
+<p><code>String</code> è un tipo stringa, fornito dalla libreria standard. Una
+<a href="../std/string/struct.String.html"><code>String</code></a> è un pezzo di testo estendibile, codificato in UTF-8.</p>
+
+<p>La sintassi <code>::new()</code> usa i <code>::</code> perché questa è una ‘funzione associata’
+di un particolare tipo. Il che significa che è associata allo stesso tipo
+<code>String</code>, invece che ad una particolare istanza di <code>String</code>. Altri linguaggi
+lo chiamerebbero ‘metodo statico’ o ‘metodo di classe’.</p>
+
+<p>Questa funzione si chiama <code>new()</code>, perché crea un a nuova <code>String</code>, vuota.
+Molti tipi hanno una funzione <code>new()</code>, dato che è un nome naturale
+per creare un nuovo valore ti qualche tipo.</p>
+
+<p>Andiamo avanti:</p>
+
+<span class='rusttest'>fn main() {
+        io::stdin().read_line(&amp;mut tentativo)
+        .expect(&quot;Non si riesce a leggere la riga&quot;);
+}</span><pre class='rust rust-example-rendered'>
+    <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);</pre>
+
+<p>C&#39;è molto di più! Prendiamo un pezzetto alla volta. La prima riga ha due parti.
+Ecco la prima:</p>
+
+<span class='rusttest'>fn main() {
+    io::stdin()
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>io</span>::<span class='ident'>stdin</span>()</pre>
+
+<p>Alla prima riga del programma avevamo scritto <code>use std::io</code>. Adesso stiamo
+chiamando una funzione associata a tale tipo. Comunque, se non avessimo scritto
+<code>use std::io</code>, ce la saremmo cavata scrivendo in questa riga
+<code>std::io::stdin()</code>.</p>
+
+<p>Questa funzione particolare restituisce un handle al flusso standard di input
+per la console. Più specificamente, a <a href="../std/io/struct.Stdin.html">std::io::Stdin</a>.</p>
+
+<p>La prossima parte userà questo handle per ottenere l&#39;input dall&#39;utente:</p>
+
+<span class='rusttest'>fn main() {
+    .read_line(&amp;mut tentativo)
+}</span><pre class='rust rust-example-rendered'>
+.<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)</pre>
+
+<p>Qui, chiamiamo il metodo <a href="../std/io/struct.Stdin.html#method.read_line"><code>read_line()</code></a> sul nostro handle.
+I <a href="method-syntax.html">metodi</a> sono come funzioni associate, ma sono disponibili solamente
+per un&#39;istanza particolare di un tipo, invece che sul tipo stesso. Stiamo anche
+passando un argomento a <code>read_line()</code>: <code>&amp;mut tentativo</code>.</p>
+
+<p>Come abbiamo legato il nome <code>tentativo</code> prima? Abbiamo detto che era mutabile.
+Però, <code>read_line</code> non prende una <code>String</code> come argomento: prende
+una <code>&amp;mut String</code>. Rust ha una caratteristica chiamata ‘<a href="references-and-borrowing.html">riferimenti</a>’, che consente di avere più riferimenti ad un singolo dato,
+la quale riduce la necessità di copiare. I riferimenti sono
+una caratteristica complessa, dato che uno dei principali vantaggi di Rust
+è quanto sia sicuro e facile usare i riferimenti. Però, per adesso, non
+ci serve sapere molti dettagli per finire il nostro programma. Per adesso,
+l&#39;unica cosa che dobbiamo sapere è che anche i riferimenti, come i legami
+<code>let</code>, sono immutabili di default. Pertanto, dobbiamo scrivere
+<code>&amp;mut tentativo</code>, invece che semplicemente <code>&amp;tentativo</code>.</p>
+
+<p>Perché <code>read_line()</code> prende un riferimento mutabile a una stringa? Il suo
+compito è prendere i caratteri digitati dall&#39;utente tramite lo standard input,
+e collocarli in una stringa. Quindi prende quella come argomento, e per poterci
+aggiungere l&#39;input, ha bisogno che sia mutabile.</p>
+
+<p>Ma non abbiamo proprio finito con questa riga di codice. Anche se è una singola
+riga di testo, è solamente la prima parte della singola riga logica di codice:</p>
+
+<span class='rusttest'>fn main() {
+            .expect(&quot;Non si riesce a leggere la riga&quot;);
+}</span><pre class='rust rust-example-rendered'>
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);</pre>
+
+<p>Quando si chiama un metodo con la sintassi <code>.foo()</code>, si può andare a capo
+o si possono inserire spazi. Ciò aiuta a spezzare righe lunghe. <em>Avremmo anche
+potuto</em> scrivere:</p>
+
+<span class='rusttest'>fn main() {
+        io::stdin().read_line(&amp;mut tentativo).expect(&quot;non si riesce a leggere la riga&quot;);
+}</span><pre class='rust rust-example-rendered'>
+    <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>).<span class='ident'>expect</span>(<span class='string'>&quot;non si riesce a leggere la riga&quot;</span>);</pre>
+
+<p>Ma sarebbe diventato più difficile da leggere. E allora l&#39;abbiamo spezzato;
+due righe per due chiamate di metodo. Abbiamo già parlato di <code>read_line()</code>,
+ma che dire di <code>expect()</code>? Beh, abbiamo già accennato che <code>read_line()</code> mette
+ciò che viene digitato dall&#39;utente nella <code>&amp;mut String</code> che le passiamo.
+Ma restituisce anche un valore: in questo caso, un <a href="../std/io/type.Result.html"><code>io::Result</code></a>.
+Rust ha vari tipi chiamati <code>Result</code> nella sua libreria standard: un <a href="../std/result/enum.Result.html"><code>Result</code></a> generico, e poi delle versioni specifiche per delle sotto-librerie,
+come <code>io::Result</code>.</p>
+
+<p>Lo scopo di questi tipi <code>Result</code> è codificare le informazioni di gestione
+degli errori. Per i valori del tipo <code>Result</code>, come per quelli di ogni altro
+tipo, sono definiti dei metodi. In questo caso, <code>io::Result</code> ha un <a href="../std/result/enum.Result.html#method.expect">metodo
+<code>expect()</code></a> che prende un valore su cui è chiamato, e se tale valore
+non rappresenta un successo, va in <a href="error-handling.html"><code>panic!</code></a> emettendo il messaggio
+che gli è stato passato. Un <code>panic!</code> come questo manderà in crash il programma,
+mostrando il messaggio.</p>
+
+<p>Se omettiamo la chiamata a questo metodo, il nostro programma compilerà,
+ma otterremo un avvertimento:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+src/main.rs:10:5: 10:43 warning: unused result which must be used,
+#[warn(unused_must_use)] on by default
+src/main.rs:10     io::stdin().read_line(&amp;mut tentativo);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</code></pre>
+
+<p>Rust ci avvisa che non abbiamo utilizzato il valore <code>Result</code>. Questo
+avvertimento viene generato da una speciale annotazione utilizzata da <code>io::Result</code>.
+Rust sta cercando di dirci che non abbiamo gestito un possibile errore. Il
+modo giusto per sopprimere l&#39;errore è scrivere il codice per la gestione
+dell&#39;errore stesso. Fortunatamente, se vogliamo abortire il programma in caso
+ci sia un problema, possiamo usare <code>expect()</code>. Se possiamo recuperare
+dall&#39;errore in qualche modo, faremo qualcosa di diverso, ma riserviamo
+l&#39;argomento per un progetto futuro.</p>
+
+<p>C&#39;è solo una riga di codice rimasta per questo primo esempio:</p>
+
+<span class='rusttest'>fn main() {
+        println!(&quot;Hai digitato: {}&quot;, tentativo);
+}
+}</span><pre class='rust rust-example-rendered'>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+}</pre>
+
+<p>Questa riga stampa la stringa dove abbiamo salvato il nostro input. Le
+parentesi graffe <code>{}</code> sono dei segna-posto per passare <code>tentativo</code> come
+argomento. Se avessimo scritto diversi <code>{}</code>, avremmo passato diversi
+argomenti:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5;
+let y = 10;
+
+println!(&quot;x e y: {} e {}&quot;, x, y);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>10</span>;
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x e y: {} e {}&quot;</span>, <span class='ident'>x</span>, <span class='ident'>y</span>);</pre>
+
+<p>Facile.</p>
+
+<p>Possiamo lanciare quello che abbiamo con <code>cargo run</code>:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/debug/gioco_indovina`
+Indovina il numero!
+Prego, digita un tentativo.
+6
+Hai digitato: 6
+</code></pre>
+
+<p>Tutto bene! La prima parte del progetto è fatta: possiamo prendere input da
+tastiera, e stamparli a schermo.</p>
+
+<h1 id='generare-un-numero-segreto' class='section-header'><a href='#generare-un-numero-segreto'>Generare un numero segreto</a></h1>
+<p>Poi, dobbiamo generare un numero segreto. La libreria standard di Rust
+non comprende ancora un generatore di numeri casuali. Però, la squadra
+di Rust fornisce un <a href="https://crates.io/crates/rand">crate <code>rand</code></a>. Un ‘crate’ (&#39;cassone&#39;) è
+un pacchetto di codice Rust. Stiamo costruendo un ‘crate binario’, mentre
+<code>rand</code> è un ‘crate libreria’, cioè contiene del codice pronto per essere
+usato da altri programmi.</p>
+
+<p>Usare crate esterni è la cosa per cui Cargo fa faville. Prima di poter scrivere
+del codice che usa <code>rand</code>, dobbiamo modificare il nostro <code>Cargo.toml</code>.
+Apriamolo, e aggiungiamo in fondo queste due righe:</p>
+
+<pre><code class="language-toml">[dependencies]
+
+rand=&quot;0.3.0&quot;
+</code></pre>
+
+<p>La sezione <code>[dependencies]</code> di <code>Cargo.toml</code> è simile alla sezione <code>[package]</code>:
+ogni cosa che la segue ne fa parte, fino all&#39;inizio della sezione successiva.
+Cargo usa la sezione dependencies per sapere quali dipendenze ci sono da crate
+esterni, e quali versioni di essi sono richieste. In questo caso, abbiamo
+specificato la versione <code>0.3.0</code>, che Cargo capisce essere qualunque rilascio
+che è compatibile con questa specifica versione. Cargo capisce
+il <a href="http://semver.org">Versionamento semantico</a>, che è uno standard per scrivere
+numeri di versione. Un semplice numero come quello sopra è in realtà
+un&#39;abbreviazione di <code>^0.3.0</code>, che significa &quot;tutte le versioni compatibili
+con la versione 0.3.0&quot;.
+Se avessimo voluto usare solamente proprio la versione <code>0.3.0</code>, avremmo potuto
+dire <code>rand=&quot;=0.3.0&quot;</code> (si notino i due segni di uguaglianza).
+E se volessimo usare sempre la versione più recente, potremmo usare <code>*</code>.
+Potremmo usare anche una gamma di versioni.
+La <a href="http://doc.crates.io/specifying-dependencies.html">documentazione di Cargo</a> contiene ulteriori dettagli.</p>
+
+<p>Adesso, senza cambiare nient&#39;altro del codice, costruiamo il nostro progetto:</p>
+
+<pre><code class="language-bash">$ cargo build
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+ Downloading rand v0.3.8
+ Downloading libc v0.1.6
+   Compiling libc v0.1.6
+   Compiling rand v0.3.8
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+</code></pre>
+
+<p>(Naturalmente, si potranno vedere diversi numeri di versione.)</p>
+
+<p>Un sacco di nuovo output! Adesso che abbiamo una dipendenza esterna, Cargo
+va a prendere le versioni più recenti di ogni cosa dal registry, che è
+una copia di dati presi da <a href="https://crates.io">Crates.io</a>. Crates.io è il posto dove
+la gente nell&#39;ecosistema di Rust invia i suoi progetti open source in Rust
+per farli usare ad altri.</p>
+
+<p>Dopo aver aggiornato il registry, Cargo verifica la nostra sezione
+<code>[dependencies]</code> e scarica tutti i pacchetti che non abbiamo ancora. In questo
+caso, mentre abbiamo detto soltanto che volevamo dipendere da <code>rand</code>, ci siamo
+presi anche una copia di <code>libc</code>. Questo perché <code>rand</code> dipende da <code>libc</code>
+per funzionare. Dopo averli scaricati, li compila, e poi compila
+il nostro progetto.</p>
+
+<p>Se eseguiamo ancora <code>cargo build</code>, otteniamo un output diverso:</p>
+
+<pre><code class="language-bash">$ cargo build
+</code></pre>
+
+<p>Va bene, nessun output! Cargo sa che il nostro progetto è stato costruito, e
+che tutte le sue dipendenze sono state scaricate e costruite, e quindi non c&#39;è
+ragione di fare tutta quella roba. Non avendo niente da fare, semplicemente
+termina. Se riapriamo <code>src/main.rs</code>, facciamo una modifica banale, e lo
+salviamo di nuovo, vedremo solamente una riga:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+</code></pre>
+
+<p>Perciò, abbiamo detto a Cargo che volevamo la versione <code>0.3.x</code> di <code>rand</code>, e
+quindi ci ha preso la versione più recente che c&#39;era all&#39;istante in cui questo
+documento è stato scritto, la <code>v0.3.8</code>. Ma cosa accadrà la prossima settimana,
+quando uscirà la versione <code>v0.3.9</code>, contenente una correzione importante?
+Ricevere le correzioni è importante, ma se la versione <code>0.3.9</code> contiene
+una regressione incompatibile con il nostro codice?</p>
+
+<p>La risposta a questo problema è il file <code>Cargo.lock</code> che adesso si troverà
+nella directory del nostro progetto. Quando costruiamo un progetto per
+la prima volta, Cargo calcola tutti i numeri di versione che soddisfano
+i nostri criteri, e poi li scrive nel file <code>Cargo.lock</code>. Quando si costruisce
+nuovamente il progetto, Cargo vedrà che il file <code>Cargo.lock</code> esiste, e quindi
+usa quella specifica versione invece di rifare tutto il lavoro di calcolare
+i numeri di versione. Questo consente di avere un build ripetibile automaticamente.
+In altri termini, rimarremo alla versione <code>0.3.8</code> finché la
+aggiorniamo esplicitamente, e così farà chiunque condivida il nostro codice,
+grazie al file <code>.lock</code>.</p>
+
+<p>E che fare quando <em>vogliamo</em> usare la versione <code>v0.3.9</code>? Cargo ha un altro
+comando, <code>update</code>, che significa ‘ignora il file <code>.lock</code>, calcola tutte
+le versioni più recenti che soddisfano quello che abbiamo specificato.
+Se funziona, scrivi quelle versioni nel file <code>.lock</code>’. Ma, di default, Cargo
+cercherà solamente versioni superiori alla <code>0.3.0</code> e inferiori alla <code>0.4.0</code>. Se volessimo
+aggiornare ad una versione <code>0.4.x</code>, dovremmo aggiornare direttamente il file
+<code>Cargo.toml</code>. Quando lo facciamo, la prossima volta che eseguiamo il comando
+<code>cargo build</code>, Cargo aggiornerà l&#39;indice e rivaluterà i requisiti del nostro
+<code>rand</code>.</p>
+
+<p>C&#39;è molto più da dire su <a href="http://doc.crates.io">Cargo</a> e sul <a href="http://doc.crates.io/crates-io.html">suo ecosistema</a>,
+ma per adesso, è tutto  quello che ci serve. Cargo rende davvero facile il
+riutilizzo delle
+librerie, e quindi i Rustaciani tendono a scrivere progetti piccoli, assemblati
+usando vari sotto-progetti.</p>
+
+<p>Procediamo a <em>usare</em> <code>rand</code>. Ecco il nostro prossimo passo:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+
+    println!(&quot;Prego, digita un tentativo.&quot;);
+
+    let mut tentativo = String::new();
+
+    io::stdin().read_line(&amp;mut tentativo)
+        .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+    println!(&quot;Hai digitato: {}&quot;, tentativo);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+    <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+}</pre>
+
+<p>La prima cosa che abbiamo fatto è cambiare la prima riga. Adesso dice
+<code>extern crate rand</code>. Dato che abbiamo dichiarato <code>rand</code> nelle nostre
+<code>[dependencies]</code>, possiamo usare <code>extern crate</code> per far sapere a Rust che ne
+faremo uso. Questa istruzione fa anche l&#39;equivalente di un <code>use rand;</code>,
+e quindi possiamo fare uso di ogni cosa presente nel crate <code>rand</code> pur di
+qualificarla con il prefisso <code>rand::</code>.</p>
+
+<p>Poi, abbiamo aggiunto un&#39;altra riga <code>use</code>: <code>use rand::Rng</code>. Fra un attimo
+useremo un metodo, e tale metodo richiede che <code>Rng</code> sia nell&#39;ambito del
+programma. L&#39;idea
+di base è questa: i metodi sono definiti su cose chiamate ‘tratti’ (&#39;traits&#39;),
+e affinché
+un metodo funzioni, ha bisogno che il suo tratto sia attivo nell&#39;ambito
+corrente. Per maggiori dettagli, si legga la sezione sui <a href="traits.html">tratti</a>.</p>
+
+<p>Abbiamo aggiunto due altre righe, nel mezzo:</p>
+
+<span class='rusttest'>fn main() {
+        let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+}</span><pre class='rust rust-example-rendered'>
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);</pre>
+
+<p>Usiamo la funzione <code>rand::thread_rng()</code> per ottenere una copia del generatore
+di numeri casuali, che è locale al particolare <a href="concurrency.html">thread</a> di
+esecuzione in cui siamo.
+Siccome sopra abbiamo scritto <code>use rand::Rng</code>, adesso il metodo
+<code>gen_range()</code> è disponibile. Questo metodo prende due argomenti, e genera
+un numero compreso tra di essi. Il limite inferiore è incluso, mentre il limite
+superiore è escluso, e quindi ci servono <code>1</code> e <code>101</code> per ottenere un numero
+che può andare da uno a cento.</p>
+
+<p>La seconda riga stampa il numero segreto. Questa è utile fintanto che stiamo
+sviluppando il nostro programma, così che possiamo collaudarlo facilmente.
+Ma la toglieremo per la versione finale. Non sarebbe un gran gioco se stampasse
+la risposta esatta quando lo si lancia!</p>
+
+<p>Proviamo a eseguire alcune volte il nostro nuovo programma:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/debug/gioco_indovina`
+Indovina il numero!
+Il numero segreto è: 7
+Prego, digita un tentativo.
+4
+Hai digitato: 4
+$ cargo run
+     Running `target/debug/gioco_indovina`
+Indovina il numero!
+Il numero segreto è: 83
+Prego, digita un tentativo.
+5
+Hai digitato: 5
+</code></pre>
+
+<p>Ottimo! Prossimo passo: confrontare il nostro tentativo con il numero segreto.</p>
+
+<h1 id='confrontare-i-tentativi' class='section-header'><a href='#confrontare-i-tentativi'>Confrontare i tentativi</a></h1>
+<p>Adesso che abbiamo l&#39;input dell&#39;utente, confrontiamo il nostro tentativo
+con il numero segreto. Ecco il nostro nuovo passo, anche se non compila ancora:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+
+    println!(&quot;Prego, digita un tentativo.&quot;);
+
+    let mut tentativo = String::new();
+
+    io::stdin().read_line(&amp;mut tentativo)
+        .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+    println!(&quot;Hai digitato: {}&quot;, tentativo);
+
+    match tentativo.cmp(&amp;numero_segreto) {
+        Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+        Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+        Ordering::Equal   =&gt; println!(&quot;Hai vinto!&quot;),
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+    <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+
+    <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+        <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+        <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+        <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>),
+    }
+}</pre>
+
+<p>Ci sono alcune aggiunte. La prima è un altro <code>use</code>. Portiamo nell&#39;ambito
+un tipo chiamato <code>std::cmp::Ordering</code>. Poi, ci sono cinque nuove righe
+in fondo che usano tale tipo:</p>
+
+<span class='rusttest'>fn main() {
+    match tentativo.cmp(&amp;numero_segreto) {
+    Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+    Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+    Ordering::Equal   =&gt; println!(&quot;Hai vinto!&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+    <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+    <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+    <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>),
+}</pre>
+
+<p>Il metodo <code>cmp()</code> può essere chiamato su qualunque oggetto che può essere
+confrontato, e prende un riferimento all&#39;oggetto con cui lo si vuole
+confrontare. Il confronto restituisce il tipo <code>Ordering</code>
+che abbiamo importato prima. Usiamo
+un&#39;istruzione <a href="match.html"><code>match</code></a> per determinare esattamente quale <code>Ordering</code>
+abbiamo ottenuto dal confronto. <code>Ordering</code> è una <a href="enums.html"><code>enum</code></a>, abbreviazione
+di ‘enumerazione’. Le enumerazioni si presentano così:</p>
+
+<span class='rusttest'>fn main() {
+    enum Foo {
+    Bar,
+    Baz,
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='ident'>Foo</span> {
+    <span class='ident'>Bar</span>,
+    <span class='ident'>Baz</span>,
+}</pre>
+
+<p>Con questa definizione, ogni oggetto di tipo <code>Foo</code> può essere o una <code>Foo::Bar</code>
+o un <code>Foo::Baz</code>. Usiamo il <code>::</code> per indicare lo spazio dei nomi
+di una paricolare variante della <code>enum</code>.</p>
+
+<p>L&#39;<code>enum</code> <a href="../std/cmp/enum.Ordering.html"><code>Ordering</code></a> ha tre possibili varianti: <code>Less</code>, <code>Equal</code>,
+e <code>Greater</code>. L&#39;istruzione <code>match</code> prende un valore di un tipo, e permette
+di creare un ‘braccio’ per ogni valore possibile. Dato che abbiamo tre varianti
+di <code>Ordering</code>, dobbiamo avere tre bracci:</p>
+
+<span class='rusttest'>fn main() {
+    match tentativo.cmp(&amp;numero_segreto) {
+    Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+    Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+    Ordering::Equal   =&gt; println!(&quot;Hai vinto!&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+    <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+    <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+    <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>),
+}</pre>
+
+<p>Se vale <code>Less</code>, stampiamo <code>Troppo piccolo!</code>, se vale <code>Greater</code>,
+<code>Troppo grande!</code>, e se vale <code>Equal</code>, <code>Hai vinto!</code>. <code>match</code> è davvero utile,
+ed è usato spesso in Rust.</p>
+
+<p>Ho già detto che questo codice non compilava, però. Proviamolo:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+src/main.rs:28:25: 28:40 error: mismatched types:
+ expected `&amp;collections::string::String`,
+    found `&amp;_`
+(expected struct `collections::string::String`,
+    found integral variable) [E0308]
+src/main.rs:28     match tentativo.cmp(&amp;numero_segreto) {
+                                       ^~~~~~~~~~~~~~~
+error: aborting due to previous error
+Could not compile `gioco_indovina`.
+</code></pre>
+
+<p>Urca! Questo è un grosso errore. Il sua sintesi è che abbiamo dei ‘tipi male
+accoppiati’ [&quot;‘mismatched types’&quot;]. Rust ha un sistema dei tipi forte
+e statico. Però, ha anche l&#39;inferenza dei tipi. Quando abbiamo scritto
+<code>let tentativo = String::new()</code>, Rust è stato capace di inferire che
+<code>tentativo</code> doveva essere una <code>String</code>, e quindi non ci ha costretto
+a scriverne il tipo. E con il nostro <code>numero_secreto</code>, ci sono vari tipi
+che possono avere un valore fra uno e cento: <code>i32</code>, cioè un numero intero
+con segno a trentadue bit, o <code>u32</code>, cioè un numero intero senza segno
+a trentadue bit, o <code>i64</code>, un numero intero con segno a sessantaquattro bit
+oppure altri. Finora questo fatto non ha importato, e quindi Rust ha preso come default
+un <code>i32</code>. Però, qui, Rust non sa come confrontare <code>tentativo</code> con
+<code>secret_number</code>. Devono essere dello stesso tipo. Pertanto, dobbiamo convertire
+la <code>String</code> che abbiamo letto come input in un vero tipo numerico, per poterlo
+confrontare. Lo possiamo fare aggiungendo due righe. Ecco il nostro nuovo
+programma:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+
+    println!(&quot;Prego, digita un tentativo.&quot;);
+
+    let mut tentativo = String::new();
+
+    io::stdin().read_line(&amp;mut tentativo)
+        .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+    let tentativo: u32 = tentativo.trim().parse()
+        .expect(&quot;Prego, digita un numero!&quot;);
+
+    println!(&quot;Hai digitato: {}&quot;, tentativo);
+
+    match tentativo.cmp(&amp;numero_segreto) {
+        Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+        Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+        Ordering::Equal   =&gt; println!(&quot;Hai vinto!&quot;),
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+    <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>()
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Prego, digita un numero!&quot;</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+
+    <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+        <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+        <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+        <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>),
+    }
+}</pre>
+
+<p>Le due nuove righe:</p>
+
+<span class='rusttest'>fn main() {
+        let tentativo: u32 = tentativo.trim().parse()
+        .expect(&quot;Prego, digita un numero!&quot;);
+}</span><pre class='rust rust-example-rendered'>
+    <span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>()
+        .<span class='ident'>expect</span>(<span class='string'>&quot;Prego, digita un numero!&quot;</span>);</pre>
+
+<p>Aspetta un attimo, pensavo che avevamo già un <code>tentativo</code>? Sì, ma Rust ci
+permette di ’oscurare’ [&quot;‘shadow’&quot;] il precedente <code>tentativo</code> con uno nuovo.
+Questo si usa spesso proprio in questa situazione, in cui <code>tentativo</code> inizia
+come <code>String</code>, ma lo vogliamo convertire in un <code>u32</code>. L&#39;oscuramento ci permette
+di riusare il nome <code>tentativo</code>, invece di costringerci a inventare due nomi
+diversi come <code>tentativo_str</code> e <code>tentativo</code>, o qualcos&#39;altro.</p>
+
+<p>Leghiamo <code>tentativo</code> ad una espressione che somiglia a qualcosa che abbiamo
+scritto prima:</p>
+
+<span class='rusttest'>fn main() {
+    tentativo.trim().parse()
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>()</pre>
+
+<p>Qui, <code>tentativo</code> si riferisce al vecchio <code>tentativo</code>, quello che era
+una <code>String</code> contenente il nostro input. Il metodo <code>trim()</code> applicato ad
+una <code>String</code> eliminerà tutti gli spazi all&#39;inizio e alla fine della stringa.
+Questo è importante, dato che abbiamo dovuto premere il tasto ‘Invio’
+per soddisfare la funzione <code>read_line()</code>. Ciò significa che se digitiamo <code>5</code>
+e battiamo Invio, <code>tentativo</code> conterrà <code>5\n</code>. La stringa <code>\n</code> rappresenta un
+carattere ‘a capo’, inserito dal tasto Invio. <code>trim()</code> se ne sbarazza,
+lasciando nella nostra stringa solamente il <code>5</code>. Il <a href="../std/primitive.str.html#method.parse">metodo <code>parse()</code> applicato
+a una stringa</a> analizza la stringa estraendone un numero di qualche
+tipo. Dato che tale metodo può riconoscere vari tipi di numeri, dobbiamo
+suggerire a Rust il tipo esatto del numero che vogliamo. Pertanto, scriviamo
+<code>let tentativo: u32</code>. I due-punti (<code>:</code>) dopo <code>tentativo</code> dicono a Rust
+che stiamo annotando il tipo del legame. <code>u32</code> è il tipo intero senza segno
+a trentadue bit. Rust ha <a href="primitive-types.html#numeric-types">vari tipi numerici predefiniti</a>, ma abbiamo
+scelto <code>u32</code>. È una buona scelta di default per un numero positivo piccolo.</p>
+
+<p>Proprio come <code>read_line()</code>, anche la nostra chiamata a <code>parse()</code> potrebbe
+provocare un errore. Che fare se la nostra stringa contenesse <code>A👍%</code>? Non ci
+sarebbe modo di convertirla in un numero. Pertanto, faremo la stessa cosa che
+abbiamo fatto con <code>read_line()</code>: usiamo il metodo <code>expect()</code> per andare
+in crash se c&#39;è un errore.</p>
+
+<p>Proviamo il nostro programma!</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/gioco_indovina`
+Indovina il numero!
+Il numero segreto è: 58
+Prego, digita un tentativo.
+  76
+Hai digitato: 76
+Troppo grande!
+</code></pre>
+
+<p>Carino! Si può vedere che abbiamo perfino aggiunto degli spazi prima
+di digitare il tentativo, ma il programma è comunque riuscito a valutarlo come 76.
+Eseguiamo il programma alcune volte, e verifichiamo che funzioni quando
+si indovina il numero, e anche quando il tentativo è un numero troppo piccolo.</p>
+
+<p>Adesso la maggior parte del gioco funziona, ma possiamo fare
+un solo tentativo. Modifichiamolo aggiungendo i cicli!</p>
+
+<h1 id='ciclare' class='section-header'><a href='#ciclare'>Ciclare</a></h1>
+<p>La parola-chiave <code>loop</code> ci dà un ciclo infinito. Aggiungiamola:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+
+    loop {
+        println!(&quot;Prego, digita un tentativo.&quot;);
+
+        let mut tentativo = String::new();
+
+        io::stdin().read_line(&amp;mut tentativo)
+            .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+        let tentativo: u32 = tentativo.trim().parse()
+            .expect(&quot;Prego, digita un numero!&quot;);
+
+        println!(&quot;Hai digitato: {}&quot;, tentativo);
+
+        match tentativo.cmp(&amp;numero_segreto) {
+            Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+            Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+            Ordering::Equal   =&gt; println!(&quot;Hai vinto!&quot;),
+        }
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);
+
+    <span class='kw'>loop</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+        <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+        <span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>()
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Prego, digita un numero!&quot;</span>);
+
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+
+        <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+            <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>),
+        }
+    }
+}</pre>
+
+<p>E proviamola. Ma, un momento, non abbiamo appena aggiunto un ciclo infinito?
+Già. Prima, parlando di <code>parse()</code>, abbiamo detto che se gli diamo una risposta
+che non è un numero, andrà in <code>panic!</code> e terminerà. Osserviamo:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/gioco_indovina`
+Indovina il numero!
+Il numero segreto è: 59
+Prego, digita un tentativo.
+45
+Hai digitato: 45
+Troppo piccolo!
+Prego, digita un tentativo.
+60
+Hai digitato: 60
+Troppo grande!
+Prego, digita un tentativo.
+59
+Hai digitato: 59
+Hai vinto!
+Prego, digita un tentativo.
+basta
+thread &#39;main&#39; panicked at &#39;Prego, digita un numero!&#39;
+</code></pre>
+
+<p>Ah! Digitando <code>basta</code> in effetti si termina il programma. Come fa qualunque
+input non numerico. Beh, questo non è il massimo, a dir poco. Come prima cosa,
+terminiamo effettivamente quando si vince il gioco:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+
+    loop {
+        println!(&quot;Prego, digita un tentativo.&quot;);
+
+        let mut tentativo = String::new();
+
+        io::stdin().read_line(&amp;mut tentativo)
+            .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+        let tentativo: u32 = tentativo.trim().parse()
+            .expect(&quot;Prego, digita un numero!&quot;);
+
+        println!(&quot;Hai digitato: {}&quot;, tentativo);
+
+        match tentativo.cmp(&amp;numero_segreto) {
+            Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+            Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+            Ordering::Equal   =&gt; {
+                println!(&quot;Hai vinto!&quot;);
+                break;
+            }
+        }
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);
+
+    <span class='kw'>loop</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+        <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+        <span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>()
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Prego, digita un numero!&quot;</span>);
+
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+
+        <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+            <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> {
+                <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>);
+                <span class='kw'>break</span>;
+            }
+        }
+    }
+}</pre>
+
+<p>Aggiungendo la riga <code>break</code> dopo la stampa di <code>Hai vinto!</code>, usciremo dal ciclo
+quando si vince. Uscire dal ciclo comporta anche uscire dal programma, dato che
+non c&#39;è altro in <code>main()</code>. Abbiamo solamente un altro ritocco da fare: quando
+si digita un input non numerico, non vogliamo terminare, vogliamo ignorarlo.
+Lo possiamo fare così:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    println!(&quot;Il numero segreto è: {}&quot;, numero_segreto);
+
+    loop {
+        println!(&quot;Prego, digita un tentativo.&quot;);
+
+        let mut tentativo = String::new();
+
+        io::stdin().read_line(&amp;mut tentativo)
+            .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+        let tentativo: u32 = match tentativo.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+
+        println!(&quot;Hai digitato: {}&quot;, tentativo);
+
+        match tentativo.cmp(&amp;numero_segreto) {
+            Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+            Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+            Ordering::Equal   =&gt; {
+                println!(&quot;Hai vinto!&quot;);
+                break;
+            }
+        }
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il numero segreto è: {}&quot;</span>, <span class='ident'>numero_segreto</span>);
+
+    <span class='kw'>loop</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+        <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+        <span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>() {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+            <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+        };
+
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+
+        <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+            <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> {
+                <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>);
+                <span class='kw'>break</span>;
+            }
+        }
+    }
+}</pre>
+
+<p>Le righe modificate sono le seguenti:</p>
+
+<span class='rusttest'>fn main() {
+    let tentativo: u32 = match tentativo.trim().parse() {
+    Ok(num) =&gt; num,
+    Err(_) =&gt; continue,
+};
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>() {
+    <span class='prelude-val'>Ok</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+    <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+};</pre>
+
+<p>Il modo tipico per passare da un ‘crash dovuto a errore’ a una ‘gestione
+effettiva dell&#39;errore’, è passare dall&#39;uso del metodo <code>expect()</code> all&#39;uso
+dell&#39;istruzione <code>match</code>. La chiamata a <code>parse()</code> restituisce un <code>Result</code>;
+questo è una <code>enum</code>, come <code>Ordering</code>, ma in questo caso,
+ogni variante ha alcuni dati associati ad essa:
+<code>Ok</code> indica un successo, e <code>Err</code> indica un fallimento, ma
+entrambi contengono ulteriori informazioni: per il primo, l&#39;intero estratto
+con successo, e per l&#39;altro il genere di errore. In questo caso, <code>match</code>
+proverà a far combaciare il suo argomento con <code>Ok(num)</code>, che assegnerà al nome
+il valore contenuto in <code>Ok</code> (cioè l&#39;intero estratto), e restituirà
+quest&#39;ultimo nel lato destro. Nel caso <code>Err</code>, non ci interessa il genere
+di errore, e così usiamo il carattere piglia-tutto <code>_</code>, invece di un nome.
+Questo jolly combacia con qualunque codice d&#39;errore, e poi <code>continue</code> ci
+sposterà alla prossima iterazione del ciclo; in effetti, questo codice
+ci consente di ignorare tutti gli errori e continuare nel programma.</p>
+
+<p>Adesso dovremmo essere a posto! Proviamo:</p>
+
+<pre><code class="language-bash">$ cargo run
+   Compiling gioco_indovina v0.1.0 (file:///home/you/projects/gioco_indovina)
+     Running `target/gioco_indovina`
+Indovina il numero!
+Il numero segreto è: 61
+Prego, digita un tentativo.
+10
+Hai digitato: 10
+Troppo piccolo!
+Prego, digita un tentativo.
+99
+Hai digitato: 99
+Troppo grande!
+Prego, digita un tentativo.
+foo
+Prego, digita un tentativo.
+61
+Hai digitato: 61
+Hai vinto!
+</code></pre>
+
+<p>Magnifico! Con un ultimo ritocchino, finiremo il gioco. Riesci ad indovinare
+quale sarà? Giusto, non vogliamo stampare subito il numero segreto. Andava
+bene per il collaudo, ma rovinava il gioco. Ecco il nostro sorgente finale:</p>
+
+<span class='rusttest'>extern crate rand;
+
+use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+fn main() {
+    println!(&quot;Indovina il numero!&quot;);
+
+    let numero_segreto = rand::thread_rng().gen_range(1, 101);
+
+    loop {
+        println!(&quot;Prego, digita un tentativo.&quot;);
+
+        let mut tentativo = String::new();
+
+        io::stdin().read_line(&amp;mut tentativo)
+            .expect(&quot;Non si riesce a leggere la riga&quot;);
+
+        let tentativo: u32 = match tentativo.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+
+        println!(&quot;Hai digitato: {}&quot;, tentativo);
+
+        match tentativo.cmp(&amp;numero_segreto) {
+            Ordering::Less    =&gt; println!(&quot;Troppo piccolo!&quot;),
+            Ordering::Greater =&gt; println!(&quot;Troppo grande!&quot;),
+            Ordering::Equal   =&gt; {
+                println!(&quot;Hai vinto!&quot;);
+                break;
+            }
+        }
+    }
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Indovina il numero!&quot;</span>);
+
+    <span class='kw'>let</span> <span class='ident'>numero_segreto</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>thread_rng</span>().<span class='ident'>gen_range</span>(<span class='number'>1</span>, <span class='number'>101</span>);
+
+    <span class='kw'>loop</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Prego, digita un tentativo.&quot;</span>);
+
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tentativo</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+
+        <span class='ident'>io</span>::<span class='ident'>stdin</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>tentativo</span>)
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Non si riesce a leggere la riga&quot;</span>);
+
+        <span class='kw'>let</span> <span class='ident'>tentativo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>trim</span>().<span class='ident'>parse</span>() {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+            <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+        };
+
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai digitato: {}&quot;</span>, <span class='ident'>tentativo</span>);
+
+        <span class='kw'>match</span> <span class='ident'>tentativo</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>numero_segreto</span>) {
+            <span class='ident'>Ordering</span>::<span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo piccolo!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Troppo grande!&quot;</span>),
+            <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>   <span class='op'>=&gt;</span> {
+                <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hai vinto!&quot;</span>);
+                <span class='kw'>break</span>;
+            }
+        }
+    }
+}</pre>
+
+<h1 id='finito' class='section-header'><a href='#finito'>Finito!</a></h1>
+<p>Questo progetto ha mostrato parecchie cose: <code>let</code>, <code>match</code>, i metodi,
+le funzioni associate, l&#39;uso di crate esterni, e altro.</p>
+
+<p>A questo punto, abbiamo costruito un gioco-indovina funzionante!
+Congratulazioni!</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

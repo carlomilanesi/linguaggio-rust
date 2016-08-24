@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Allocatori personalizzati</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a class='active' href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Allocatori personalizzati</h1>
+    <p>Allocare memoria non è sempre la cosa più facile da fare, e mentre Rust
+in generale se ne occupa di default, spesso diventa necessario personalizzare
+come avviene l&#39;allocazione. Il compilatore e la libreria standard attualmente
+consentono di escludere l&#39;uso dell&#39;allocatore globale di default in fase
+di compilazione. Il progetto è attualmente descritto nell&#39;<a href="https://github.com/rust-lang/rfcs/blob/master/text/1183-swap-out-jemalloc.md">RFC 1183</a>,
+ma qui vedremo i passi per impostare l&#39;uso del proprio allocatore
+personalizzato.</p>
+
+<h1 id='lallocatore-di-default' class='section-header'><a href='#lallocatore-di-default'>L&#39;allocatore di default</a></h1>
+<p>Il compilatore attualmente fornisce due allocatori di default: <code>alloc_system</code>
+e <code>alloc_jemalloc</code> (però per alcuni target jemalloc non viene fornito). Questi
+allocatori sono dei normali crate Rust e contengono un&#39;implementazione
+delle routine per allocare e deallocare memoria. La libreria standard non
+viene compilata assumendo uno specifico, e il compilatore deciderà quale
+allocatore è in uso in fase di compilazione a seconda del tipo degli artefatti
+di output che vengono prodotti.</p>
+
+<p>I binari generati dal compilatore useranno <code>alloc_jemalloc</code> di default (se
+disponibile). In questa situazione il compilator &quot;controlla il mondo&quot;
+nel senso che ha il potere di influenza il link finale. Primariamente ciò
+significa che la decisione sull&#39;allocatore si può lasciare al compilatore.</p>
+
+<p>Però, le libererie dinamiche e statiche di default usano <code>alloc_system</code>.
+In questo caso Rust è tipicamente un &#39;ospite&#39; in un&#39;altra applicazioneo
+in un&#39;altro mondo dove non può decidere autoritariamente quale allocatore
+usare. Di conseguenza ricorre alle API standard (per esempio <code>malloc</code> e <code>free</code>)
+per acquisire e rilasciare la memoria.</p>
+
+<h1 id='cambiare-allocatori' class='section-header'><a href='#cambiare-allocatori'>Cambiare allocatori</a></h1>
+<p>Sebbene le scelte di default del compilatore possono funzionare la maggior
+parte delle volte, è spesso necessario mettere a punto certi aspetti.
+Scavalcare la decisione del compilatore su quale allocatore usare viene fatto
+semplicemente eseguendo il link con l&#39;allocatore desiderato:</p>
+
+<span class='rusttest'>#![feature(alloc_system)]
+
+extern crate alloc_system;
+
+fn main() {
+    let a = Box::new(4); // alloca dall&#39;allocatore di sistema
+    println!(&quot;{}&quot;, a);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>alloc_system</span>)]</span>
+
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>alloc_system</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>4</span>); <span class='comment'>// alloca dall&#39;allocatore di sistema</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>a</span>);
+}</pre>
+
+<p>In questo esempio il binario generato non linkerà jemalloc di default ma invece
+userà l&#39;allocatore di sistema. Viceversa per generare una liberaria dinamica
+che usa jemalloc di default si scriverebbe:</p>
+
+<span class='rusttest'>#![feature(alloc_jemalloc)]
+#![crate_type = &quot;dylib&quot;]
+
+extern crate alloc_jemalloc;
+
+pub fn foo() {
+    let a = Box::new(4); // alloca da jemalloc
+    println!(&quot;{}&quot;, a);
+}
+fn main() {}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>alloc_jemalloc</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>]</span>
+
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>alloc_jemalloc</span>;
+
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>foo</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>4</span>); <span class='comment'>// alloca da jemalloc</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>a</span>);
+}</pre>
+
+<h1 id='scrivere-un-allocatore-personalizzato' class='section-header'><a href='#scrivere-un-allocatore-personalizzato'>Scrivere un allocatore personalizzato</a></h1>
+<p>Talvolta perfino le scelte tra jemalloc e l&#39;allocatore di sistema non bastano
+e servirebbe un allocatore personalizzato completamente nuovo. In questa
+sezione scriveremo il nostro crate che implementa l&#39;API di allocatore
+(per esempio la stessa di <code>alloc_system</code> e di <code>alloc_jemalloc</code>). Come esempio,
+diamo un&#39;occhiata a una versione semplificata e annotata di <code>alloc_system</code>:</p>
+
+<span class='rusttest'>// necessario solamente per rustdoc --collaudo in seguito
+#![feature(lang_items)]
+// Al compilatore si deve far sapere che questo crate è un allocatore affinché
+// eviti di linkare un altro allocatore, come jemalloc
+#![feature(allocator)]
+#![allocator]
+
+// Agli allocatori non è consentito dipendere dalla libreria standard,
+// perché questa dipende da un allocatore, e quindi ci sarebbero dipendenze
+// circolari. Questo crate, comunque, può usare tutto libcore.
+#![no_std]
+
+// Diamo un nome univoco al nostro allocatore personalizzato
+#![crate_name = &quot;il_mio_allocatore&quot;]
+#![crate_type = &quot;rlib&quot;]
+
+// Il nostro allocatore personalizzato userà il crate libc in-albero per i legami FFI. Si noti
+// che attuallmente il libc esterno (crates.io) non può essere usato perché linka
+// alla libreria standard (per es. `#![no_std]` non è ancora stabile), quindi
+// ecco perché questo richiede specificamente la versione in-albero.
+#![feature(libc)]
+extern crate libc;
+
+// Elencati sotto ci sono cinque funzioni di allocazione attualmente richieste per gli allocatori personalizzati
+// . Attualmente il compilatore non verifica il tipo delle loro firme e dei loro simboli
+// , ma questa è un&#39;estensione futura e devono corrispondere a ciò che si trova sotto.
+//
+// Si noti che le funzioni standard `malloc` e `realloc` non forniscono un modo
+// per comunicare l&#39;allineamento, e così questa implementazione avrebbe bisogno di essere migliorata
+// rispetto all&#39;allineamento.
+
+#[no_mangle]
+pub extern fn __rust_allocate(size: usize, _align: usize) -&gt; *mut u8 {
+    unsafe { libc::malloc(size as libc::size_t) as *mut u8 }
+}
+
+#[no_mangle]
+pub extern fn __rust_deallocate(ptr: *mut u8, _old_size: usize, _align: usize) {
+    unsafe { libc::free(ptr as *mut libc::c_void) }
+}
+
+#[no_mangle]
+pub extern fn __rust_reallocate(ptr: *mut u8, _old_size: usize, size: usize,
+                                _align: usize) -&gt; *mut u8 {
+    unsafe {
+        libc::realloc(ptr as *mut libc::c_void, size as libc::size_t) as *mut u8
+    }
+}
+
+#[no_mangle]
+pub extern fn __rust_reallocate_inplace(_ptr: *mut u8, old_size: usize,
+                                        _size: usize, _align: usize) -&gt; usize {
+    old_size // this api is not supported by libc
+}
+
+#[no_mangle]
+pub extern fn __rust_usable_size(size: usize, _align: usize) -&gt; usize {
+    size
+}
+
+// necessario solamente affinché rustdoc lo collaudi
+fn main() {}
+#[lang = &quot;panic_fmt&quot;] fn panic_fmt() {}
+#[lang = &quot;eh_personality&quot;] fn eh_personality() {}
+#[lang = &quot;eh_unwind_resume&quot;] extern fn eh_unwind_resume() {}
+#[no_mangle] pub extern fn rust_eh_register_frames () {}
+#[no_mangle] pub extern fn rust_eh_unregister_frames () {}
+</span><pre class='rust rust-example-rendered'>
+<span class='comment'>// Al compilatore si deve far sapere che questo crate è un allocatore affinché</span>
+<span class='comment'>// eviti di linkare un altro allocatore, come jemalloc</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>allocator</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allocator</span>]</span>
+
+<span class='comment'>// Agli allocatori non è consentito dipendere dalla libreria standard,</span>
+<span class='comment'>// perché questa dipende da un allocatore, e quindi ci sarebbero dipendenze</span>
+<span class='comment'>// circolari. Questo crate, comunque, può usare tutto libcore.</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>no_std</span>]</span>
+
+<span class='comment'>// Diamo un nome univoco al nostro allocatore personalizzato</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;il_mio_allocatore&quot;</span>]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;rlib&quot;</span>]</span>
+
+<span class='comment'>// Il nostro allocatore personalizzato userà il crate libc in-albero per i legami FFI. Si noti</span>
+<span class='comment'>// che attuallmente il libc esterno (crates.io) non può essere usato perché linka</span>
+<span class='comment'>// alla libreria standard (per es. `#![no_std]` non è ancora stabile), quindi</span>
+<span class='comment'>// ecco perché questo richiede specificamente la versione in-albero.</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>libc</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+
+<span class='comment'>// Elencati sotto ci sono cinque funzioni di allocazione attualmente richieste per gli allocatori personalizzati</span>
+<span class='comment'>// . Attualmente il compilatore non verifica il tipo delle loro firme e dei loro simboli</span>
+<span class='comment'>// , ma questa è un&#39;estensione futura e devono corrispondere a ciò che si trova sotto.</span>
+<span class='comment'>//</span>
+<span class='comment'>// Si noti che le funzioni standard `malloc` e `realloc` non forniscono un modo</span>
+<span class='comment'>// per comunicare l&#39;allineamento, e così questa implementazione avrebbe bisogno di essere migliorata</span>
+<span class='comment'>// rispetto all&#39;allineamento.</span>
+
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>__rust_allocate</span>(<span class='ident'>size</span>: <span class='ident'>usize</span>, <span class='ident'>_align</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> {
+    <span class='kw'>unsafe</span> { <span class='ident'>libc</span>::<span class='ident'>malloc</span>(<span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> }
+}
+
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>__rust_deallocate</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>_old_size</span>: <span class='ident'>usize</span>, <span class='ident'>_align</span>: <span class='ident'>usize</span>) {
+    <span class='kw'>unsafe</span> { <span class='ident'>libc</span>::<span class='ident'>free</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>c_void</span>) }
+}
+
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>__rust_reallocate</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>_old_size</span>: <span class='ident'>usize</span>, <span class='ident'>size</span>: <span class='ident'>usize</span>,
+                                <span class='ident'>_align</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> {
+    <span class='kw'>unsafe</span> {
+        <span class='ident'>libc</span>::<span class='ident'>realloc</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>c_void</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>
+    }
+}
+
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>__rust_reallocate_inplace</span>(<span class='ident'>_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>old_size</span>: <span class='ident'>usize</span>,
+                                        <span class='ident'>_size</span>: <span class='ident'>usize</span>, <span class='ident'>_align</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    <span class='ident'>old_size</span> <span class='comment'>// this api is not supported by libc</span>
+}
+
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>__rust_usable_size</span>(<span class='ident'>size</span>: <span class='ident'>usize</span>, <span class='ident'>_align</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    <span class='ident'>size</span>
+}
+</pre>
+
+<p>Dopo aver compilato questo crate, lo si può usare come segue:</p>
+
+<span class='rusttest'>extern crate il_mio_allocatore;
+
+fn main() {
+    let a = Box::new(8); // alloca la memoria tramite il crate del nostro allocatore personalizzato
+    println!(&quot;{}&quot;, a);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>il_mio_allocatore</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='number'>8</span>); <span class='comment'>// alloca la memoria tramite il crate del nostro allocatore personalizzato</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>a</span>);
+}</pre>
+
+<h1 id='limitazioni-dellallocatore-personalizzato' class='section-header'><a href='#limitazioni-dellallocatore-personalizzato'>Limitazioni dell&#39;allocatore personalizzato</a></h1>
+<p>Ci sono alcune restrizioni quando si lavora con gli allocatori personalizzati
+che possono causare errori di compilazione:</p>
+
+<ul>
+<li><p>Ogni artefatto può essere linkato solamente a un allocatore al massimo. I binari,
+le dylib, e le staticlib devono linkare ad esattamente un allocatore, e se nessuno è
+stato esplicitamente scelto il compilatore ne sceglierà uno. D&#39;altro canto le rlib
+non hanno bisogno di linkare a un allocatore (ma lo possono ancora).</p></li>
+<li><p>Un consumatore di un allocatore è etichettato con <code>#![needs_allocator]</code> (per es. attualmente
+il crate <code>liballoc</code>) e un crate <code>#[allocator]</code> non può transitivamente
+dipendere da un crate che ha bisogno di un allocatore (per es. le dipendenze circolari non sono ammesse).
+Questo sostanzialmente significa che gli allocatori attualmente devono restringersi to
+libcore.</p></li>
+</ul>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

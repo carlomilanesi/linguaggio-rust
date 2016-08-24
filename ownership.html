@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Possesso</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a class='active' href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Possesso</h1>
+    <p>Questa è la prima delle tre sezioni che presentano il sistema di possesso
+di Rust. Questa è una delle caratteristiche più distintive e avvincenti
+di Rust, con la quale gli sviluppatori Rust dovrebbero diventare familiari.
+Il possesso è il modo in cui Rust raggiunge il suo maggior obiettivo, la sicurezza
+di accesso alla memoria. Ci sono alcuni concetti distinti, ognuno descritto
+in una sezione distinta:</p>
+
+<ul>
+<li>il possesso, che è la sezione attuale</li>
+<li>i <a href="references-and-borrowing.html">prestiti</a>, e le caratteristiche a loro associate,
+i ‘riferimenti’</li>
+<li>i <a href="lifetimes.html">tempi di vita</a>, un avanzato concetto di prestito</li>
+</ul>
+
+<p>Queste tre sezioni sono correlate, e seguono un ordine. Bisognerà leggerli
+tutti e tre per capire pienamente il sistema di possesso.</p>
+
+<h1 id='meta' class='section-header'><a href='#meta'>Meta</a></h1>
+<p>Prima di passare ai dettagli, due appunti importanti sul sistema di possesso.</p>
+
+<p>Rust ha un&#39;attenzione particolare sulla sicurezza e sulla velocità.
+Raggiunge questi obiettivi tramite molte ‘astrazioni a costo zero’, il che
+significa che in Rust, le astrazioni costano il meno possibile
+al fine di farle funzionare. Il sistema di possesso è un esempio primario
+di astrazione a costo zero. Tutta l&#39;analisi di cui parleremo in questa guida
+viene <em>fatta in fase di compilazione</em>. Non si paga nessun costo in fase
+di esecuzione per queste funzionalità.</p>
+
+<p>Però, questo sistema ha un certo costo: il tempo di apprendimento. Molti nuovi
+utenti di Rust sperimentano qualcosa che ci piace chiamare ‘combattere
+con il verificatore dei prestiti’, che è la parte del compilatore Rust che
+si rifiuta di compilare un programma che l&#39;autore pensa essere valido. Ciò
+accade spesso perché il modello mentale del programmatore di come il possesso
+dovrebbe funzionare non combacia con le regole effettivamente implementate
+da Rust.
+Dapprima tutti sperimentano cose simili. Però, c&#39;è una buona notizia:
+gli sviluppatori Rust più esperti riferiscono che una volta che lavorano con
+le regole del sistema di possesso per un periodo di tempo, combattono sempre
+meno con il verificatore dei prestiti.</p>
+
+<p>Con questo in mente, vediamo in cosa consiste il possesso.</p>
+
+<h1 id='possesso' class='section-header'><a href='#possesso'>Possesso</a></h1>
+<p>I <a href="variable-bindings.html">legami di variabili</a> hanno una proprietà in Rust: ‘possiedono’
+quello a cui sono legati. Ciò significa che quando un legame esce di ambito,
+Rust libererà le risorse legate. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo() {
+    let v = vec![1, 2, 3];
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>() {
+    <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+}</pre>
+
+<p>Quando <code>v</code> viene nell&#39;ambito, viene creato un nuovo <a href="vectors.html">vettore</a>
+sullo <a href="the-stack-and-the-heap.html#the-stack">stack</a>, e alloca spazio sullo <a href="the-stack-and-the-heap.html#the-heap">heap</a> per i suoi elementi.
+Quando <code>v</code> esce di ambito alla fine di <code>foo()</code>, Rust ripulirà ogni cosa
+correlata al vettore, anche la memoria allocata sullo heap. Questo avviene
+deterministicamente alla fine dell&#39;ambito.</p>
+
+<p>Tratteremo i <a href="vectors.html">vettori</a> in dettaglio più avanti in questo capitolo; li usiamo
+qui solamente come esempio di un tipo che alloca spazio sullo heap in fase
+di esecuzione. Si comportano come <a href="primitive-types.html#arrays">array</a>, eccetto che la loro dimensione
+può cambiare chiamando <code>push()</code> per aggiungere loro altri elementi.</p>
+
+<p>I vettori hanno un <a href="generics.html">tipo generico</a> <code>Vec&lt;T&gt;</code>, perciò in questo esempio
+<code>v</code> sarà di tipo <code>Vec&lt;i32&gt;</code>. Tratteremo i generici in dettaglio più avanti
+in questo capitolo.</p>
+
+<h1 id='semantica-di-spostamento' class='section-header'><a href='#semantica-di-spostamento'>Semantica di spostamento</a></h1>
+<p>Però qui c&#39;è qualche altra sottigliezza: Rust assicura che ci sia <em>esattamente
+un</em> legame a ogni data risorsa. Per esempio, se abbiamo un vettore, possiamo
+assegnarlo a un altro legame:</p>
+
+<span class='rusttest'>fn main() {
+    let v = vec![1, 2, 3];
+let v2 = v;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> <span class='ident'>v2</span> <span class='op'>=</span> <span class='ident'>v</span>;</pre>
+
+<p>Ma, se dopo proviamo a usare <code>v</code>, otteniamo un  errore:</p>
+
+<span class='rusttest'>fn main() {
+    let v = vec![1, 2, 3];
+let v2 = v;
+println!(&quot;v[0] vale: {}&quot;, v[0]);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> <span class='ident'>v2</span> <span class='op'>=</span> <span class='ident'>v</span>;
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;v[0] vale: {}&quot;</span>, <span class='ident'>v</span>[<span class='number'>0</span>]);</pre>
+
+<p>L&#39;errore si presenta così:</p>
+
+<pre><code class="language-text">error: use of moved value: `v`
+println!(&quot;v[0] vale: {}&quot;, v[0]);
+                          ^
+</code></pre>
+
+<p>Una cosa simile accade se definiamo una funzione che prende possesso
+dell&#39;argomento, e proviamo a usare qualcosa dopo che l&#39;abbiamo passato
+come argomento:</p>
+
+<span class='rusttest'>fn main() {
+    fn prendi(v: Vec&lt;i32&gt;) {
+    // ciò che accade qui dentro non è importante.
+}
+
+let v = vec![1, 2, 3];
+prendi(v);
+println!(&quot;v[0] vale: {}&quot;, v[0]);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>prendi</span>(<span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) {
+    <span class='comment'>// ciò che accade qui dentro non è importante.</span>
+}
+
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='ident'>prendi</span>(<span class='ident'>v</span>);
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;v[0] vale: {}&quot;</span>, <span class='ident'>v</span>[<span class='number'>0</span>]);</pre>
+
+<p>Stesso errore: ‘use of moved value’. Quando si trasferisce il possesso
+di un oggetto da un legame a un altro, si dice che l&#39;oggetto a cui si fa
+riferimento è stato ‘spostato’. Qui non ci vuole qualche sorta di annotazione
+speciale, è il normale comportamento di Rust.</p>
+
+<h2 id='i-dettagli' class='section-header'><a href='#i-dettagli'>I dettagli</a></h2>
+<p>La ragione per cui non si può più usare un legame dopo che l&#39;oggetto è stato
+spostato è sottile, ma importante.</p>
+
+<p>Quando scriviamo del codice come questo:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 10;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>10</span>;</pre>
+
+<p>Rust alloca sullo <a href="the-stack-and-the-heap.html">stack</a> della memoria per un intero <a href="primitive-types.html#numeric-types">i32</a>, copia i bit
+che rappresentano il valore 10 alla memoria allocata, e lega il nome
+della variabile x a questa regione di memoria per poterna riferire in seguito.</p>
+
+<p>Adesso consideriamo il seguente frammento di codice:</p>
+
+<span class='rusttest'>fn main() {
+    let v = vec![1, 2, 3];
+let mut v2 = v;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v2</span> <span class='op'>=</span> <span class='ident'>v</span>;</pre>
+
+<p>La prima riga alloca sullo stack della memoria per l&#39;oggetto vettore <code>v</code>, come
+ha fatto per <code>x</code> precedentemente. Ma in aggiunta a ciò, alloca anche
+della memoria sullo <a href="the-stack-and-the-heap.html">heap</a> per i dati effettivi (<code>[1, 2, 3]</code>). Rust copia
+l&#39;indirizzo di questa allocazione sullo heap al puntatore interno, che fa parte
+dell&#39;oggetto vettore posto sullo stack (chiamiamolo &quot;puntatore ai dati&quot;).</p>
+
+<p>Vale la pena evidenziare (anche al rischio di affermare l&#39;ovvio) che l&#39;oggetto
+vettore e i suoi dati vivono in regioni di memoria separate, invece di essere
+un&#39;unica allocazione di memoria contigua (a causa di ragioni che non
+approfondiremo in questo momento). Queste due parti del vettore (quella sullo
+stack e quella sullo heap) devono accordarsi l&#39;un l&#39;altra in ogni momento
+riguardo a cose come la lunghezza, la capacità, ecc.</p>
+
+<p>Quando si sposta <code>v</code> in <code>v2</code>, Rust effettivamente fa una copia bit-a-bit
+dell&#39;oggetto vettore <code>v</code> nell&#39;allocazione sullo stack rappresentata da <code>v2</code>.
+Questa copia superficiale non crea una copia dell&#39;allocazione sullo heap
+contenente i dati effettivi.
+Il che significa che ci sarebbero due puntatori al contenuto del vettore
+entrambi che puntano alla stessa allocazione di memoria sullo heap.
+Se si potesse accedere sia a <code>v</code> che a <code>v2</code> nello stesso tempo, si violerebbe
+la garanzia di sicurezza di Rust, introducendo un&#39;accesso concorrente ai dati.</p>
+
+<p>Per esempio, se troncassimo il vettore ad appena due elementi tramite <code>v2</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let v = vec![1, 2, 3];
+let mut v2 = v;
+v2.truncate(2);
+}</span><pre class='rust rust-example-rendered'>
+<span class='ident'>v2</span>.<span class='ident'>truncate</span>(<span class='number'>2</span>);</pre>
+
+<p>e <code>v</code> fosse ancora accessibile, finiremmo con un vettore non valido, dato che
+<code>v</code> non saprebbe che i dati sullo heap sono stati troncati. Adesso, la parte
+del vettore <code>v</code> sullo stack non concorda con la parte corrispondente sullo
+heap. <code>v</code> pensa ancora che ci siano tre elementi nel vettore e permetterebbe
+di accedere all&#39;elemento non esistente <code>v[2]</code>, ma, come potremmo già sapere,
+questa è una ricetta per il disastro. Specialmente perché potrebbe condurre
+a un segmentation fault o peggio consentire a un utente non autorizzato
+di leggere da un&#39;area di memoria a cui non dovrebbe aver accesso.</p>
+
+<p>Questa è la ragione per cui Rust proibisce di usare <code>v</code> dopo che l&#39;abbiamo
+spostato.</p>
+
+<p>È anche importante notare che le ottimizzazioni possono rimuovere la copia
+effettiva dei byte sullo stack, a seconda delle circostanza. Perciò potrebbe
+non essere così inefficiente come come sembra inizialmente.</p>
+
+<h2 id='i-tipi-copy' class='section-header'><a href='#i-tipi-copy'>I tipi <code>Copy</code></a></h2>
+<p>Abbiamo stabilito che quando il possesso viene trasferito a un altro legame,
+non si può più usare il legame originale. Però, c&#39;è un [tratto][tratto] che
+cambia questo comportamento, e si chiama <code>Copy</code>. Non abbiamo ancora parlato
+dei tratti, ma per ora, si può pensare ad essi come annotazioni a tipi
+particolari che aggiungono ulteriori comportamenti. Per esempio:</p>
+
+<span class='rusttest'>fn main() {
+    let v = 1;
+let v2 = v;
+println!(&quot;v vale: {}&quot;, v);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='kw'>let</span> <span class='ident'>v2</span> <span class='op'>=</span> <span class='ident'>v</span>;
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;v vale: {}&quot;</span>, <span class='ident'>v</span>);</pre>
+
+<p>In questo caso, <code>v</code> è un <code>i32</code>, tipo che implementa il tratto <code>Copy</code>. Ciò
+significa che, proprio come uno spostamento, quando si assegna <code>v</code> a <code>v2</code>,
+viene fatta una copia dei dati.
+Ma, diversamente da uno spostamento, dopo, possiamo ancora usare <code>v</code>.
+Infatti un <code>i32</code> non ha puntatori che puntano a dati da qualche
+altra parte, e quindi spostandolo si fa una copia completa.</p>
+
+<p>Tutti i tipi primitivi implementano il tratto <code>Copy</code> e perciò il loro possesso
+non viene spostato come si potrebbe immaginare, seguendo le ‘regole
+del possesso’. Per fare un esempio, i due seguenti frammenti di codice
+compilano solamente perché i tipi <code>i32</code> e <code>bool</code> implementano il tratto <code>Copy</code>.</p>
+
+<span class='rusttest'>fn main() {
+    let a = 5;
+    let _y = raddoppia(a);
+    println!(&quot;{}&quot;, araddoppia
+}
+
+fn raddoppia(x: i32) -&gt; i32 {
+    x * 2
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class='kw'>let</span> <span class='ident'>_y</span> <span class='op'>=</span> <span class='ident'>raddoppia</span>(<span class='ident'>a</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>araddoppia</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>raddoppia</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>x</span> <span class='op'>*</span> <span class='number'>2</span>
+}</pre>
+
+<span class='rusttest'>fn main() {
+    let a = true;
+    let _y = cambia_verita(a);
+    println!(&quot;{}&quot;, a);
+}
+
+fn cambia_verita(x: bool) -&gt; bool {
+    !x
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+    <span class='kw'>let</span> <span class='ident'>_y</span> <span class='op'>=</span> <span class='ident'>cambia_verita</span>(<span class='ident'>a</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>a</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>cambia_verita</span>(<span class='ident'>x</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='op'>!</span><span class='ident'>x</span>
+}</pre>
+
+<p>Se avessimo usato dei tipi che non implementano il tratto <code>Copy</code>,
+avremmo ottenuto un errore di compilazione perché abbiamo provato a usare
+un valore spostato.</p>
+
+<pre><code class="language-text">error: use of moved value: `a`
+println!(&quot;{}&quot;, a);
+               ^
+</code></pre>
+
+<p>Discuteremo come aggiungere il tratto <code>Copy</code> ai propri tipi nella sezione
+<a href="traits.html">tratti</a>.</p>
+
+<h1 id='oltre-al-possesso' class='section-header'><a href='#oltre-al-possesso'>Oltre al possesso</a></h1>
+<p>Naturalmente, se ogni nostra funzione dovesse restituire il possesso,
+scriveremmo:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo(v: Vec&lt;i32&gt;) -&gt; Vec&lt;i32&gt; {
+    // fa&#39; qualcosa con v
+
+    // restituisci il possesso
+    v
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> {
+    <span class='comment'>// fa&#39; qualcosa con v</span>
+
+    <span class='comment'>// restituisci il possesso</span>
+    <span class='ident'>v</span>
+}</pre>
+
+<p>Ciò diventerebbe molto noioso. E peggiora più sono gli oggetti di cui vogliamo
+prendere possesso:</p>
+
+<span class='rusttest'>fn main() {
+    fn foo(v1: Vec&lt;i32&gt;, v2: Vec&lt;i32&gt;) -&gt; (Vec&lt;i32&gt;, Vec&lt;i32&gt;, i32) {
+    // fa&#39; qualcosa con v1 e con v2
+
+    // restituisci il possesso di v1 e v2, e restituisci anche
+    // il risultato della nostra funzione
+    (v1, v2, 42)
+}
+
+let v1 = vec![1, 2, 3];
+let v2 = vec![1, 2, 3];
+let (v1, v2, risposta) = foo(v1, v2);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>foo</span>(<span class='ident'>v1</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>v2</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> (<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>, <span class='ident'>i32</span>) {
+    <span class='comment'>// fa&#39; qualcosa con v1 e con v2</span>
+
+    <span class='comment'>// restituisci il possesso di v1 e v2, e restituisci anche</span>
+    <span class='comment'>// il risultato della nostra funzione</span>
+    (<span class='ident'>v1</span>, <span class='ident'>v2</span>, <span class='number'>42</span>)
+}
+
+<span class='kw'>let</span> <span class='ident'>v1</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> <span class='ident'>v2</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+<span class='kw'>let</span> (<span class='ident'>v1</span>, <span class='ident'>v2</span>, <span class='ident'>risposta</span>) <span class='op'>=</span> <span class='ident'>foo</span>(<span class='ident'>v1</span>, <span class='ident'>v2</span>);</pre>
+
+<p>Mah! Il tipo reso, la riga finale della funzione, e la chiamata della funzione
+diventano parecchio più complicati.</p>
+
+<p>Fortunatamente, Rust offre una caratteristica che aiuta a risolvere questo
+problema. Si chiama &quot;prestito&quot; ed è l&#39;argomento della prossima sezione!</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

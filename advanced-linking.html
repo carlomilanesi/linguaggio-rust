@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Link avanzato</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a class='active' href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Link avanzato</h1>
+    <p>I casi comuni di link con Rust sono stati trattati precedentemente,
+ma supportare la gamma di possibilità di linking rese disponibili da altri
+linguaggi è importante per Rust per raggiungere un interazione fluida
+con le librerie native.</p>
+
+<h1 id='argomenti-di-link' class='section-header'><a href='#argomenti-di-link'>Argomenti di link</a></h1>
+<p>C&#39;è un altro modo di dire a <code>rustc</code> come personalizzare il link, e cioè tramite
+l&#39;attributo <code>link_args</code>. Questo attributo viene applicato ai blocchi <code>extern</code>
+e specifica dei flags grezzi che devono essere passati al linker
+quando si produce un artefatto. Ecco un esempio di utilizzo:</p>
+
+<span class='rusttest'>#![feature(link_args)]
+
+#[link_args = &quot;-foo -bar -baz&quot;]
+extern {}
+fn main() {}
+</span><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>link_args</span>)]</span>
+
+<span class='attribute'>#[<span class='ident'>link_args</span> <span class='op'>=</span> <span class='string'>&quot;-foo -bar -baz&quot;</span>]</span>
+<span class='kw'>extern</span> {}</pre>
+
+<p>Si noti che questa caratteristica attualmente è nascosta dietro il gate
+<code>feature(link_args)</code> perché questo non è un modo ufficialmente accettato
+di eseguire il link. Attualmente <code>rustc</code> lancia il linker di sistema
+(<code>gcc</code> per la maggior parte delle configurazioni, <code>link.exe</code> per MSVC),
+perciò ha senso fornire ulteriore argomenti di riga di comando,
+ma potrebbe non essere così per sempre. In futuro <code>rustc</code> potrebbe usare
+direttamente LLVM per linkare librerie native, nel qual caso <code>link_args</code>
+non avrà significato. Si può ottenere lo stesso effetto dell&#39;attributo
+<code>link_args</code> con l&#39;argomento <code>-C link-args</code> di <code>rustc</code>.</p>
+
+<p>Si consiglia vivamente di <em>non</em> usare questo attributo, e invece usare
+il più formale attributo <code>#[link(...)]</code> su blocchi <code>extern</code>.</p>
+
+<h1 id='link-statico' class='section-header'><a href='#link-statico'>Link statico</a></h1>
+<p>Per &quot;link statico&quot; si intende il procedimento di creazione di un output
+che contiene tutte le librerie necessarie, e quindi non ha bisogno che
+delle librerie siano installate su ogni sistema in cui si vuole usare
+il proprio progetto compilato. Le dipendenze in puro Rust sono linkate
+staticamente di default, e quindi si possono usare i programmi e le librerie
+creati senza dover installare Rust ovunque. Al contrario, le librerie native
+(per es. <code>libc</code> e <code>libm</code>) vengono solitamente linkate dinamicamente,
+ma è possibile fare diversamente, e linkare staticamente anche loro.</p>
+
+<p>Linkare è un argomento molto dipendente dalla piattaforma, e il link statico
+potrebbe persino non essere disponibile su qualche piattaforma! Questa sezione
+assume una familiarità di base con il link nella propria piattaforma.</p>
+
+<h2 id='linux' class='section-header'><a href='#linux'>Linux</a></h2>
+<p>Di default, tutti i programmi in Rust su Linux linkeranno con la libreria
+<code>libc</code> di sistema, insieme a varie altre librerie. Guardiamo un esempio
+su una macchina Linux a 64 bit avente GCC e <code>glibc</code> (nettamente la <code>libc</code>
+più diffusa su Linux):</p>
+
+<pre><code class="language-text">$ cat example.rs
+fn main() {}
+$ rustc example.rs
+$ ldd example
+        linux-vdso.so.1 =&gt;  (0x00007ffd565fd000)
+        libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fa81889c000)
+        libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fa81867e000)
+        librt.so.1 =&gt; /lib/x86_64-linux-gnu/librt.so.1 (0x00007fa818475000)
+        libgcc_s.so.1 =&gt; /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fa81825f000)
+        libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fa817e9a000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007fa818cf9000)
+        libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007fa817b93000)
+</code></pre>
+
+<p>Il link dinamico su Linux può essere indesiderabile se si vogliono usare
+delle nuove caratteristiche di libreria su vecchi sistemi, o avere
+come target dei sistemi che non hanno le dipendenze necessarie per eseguire
+il proprio programma.</p>
+
+<p>Il link statico è supportato tramite un <code>libc</code> alternativo,
+<a href="http://www.musl-libc.org"><code>musl</code></a>. Si può compilare la propria versione
+di Rust con <code>musl</code> abilitato e installarlo in una directory personalizzata
+seguendo queste istruzioni:</p>
+
+<pre><code class="language-text">$ mkdir musldist
+$ PREFIX=$(pwd)/musldist
+$
+$ # Build musl
+$ curl -O http://www.musl-libc.org/releases/musl-1.1.10.tar.gz
+$ tar xf musl-1.1.10.tar.gz
+$ cd musl-1.1.10/
+musl-1.1.10 $ ./configure --disable-shared --prefix=$PREFIX
+musl-1.1.10 $ make
+musl-1.1.10 $ make install
+musl-1.1.10 $ cd ..
+$ du -h musldist/lib/libc.a
+2.2M    musldist/lib/libc.a
+$
+$ # Build libunwind.a
+$ curl -O http://llvm.org/releases/3.7.0/llvm-3.7.0.src.tar.xz
+$ tar xf llvm-3.7.0.src.tar.xz
+$ cd llvm-3.7.0.src/projects/
+llvm-3.7.0.src/projects $ curl http://llvm.org/releases/3.7.0/libunwind-3.7.0.src.tar.xz | tar xJf -
+llvm-3.7.0.src/projects $ mv libunwind-3.7.0.src libunwind
+llvm-3.7.0.src/projects $ mkdir libunwind/build
+llvm-3.7.0.src/projects $ cd libunwind/build
+llvm-3.7.0.src/projects/libunwind/build $ cmake -DLLVM_PATH=../../.. -DLIBUNWIND_ENABLE_SHARED=0 ..
+llvm-3.7.0.src/projects/libunwind/build $ make
+llvm-3.7.0.src/projects/libunwind/build $ cp lib/libunwind.a $PREFIX/lib/
+llvm-3.7.0.src/projects/libunwind/build $ cd ../../../../
+$ du -h musldist/lib/libunwind.a
+164K    musldist/lib/libunwind.a
+$
+$ # Build musl-enabled rust
+$ git clone https://github.com/rust-lang/rust.git muslrust
+$ cd muslrust
+muslrust $ ./configure --target=x86_64-unknown-linux-musl --musl-root=$PREFIX --prefix=$PREFIX
+muslrust $ make
+muslrust $ make install
+muslrust $ cd ..
+$ du -h musldist/bin/rustc
+12K     musldist/bin/rustc
+</code></pre>
+
+<p>Adesso abbiamo una build di un Rust abilitato a <code>musl</code>! Siccome l&#39;abbiamo
+installato a un prefisso personalizzato, dobbiamo assicurarci che il nostro
+sistema  possa trovare i programmi e le appropriate librerie quando proviamo
+a eseguirlo:</p>
+
+<pre><code class="language-text">$ export PATH=$PREFIX/bin:$PATH
+$ export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+</code></pre>
+
+<p>Proviamolo!</p>
+
+<pre><code class="language-text">$ echo &#39;fn main() { println!(&quot;hi!&quot;); panic!(&quot;failed&quot;); }&#39; &gt; example.rs
+$ rustc --target=x86_64-unknown-linux-musl example.rs
+$ ldd example
+        not a dynamic executable
+$ ./example
+hi!
+thread &#39;main&#39; panicked at &#39;failed&#39;, example.rs:1
+</code></pre>
+
+<p>Successo! Questo programma può essere copiato in quasi ogni macchina Linux
+che abbia la stessa architettura di CPU ed essere eseguito senza problemi.</p>
+
+<p>Anche <code>cargo build</code> permette l&#39;opzione <code>--target</code>, e quindi si dovrebbe
+poter costruire i propri crate normalmente. Però, potrebbe essere necessario
+recompilare le librerie native con <code>musl</code> prima di poterle usare nel link.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

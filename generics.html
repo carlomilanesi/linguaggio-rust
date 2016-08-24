@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>I generici</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a class='active' href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">I generici</h1>
+    <p>Talvolta, quando si scrive una funzione o un tipo di dati, potremmo volere che
+funzioni per più tipi di argomenti. In Rust, lo possiamo fare usando
+i generici. Nella teoria dei tipi, i generici sono chiamati ‘polimorfismo
+parametrico’, che significa che sono tipi o funzioni che hanno più forme
+(in greco ‘poli’ significa ‘plurimo‘, e ‘morfo’ significa ‘forma‘) in base a
+un dato parametro (da cui ‘parametrico’).</p>
+
+<p>Comunque, basta così con la teoria dei tipi, guardiamo del codice generico.
+La libreria standard di Rust fornisce un tipo, <code>Option&lt;T&gt;</code>, che è generico:</p>
+
+<span class='rusttest'>fn main() {
+    enum Option&lt;T&gt; {
+    Some(T),
+    None,
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='prelude-val'>Some</span>(<span class='ident'>T</span>),
+    <span class='prelude-val'>None</span>,
+}</pre>
+
+<p>La parte <code>&lt;T&gt;</code>, che abbiamo già visto alcune volte, indica che questo è un tipo
+di dati generico. Ogni volta che nel nostro codice usiamo questo <code>enum</code>,
+specifichiamo un tipo che sostituisce il parametro <code>T</code> ogni volta che compare
+nella dichiarazione generica. Ecco un esempio di uso di <code>Option&lt;T&gt;</code>,
+con un&#39;annotazione di tipo aggiuntiva:</p>
+
+<span class='rusttest'>fn main() {
+    let x: Option&lt;i32&gt; = Some(5);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='number'>5</span>);</pre>
+
+<p>Nella dichiarazione di tipo, diciamo <code>Option&lt;i32&gt;</code>. Si noti quanto simile
+appaia a <code>Option&lt;T&gt;</code>. Quindi, in questa particolare <code>Option</code>, <code>T</code> ha il valore
+di <code>i32</code>. Sul lato destro del legame, costruiamo un <code>Some(T)</code>, dove l&#39;oggetto
+di tipo <code>T</code> è <code>5</code>. Dato che si tratta di un <code>i32</code>, i due lati combaciano, e
+Rust è contento. Se non combaciassero, otterremmo un errore:</p>
+
+<span class='rusttest'>fn main() {
+    let x: Option&lt;f64&gt; = Some(5);
+// error: mismatched types: expected `core::option::Option&lt;f64&gt;`,
+// found `core::option::Option&lt;_&gt;` (expected f64 but found integral variable)
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='number'>5</span>);
+<span class='comment'>// error: mismatched types: expected `core::option::Option&lt;f64&gt;`,</span>
+<span class='comment'>// found `core::option::Option&lt;_&gt;` (expected f64 but found integral variable)</span></pre>
+
+<p>Ciò non significa che non si possono costruire degli <code>Option&lt;T&gt;</code> che tengono
+<code>f64</code>! Solamente i due lati dell&#39;assegnamento devono avere lo stesso tipo:</p>
+
+<span class='rusttest'>fn main() {
+    let x: Option&lt;i32&gt; = Some(5);
+let y: Option&lt;f64&gt; = Some(5.0f64);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='number'>5</span>);
+<span class='kw'>let</span> <span class='ident'>y</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='number'>5.0f64</span>);</pre>
+
+<p>Così va bene. Una sola definizione, utilizzi multipli.</p>
+
+<p>I generici non sono limitati ad essere parametrizzati da un solo tipo.
+Si consideri un altro tipo simile, fornito dalla liberia standard di Rust,
+<code>Result&lt;T, E&gt;</code>:</p>
+
+<span class='rusttest'>fn main() {
+    enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>E</span><span class='op'>&gt;</span> {
+    <span class='prelude-val'>Ok</span>(<span class='ident'>T</span>),
+    <span class='prelude-val'>Err</span>(<span class='ident'>E</span>),
+}</pre>
+
+<p>Questo tipo è generico relativamente a <em>due</em> tipi: <code>T</code> ed <code>E</code>. Tra l&#39;altro,
+le lettere maiuscole possono essere qualunque lettera si gradisca. Si sarebbe
+potuto definire <code>Result&lt;T, E&gt;</code> come:</p>
+
+<span class='rusttest'>fn main() {
+    enum Result&lt;A, Z&gt; {
+    Ok(A),
+    Err(Z),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>Z</span><span class='op'>&gt;</span> {
+    <span class='prelude-val'>Ok</span>(<span class='ident'>A</span>),
+    <span class='prelude-val'>Err</span>(<span class='ident'>Z</span>),
+}</pre>
+
+<p>se si avesse voluto. Per convenzione il primo parametro generico dovrebbe
+essere <code>T</code>, per ‘tipo’, e si dovrebbe usare <code>E</code> per ‘errore’. Però a Rust
+non importa.</p>
+
+<p>Il tipo <code>Result&lt;T, E&gt;</code> è pensato per essere usato come risultato
+di un&#39;elaborazione, dando la possibilità di rendere un errore nel caso
+non si riuscisse a completare correttamente l&#39;elaborazione.</p>
+
+<h2 id='funzioni-generiche' class='section-header'><a href='#funzioni-generiche'>Funzioni generiche</a></h2>
+<p>Si possono scrivere funzioni che prendono tipi generici, usando una sintassi
+simile:</p>
+
+<span class='rusttest'>fn main() {
+    fn prende_qualunque_cosa&lt;T&gt;(x: T) {
+    // fai qualcosa con x
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>prende_qualunque_cosa</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>) {
+    <span class='comment'>// fai qualcosa con x</span>
+}</pre>
+
+<p>La sintassi ha due parti: la <code>&lt;T&gt;</code> dice “questa funzione è generica rispetto
+a un tipo, <code>T</code>”, e la <code>x: T</code> dice “x è di tipo <code>T</code>.”</p>
+
+<p>Più argomenti possono essere dello stesso tipo generico:</p>
+
+<span class='rusttest'>fn main() {
+    fn prende_due_oggetti_del_medesimo_tipo&lt;T&gt;(x: T, y: T) {
+    // ...
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>prende_due_oggetti_del_medesimo_tipo</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>, <span class='ident'>y</span>: <span class='ident'>T</span>) {
+    <span class='comment'>// ...</span>
+}</pre>
+
+<p>Si può anche scrivere una versione che prende più tipi:</p>
+
+<span class='rusttest'>fn main() {
+    fn prende_due_oggetti&lt;T, U&gt;(x: T, y: U) {
+    // ...
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>prende_due_oggetti</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>U</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='ident'>T</span>, <span class='ident'>y</span>: <span class='ident'>U</span>) {
+    <span class='comment'>// ...</span>
+}</pre>
+
+<h2 id='struct-generiche' class='section-header'><a href='#struct-generiche'>Struct generiche</a></h2>
+<p>Si può usare un tipo generico anche per i campi di una <code>struct</code>:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+let origine_intera = Punto { x: 0, y: 0 };
+let origine_a_virgola_mobile = Punto { x: 0.0, y: 0.0 };
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Punto</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='ident'>T</span>,
+    <span class='ident'>y</span>: <span class='ident'>T</span>,
+}
+
+<span class='kw'>let</span> <span class='ident'>origine_intera</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>0</span>, <span class='ident'>y</span>: <span class='number'>0</span> };
+<span class='kw'>let</span> <span class='ident'>origine_a_virgola_mobile</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>0.0</span>, <span class='ident'>y</span>: <span class='number'>0.0</span> };</pre>
+
+<p>Analogamente alle funzioni, la <code>&lt;T&gt;</code> è dove si dichiarano i parametri generici,
+che poi vengono usati nelle dichiarazioni dei campi <code>x: T</code> e <code>y: T</code>.</p>
+
+<p>Quando si vuole aggiungere un&#39;implementazione per una <code>struct</code> generica, si
+dichiara il parametro di tipo subito dopo la <code>impl</code>:</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+impl&lt;T&gt; Punto&lt;T&gt; {
+    fn swap(&amp;mut self) {
+        std::mem::swap(&amp;mut self.x, &amp;mut self.y);
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Punto</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+        <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>x</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>y</span>);
+    }
+}</pre>
+
+<p>Finora abbiamo visto dei generici che prendono assolutamente qualunque tipo.
+Questi servono in molti casi: abbiamo già visto <code>Option&lt;T&gt;</code>, e poi incontreremo
+i tipi contenitore universali, come <a href="../std/vec/struct.Vec.html"><code>Vec&lt;T&gt;</code></a>. D&#39;altra parte, spesso si
+vuole rinunciare a quella flessibilità per avere un maggior poter espressivo.
+Si legga la sezione sui <a href="traits.html">legami di tratto</a> per vedere come e perché.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

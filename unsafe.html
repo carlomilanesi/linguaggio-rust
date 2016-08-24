@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Unsafe</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a class='active' href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Unsafe</h1>
+    <p>La principale attrattiva di Rust è costituita dalle potenti garanzie statiche
+sul suo comportamento. Ma le verifiche di sicurezza sono prudenti per natura:
+ci sono alcuni programmi che sono effettivamente sicuri, ma il compilatore
+non è in grado di verificarlo. Per compilare questo genere di programmi,
+dobbiamo dire al compilatore di rilassare un po&#39; le sue restrizioni. A questo
+scopo, Rust ha una parola-chiave, <code>unsafe</code> (insicuro, in italiano).
+Il codice che usa <code>unsafe</code> ha meno restrizioni del codice normale.</p>
+
+<p>Andiamo a vedere la sintassi, e poi parleremo della semantica. <code>unsafe</code> si usa
+in quattro contesti. Il primo è per marcare una funzione come insicura:</p>
+
+<span class='rusttest'>fn main() {
+    unsafe fn pericolo_di_morte() {
+    // roba paurosa
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>pericolo_di_morte</span>() {
+    <span class='comment'>// roba paurosa</span>
+}</pre>
+
+<p>Tutte le funzioni chiamate da <a href="ffi.html">FFI</a> devono essere marcate come <code>unsafe</code>,
+per esempio. Il secondo uso di <code>unsafe</code> è per marcare un blocco insicuro:</p>
+
+<span class='rusttest'>fn main() {
+    unsafe {
+    // roba paurosa
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>unsafe</span> {
+    <span class='comment'>// roba paurosa</span>
+}</pre>
+
+<p>Il terzo è per marcare tratti insicuri:</p>
+
+<span class='rusttest'>fn main() {
+    unsafe trait Pauroso { }
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Pauroso</span> { }</pre>
+
+<p>E il quarto è per <code>impl</code>ementare uno di quei tratti:</p>
+
+<span class='rusttest'>fn main() {
+    unsafe trait Scary { }
+unsafe impl Pauroso for i32 {}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Pauroso</span> <span class='kw'>for</span> <span class='ident'>i32</span> {}</pre>
+
+<p>È importante essere capaci di delimitare esplicitamente il codice che
+può avere dei difetti che provocano grossi danni. Se un programma in Rust va
+in segmentation fault, si può stare sicuri che la causa è correlata a qualcosa
+marcato come <code>unsafe</code>.</p>
+
+<h1 id='che-cosa-significa-sicuro' class='section-header'><a href='#che-cosa-significa-sicuro'>Che cosa significa ‘sicuro’?</a></h1>
+<p>Sicuro [&quot;safe&quot;], nel contesto di Rust, significa ‘non fa niente di insicuro
+[&quot;unsafe&quot;]’. È anche importante sapere che ci sono certi comportamenti che
+probabilmente non sono desiderabili nel nostro codice, ma che sono
+espressamente <em>non</em> insicuri, tra i quali:</p>
+
+<ul>
+<li>i deadlock</li>
+<li>i leak di memoria o di altre risorse</li>
+<li>uscire senza chiamare i distruttori</li>
+<li>l&#39;overflow di un intero</li>
+</ul>
+
+<p>Rust non può prevenire tutti i tipi di difetti del software. In Rust si può
+scrivere, e inevitabilmente si scrive, del codice bacato. Queste cose
+ovviamente sono indesiderabili, ma non si possono chiamare specificamente
+<code>unsafe</code>.</p>
+
+<p>Inoltre, i seguenti sono tutti comportamenti indefiniti in Rust, e devono
+essere evitati, anche quando si scrive del codice <code>unsafe</code>:</p>
+
+<ul>
+<li>Accedere simultaneamente ai dati [&quot;data race&quot;]</li>
+<li>Dereferenziare un puntatore grezzo nullo o penzolante</li>
+<li>Leggere memoria <a href="http://llvm.org/docs/LangRef.html#undefined-values">non inizializzata</a></li>
+<li>Violare le <a href="http://llvm.org/docs/LangRef.html#pointer-aliasing-rules">regole di aliasing dei puntatori</a> con dei puntatori
+grezzi.</li>
+<li><code>&amp;mut T</code> e <code>&amp;T</code> seguono il modello <a href="http://llvm.org/docs/LangRef.html#noalias">noalias</a> di ambito di LLVM,
+tranne se il <code>&amp;T</code> contiene un <code>UnsafeCell&lt;U&gt;</code>. Il codice unsafe non deve
+violare queste garanzie di aliasing.</li>
+<li>Mutare un valore/riferimento immutabile senza usare <code>UnsafeCell&lt;U&gt;</code></li>
+<li>Invocare del comportamento indefinito tramite gli intrinseci del compilatore:
+
+<ul>
+<li>Indicizzare fuori dai limiti di un oggetto con <code>std::ptr::offset</code>
+(l&#39;intrinseco <code>offset</code>), eccetto uscire di un solo byte il che è permesso.</li>
+<li>Usare <code>std::ptr::copy_nonoverlapping_memory</code> (gli intrinseci <code>memcpy32</code>/
+<code>memcpy64</code>) su buffer che si sovrappongono</li>
+</ul></li>
+<li>Usare i seguenti valori non validi in tipi primitivi, anche in campi privati
+e in legami locali:
+
+<ul>
+<li>un riferimento o box nullo o penzolante</li>
+<li>Un valore diverso da <code>false</code> (0) e da <code>true</code> (1) in un <code>bool</code></li>
+<li>Un discriminante in un <code>enum</code> non compreso nella definizione del suo tipo</li>
+<li>Un valore in un <code>char</code> che è un surrogato, o è maggiore di <code>char::MAX</code></li>
+<li>Sequenze di byte non UTF-8 in un <code>str</code></li>
+</ul></li>
+<li>Svolgere lo stack da codice straniero a codice Rust o da codice Rust a codice
+straniero.</li>
+</ul>
+
+<h1 id='i-superpoteri-del-codice-insicuro' class='section-header'><a href='#i-superpoteri-del-codice-insicuro'>I superpoteri del codice insicuro</a></h1>
+<p>Sia nelle funzioni insicure che nei blocchi insicuri, Rust consentirà di fare
+tre cose che normalmente non consente. Appena tre. Eccole:</p>
+
+<ol>
+<li>Leggere o scrivere una <a href="const-and-static.html#static">variabile mutabile statica</a>.</li>
+<li>Dereferenziare un puntatore grezzo.</li>
+<li>Chiamare funzioni insicure. Questa è l&#39;abilità più potente.</li>
+</ol>
+
+<p>Ecco. È importante <code>unsafe</code>, per esempio, non ‘spenga il verificatore
+dei prestiti’. Aggiungere <code>unsafe</code> a qualche porzione di codice Rust non cambia
+la sua semantica; non inizierà ad accettare di tutto. Ma permetterà
+di scrivere cose che <em>violano</em> ancune delle regole.</p>
+
+<p>Si incontrerà la parola-chiave <code>unsafe</code> anche quando si scrivono dei legami
+a interfacce straniere (cioè non in Rust). Usando i metodi forniti dalla
+libreria, si è incoraggiati a scrivere interfacce sicure e native in Rust.</p>
+
+<p>Esaminiamo le tre abilità di base elencate, in ordine.</p>
+
+<h2 id='lettura-o-scrittura-di-un-static-mut' class='section-header'><a href='#lettura-o-scrittura-di-un-static-mut'>Lettura o scrittura di un <code>static mut</code></a></h2>
+<p>Rust ha una caratteristica chiamata ‘<code>static mut</code>’ che permette uno stato
+global mutabile. Farlo può causare una corsa ai dati, e come tale è
+inerentemente non sicura. Per maggiori dettagli, si veda la sezione
+<a href="const-and-static.html#static">static</a> del libro.</p>
+
+<h2 id='dereferenziare-un-puntatore-grezzo' class='section-header'><a href='#dereferenziare-un-puntatore-grezzo'>Dereferenziare un puntatore grezzo</a></h2>
+<p>I puntatori grezzi consentono di fare dell&#39;aritmetica di puntatori arbitraria,
+e possono provocare vari diversi difetti nella sicurezza e nella vulnerabilità
+della memoria. In alcuni sensi, l&#39;abilità di dereferenziare un puntatore
+arbitrario è una delle cose più pericolose che si può fare. Per maggiori
+informazioni sui puntatori grezzi, i veda <a href="raw-pointers.html">la loro sezione</a>
+del libro.</p>
+
+<h2 id='chiamare-funzioni-insicure' class='section-header'><a href='#chiamare-funzioni-insicure'>Chiamare funzioni insicure</a></h2>
+<p>Quest&#39;ultima abilità funziona con entrambi gli aspetti di <code>unsafe</code>: si possono
+chiamare le funzioni marcate <code>unsafe</code> solamente dall&#39;interno di un blocco
+insicuro.</p>
+
+<p>Quest&#39;abilità è potente e variegata. Rust espone alcuni <a href="intrinsics.html">intrinseci
+del compilatore</a> come funzioni insicure, e alcune funzioni
+insicure eludono le verifiche di sicurezza in fase di esecuzione,
+barattando la sicurezza con la velocità.</p>
+
+<p>Lo ripeto ancora: anche se si <em>può</em> fare cose arbitrarie in blocchi e funzioni
+insicuri, ciò non significa che si dovrebbe. Il compilatore agirà come se
+si stessero mantenendo le sue invarianti, perciò bisogna fare attenzione!</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

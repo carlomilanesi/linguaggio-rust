@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Operatori e sovraccaricamento [&quot;overloading&quot;]</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a class='active' href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Operatori e sovraccaricamento [&quot;overloading&quot;]</h1>
+    <p>Rust consente una forma limitata di sovraccaricamento degli operatori.
+Ci sono certi operatori che possono essere sovraccaricati. Per supportare
+un particolare operatore fra tipi, c&#39;è uno specifico tratto che si può
+implementare, il quale si occupa di sovraccaricare l&#39;operatore.</p>
+
+<p>Per esempio, l&#39;operatore <code>+</code> può essere sovraccaricato con il tratto <code>Add</code>:</p>
+
+<span class='rusttest'>use std::ops::Add;
+
+#[derive(Debug)]
+struct Punto {
+    x: i32,
+    y: i32,
+}
+
+impl Add for Punto {
+    type Output = Punto;
+
+    fn add(self, other: Punto) -&gt; Punto {
+        Punto { x: self.x + other.x, y: self.y + other.y }
+    }
+}
+
+fn main() {
+    let p1 = Punto { x: 1, y: 0 };
+    let p2 = Punto { x: 2, y: 3 };
+
+    let p3 = p1 + p2;
+
+    println!(&quot;{:?}&quot;, p3);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Add</span>;
+
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>struct</span> <span class='ident'>Punto</span> {
+    <span class='ident'>x</span>: <span class='ident'>i32</span>,
+    <span class='ident'>y</span>: <span class='ident'>i32</span>,
+}
+
+<span class='kw'>impl</span> <span class='ident'>Add</span> <span class='kw'>for</span> <span class='ident'>Punto</span> {
+    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>Punto</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>add</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>Punto</span>) <span class='op'>-&gt;</span> <span class='ident'>Punto</span> {
+        <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='self'>self</span>.<span class='ident'>x</span> <span class='op'>+</span> <span class='ident'>other</span>.<span class='ident'>x</span>, <span class='ident'>y</span>: <span class='self'>self</span>.<span class='ident'>y</span> <span class='op'>+</span> <span class='ident'>other</span>.<span class='ident'>y</span> }
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>p1</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>1</span>, <span class='ident'>y</span>: <span class='number'>0</span> };
+    <span class='kw'>let</span> <span class='ident'>p2</span> <span class='op'>=</span> <span class='ident'>Punto</span> { <span class='ident'>x</span>: <span class='number'>2</span>, <span class='ident'>y</span>: <span class='number'>3</span> };
+
+    <span class='kw'>let</span> <span class='ident'>p3</span> <span class='op'>=</span> <span class='ident'>p1</span> <span class='op'>+</span> <span class='ident'>p2</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>p3</span>);
+}</pre>
+
+<p>In <code>main</code>, possiamo usare <code>+</code> sui nostri due oggetti di tipo <code>Punto</code>, dato che
+abbiamo implementato <code>Add&lt;Output=Punto&gt;</code> per <code>Punto</code>.</p>
+
+<p>Ci sono vari operatori che possono essere sovraccaricati in questo modo,
+e tutti i loro tratti associati si trovano nel modulo <a href="../std/ops/index.html"><code>std::ops</code></a>.
+Si veda la sua documentazione per avere l&#39;elenco completo.</p>
+
+<p>L&#39;implementazione di questi tratti segue un pattern. Guardiamo <a href="../std/ops/trait.Add.html"><code>Add</code></a>
+più in dettaglio:</p>
+
+<span class='rusttest'>fn main() {
+    mod foo {
+pub trait Add&lt;RHS = Self&gt; {
+    type Output;
+
+    fn add(self, rhs: RHS) -&gt; Self::Output;
+}
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Add</span><span class='op'>&lt;</span><span class='ident'>RHS</span> <span class='op'>=</span> <span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Output</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>add</span>(<span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='ident'>RHS</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Output</span>;
+}</pre>
+
+<p>Qui ci sono tre tipi coinvolti: il tipo per cui si implementa <code>Add</code>, <code>RHS</code>,
+che di default è ancora <code>Self</code>, e <code>Output</code>. Nel caso di dell&#39;espressione
+<code>let z = x + y</code>, <code>x</code> è di tipo <code>Self</code>, <code>y</code> è di tipo RHS, e <code>z</code> è di tipo
+<code>Self::Output</code>.</p>
+
+<span class='rusttest'>fn main() {
+    struct Punto;
+use std::ops::Add;
+impl Add&lt;i32&gt; for Punto {
+    type Output = f64;
+
+    fn add(self, rhs: i32) -&gt; f64 {
+        // somma un i32 a un Punto e ottieni un f64
+1.0
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>Add</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Punto</span> {
+    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>f64</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>add</span>(<span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+        <span class='comment'>// somma un i32 a un Punto e ottieni un f64</span>
+    }
+}</pre>
+
+<p>consente di fare questo:</p>
+
+<span class='rusttest'>fn main() {
+    let p: Punto = // ...
+let x: f64 = p + 2i32;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>p</span>: <span class='ident'>Punto</span> <span class='op'>=</span> <span class='comment'>// ...</span>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='ident'>p</span> <span class='op'>+</span> <span class='number'>2i32</span>;</pre>
+
+<h1 id='utilizzo-di-tratti-di-operator-in-strutture-generiche' class='section-header'><a href='#utilizzo-di-tratti-di-operator-in-strutture-generiche'>Utilizzo di tratti di operator in strutture generiche</a></h1>
+<p>Adesso che sappiamo come sono definiti i tratti degli operatori, possiamo
+definire in modo più generico il nostro tratto <code>HaArea</code> e la nostra struttura
+<code>Quadrato</code> di cui si è parlato nel <a href="traits.html">capitolo sui tratti</a>:</p>
+
+<span class='rusttest'>use std::ops::Mul;
+
+trait HaArea&lt;T&gt; {
+    fn area(&amp;self) -&gt; T;
+}
+
+struct Quadrato&lt;T&gt; {
+    x: T,
+    y: T,
+    lato: T,
+}
+
+impl&lt;T&gt; HaArea&lt;T&gt; for Quadrato&lt;T&gt;
+        where T: Mul&lt;Output=T&gt; + Copy {
+    fn area(&amp;self) -&gt; T {
+        self.lato * self.lato
+    }
+}
+
+fn main() {
+    let s = Quadrato {
+        x: 0.0f64,
+        y: 0.0f64,
+        lato: 12.0f64,
+    };
+
+    println!(&quot;Area di s: {}&quot;, s.area());
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Mul</span>;
+
+<span class='kw'>trait</span> <span class='ident'>HaArea</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span>;
+}
+
+<span class='kw'>struct</span> <span class='ident'>Quadrato</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='ident'>x</span>: <span class='ident'>T</span>,
+    <span class='ident'>y</span>: <span class='ident'>T</span>,
+    <span class='ident'>lato</span>: <span class='ident'>T</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>HaArea</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Quadrato</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Mul</span><span class='op'>&lt;</span><span class='ident'>Output</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Copy</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span> {
+        <span class='self'>self</span>.<span class='ident'>lato</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>lato</span>
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>Quadrato</span> {
+        <span class='ident'>x</span>: <span class='number'>0.0f64</span>,
+        <span class='ident'>y</span>: <span class='number'>0.0f64</span>,
+        <span class='ident'>lato</span>: <span class='number'>12.0f64</span>,
+    };
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Area di s: {}&quot;</span>, <span class='ident'>s</span>.<span class='ident'>area</span>());
+}</pre>
+
+<p>Per <code>HaArea</code> e <code>Quadrato</code>, dichiariamo un parametro di tipo <code>T</code> e sostituiamo
+<code>f64</code> con tale parametro. L&#39;<code>impl</code> ha bisogno di modifiche più involute:</p>
+
+<span class='rusttest'>fn main() {
+    impl&lt;T&gt; HasArea&lt;T&gt; for Square&lt;T&gt;
+        where T: Mul&lt;Output=T&gt; + Copy { ... }
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>HasArea</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Square</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Mul</span><span class='op'>&lt;</span><span class='ident'>Output</span><span class='op'>=</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Copy</span> { ... }</pre>
+
+<p>Il metodo <code>area</code> richiede che possiamo moltiplicare i lati, e quindi
+dichiariamo che il tipo <code>T</code> deve implementare <code>std::ops::Mul</code>. Come <code>Add</code>,
+citato prima, <code>Mul</code> stesso prende un parametro <code>Output</code>: dato che sappiamo
+che i numeri non cambiano tipo quando vengono moltiplicati, impostiamo
+anch&#39;esso a <code>T</code>. <code>T</code> deve anche supportare la copia, cosicché Rust non provi
+a spostare <code>self.side</code> nel valore reso.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Iteratori</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a  href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a class='active' href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Iteratori</h1>
+    <p>Parliamo dei cicli.</p>
+
+<p>Avevamo già parlato dei cicli <code>for</code> di Rust. Ecco un esempio:</p>
+
+<span class='rusttest'>fn main() {
+    for x in 0..10 {
+    println!(&quot;{}&quot;, x);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>10</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+<p>Adesso che abbiamo visto vari aspetti di Rust, possiamo descrivere
+in dettaglio come funzionano.
+I range (lo <code>0..10</code>) sono degli &#39;iteratori&#39;. Un iteratore è qualcosa su cui
+possiamo chiamare ripetutamente il metodo <code>.next()</code>, e ottenere ogni volta
+un elemento diverso, appartenente una sequenza di oggetti.</p>
+
+<p>(Tra l&#39;altro, un range con due punti, come <code>0..10</code> include il limite sulla
+sinistra (e quindi, in questo caso, inizia da 0), ed esclude il limite sulla
+destra (e quindi, in questo caso, finisce a 9). Un matematico scriverebbe
+&quot;[0, 10)&quot;. Per ottenere un range che arriva a 10 si può scrivere <code>0..11</code>.)</p>
+
+<p>Ecco come usarlo:</p>
+
+<span class='rusttest'>fn main() {
+    let mut range = 0..10;
+
+loop {
+    match range.next() {
+        Some(x) =&gt; {
+            println!(&quot;{}&quot;, x);
+        },
+        None =&gt; { break }
+    }
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>range</span> <span class='op'>=</span> <span class='number'>0</span>..<span class='number'>10</span>;
+
+<span class='kw'>loop</span> {
+    <span class='kw'>match</span> <span class='ident'>range</span>.<span class='ident'>next</span>() {
+        <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> {
+            <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+        },
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> { <span class='kw'>break</span> }
+    }
+}</pre>
+
+<p>Abbiamo creato una variabile mutabile al range, che è il nostro iteratore.
+Poi abbiamo eseguito un <code>loop</code>, contenente un <code>match</code>. Questo <code>match</code>
+si applica al risultato dell&#39;espressione <code>range.next()</code>, che ci dà
+un riferimento al prossimo valofe dell&#39;iteratore. In questo caso, il metodo
+<code>next</code> restituisce un oggetto di tipo <code>Option&lt;i32&gt;</code>, il quale sarà
+un <code>Some(i32)</code> quando viene preso un valore dalla sequenza, e un <code>None</code> quando
+non ci sono più valori nella sequenza. Se otteniamo un <code>Some(i32)</code>,
+lo stampiamo, mentre se otteniamo <code>None</code>, saltiamo fuori dal ciclo
+usando <code>break</code>.</p>
+
+<p>Questa porzione di codice fa sostanzialmente lo stesso della nostra versione
+del ciclo <code>for</code>. Il ciclo <code>for</code> è un modo comodo di scrivere questo costrutto
+<code>loop</code>/<code>match</code>/<code>break</code>.</p>
+
+<p>I cicli <code>for</code> non sono l&#39;unica cosa che usa iteratori, comunque. Scrivere
+il proprio iteratore comporta implementare il tratto <code>Iterator</code>. Mentre farlo
+esulerebbe da questa guida, Rust fornisce vari utili iteratori
+per compiere vari compiti. Ma prima, vediamo alcuni limitazioni dei range.</p>
+
+<p>I range sono molto primitivi, e spesso si possono usare alternative migliori.
+Si consideri il seguente anti-pattern di Rust: usare i range per emulare
+un ciclo <code>for</code> in stile-C. Supponiamo di aver bisogno di iterare sul contenuto
+di un vettore. Si può essere tentati di scrivere così:</p>
+
+<span class='rusttest'>fn main() {
+    let numeri = vec![1, 2, 3];
+
+for i in 0..numeri.len() {
+    println!(&quot;{}&quot;, numeri[i]);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>numeri</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+
+<span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>numeri</span>.<span class='ident'>len</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>numeri</span>[<span class='ident'>i</span>]);
+}</pre>
+
+<p>Questo è nettamente peggio che usare un iteratore. Infatti, si può, e si
+dovrebbe, iterare sui vettori direttamente, e quindi scrivere:</p>
+
+<span class='rusttest'>fn main() {
+    let numeri = vec![1, 2, 3];
+
+for numero in &amp;numeri {
+    println!(&quot;{}&quot;, numero);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>numeri</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+
+<span class='kw'>for</span> <span class='ident'>numero</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='ident'>numeri</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>numero</span>);
+}</pre>
+
+<p>Ci sono due ragioni per farlo. Primo, questa notazione esprime più
+esplicitamente cosa si intende fare. Stiamo iterando su tutti gli elementi
+del vettore, e non iterando sulle posizioni degli elementi del vettore,
+e poi accedendo agli elementi del vettore in base alla loro posizione.
+Secondo, questa versione è più efficiente: la prima versione dovrà
+verificare che gli indici non sforino i limiti, nell&#39;espressione <code>numeri[i]</code>.
+Invece nel secondo esempio, non c&#39;è bisogno di verificare i limiti,
+dato che l&#39;iteratore si occupa di fornire un riferimento a ogni elemento
+del vettore. Questo effetto è molto comune con gli iteratori: si possono
+evitare le verifiche dei limiti, ma avere comunque la garanzia che non
+vengano oltrepassati.</p>
+
+<p>Qui c&#39;è un altro dettaglio che non è chiaro al 100% a causa di come funziona
+<code>println!</code>. <code>num</code> è effettivamente di tipo <code>&amp;i32</code>. Cioè, è un riferimento
+a un <code>i32</code>, non è un <code>i32</code> esso stesso. <code>println!</code> si occupa di gestire
+la dereferenziazione, e quindi non la vediamo. Anche il seguente codice
+funziona bene:</p>
+
+<span class='rusttest'>fn main() {
+    let numeri = vec![1, 2, 3];
+
+for numero in &amp;numeri {
+    println!(&quot;{}&quot;, *numero);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>numeri</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+
+<span class='kw'>for</span> <span class='ident'>numero</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='ident'>numeri</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='op'>*</span><span class='ident'>numero</span>);
+}</pre>
+
+<p>Adesso stiamo dereferenziando <code>numero</code> esplicitamente. Perché otteniamo
+dei riferimenti da <code>&amp;nums</code>? In primo luogo, perché glielo abbiamo chiesto
+esplicitamente scrivendo <code>&amp;</code>. E in secondo luogo, se ci avesse dato
+il dato stesso, noi saremmo diventati i suoi proprietari, il che
+avrebbe comportato copiare i dati e darci la copia. Con i riferimenti,
+stiamo solamente prendendo in prestito un riferimento al dato,
+e quindi ci sta passando solamente un riferimento, senza bisogno di spostarlo.</p>
+
+<p>Perciò, adesso che abbiamo stabilito che spesso i range non sono ciò che
+si vorrebbe, parliamo invece di ciò si vorrebbe.</p>
+
+<p>Ci sono tre ampie classi di cose che sono rilevanti qui: gli iteratori,
+gli <em>adattatori di iteratore</em>, e i <em>consumatori</em>. Ecco alcune definizioni:</p>
+
+<ul>
+<li>Gli <em>iteratori</em> producono una sequenza di valori.</li>
+<li>Gli <em>adattatori di iteratore</em> operano su un iteratore, producendo un nuovo
+iteratore con una diversa sequenza in uscita.</li>
+<li>I <em>consumatori</em> operano su un iteratore, producendo un insieme finale
+di valori.</li>
+</ul>
+
+<p>Dapprima parliamo dei consumatori, dato che abbiamo già visto un tipo
+di iteratori, i range.</p>
+
+<h2 id='consumatori' class='section-header'><a href='#consumatori'>Consumatori</a></h2>
+<p>Un <em>consumatore</em> opera su un iteratore, restituendo qualche tipo di valore
+o di valori.
+Il consumatore più comune è <code>collect()</code>. Il seguente codice non è proprio
+corretto, ma rende l&#39;idea:</p>
+
+<span class='rusttest'>fn main() {
+    let da_uno_a_cento = (1..101).collect();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>da_uno_a_cento</span> <span class='op'>=</span> (<span class='number'>1</span>..<span class='number'>101</span>).<span class='ident'>collect</span>();</pre>
+
+<p>Come si vede, si chiama <code>collect()</code> sul nostro iteratore. <code>collect()</code>  prende
+tanti valori quanti gliene da l&#39;iteratore, e restituisce una collezione
+dei risultati. Perciò questo non compila?
+Rust non riesce a determinare quale tipo collezione
+creare, e perciò bisogna farglielo sapere. Ecco la versione che compila:</p>
+
+<span class='rusttest'>fn main() {
+    let da_uno_a_cento = (1..101).collect::&lt;Vec&lt;i32&gt;&gt;();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>da_uno_a_cento</span> <span class='op'>=</span> (<span class='number'>1</span>..<span class='number'>101</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span>();</pre>
+
+<p>Come già detto, la sintassi <code>::&lt;&gt;</code> consente di suggerire il tipo,
+e perciò indichiamo che vogliamo un vettore di interi. Però non c&#39;è sempre
+bisogno di specificare l&#39;intero tipo. Usando un <code>_</code> si può fornire
+un suggerimento parziale:</p>
+
+<span class='rusttest'>fn main() {
+    let da_uno_a_cento = (1..101).collect::&lt;Vec&lt;_&gt;&gt;();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>da_uno_a_cento</span> <span class='op'>=</span> (<span class='number'>1</span>..<span class='number'>101</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>();</pre>
+
+<p>Quest codice dice &quot;Raccogli in un <code>Vec&lt;T&gt;</code>, ma capiscilo da solo il tipo <code>T</code>.&quot;
+<code>_</code> è talvolta chiamato &quot;segnaposto di tipo&quot; (&quot;type placeholder&quot;) per questa
+ragione.</p>
+
+<p><code>collect()</code> è il consumatore più comune, ma ce ne sono anche altri.
+Uno è <code>find()</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let maggiore_di_quaranta_due = (0..100).find(|x| *x &gt; 42);
+
+match maggiore_di_quaranta_due {
+    Some(_) =&gt; println!(&quot;Trovata una corrispondenza!&quot;),
+    None =&gt; println!(&quot;Nessuna corrispondenza trovata :(&quot;),
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>maggiore_di_quaranta_due</span> <span class='op'>=</span> (<span class='number'>0</span>..<span class='number'>100</span>).<span class='ident'>find</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>&gt;</span> <span class='number'>42</span>);
+
+<span class='kw'>match</span> <span class='ident'>maggiore_di_quaranta_due</span> {
+    <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Trovata una corrispondenza!&quot;</span>),
+    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Nessuna corrispondenza trovata :(&quot;</span>),
+}</pre>
+
+<p><code>find</code> prende una chiusura, e lavora su un riferimento a ogni elemento
+di un iteratore. Questa chiusura restituisce <code>true</code> se l&#39;elemento è l&#39;elemento
+che stiamo cercando, e <code>false</code> altrimenti. <code>find</code> restituisce il primo elemento
+che soddisfa il predicato specificato. Siccome potremmo non trovare
+nessun elemento corrispondente, <code>find</code> restituisce una <code>Option</code> invece
+dell&#39;elemento stesso.</p>
+
+<p>Un altro consumatore importante è <code>fold</code>. Ecco come si presenta:</p>
+
+<span class='rusttest'>fn main() {
+    let somma = (1..4).fold(0, |somma_parziale, x| somma_parziale + x);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>somma</span> <span class='op'>=</span> (<span class='number'>1</span>..<span class='number'>4</span>).<span class='ident'>fold</span>(<span class='number'>0</span>, <span class='op'>|</span><span class='ident'>somma_parziale</span>, <span class='ident'>x</span><span class='op'>|</span> <span class='ident'>somma_parziale</span> <span class='op'>+</span> <span class='ident'>x</span>);</pre>
+
+<p><code>fold()</code> è un consumatore che si presenta così:
+<code>fold(base, |accumulatore, elemento| ...)</code>. Prende due argomenti: il primo
+è un elemento chiamato <em>base</em>. Il secondo è una chiusura che a sua volta
+prende due argomenti: il primo è chiamato <em>accumulator</em>, e il second è un
+<em>elemento</em>. Ad ogni iterazione, la chiusura viene chiamata, e il risultato
+diventa il valore dell&#39;accumulatore allìiterazione successiva. Alla prima
+iterazione, la base diventa il valore dell&#39;accumulatore.</p>
+
+<p>Va be&#39;, non è chiarissimo. Esaminiamo i valori di tutte queste cose
+in questo iteratore:</p>
+
+<table>
+<thead>
+<tr>
+<th>base</th>
+<th>accumulatore</th>
+<th>elemento</th>
+<th>risultato della chiusura</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>0</td>
+<td>3</td>
+<td>3</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+
+<p>Abbiamo chiamato <code>fold()</code> con questi argomenti:</p>
+
+<span class='rusttest'>fn main() {
+    (1..4)
+.fold(0, |somma_parziale, x| somma_parziale + x);
+}</span><pre class='rust rust-example-rendered'>
+.<span class='ident'>fold</span>(<span class='number'>0</span>, <span class='op'>|</span><span class='ident'>somma_parziale</span>, <span class='ident'>x</span><span class='op'>|</span> <span class='ident'>somma_parziale</span> <span class='op'>+</span> <span class='ident'>x</span>);</pre>
+
+<p>Così, <code>0</code> è la nostra base, <code>somma_parziale</code> è il nostro accumulatore,
+e <code>x</code> è il nostro elemento.  Alla prima iterazione, abbiamo impostato
+<code>somma_parziale</code> a <code>0</code>, e <code>x</code> è il primo elemento di <code>numeri</code>, cioè
+<code>1</code>. Poi abbiamo sommato <code>somma_parziale</code> e <code>x</code>, ottenendo <code>0 + 1 = 1</code>.
+Alla seconda iterazione, quel valore è diventato il nostro accumulatore,
+<code>somma_parziale</code>, e l&#39;elemento è il secondo elemento dell&#39;array, <code>2</code>.
+<code>1 + 2 = 3</code>, e così quello è diventato il valore dell&#39;accumulatore
+per l&#39;ultima iterazione. In quell&#39;iterazione, <code>x</code> è l&#39;ultimo elemento, <code>3</code>,
+e <code>3 + 3 = 6</code>, che è il risultato finale della nostra somma. <code>1 + 2 + 3 = 6</code>,
+e quello è il risultato che abbiamo ottenuto.</p>
+
+<p>Accidenti! <code>fold</code> può sembrare un po&#39; strano le prime volte che lo si vede,
+ma quando lo si afferra, lo si può usare un po&#39; dappertutto. Ogni volta che
+che si ha una lista di oggetti, e se ne vuole ottenere un risultato singolo,
+<code>fold</code> può essere appropriato.</p>
+
+<p>I consumatori sono importanti a causa di una proprietà aggiuntiva
+degli iteratori di cui non abbiamo ancora parlato: la pigrizia (&quot;laziness&quot;).
+Parliamo ancora un po&#39; degli iteratori, e vedremo perché i consumatori
+sono così importanti.</p>
+
+<h2 id='iteratori' class='section-header'><a href='#iteratori'>Iteratori</a></h2>
+<p>Come abbiamo detto prima, un iteratore è qualcosa di cui possiamo chiamare
+ripetutamente il metodo <code>.next()</code>, e ci dà una sequenza di oggetti.
+Siccome per ottenere l&#39;oggetto si deve chiamare un metodo, questo significa
+che gli iteratori possono essere <em>pigri</em>  (&quot;lazy&quot;) e non generare subito
+tutti i valori. Questo codice, per esempio, non genera effettivamente
+i numeri da <code>1</code> a <code>99</code>, bensì crea un oggetto che si limita a rappresentare
+tale sequenza:</p>
+
+<span class='rusttest'>fn main() {
+    let nums = 1..100;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>nums</span> <span class='op'>=</span> <span class='number'>1</span>..<span class='number'>100</span>;</pre>
+
+<p>E dato che non abbiamo fatto niente con tale range, non ha proprio generato
+la sequenza. Aggiungiamo il consumatore:</p>
+
+<span class='rusttest'>fn main() {
+    let numeri = (1..100).collect::&lt;Vec&lt;i32&gt;&gt;();
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>numeri</span> <span class='op'>=</span> (<span class='number'>1</span>..<span class='number'>100</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span>();</pre>
+
+<p>Adesso, <code>collect()</code> richiederà che il range gli dia tutti i numeri, e quindi
+farà il lavoro di generare la sequenza.</p>
+
+<p>I range sono uno dei due iteratori di base che vedremo. L&#39;altro è <code>iter()</code>.
+<code>iter()</code> può trasformare un vettore in un semplice iteratore che ci dà
+ogni elemento, uno alla volta:</p>
+
+<span class='rusttest'>fn main() {
+    let numeri = vec![1, 2, 3];
+
+for numero in numeri.iter() {
+   println!(&quot;{}&quot;, numero);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>numeri</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+
+<span class='kw'>for</span> <span class='ident'>numero</span> <span class='kw'>in</span> <span class='ident'>numeri</span>.<span class='ident'>iter</span>() {
+   <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>numero</span>);
+}</pre>
+
+<p>Questi due iteratori di base dovrebbero servirci bene. Ci sono alcuni
+iteratori più avanzati, tra cui alcuni che sono infiniti.</p>
+
+<p>Abbiamo parlato abbastanza degli iteratori. Gli adattatori degli iteratori
+sono l&#39;ultimo concetto di cui dobbiamo parlare a proposito degli iteratori.
+Avanti!</p>
+
+<h2 id='adattatori-degli-iteratori' class='section-header'><a href='#adattatori-degli-iteratori'>Adattatori degli iteratori</a></h2>
+<p>Gli <em>adattatori degli iteratori</em> prendono un iteratore e lo modificano
+in qualche modo, producendo un nuovo iteratore. Quello più semplice
+si chiama <code>map</code> [&quot;mappa&quot;]:</p>
+
+<span class='rusttest'>fn main() {
+    (1..100).map(|x| x + 1);
+}</span><pre class='rust rust-example-rendered'>
+(<span class='number'>1</span>..<span class='number'>100</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>);</pre>
+
+<p><code>map</code> viene chiamato su un altro iteratore, e produce un nuovo iteratore
+che chiama su ogni elemento la chiusura ricevuta come argomento.
+Perciò il codice sopra restituirebbe i numeri da <code>2</code> a <code>100</code>. Beh, quasi!
+Se si compila il programma, si ottiene un avvertenza:</p>
+
+<pre><code class="language-text">warning: unused result which must be used: iterator adaptors are lazy and
+         do nothing unless consumed, #[warn(unused_must_use)] on by default
+(1..100).map(|x| x + 1);
+ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</code></pre>
+
+<p>La pigrizia colpisce ancora! Quella chiusura non verrà mai eseguita.
+Questo esempio non stampa nessun numero:</p>
+
+<span class='rusttest'>fn main() {
+    (1..100).map(|x| println!(&quot;{}&quot;, x));
+}</span><pre class='rust rust-example-rendered'>
+(<span class='number'>1</span>..<span class='number'>100</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>));</pre>
+
+<p>Se si vuole eseguire una chiusura su un iteratore perché si è interessati
+ai suoi effetti collaterali, si deve usare <code>for</code> invece.</p>
+
+<p>Ci sono tonnellate di interessanti adattatori di iteratore. <code>take(n)</code>
+restituisce un iteratore sui successivi <code>n</code> elementi dell&#39;iteratore originale.
+Proviamolo con un iteratore infinito:</p>
+
+<span class='rusttest'>fn main() {
+    for i in (1..).take(5) {
+    println!(&quot;{}&quot;, i);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> (<span class='number'>1</span>..).<span class='ident'>take</span>(<span class='number'>5</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>i</span>);
+}</pre>
+
+<p>che stamperà</p>
+
+<pre><code class="language-text">1
+2
+3
+4
+5
+</code></pre>
+
+<p><code>filter()</code> è un adattatore che prende come argomento una chiusura.
+Questa chiusura restituisce <code>true</code> o <code>false</code>. Il nuovo iteratore <code>filter()</code>
+produce solamente gli elementi per cui la chiusura restituisce <code>true</code>:</p>
+
+<span class='rusttest'>fn main() {
+    for i in (1..101).filter(|&amp;x| x % 2 == 0) {
+    println!(&quot;{}&quot;, i);
+}
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> (<span class='number'>1</span>..<span class='number'>101</span>).<span class='ident'>filter</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>2</span> <span class='op'>==</span> <span class='number'>0</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>i</span>);
+}</pre>
+
+<p>Questo stamperà tutti i numeri pari fra uno e cento.
+(Si noti che, diversamente da <code>map</code>, la chiusura passata a <code>filter</code> riceve
+un riferimento all&#39;elemento invece dell&#39;elemento stesso. Il predicato di filtro
+qui usa il pattern <code>&amp;x</code> per estrarre l&#39;intero. La chiusura del filtro riceve
+un riferimento perché restituisce <code>true</code> o <code>false</code> invece dell&#39;elemento,
+e così l&#39;implementazione di <code>filter</code> può conservare il possesso per mettere
+gli elementi nell&#39;iteratore da costruire.)</p>
+
+<p>Si può concatenare tutte e tre le cose insieme: iniziare con un iteratore,
+adattarlo alcune volte, e poi consumare il risultato. Proviamo:</p>
+
+<span class='rusttest'>fn main() {
+    (1..)
+    .filter(|&amp;x| x % 2 == 0)
+    .filter(|&amp;x| x % 3 == 0)
+    .take(5)
+    .collect::&lt;Vec&lt;i32&gt;&gt;();
+}</span><pre class='rust rust-example-rendered'>
+(<span class='number'>1</span>..)
+    .<span class='ident'>filter</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>2</span> <span class='op'>==</span> <span class='number'>0</span>)
+    .<span class='ident'>filter</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>%</span> <span class='number'>3</span> <span class='op'>==</span> <span class='number'>0</span>)
+    .<span class='ident'>take</span>(<span class='number'>5</span>)
+    .<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span>();</pre>
+
+<p>Questo codice darà un vettore contenente <code>6</code>, <code>12</code>, <code>18</code>, <code>24</code>, e <code>30</code>.</p>
+
+<p>Questo è solo un assaggio di ciò a cui gli iteratori, gli adattaori
+degli iterator, e i consumatori possono servire. Ci sono vari iteratori
+realmente utili, e inoltre se ne possono scrivere di propri. Gli iteratori
+forniscono un modo sicuro ed efficiente di manipolare ogni tipo di lista.
+Dapprima sono un po&#39; insoliti, ma se ci si gioca, ci si appassiona.
+Per una lista completa dei diversi iteratori e consumatori,
+si veda la <a href="../std/iter/index.html">documentazione del modulo iteratore</a>.</p>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>

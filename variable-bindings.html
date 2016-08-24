@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Legami di variabile</title>
+
+    <link rel="stylesheet" type="text/css" href="rustbook.css">
+
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+                <div id="nav">
+                    <button id="toggle-nav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a  href='README.html'><b>1.</b> Introduzione</a>
+</li>
+<li><a  href='getting-started.html'><b>2.</b> Come Iniziare</a>
+</li>
+<li><a  href='guessing-game.html'><b>3.</b> Tutorial: Gioco-indovina</a>
+</li>
+<li><a  href='syntax-and-semantics.html'><b>4.</b> Sintassi e semantica</a>
+<ul class='section'>
+<li><a class='active' href='variable-bindings.html'><b>4.1.</b> Legami di variabili</a>
+</li>
+<li><a  href='functions.html'><b>4.2.</b> Funzioni</a>
+</li>
+<li><a  href='primitive-types.html'><b>4.3.</b> Tipi primitivi</a>
+</li>
+<li><a  href='comments.html'><b>4.4.</b> Commenti</a>
+</li>
+<li><a  href='if.html'><b>4.5.</b> if</a>
+</li>
+<li><a  href='loops.html'><b>4.6.</b> Cicli</a>
+</li>
+<li><a  href='vectors.html'><b>4.7.</b> Vettori</a>
+</li>
+<li><a  href='ownership.html'><b>4.8.</b> Possesso</a>
+</li>
+<li><a  href='references-and-borrowing.html'><b>4.9.</b> Riferimenti e prestito</a>
+</li>
+<li><a  href='lifetimes.html'><b>4.10.</b> Tempo di vita</a>
+</li>
+<li><a  href='mutability.html'><b>4.11.</b> Mutabilità</a>
+</li>
+<li><a  href='structs.html'><b>4.12.</b> Strutture</a>
+</li>
+<li><a  href='enums.html'><b>4.13.</b> Enumerazioni</a>
+</li>
+<li><a  href='match.html'><b>4.14.</b> Match</a>
+</li>
+<li><a  href='patterns.html'><b>4.15.</b> Pattern</a>
+</li>
+<li><a  href='method-syntax.html'><b>4.16.</b> Sintassi dei metodi</a>
+</li>
+<li><a  href='strings.html'><b>4.17.</b> Stringhe</a>
+</li>
+<li><a  href='generics.html'><b>4.18.</b> Genericità</a>
+</li>
+<li><a  href='traits.html'><b>4.19.</b> Tratti</a>
+</li>
+<li><a  href='drop.html'><b>4.20.</b> Drop</a>
+</li>
+<li><a  href='if-let.html'><b>4.21.</b> `if let`</a>
+</li>
+<li><a  href='trait-objects.html'><b>4.22.</b> Oggetti-tratti</a>
+</li>
+<li><a  href='closures.html'><b>4.23.</b> Chiusure</a>
+</li>
+<li><a  href='ufcs.html'><b>4.24.</b> Sintassi universale di chiamata di funzione</a>
+</li>
+<li><a  href='crates-and-modules.html'><b>4.25.</b> Crate e moduli</a>
+</li>
+<li><a  href='const-and-static.html'><b>4.26.</b> `const` e `static`</a>
+</li>
+<li><a  href='attributes.html'><b>4.27.</b> Attributi</a>
+</li>
+<li><a  href='type-aliases.html'><b>4.28.</b> Alias tramite `type`</a>
+</li>
+<li><a  href='casting-between-types.html'><b>4.29.</b> Forzatura di tipo</a>
+</li>
+<li><a  href='associated-types.html'><b>4.30.</b> Tipi associati</a>
+</li>
+<li><a  href='unsized-types.html'><b>4.31.</b> Tipi non dimensionati</a>
+</li>
+<li><a  href='operators-and-overloading.html'><b>4.32.</b> Operatori e sovraccaricamento</a>
+</li>
+<li><a  href='deref-coercions.html'><b>4.33.</b> Coercizione Deref</a>
+</li>
+<li><a  href='macros.html'><b>4.34.</b> Le macro</a>
+</li>
+<li><a  href='raw-pointers.html'><b>4.35.</b> Puntatori grezzi</a>
+</li>
+<li><a  href='unsafe.html'><b>4.36.</b> `unsafe`</a>
+</li>
+</ul>
+</li>
+<li><a  href='effective-rust.html'><b>5.</b> Rust efficace</a>
+<ul class='section'>
+<li><a  href='the-stack-and-the-heap.html'><b>5.1.</b> Lo stack e lo heap</a>
+</li>
+<li><a  href='testing.html'><b>5.2.</b> Collaudo</a>
+</li>
+<li><a  href='conditional-compilation.html'><b>5.3.</b> Compilazione condizionale</a>
+</li>
+<li><a  href='documentation.html'><b>5.4.</b> Documentazione</a>
+</li>
+<li><a  href='iterators.html'><b>5.5.</b> Iteratori</a>
+</li>
+<li><a  href='concurrency.html'><b>5.6.</b> Concorrenza</a>
+</li>
+<li><a  href='error-handling.html'><b>5.7.</b> Gestione degli errori</a>
+</li>
+<li><a  href='choosing-your-guarantees.html'><b>5.8.</b> Scegliere le garanzie</a>
+</li>
+<li><a  href='ffi.html'><b>5.9.</b> FFI</a>
+</li>
+<li><a  href='borrow-and-asref.html'><b>5.10.</b> Prestito e AsRef</a>
+</li>
+<li><a  href='release-channels.html'><b>5.11.</b> Canali di rilascio</a>
+</li>
+<li><a  href='using-rust-without-the-standard-library.html'><b>5.12.</b> Usare Rust senza la libreria standard</a>
+</li>
+</ul>
+</li>
+<li><a  href='nightly-rust.html'><b>6.</b> Rust notturno</a>
+<ul class='section'>
+<li><a  href='compiler-plugins.html'><b>6.1.</b> Plugin del compilatore</a>
+</li>
+<li><a  href='inline-assembly.html'><b>6.2.</b> Assembly in-line</a>
+</li>
+<li><a  href='no-stdlib.html'><b>6.3.</b> Omettere la libreria stdandard</a>
+</li>
+<li><a  href='intrinsics.html'><b>6.4.</b> Intrinseci</a>
+</li>
+<li><a  href='lang-items.html'><b>6.5.</b> Elementi "lang"</a>
+</li>
+<li><a  href='advanced-linking.html'><b>6.6.</b> Link avanzato</a>
+</li>
+<li><a  href='benchmark-tests.html'><b>6.7.</b> Collaudi prestazionali</a>
+</li>
+<li><a  href='box-syntax-and-patterns.html'><b>6.8.</b> Sintassi di box e relativi pattern</a>
+</li>
+<li><a  href='slice-patterns.html'><b>6.9.</b> Pattern di slice</a>
+</li>
+<li><a  href='associated-constants.html'><b>6.10.</b> Costanti associate</a>
+</li>
+<li><a  href='custom-allocators.html'><b>6.11.</b> Allocatori personalizzati</a>
+</li>
+</ul>
+</li>
+<li><a  href='glossary.html'><b>7.</b> Glossario</a>
+</li>
+<li><a  href='syntax-index.html'><b>8.</b> Indice analitico della sintassi</a>
+</li>
+</ul>
+</div>
+<div id='page-wrapper'>
+<div id='page'>
+
+
+    <h1 class="title">Legami di variabile</h1>
+    <p>Praticamente qualunque programma in Rust più complesso di &#39;Hello World’ usa
+i <em>legami di variabile</em> [&quot;variable binding&quot;]. Tali istruzioni legano qualche
+valore ad un nome, in modo da poter essere usato in seguito. Per introdurre
+un legame, si usa la parola-chiave <code>let</code>, così:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5;
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+}</pre>
+
+<p>Mettere <code>fn main() {</code> in ogni esempio è un po&#39; noioso, perciò in futuro
+lo ometteremo. Nel prosieguo, ci si ricordi di editare il corpo della propria
+funzione <code>main()</code>, invece di ometterla. Altrimenti, si otterrà un&#39;errore.</p>
+
+<h1 id='i-pattern' class='section-header'><a href='#i-pattern'>I pattern</a></h1>
+<p>In molti linguaggi, un legame di variabile verrebbe chiamato semplicemente
+<em>variabile</em>, ma i legami di variabile di Rust hanno alcuni assi nella manica.
+Per esempio, il lato sinistro di un&#39;istruzione <code>let</code> è un ‘<a href="patterns.html">pattern</a>’,
+non un semplice nome di variabile. Ciò significa che si può fare:</p>
+
+<span class='rusttest'>fn main() {
+    let (x, y) = (1, 2);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> (<span class='ident'>x</span>, <span class='ident'>y</span>) <span class='op'>=</span> (<span class='number'>1</span>, <span class='number'>2</span>);</pre>
+
+<p>Dopo che questa istruzione viene eseguita, <code>x</code> varrà uno, e <code>y</code> varrà due.
+I pattern sono veramente vantaggiosi, e hanno <a href="patterns.html">una loro sezione</a>
+in questo libro. Per adesso non ci servono quelle caratteristiche, e quindi
+le accantoneremo mentre proseguiamo.</p>
+
+<h1 id='annotazioni-di-tipo' class='section-header'><a href='#annotazioni-di-tipo'>Annotazioni di tipo</a></h1>
+<p>Rust è un linguaggio tipizzato staticamente, il che significa che specifichiamo
+subito i tipi, e questi vengono verificati in fase di compilazione. Allora
+perché il nostro primo esempio compilava? Beh, Rust ha una cosa chiamata
+‘inferenza di tipo’. Se riesce a desumere qual&#39;è il tipo di qualche dato,
+Rust non costringe a digitarlo esplicitamente.</p>
+
+<p>Se vogliamo, possiamo aggiungere il tipo di dato. I tipi si mettono dopo
+un punto-e-virgola (<code>:</code>):</p>
+
+<span class='rusttest'>fn main() {
+    let x: i32 = 5;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>5</span>;</pre>
+
+<p>Se volessi leggere questa istruzione ad alta voce, direi “<code>x</code> è un legame
+di tipo <code>i32</code> al valore <code>cinque</code>.”</p>
+
+<p>In questo caso abbiamo scelto di rappresentare <code>x</code> come un intero con segno
+a 32 bit. Rust ha molti tipi interi primitivi. I loro nomi cominciano con <code>i</code>
+per gli interi con segno, e con <code>u</code> per gli interi senza segno (unsigned).
+Le dimensioni intere possibili sono 8, 16, 32, e 64 bit.</p>
+
+<p>Negli esempi futuri, potremmo annotare il tipo in un commento. Gli esempi si
+presenteranno così:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5; // x: i32
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>; <span class='comment'>// x: i32</span>
+}</pre>
+
+<p>Si noti la somiglianza fra questa annotazione e la sintassi che si usa con
+<code>let</code>. Scrivere questo genere di commenti è insolito in Rust, ma lo faremo
+occasionalmente per aiutare a capire quali sono i tipi che Rust inferisce.</p>
+
+<h1 id='mutabilità' class='section-header'><a href='#mutabilità'>Mutabilità</a></h1>
+<p>Di default, i legami sono <em>immutabili</em>. Questo codice non compilerà:</p>
+
+<span class='rusttest'>fn main() {
+    let x = 5;
+x = 10;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>10</span>;</pre>
+
+<p>Darà questo errore:</p>
+
+<pre><code class="language-text">error: re-assignment of immutable variable `x`
+     x = 10;
+     ^~~~~~~
+</code></pre>
+
+<p>Se si vuole che un legame sia mutabile, si deve usare <code>mut</code>:</p>
+
+<span class='rusttest'>fn main() {
+    let mut x = 5; // mut x: i32
+x = 10;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5</span>; <span class='comment'>// mut x: i32</span>
+<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>10</span>;</pre>
+
+<p>Non c&#39;è una singola ragione per cui i legami sono immutabili di default, ma
+possiamo pensarci in base a uno degli obiettivi primari di Rust: la sicurezza.
+Se ci si dimentica di dire <code>mut</code>, il compilatore se ne accorgerà, e farà
+sapere che si ha mutato qualcosa che si potrebbe non aver inteso mutare.
+Se i legami fossero mutabili di default, il compilatore non sarebbe in grado
+di dirlo. Se si <em>intendesse</em> proprio la mutazione, allora la soluzione è
+facilissima: aggiungere <code>mut</code>.</p>
+
+<p>Ci sono altre buone ragioni per evitare lo stato mutabile quando possibile,
+ma non ne parleremo in questo libro. In generale, si può spesso evitare
+la mutazione esplicita, e quindi in Rust è preferibile evitarla. Detto questo,
+talvolta, la mutazione è quello che serve, e quindi non è proibita.</p>
+
+<h1 id='inizializzare-i-legami' class='section-header'><a href='#inizializzare-i-legami'>Inizializzare i legami</a></h1>
+<p>I legami di variabile in Rust hanno un altro aspetto che differisce da altri
+linguaggi: i legami devono essere inizializzati con un valore prima di poterli
+usare.</p>
+
+<p>Facciamo una prova. Modifichiamo il nostro file <code>src/main.rs</code> in modo che
+si presenti così:</p>
+
+<span class='rusttest'>fn main() {
+    let x: i32;
+
+    println!(&quot;Hello world!&quot;);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello world!&quot;</span>);
+}</pre>
+
+<p>Si può usare <code>cargo build</code> dalla riga di comando per costruirlo. Si otterrà
+un avvertimento, ma stamperà ancora &quot;Hello, world!&quot;:</p>
+
+<pre><code class="language-text">   Compiling hello_world v0.0.1 (file:///home/you/projects/hello_world)
+src/main.rs:2:9: 2:10 warning: unused variable: `x`, #[warn(unused_variable)]
+   on by default
+src/main.rs:2     let x: i32;
+                      ^
+</code></pre>
+
+<p>Rust ci avverte che non abbiamo mai usato il legame di variabile, ma dato che
+non l&#39;abbiamo mai usato, nessun danno, nessun fallo. Però le cose cambiano
+se proviamo ad usare effettivamente questa <code>x</code>. Facciamolo. Modifichiamo
+il programma in modo che si presenti così:</p>
+
+<span class='rusttest'>fn main() {
+    let x: i32;
+
+    println!(&quot;Il valore di x è: {}&quot;, x);
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il valore di x è: {}&quot;</span>, <span class='ident'>x</span>);
+}</pre>
+
+<p>E proviamo a costruirlo. Otterremo un errore:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling hello_world v0.0.1 (file:///home/you/projects/hello_world)
+src/main.rs:4:39: 4:40 error: use of possibly uninitialized variable: `x`
+src/main.rs:4     println!(&quot;Il valore di x è: {}&quot;, x);
+                                                   ^
+note: in expansion of format_args!
+&lt;std macros&gt;:2:23: 2:77 note: expansion site
+&lt;std macros&gt;:1:1: 3:2 note: in expansion of println!
+src/main.rs:4:5: 4:41 note: expansion site
+error: aborting due to previous error
+Could not compile `hello_world`.
+</code></pre>
+
+<p>Rust non ci permetterà di usare un valore che non è stato inizializzato.</p>
+
+<p>Prendiamo un minuto per parlare di questa cosa che abbiamo aggiunto a
+<code>println!</code>.</p>
+
+<p>Se si inseriscono due graffe (<code>{}</code>, alcuni li chiamano baffi...) nella nostra
+stringa da stampare, Rust le interpreterà come una richiesta di interpolare
+qualche sorta di valore. L&#39;*interpolazione di stringa* è un termine
+informatico che significa &quot;inserire una o più stringhe dentro un&#39;altra stringa,
+al posto di altrettanti segnaposto.&quot; Dopo la nostra stringa, mettiamo
+una virgola, e una <code>x</code>, per indicare che vogliamo che <code>x</code> sia il valore che
+stiamo interpolando. La virgola serve a separare gli argomenti che passiamo
+alle funzioni e alle macro.</p>
+
+<p>Quando si usa la coppia di graffe, Rust tenterà di visualizzare il valore
+in un modo significativo verificando il suo tipo. Se si vuole specificare
+il formato in una maniera più dettagliata, c&#39;è un <a href="../std/fmt/index.html">ampio numero di opzioni
+disponibili</a>. Per adesso, ci limitiamo al default: gli interi non sono
+molto complicati da stampare.</p>
+
+<h1 id='ambito-ed-oscuramento' class='section-header'><a href='#ambito-ed-oscuramento'>Ambito ed oscuramento</a></h1>
+<p>Torniamo ai legami. I legami di variabile hanno un ambito - ossia sono
+vincolati a risiedere nel blocco in cui sono stati definiti. Un blocco è una
+collezione di istruzioni racchiuse da <code>{</code> e <code>}</code>. Anche le definizioni
+di funzione sono blocchi! Nell&#39;esempio seguente definiamo due legami
+di variabile, <code>x</code> e <code>y</code>, che risiedono in blocchi diversi. Si può accedere
+a <code>x</code> da tutto il blocco <code>fn main() {}</code>, mentre si può accedere a <code>y</code> solamente
+dal blocco più interno:</p>
+
+<span class='rusttest'>fn main() {
+    let x: i32 = 17;
+    {
+        let y: i32 = 3;
+        println!(&quot;Il valore di x è {} e il valore di y è {}&quot;, x, y);
+    }
+    println!(&quot;Il valore di x è {} e il valore di y è {}&quot;, x, y); // Questo non funziona
+}
+</span><pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>17</span>;
+    {
+        <span class='kw'>let</span> <span class='ident'>y</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>3</span>;
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il valore di x è {} e il valore di y è {}&quot;</span>, <span class='ident'>x</span>, <span class='ident'>y</span>);
+    }
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Il valore di x è {} e il valore di y è {}&quot;</span>, <span class='ident'>x</span>, <span class='ident'>y</span>); <span class='comment'>// Questo non funziona</span>
+}</pre>
+
+<p>La prima <code>println!</code> stamperebbe &quot;Il valore di x è 17 e il valore di y è 3&quot;,
+ma questo esempio non può essere compilato con successo, perché la seconda
+<code>println!</code> non può accedere al valore di <code>y</code>, dato che non è più
+nel suo ambito. Otteniamo invece questo errore:</p>
+
+<pre><code class="language-bash">$ cargo build
+   Compiling hello v0.1.0 (file:///home/you/projects/hello_world)
+main.rs:7:62: 7:63 error: unresolved name `y`. Did you mean `x`? [E0425]
+main.rs:7     println!(&quot;Il valore di x è {} e il valore di y è {}&quot;, x, y); // Questo non funziona
+                                                                       ^
+note: in expansion of format_args!
+&lt;std macros&gt;:2:25: 2:56 note: expansion site
+&lt;std macros&gt;:1:1: 2:62 note: in expansion of print!
+&lt;std macros&gt;:3:1: 3:54 note: expansion site
+&lt;std macros&gt;:1:1: 3:58 note: in expansion of println!
+main.rs:7:5: 7:65 note: expansion site
+main.rs:7:62: 7:63 help: run `rustc --explain E0425` to see a detailed explanation
+error: aborting due to previous error
+Could not compile `hello`.
+
+To learn more, run the command again with --verbose.
+</code></pre>
+
+<p>Inoltre, i legami di variabile possono venire oscurati (&quot;shadowed&quot;). Ciò
+significa che un successivo legame di variabile con il medesimo nome di un
+legame attualmente nel suo ambito scavalcherà il legame precedente.</p>
+
+<span class='rusttest'>fn main() {
+    let x: i32 = 8;
+{
+    println!(&quot;{}&quot;, x); // Stampa &quot;8&quot;
+    let x = 12;
+    println!(&quot;{}&quot;, x); // Stampa &quot;12&quot;
+}
+println!(&quot;{}&quot;, x); // Stampa &quot;8&quot;
+let x =  42;
+println!(&quot;{}&quot;, x); // Stampa &quot;42&quot;
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>8</span>;
+{
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>); <span class='comment'>// Stampa &quot;8&quot;</span>
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>12</span>;
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>); <span class='comment'>// Stampa &quot;12&quot;</span>
+}
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>); <span class='comment'>// Stampa &quot;8&quot;</span>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span>  <span class='number'>42</span>;
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>); <span class='comment'>// Stampa &quot;42&quot;</span></pre>
+
+<p>L&#39;oscuramento e la mutabilità dei legami possono apparire come due facce
+della stessa medaglia, ma sono due concetti distinti che non sono sempre
+intercambiabili. Per dirne una, l&#39;oscuramento ci consente di rilegare un nome
+ad un valore di tipo diverso. È anche possibile cambiare la mutabilità
+di un legame. Si noti che oscurare un nome non altera né distrugge il valore
+a cui era legato quel nome, e tale valore continuerà a esistere finché
+non esce di ambito, anche se non è più accessibile in nessun modo.</p>
+
+<span class='rusttest'>fn main() {
+    let mut x: i32 = 1;
+x = 7;
+let x = x; // x adesso è immutabile ed è legato a 7
+
+let y = 4;
+let y = &quot;Posso anche essere legato a un testo!&quot;; // y adesso è di un altro tipo
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='ident'>x</span> <span class='op'>=</span> <span class='number'>7</span>;
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>x</span>; <span class='comment'>// x adesso è immutabile ed è legato a 7</span>
+
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='number'>4</span>;
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='string'>&quot;Posso anche essere legato a un testo!&quot;</span>; <span class='comment'>// y adesso è di un altro tipo</span></pre>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "https://play.rust-lang.org";
+    </script>
+    <script src='rustbook.js'></script>
+<script src='playpen.js'></script>
+</div></div>
+
+
+</body>
+</html>
