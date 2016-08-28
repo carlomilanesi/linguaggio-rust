@@ -1,6 +1,7 @@
-% Associated Constants
+% Le costanti associate
 
-With the `associated_consts` feature, you can define constants like this:
+Con la caratteristica delle `associated_consts`, si possono definire
+costanti così:
 
 ```rust
 #![feature(associated_consts)]
@@ -18,7 +19,7 @@ fn main() {
 }
 ```
 
-Any implementor of `Foo` will have to define `ID`. Without the definition:
+Qualunque implementatore di `Foo` dovrà definire `ID`. Senza la definizione:
 
 ```rust,ignore
 #![feature(associated_consts)]
@@ -31,7 +32,7 @@ impl Foo for i32 {
 }
 ```
 
-gives
+si ottiene:
 
 ```text
 error: not all trait items implemented, missing: `ID` [E0046]
@@ -39,7 +40,7 @@ error: not all trait items implemented, missing: `ID` [E0046]
      }
 ```
 
-A default value can be implemented as well:
+Si può implementare anche un valore di default:
 
 ```rust
 #![feature(associated_consts)]
@@ -61,12 +62,12 @@ fn main() {
 }
 ```
 
-As you can see, when implementing `Foo`, you can leave it unimplemented, as
-with `i32`. It will then use the default value. But, as in `i64`, we can also
-add our own definition.
+Come si vede, quando si implementa `Foo`, si può lasciare la costante
+non implementata, come per `i32`. In tal caso si userà il valore di default.
+Ma, come per `i64`, si può anche aggiungere una ridefinizione.
 
-Associated constants don’t have to be associated with a trait. An `impl` block
-for a `struct` or an `enum` works fine too:
+Le costanti associate non devono necessariamente essere associate a un tratto.
+Un blocco `impl` funziona bene anche per una `struct` o una `enum`:
 
 ```rust
 #![feature(associated_consts)]

@@ -1,4 +1,4 @@
-% Sintassi e Semantica
+% Sintassi e semantica
 
 Questo capitolo scompone Rust in pezzetti, uno per ogni concetto.
 

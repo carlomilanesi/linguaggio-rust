@@ -1144,11 +1144,11 @@ Le prime due cose sono dovute al fatto che `Error` richiede che siano
 implementati sia `Debug` che `Display`. Le ultime due cose sono dovute
 ai due metodi defined in `Error`. Il potere di `Error` deriva dal fatto che
 tutti i tipi di errore implementano `Error`, che significa che gli errori
-possono essere quantificati esistenzialmente come un [oggetto tratto]
+possono essere quantificati esistenzialmente come un [oggetto-tratto]
 (../book/trait-objects.html). Questo si manifesta come o un `Box<Error>`
 o un `&Error`. In effetti, il metodo `cause` restituisce un `&Error`, che è
-esso stesso un oggetto tratto. Più avanti ritorneremo sull'utilità del tratto
-`Error` come oggetto tratto.
+esso stesso un oggetto-tratto. Più avanti ritorneremo sull'utilità del tratto
+`Error` come oggetto-tratto.
 
 Per adesso, basta mostrare un esempio che implementa il tratto `Error`. Usiamo
 il tipo di errore che abbiamo definito nella [sottosezione precedente]
@@ -1205,7 +1205,7 @@ impl error::Error for CliError {
         match *self {
             // N.B. Entrambi convertono implicitamente `err` dai loro tipi
             // concreti (o `&io::Error` o `&num::ParseIntError`)
-            // a un oggetto tratto `&Error`. Questo funziona perché entrambi
+            // a un oggetto-tratto `&Error`. Questo funziona perché entrambi
             // i tipi di errore implementano `Error`.
             CliError::Io(ref err) => Some(err),
             CliError::Parse(ref err) => Some(err),
@@ -1254,7 +1254,7 @@ impl<'a, E: Error + 'a> From<E> for Box<Error + 'a>
 ```
 
 Questa implementazione dice che per *ogni* tipo che implementa `Error`,
-possiamo convertirlo in un oggetto tratto `Box<Error>`. Questo può non sembrare
+possiamo convertirlo in un oggetto-tratto `Box<Error>`. Questo può non sembrare
 terribilmente sorprendente, ma è utile in un contesto generico.
 
 Ricordiamo i due errori che stavamo trattando prima? Specificamente,
@@ -1279,7 +1279,7 @@ let err2: Box<Error> = From::from(parse_err);
 
 Qui c'è un pattern veramente importante da riconoscere. `err1` ed `err2` hanno
 il *medesimo tipo*. Questo perché sono tipi quantificati esistenzialmente,
-od oggetti tratto. In particolare, il loro tipo soggiaciente viene *eliminato*
+od oggetti-tratto. In particolare, il loro tipo soggiaciente viene *eliminato*
 dalla conoscenza del compilatore, in modo che veda realmente `err1` e `err2`
 come esattamente del medesimo tipo. Inoltre, abbiamo costruito `err1` e `err2`
 usando precisamente la medesima chiamata di funzione: `From::from`.
@@ -1774,7 +1774,7 @@ il nostro tipo di errore.
 
 `Box<Error>` è carino perché *in qualche modo, funziona*. Non è necessario
 definire i propri tipi di errore e né implementazioni di `From`. Lo svantaggio
-è che, siccome `Box<Error>` è un oggetto tratto, *cancella il tipo*,
+è che, siccome `Box<Error>` è un oggetto-tratto, *cancella il tipo*,
 che significa che il compilatore non può più ragionare sul suo
 tipo soggiaciente.
 
@@ -2011,7 +2011,7 @@ un analizzatore da [qualunque tipo che implementi `io::Read`]
 Ma come possiamo usare il medesimo codice su entrambi i tipi? Effettivamente
 c'è un paio di strade che potremmo percorrere per questo. Una strada è scrivere
 `cerca` in modo tale che sia generica su qualche parametro di tipo `R`, che
-soddisfa `io::Read`. Un altro modo è usare gli oggetti tratto:
+soddisfa `io::Read`. Un altro modo è usare gli oggetti-tratto:
 
 ```rust,ignore
 use std::io;

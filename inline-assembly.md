@@ -5,7 +5,7 @@ qualcuno potrebbe desiderare di controllare direttamente la CPU. Rust consente
 di farlo scrivendo codice assembly inline, tramite la macro `asm!`.
 
 ```rust,ignore
-asm!(template assembly
+asm!(template di assembly
    : operandi di output
    : operandi di input
    : clobber
@@ -13,15 +13,16 @@ asm!(template assembly
    );
 ```
 
-Any use of `asm` is feature gated (requires `#![feature(asm)]` on the
-crate to allow) and of course requires an `unsafe` block.
+Ogni uso di `asm` è una caratteristica attivata da un gate (cioè richiede
+`#![feature(asm)]` sul crate per consentirla) e naturalmente richiede
+un blocco `unsafe`.
 
 > **Nota**: qui gli esempi sono dati nell'assembly x86/x86-64, però
 > sono supportate tutte le piattaforme.
 
-## Template assembly
+## Template di assembly
 
-The `template assembly` è l'unico parametro obbligatorio e deve essere
+Il "template di assembly" è l'unico parametro obbligatorio e deve essere
 una stringa letterale (per es. `""`)
 
 ```rust
@@ -45,7 +46,7 @@ fn main() {
 }
 ```
 
-(The `feature(asm)` and `#[cfg]`s are omitted from now on.)
+(Da qui in avanti, le istruzioni `feature(asm)` e `#[cfg]` saranno omesse.)
 
 Gli operandi di output, gli operandi di input, i clobber e le opzioni sono
 tutti facoltativi, ma si devono sempre mettere i relativi caratteri `:`:
@@ -74,9 +75,10 @@ asm!("xor %eax, %eax" ::: "eax");
 
 ## Operandi
 
-Gli operandi di input e di output hanno lo stesso formato: `:
-"constraints1"(expr1), "constraints2"(expr2), ..."`. Le espressioni
-degli operandi di output devono essere lvalue mutabili, o non ancora assegnati:
+Gli operandi di input e di output hanno lo stesso formato:
+`: "constraints1"(expr1), "constraints2"(expr2), ..."`.
+Le espressioni degli operandi di output devono essere l-value mutabili,
+o non ancora assegnati:
 
 ```rust
 # #![feature(asm)]

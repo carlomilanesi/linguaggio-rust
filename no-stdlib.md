@@ -16,7 +16,7 @@ usando l'attributo: `#![no_std]`.
 Ovviamente nella vita c'è di più che le librerie: si può usare
 `#[no_std]` anche con un programma.
 
-### Usare libc
+### Usare "libc"
 
 Per poter costruire un programma `#[no_std]`, avremo bisogno di una dipendenza
 da libc. Lo possiamo specificare usando il nostro file `Cargo.toml`:
@@ -33,19 +33,19 @@ quindi devono essere disabilitate.**
 
 ### Scrivere un programma senza stdlib
 
-Controllare il punto di ingresso è possibile è possibile in due modi:
-l'attributo `#[start]`, o scavalcare il shim di default per la funzione C
-`main` con la propria.
+Si può controllare il punto di ingresso in due modi:
+o usando l'attributo `#[start]`, o sovrascrivendo con una propria funzione
+la routine di default che richiama la funzione `main` del linguaggio C.
 
-The function marked `#[start]` is passed the command line parameters
-in the same format as C:
+La funzione marcata `#[start]` riceve gli argomenti della riga di comando
+nello stesso formato del linguaggio C:
 
 ```rust,ignore
 #![feature(lang_items)]
 #![feature(start)]
 #![no_std]
 
-// Tira dentro la libreria libc di sistema per avere ciò che probabilmente
+// Incorpora la libreria libc di sistema per avere ciò che probabilmente
 // e' richiesto da crt0.o
 extern crate libc;
 

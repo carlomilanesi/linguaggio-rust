@@ -1,5 +1,10 @@
 % Il linguaggio di programmazione Rust
 
+Questo libro è una traduzione della [documentazione ufficiale in inglese]
+[book-html] del linguaggio Rust. La versione originale di riferimento è la 1.12.0-dev,
+risalente al 17 luglio 2016.
+Tale documentazione comprende una dettagliata bibliografia in inglese.
+
 Benvenuti! Questo libro insegnerà il [linguaggio di programmazione Rust][rust].
 Rust è un linguaggio di programmazione di sistemi incentrato su tre obiettivi:
 correttezza, velocità, e concorrenza. Il linguaggio raggiunge questi tre
@@ -18,6 +23,7 @@ ad alto livello.
 Ciononostante, Rust consente ancora un controllo preciso,
 tipico di un linguaggio di basso livello.
 
+[book-html]: https://doc.rust-lang.org/book/
 [rust]: https://www.rust-lang.org
 
 “Il linguaggio di programmazione Rust” è suddiviso in capitoli.
@@ -31,9 +37,8 @@ Questa introduzione è il primo. Poi vengono:
   eccellente .
 * [Rust notturno][nr] - Funzionalità all'avanguardia che non sono ancora
   nella versione stabile.
-* [Glossario][gl] - Un riferimento ai termini usati nel libro.
-* [Bibliografia][bi] - Introduzione su ciò che ha influenzato Rust, e articoli
-  vari su Rust.
+* [Glossario][gl] - Un riferimento ai termini usati nel libro
+  e la loro traduzione in inglese.
 
 [gs]: getting-started.html
 [gg]: guessing-game.html
@@ -41,11 +46,10 @@ Questa introduzione è il primo. Poi vengono:
 [ss]: syntax-and-semantics.html
 [nr]: nightly-rust.html
 [gl]: glossary.html
-[bi]: bibliography.html
 
 ### Contribuire
 
 I file sorgente da cui questo libro è stato generato si trovano
-su [GitHub][book].
+su [GitHub][libro].
 
-[book]: https://github.com/rust-lang/rust/tree/master/src/doc/book
+[libro]: https://github.com/carlomilanesi/linguaggio-rust

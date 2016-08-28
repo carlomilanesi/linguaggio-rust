@@ -165,8 +165,8 @@ perché per ogni accesso ad un array, in fase di esecuzione si verifica
 che l'indice sia compreso nei limiti. Accessi erronei di questo tipo
 causano molti bug in altri linguaggi di programmazione di sistema.
 
-You can find more documentation for `array`s [in the standard library
-documentation][array].
+Per maggiori informazioni sugli array si consulti [la documentazione sulla
+libreria standard][array].
 
 [array]: ../std/primitive.array.html
 

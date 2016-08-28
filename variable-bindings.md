@@ -15,7 +15,7 @@ Mettere `fn main() {` in ogni esempio è un po' noioso, perciò in futuro
 lo ometteremo. Nel prosieguo, ci si ricordi di editare il corpo della propria
 funzione `main()`, invece di ometterla. Altrimenti, si otterrà un'errore.
 
-# I patterns
+# I pattern
 
 In molti linguaggi, un legame di variabile verrebbe chiamato semplicemente
 *variabile*, ma i legami di variabile di Rust hanno alcuni assi nella manica.

@@ -262,8 +262,8 @@ fn call_method_on_String(x: *const ()) -> String {
 
 static Foo_for_String_vtable: FooVtable = FooVtable {
     destructor: /* magia del compilatore */,
-    // questi sono i valori per un target a 64-bit;
-    // bisogna dimezzarli per un target a 32-bit
+    // questi sono i valori per un target a 64 bit;
+    // bisogna dimezzarli per un target a 32 bit
     size: 24,
     align: 8,
 
@@ -282,7 +282,7 @@ dato che questa informazione è incorporata nel distruttore, ma verrà usata in
 futuro, dato che gli oggetti-tratto sono resi progressivamente più flessibili.
 
 Supponiamo di avere alcuni valori che implementano `Foo`. La forma esplicita
-di costruzione e utilizzo degli oggetti-tratti di `Foo` potrebbe sembrare
+di costruzione e utilizzo degli oggetti-tratto di `Foo` potrebbe sembrare
 un po' così (ignorando gli errori di tipo: comunque sono tutti puntatori):
 
 ```rust,ignore
