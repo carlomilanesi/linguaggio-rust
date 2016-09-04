@@ -22,16 +22,16 @@ C'è una forma alternativa di `vec!` per ripetere un valore iniziale:
 let v = vec![0; 10]; // dieci zeri
 ```
 
-I vettori immagazzinano il loro contenuto sullo heap come array contigui
+I vettori immagazzinano il loro contenuto nella memoria heap come array contigui
 di `T`. Ciò significa che devono essere capaci di sapere la dimensione di `T`
 in fase di compilazione (cioè, quanti byte servono per memorizzare un `T`?).
 La dimensione di alcuni oggetti non si può sapere in fase di compilazione.
 Per tali oggetti si dovrà immagazzinare un puntatore a quell'oggetto:
-fortunatamente, il tipo [`Box`][box] funziona perfettamente a questo scopo.
+fortunatamente, il tipo [`Box`][box] funziona perfettamente per questo scopo.
 
 ## Accedere agli elementi
 
-Per ottenere il valore a un particolare indice nel vettore, si usano le `[]`:
+Per ottenere il valore ad un particolare indice nel vettore, si usano le `[]`:
 
 ```rust
 let v = vec![1, 2, 3, 4, 5];
@@ -67,12 +67,12 @@ note: the type `collections::vec::Vec<_>` cannot be indexed by `i32`
 error: aborting due to previous error
 ```
 
-C'è molta punteggiatura in quel messaggio, ma il suo nucleo significa:
-non si può indicizzare con un `i32`.
+C'è molta punteggiatura in quel messaggio, ma il suo significato
+è il seguente: non si può indicizzare con un `i32`.
 
 ## Accesso fuori dai limiti
 
-Se si prova ad accedere un indice che non esiste:
+Se si prova l'accesso ad un indice che non esiste:
 
 ```rust,ignore
 let v = vec![1, 2, 3];
@@ -85,7 +85,7 @@ allora il thread attuale andrà in [panico] con un messaggio come questo:
 thread 'main' panicked at 'index out of bounds: the len is 3 but the index is 7'
 ```
 
-Se si vuole gestire gli errori di accesso fuori dai limiti senza andare
+Se si vogliono gestire gli errori di accesso fuori dai limiti senza andare
 in panico, si possono usare metodi come [`get`][get] o [`get_mut`][get_mut],
 che restituiscono `None` quando gli viene dato un indice invalido:
 
@@ -118,7 +118,7 @@ for i in v {
 }
 ```
 
-Nota: Non si può usare ancora il vettore dopo averlo iterato prendendone
+Nota: Non si può riusare il vettore dopo averlo iterato prendendone
 il possesso. Invece, si può iterare il vettore più volte se quando lo si itera
 se ne prende un riferimento.
 Per esempio, il seguente codice non compila.
