@@ -1,9 +1,48 @@
 % Riferimenti e prestiti
 
 Questa è la seconda delle tre sezioni che presentano il sistema di possesso
-di Rust. Si assume che sia già stata letta la sezione sul [possesso][possesso].
+di Rust. Questa è una delle caratteristiche più distintive e avvincenti
+di Rust, con la quale gli sviluppatori Rust dovrebbero diventare familiari.
+Il possesso è il modo in cui Rust raggiunge il suo maggior obiettivo, la sicurezza
+di accesso alla memoria. Ci sono alcuni concetti distinti, ognuno descritto
+in una sezione distinta:
+
+
+* [possesso][possesso], il concetto chiave
+* i prestiti, che leggeremo adesso
+* [tempi di vita][tempi di vita], un concetto avanzato di prestito
+
+Queste tre sezioni sono correlate, e seguono un ordine. Bisognerà leggerli
+tutti e tre per capire pienamente il sistema di possesso.
 
 [possesso]: ownership.html
+[tempi di vita]: lifetimes.html
+
+# Meta
+
+Prima di passare ai dettagli, due appunti importanti sul sistema di possesso.
+
+Rust ha un'attenzione particolare sulla sicurezza e sulla velocità.
+Raggiunge questi obiettivi tramite molte ‘astrazioni a costo zero’, il che
+significa che in Rust, le astrazioni costano il meno possibile
+al fine di farle funzionare. Il sistema di possesso è un esempio primario
+di astrazione a costo zero. Tutta l'analisi di cui parleremo in questa guida
+viene _fatta in fase di compilazione_. Non si paga nessun costo in fase
+di esecuzione per queste funzionalità.
+
+Però, questo sistema ha un certo costo: il tempo di apprendimento. Molti nuovi
+utenti di Rust sperimentano qualcosa che ci piace chiamare ‘combattere
+con il verificatore dei prestiti’, che è la parte del compilatore Rust che
+si rifiuta di compilare un programma che l'autore pensa essere valido. Ciò
+accade spesso perché il modello mentale del programmatore su come il possesso
+dovrebbe funzionare non combacia con le regole effettivamente implementate
+da Rust.
+Dapprima tutti sperimentano cose simili. Però, c'è una buona notizia:
+gli sviluppatori Rust più esperti riferiscono che una volta che lavorano con
+le regole del sistema di possesso per un periodo di tempo, combattono sempre
+meno con il verificatore dei prestiti.
+
+Con questo in mente, vediamo di imparare riguardo il prestito.
 
 # Borrowing
 
@@ -104,7 +143,7 @@ ci viene permesso.
 
 # I riferimenti &mut
 
-C'è un altro tipo di riferimenti: `&mut T`. Un ‘riferimento mutabile’ permette
+C'è un altro tipo di riferimento: `&mut T`. Un ‘riferimento mutabile’ permette
 di mutare la risorsa che viene presa in prestito. Per esempio:
 
 ```rust
@@ -124,8 +163,7 @@ un valore immutabile.
 
 Si noterà anche che abbiamo aggiunto un asterisco (`*`) prima di `y`,
 rendendolo `*y`.  Questo è necessario perché `y` è un riferimento. Se deve
-usare un asterisco per accedere al contenuto di un riferimento, che sia
-mutabile o immutabile.
+usare un asterisco per accedere al contenuto di un riferimento.
 
 I riferimenti `&mut` somigliano ai riferimenti; però, c'_è_ una grossa
 differenza tra i due, e su come interagiscono. Si potrebbe dire che
@@ -164,12 +202,12 @@ Questa regola è molto simile, anche se non esattamente uguale,
 alla definizione di 'corsa ai dati' ["data race"]:
 
 > C'è una ‘corsa ai dati’ quando due o più puntatori accedono alla medesima
-> posizione di memoria nello stesso tempo, e per almeno uno di essi tale
-> accesso è in scrittura, e tali accessi non sono sincronizzati.
+> posizione di memoria nello stesso tempo, e almeno uno dei due sta scrivendo
+> in memoria e le operazioni non sono sincronizzate.
 
 Per quanto riguarda i riferimenti immutabili, se ne possono avere quanti se ne
 vogliono, dato che nessuno di essi sta scrivendo. Però, dato possiamo avere
-solamente un riferimenti mutabili per volta, è impossibile avere una corsa
+solamente un riferimento mutabili per volta, è impossibile avere una corsa
 ai dati. Questa tecnica consente a Rust in fase di compilazione di prevenire
 le corse ai dati: otterremmo degli errori se violiamo le regole.
 
@@ -200,7 +238,7 @@ error: cannot borrow `x` as immutable because it is also borrowed as mutable
 
 Questo perché abbiamo violate le regole: abbiamo un `&mut T` che punta a `x`,
 e così non ci è permesso creare dei `&T` che puntino al medesimo oggetto.
-È l'uno o l'altro. L'annotazione suggerisce come pensare a questo problema:
+È l'uno o l'altro. La nota suggerisce come pensare a questo problema:
 
 ```text
 note: previous borrow ends here
@@ -213,20 +251,20 @@ fn main() {
 In altre parole, il prestito mutabile viene tenuto per tutto il resto
 del programma. Ciò che vogliamo è che il prestito mutable a `y` finisca, così
 che la risorsa possa essere restituita al possessore, `x`. Poi `x` può fornire
-un prestito immutabile a `println!`. In Rust, prendere a prestito è legato
+un prestito immutabile a `println!`. In Rust, prendere in prestito è legato
 all'ambito per cui il prestito è valido. E il nostro ambito si presenta così:
 
 ```rust,ignore
 fn main() {
     let mut x = 5;
 
-    let y = &mut x;    // -+ qui inizia il prestito mutabile di x 
+    let y = &mut x;    // -+ qui inizia il prestito mutabile (mut&) di x
                        //  |
     *y += 1;           //  |
                        //  |
-    println!("{}", x); // -+ - qui prova a prendere a prestito immutabile x
+    println!("{}", x); // -+ - qui prova a prendere in prestito x
 }                      // -+ qui finisce il prestito mutabile di x
-                       
+
 ```
 
 Gli ambiti sono in conflitto: non possiamo fare un `&x` mentre `y` è
@@ -249,15 +287,15 @@ Non c'è problema. Il nostro prestito mutabile esce di ambito prima che venga
 creato quello immutabile. Perciò l'ambito è la chiave per vedere quanto dura
 un prestito.
 
-## Difetti prevenuti dai prestiti
+## Problemi prevenuti dai prestiti
 
 Perché ci sono queste regole restrittive? Beh, come abbiamo detto,
-queste regole prevengono le corse ai dati. Le corse ai dati che genere
-di difetti provocano? Ecconi alcuni.
+queste regole prevengono le corse ai dati. Che genere
+di difetti provocano le corse ai dati? Eccone alcuni.
 
 ### Invalidazione degli iteratori
 
-Un esempio è l'‘invalidazione degli iteratori’, che avviene quando si prova
+Un esempio è ‘l'invalidazione degli iteratori’, che avviene quando si prova
 a mutare una collezione su cui si sta iterando. Il verificatore dei prestiti
 di Rust previene che accada:
 
@@ -310,7 +348,7 @@ riferimento. Rust verificherà gli ambiti dei riferimenti per assicurare
 che sia così.
 
 Se Rust non verificasse questa proprietà, potremmo accidentalmente usare
-un oggetto che è diventato invalido. Per esempio:
+un riferimento ad un oggetto che è diventato invalido. Per esempio:
 
 ```rust,ignore
 let y: &i32;
@@ -349,7 +387,7 @@ Come tale, l'errore dice che il prestito ‘non vive abbastanza a lungo’ perch
 non è valido per la giusta quantità di tempo.
 
 Il medesimo problema avviene quando il riferimento è dichiarato _prima_
-della variabile a cui si riferisce. Questo è devuto al fatto che le risorse
+della variabile a cui si riferisce. Questo è dovuto al fatto che le risorse
 entro lo stesso ambito vengono rilasciate nell'ordine inverso di quello
 con cui sono state acquisite:
 
