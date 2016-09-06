@@ -12,8 +12,8 @@ in una sezione distinta:
 * i prestiti, che leggeremo adesso
 * [tempi di vita][tempi di vita], un concetto avanzato di prestito
 
-Queste tre sezioni sono correlate, e seguono un ordine. Bisognerà leggerli
-tutti e tre per capire pienamente il sistema di possesso.
+Queste tre sezioni sono correlate, e seguono un ordine. Bisognerà leggerle
+tutte e tre per capire pienamente il sistema di possesso.
 
 [possesso]: ownership.html
 [tempi di vita]: lifetimes.html
