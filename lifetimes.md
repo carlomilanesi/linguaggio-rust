@@ -1,35 +1,69 @@
 % Tempi di vita
 
 Questa è l'ultima delle tre sezioni che presentano il sistema di possesso
-di Rust. Qui si assume che siano già state lette le altre due:
+di Rust. Questa è una delle caratteristiche più distintive e avvincenti
+di Rust, con la quale gli sviluppatori Rust dovrebbero diventare familiari.
+Il possesso è il modo in cui Rust raggiunge il suo maggior obiettivo, la sicurezza
+di accesso alla memoria. Ci sono alcuni concetti distinti, ognuno descritto
+in una sezione distinta:
 
-* Il [possesso][possesso], il concetto chiave
-* I [prestiti][prestiti], e le loro caratteristiche associate, i ‘riferimenti’
+
+* [possesso][possesso], il concetto chiave
+* i [prestiti][prestiti], e le caratteristiche a loro associate,
+  i ‘riferimenti’
+* i tempi di vita, che leggeremo adesso
+
+Queste tre sezioni sono correlate, e seguono un ordine. Bisognerà leggerle
+tutte e tre per capire pienamente il sistema di possesso.
 
 [possesso]: ownership.html
 [prestiti]: references-and-borrowing.html
 
+# Meta
+
+Prima di passare ai dettagli, due appunti importanti sul sistema di possesso.
+
+Rust ha un'attenzione particolare sulla sicurezza e sulla velocità.
+Raggiunge questi obiettivi tramite molte ‘astrazioni a costo zero’, il che
+significa che in Rust, le astrazioni costano il meno possibile
+al fine di farle funzionare. Il sistema di possesso è un esempio primario
+di astrazione a costo zero. Tutta l'analisi di cui parleremo in questa guida
+viene _fatta in fase di compilazione_. Non si paga nessun costo in fase
+di esecuzione per queste funzionalità.
+
+Però, questo sistema ha un certo costo: il tempo di apprendimento. Molti nuovi
+utenti di Rust sperimentano qualcosa che ci piace chiamare ‘combattere
+con il verificatore dei prestiti’, che è la parte del compilatore Rust che
+si rifiuta di compilare un programma che l'autore pensa essere valido. Ciò
+accade spesso perché il modello mentale del programmatore su come il possesso
+dovrebbe funzionare non combacia con le regole effettivamente implementate
+da Rust.
+Dapprima tutti sperimentano cose simili. Però, c'è una buona notizia:
+gli sviluppatori Rust più esperti riferiscono che una volta che lavorano con
+le regole del sistema di possesso per un periodo di tempo, combattono sempre
+meno con il verificatore dei prestiti.
+
+Con questo in mente, vediamo di imparare riguardo i tempi di vita.
+
 # I tempi di vita
 
-Prestare un riferimento a una risorsa posseduta da qualcun altro può essere
+Prestare un riferimento ad una risorsa posseduta da qualcun altro può essere
 complicato. Per esempio, immaginiamo questa sequenza di operazioni:
 
-1. Acquisisco un riferimento a una risorsa di qualche tipo.
+1. Acquisisco un riferimento ad una risorsa di qualche tipo.
 2. Ti presto un riferimento a tale risorsa.
 3. Decido di aver finito di lavorare con quella risorsa, e quindi la rilascio,
    mentre tu hai ancora il tuo riferimento a tale risorsa.
 4. Tu decidi di usare quella risorsa.
 
 Ahi, ahi! Il tuo riferimento sta puntando a una risorsa non più valida.
-Questo difetto si chiama ‘puntatore penzolante‘ o ‘utilizzo dopo il rilascio’.
+Questo difetto si chiama ‘puntatore penzolante‘ o ‘utilizzo dopo il rilascio’,
+quando la risorsa è in memoria.
 
 Per correggerlo, dobbiamo assicurarci che il passo 4 non avvenga mai dopo
 il passo 3. Il sistema di possesso in Rust lo fa tramite un concetto chiamato
 "tempo di vita" ["lifetime"], che descrive l'ambito in cui un riferimento
-è valido. Nel nostro caso, o decidiamo che il tempo di vita vale solamente
-fino al passo 3, e in tal caso il passo 4 darà errore di compilazione,
-o decidiamo che il tempo di vita vale fino al passo 4,
-e in tal caso la risorsa dovrà essere rilasciata al passo 5.
+è valido.
 
 Quando abbiamo una funzione che prende un argomento per riferimento,
 possiamo essere impliciti o espliciti riguardo al tempo di vita di tale
@@ -45,8 +79,8 @@ fn bar<'a>(x: &'a i32) {
 }
 ```
 
-L'`'a` si legge ‘il tempo di vita a’. Tecnicamente, ogni riferimento
-ha qualche tempo di vita associato ad esso, ma il compilatore consente
+Il `'a` si legge ‘il tempo di vita a’. Tecnicamente, ogni riferimento
+ha un tempo di vita associato ad esso, ma il compilatore consente
 di eliderlo (cioè ometterlo, si veda la sezione ["Elisione del tempo di vita"]
 [elisione del tempo di vita] più avanti) nei casi più tipici.
 Però, prima di arrivarci, scomponiamo l'esempio esplicito:
@@ -68,7 +102,7 @@ dei tempi di vita.
 [generici]: generics.html
 
 Usiamo le `<>` per dichiarare i nostri tempi di vita. Questo dice che `bar`
-ha un solo tempo di vita, `'a`. Se avessimo dei parametri riferimento,
+ha un solo tempo di vita, `'a`. Se avessimo due parametri di tipo riferimento,
 si presenterebbe così:
 
 
@@ -91,13 +125,13 @@ Se avessimo voluto un riferimento `&mut`, avremmo scritto:
 
 Confrontando `&mut i32` con `&'a mut i32`, si nota che l'unica differenza
 è che il tempo di vita `'a` si è intrufolato fra il `&` il `mut i32`.
-La clausola `&mut i32` va letta come ‘un riferimento mutabile a un `i32`’,
+La clausola `&mut i32` va letta come ‘un riferimento mutabile ad un `i32`’,
 mentre la clausola `&'a mut i32` va letta come ‘un riferimento mutabile
-a un `i32` con tempo di vita `'a`’.
+ad un `i32` con tempo di vita `'a`’.
 
-# Nelle `struct`
+# Nelle `struct`s
 
-C'è bisogno dei tempi di vita espliciti anche quando si lavora come le
+C'è bisogno dei tempi di vita espliciti anche quando si lavora con le
 [`struct`][struct] che contengono riferimenti:
 
 ```rust
@@ -132,8 +166,8 @@ x: &'a i32,
 ```
 
 lo usa. Allora perché qui ci serve un tempo di vita? Ci serve per assicurare
-che ogni riferimento a un `Foo` non possa sopravvivere al riferimento
-a un `i32` che contiene.
+che ogni riferimento ad un `Foo` abbia lo stesso tempo di vita del riferimento
+ad un `i32` che contiene.
 
 ## I blocchi `impl`
 
@@ -171,7 +205,7 @@ fn x_o_y<'a>(x: &'a str, y: &'a str) -> &'a str {
 ```
 
 Questo dice che sia `x` che `y` sono vivi per lo stesso ambito, e che anche
-il valore reso è vivo per lo stesso ambito. Se si voless che `x` e `y` avessero
+il valore reso è vivo per lo stesso ambito. Se si volesse che `x` e `y` avessero
 tempi di vita diversi, si possono usare più parametri di tempo di vita:
 
 ```rust
@@ -234,7 +268,7 @@ fn main() {
 ```
 
 Whew! Come si vede, gli ambiti di `f` e `y` sono più piccoli dell'ambito
-di `x`. Ma quando facciamo `x = &f.x`, rendiamo `x` un riferimento a qualcosa
+di `x`. Ma quando assegnamo `x = &f.x`, rendiamo `x` un riferimento a qualcosa
 che sta per uscire dal suo ambito.
 
 I tempi di vita con nome sono un modo di dare un nome a questi ambiti.
@@ -244,15 +278,15 @@ Dare un nome a qualcosa è il primo passo verso l'essere capaci di parlarne.
 
 Il tempo di vita chiamato ‘static’ è un tempo di vita speciale. Segnala che
 qualcosa ha il tempo di vita dell'intero programma. La maggior parte
-dei programmatori Rust si imbatto per la prima volta in `'static`
-quando trattano le stringhe:
+dei programmatori Rust si imbatte per la prima volta in `'static`
+quando si trattano le stringhe:
 
 ```rust
 let x: &'static str = "Ciao, mondo.";
 ```
 
 I letterali di stringa sono di tipo `&'static str` perché il riferimento è
-sempre vivo: vengono depositati nel segmento dati del file binario finale.
+sempre vivo: vengono scritti nel segmento dati del file binario finale.
 Un altro esempio sono i globali:
 
 ```rust
@@ -279,8 +313,8 @@ una completa inferenza locale.
 
 Quando si parla dell'elisione del tempo di vita, usiamo i termini
 *tempo di vita di input* e *tempo di vita di output*. Un *tempo di vita
-di input* è un tempo di vita associato a un argomento di una funzione, mentre
-un *tempo di vita di output* è un tempo di vita associato a un valore
+di input* è un tempo di vita associato ad un argomento di una funzione, mentre
+un *tempo di vita di output* è un tempo di vita associato ad un valore
 reso da una funzione. Per esempio, questa funzione ha un tempo di vita
 di input:
 
@@ -303,7 +337,7 @@ fn foo<'a>(bar: &'a str) -> &'a str
 Ecco le tre regole:
 
 * Ogni tempo di vita eliso tra gli argomenti di una funzione diventa un
-  un distinto parametro tempo di vita.
+  un parametro tempo di vita distinto.
 
 * Se c'è esattamente un tempo di vita di input, eliso o no, quel tempo di vita
   è assegnato a tutti i tempi di vita elisi nei valori resi di quella funzione.
@@ -329,7 +363,7 @@ fn debug<'a>(lvl: u32, s: &'a str); // espanso
 
 Nell'esempio precedente, `lvl` non ha bisogno di un tempo di vita, perché non è
 un riferimento (`&`). Solamente oggetti riferiti a riferimenti (come
-uno `struct` che contiene un riferimento) hanno bisogno di tempi di vita.
+una `struct` che contiene un riferimento) hanno bisogno di tempi di vita.
 
 ```rust,ignore
 fn substr(s: &str, until: u32) -> &str; // eliso
