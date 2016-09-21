@@ -33,7 +33,7 @@ let y = &mut x;
 
 [ref]: references-and-borrowing.html
 
-`y` è un legame immutabile a un riferimento mutabile, il che significa che non
+`y` è un legame immutabile ad un riferimento mutabile, il che significa che non
 si può legare 'y' a qualcos'altro (`y = &mut z`), ma `y` può essere usato
 per legare `x` a qualcos'altro (`*y = 5`). Una distinzione sottile.
 
@@ -44,7 +44,7 @@ let mut x = 5;
 let mut y = &mut x;
 ```
 
-Adesso `y` può essere legato a un altro valore, e inoltre il valore che sta
+Adesso `y` può essere legato ad un altro valore, ed inoltre il valore che sta
 referenziando può essere cambiato.
 
 È importante notare che `mut` fa parte di un [pattern][pattern], e perciò
@@ -81,7 +81,7 @@ il conteggio dei riferimenti. Però qui non abbiamo usato nessun `mut`, `x` è
 un legame immutabile, e non abbiamo preso il valore `&mut 5` né altri valori.
 E allora?
 
-Per capirlo, dobbiamo tornare al nucleo della filosofia guida di Rust, che è
+Per capirlo, dobbiamo tornare alla base della filosofia guida di Rust, che è
 la sicurezza di memoria, e al meccanismo col quale Rust la garantisce, che è
 il sistema di [possesso][possesso], e più specificamente,
 il [prestito][prestito]:
@@ -89,7 +89,7 @@ il [prestito][prestito]:
 > Si possono avere l'uno o l'altro di questi due tipi di prestiti, ma non
 > entrambi allo stesso tempo:
 >
-> * uno o più riferimenti immutabili (`&T`) a una risorsa,
+> * uno o più riferimenti (`&T`) ad una risorsa,
 > * esattamente un riferimento mutabile (`&mut T`).
 
 [ownership]: ownership.html
@@ -98,7 +98,7 @@ il [prestito][prestito]:
 Perciò, questa è la vera definizione di ‘immutabilità’: è sicuro che ci siano
 due puntatori a questo oggetto? Nel caso di `Arc<T>`, sì: la mutazione è
 contenuta interamente dentro la struttura stessa. Non si presenta all'utente.
-Per questa ragione, passa un `&T` a `clone()`. Se gli avesse passato
+Per questa ragione, `clone()` passa un `&T`. Se gli avesse passato
 un `&mut T`, però, sarebbe un errore.
 
 Altri tipi, come quelli nel modulo [`std::cell`][stdcell], sono

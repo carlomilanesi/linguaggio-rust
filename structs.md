@@ -2,7 +2,7 @@
 
 Le `struct` sono un modo di creare tipi di dati più complessi. Per esempio, se
 stessimo facendo calcoli che coinvolgono coordinate nello spazio 2D,
-cioè nel piano cartesiano ci servirebbero sia un valore `x` che un valore `y`:
+ci servirebbero sia un valore `x` che un valore `y`:
 
 ```rust
 let origine_x = 0;
@@ -10,7 +10,7 @@ let origine_y = 0;
 ```
 
 Una `struct` ci permette di combinare questi due oggetti in un singolo tipo
-di dati unificato, i cui campi sono etichettati `x` e `y`:
+di dato unificato, i cui campi sono etichettati `x` e `y`:
 
 ```rust
 struct Punto {
@@ -25,10 +25,11 @@ fn main() {
 }
 ```
 
-Qui ci sono molte cose, analizziamole. Una `struct` si dichiara con
-la parola-chiave `struct`, e poi con un nome. Per convenzione, le `struct`
-hanno la maiuscolizzazione del Pascal: `PuntoNelloSpazio`,
-non `Punto_Nello_Spazio`, né `punto_nello_spazio`.
+Qui ci sono molte cose, analizziamole a piccole dosi.
+Una `struct` si dichiara con
+la parola-chiave `struct`, e poi con un nome. Per convenzione, i nomi delle
+`struct`s iniziano con la lettera maiuscola e sono "camel cased": 
+`PuntoNelloSpazio`, non `Punto_Nello_Spazio`, né `punto_nello_spazio`.
 
 Possiamo creare un'istanza della nostra `struct` usando `let`, come al solito,
 ma per impostare ogni campo usiamo una sintassi con lo stile `chiave: valore`.
@@ -150,10 +151,10 @@ let punto = Punto3d { z: 1, x: 2, .. origine };
 
 # Strutture ennuple
 
-Rust ha un altro tipo di dati che è come un ibrido fra una [ennupla][ennupla]
+Rust ha un altro tipo di dato che è come un ibrido fra una [ennupla][ennupla]
 e una `struct`, e si chiama ‘struttura ennupla’. Le strutture ennuple hanno
 un nome, ma i loro campi no. Sono dichiarate con la parola-chiave `struct`,
-e poi con un nome seguito da un'ennupla:
+e poi con un nome seguito da una ennupla:
 
 [ennupla]: primitive-types.html#tuples
 
@@ -165,8 +166,8 @@ let nero = Colore(0, 0, 0);
 let origine = Punto(0, 0, 0);
 ```
 
-Qui, `nero` e `origine` non sono dello stesso tipo, anche se contengono campi
-degli stessi tipi.
+Qui, `nero` ed `origine` non sono uguali, anche se contengono gli
+stessi valori.
 
 Si può accedere ai membri di una struttura ennupla tramite la notazione a punto
 o il `let` destrutturante, proprio come le normali ennuple:
@@ -245,7 +246,8 @@ let x = Elettrone {};
 let y = Protone;
 ```
 
-Una tale `struct` è chiamata ‘simile a unità’ perché somiglia alla ennupla
+Una tale `struct` è chiamata ‘simile ad unità’ ("unit-like")
+perché somiglia alla ennupla
 vuota, `()`, che talvolta è chiamata ‘unità’. Come una struttura ennupla,
 definisce un nuovo tipo.
 
@@ -253,6 +255,6 @@ Questo tipo è usato raramente da solo (sebbene talvolta può servire come tipo
 marcatore), ma in combinazione con altre caratteristiche, può diventare utile.
 Per esempio, una libreria può chiedere di creare una struttura che implementi
 un certo [tratto][tratto] per gestire eventi. Se non si hanno dati da mettere
-nella struttura, si può creare `struct` simile a unità.
+nella struttura, si può creare `struct` simile ad unità.
 
 [tratto]: traits.html
