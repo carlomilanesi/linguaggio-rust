@@ -2,14 +2,14 @@
 
 La versione di Rust dell'istruzione `if` non è particolarmente complessa,
 ma somiglia più all'`if` che si trova nei linguaggi tipizzati dinamicamente
-che a quello dei linguaggi di sistema traditionali.
+che a quello dei linguaggi di sistema tradizionali.
 Perciò parliamone, per assicurarsi che ne siano afferrate le sfumature.
 
 `if` è una forma specifica di un concetto più generale, la ‘diramazione’,
 il cui nome deriva dai rami degli alberi: è un punto di decisione, dove
 a seconda di un valore, si possono prendere più strade.
 
-Nel caso dell'`if`, c'è un valore booleano che conduce a due strade:
+Nel caso dell'`if`, c'è una sola scelta che conduce a due strade:
 
 ```rust
 let x = 5;
@@ -19,11 +19,11 @@ if x == 5 {
 }
 ```
 
-Se cambiamo il valore di `x` a qualcos'altro, questa riga non verrebbe
+Se cambiassimo il valore di `x` con qualcos'altro, questa riga non verrebbe
 stampata. Più specificamente, se l'espressione dopo l'`if` vale `true`, allora
 il blocco viene eseguito; se vale `false`, no.
 
-Se si vuole che accada qualcosa caso `false`, si usa una clausola `else`:
+Se si vuole che accada qualcosa nel caso `false`, si usi un `else`:
 
 ```rust
 let x = 5;
@@ -35,7 +35,7 @@ if x == 5 {
 }
 ```
 
-If c'è più di un caso, si usa un `else if`:
+Se c'è più di un caso, si usi un `else if`:
 
 ```rust
 let x = 5;

@@ -1,13 +1,13 @@
 % Cicli
 
 Attualmente Rust fornisce tre costrutti per eseguire attività iterative:
-`loop`, `while` e `for`. Ogni costrutto serve a scopi diversi.
+`loop`, `while` e `for`. Ogni costrutto serve per diversi scopi.
 
 ## loop
 
 Il costrutto `loop` ("ciclo") è la forma più semplice di ciclo disponibile
 in Rust. Usando la parola-chiave `loop`, Rust fornisce un modo
-di ciclare indefinitamente finché si raggiunge qualche istruzione
+per ciclare indefinitamente finché si raggiunge qualche istruzione
 di terminazione. Il ciclo infinito di Rust è fatto così:
 
 ```rust,ignore
@@ -50,18 +50,18 @@ Tuttavia, il costrutto `loop` è molto più adatto per gestire questo caso:
 loop {
 ```
 
-L'analisi del flusso di costrullo di Rust tratta questo costrutto
+L'analisi del flusso di controllo di Rust tratta questo costrutto
 diversamente da un `while true`, dato che sappiamo che ciclerà per sempre.
 In generale, più informazione possiamo dare al compilatore, meglio può fare
-con la sicurezza e la generazione del codice, e perciò si dovrebbe sempre
-preferire `loop` quando si intende ciclare indefinitamente.
+per la sicurezza e la generazione del codice, e perciò si dovrebbe sempre
+preferire `loop` quando si intende ciclare all'infinito.
 
 ## for
 
 Il ciclo `for` viene usato per ciclare un particolare numero di volte.
 Però i cicli `for` di Rust funzionano un po' diversamente dagli altri
-linguaggi di sistema. Il ciclo `for` di Rust non somiglia al ciclo `for`
-del linguaggio C:
+linguaggi di sistema. Il ciclo `for` di Rust non somiglia al seguente
+ciclo `for` del linguaggio C:
 
 ```c
 for (x = 0; x < 10; x++) {
@@ -77,7 +77,7 @@ for x in 0..10 {
 }
 ```
 
-o, in termini più astratti,
+In termini un pochino più astratti,
 
 ```rust,ignore
 for var in expression {
@@ -165,8 +165,8 @@ while !fatto {
 }
 ```
 
-Abbiamo dovuto tenere apposta una variabile booleana, `fatto`, per sapere
-quando dovremmo uscire dal ciclo. Rust ha due parole-chiave per aiutarci
+Abbiamo dovuto tenere un legame booleano, `fatto`, per sapere
+quando uscire dal ciclo. Rust ha due parole-chiave per aiutarci
 a modificare le iterazioni: `break` ("interrompi") e `continue` ("continua").
 
 In questo caso, possiamo scrivere il ciclo in un modo migliore usando `break`:
@@ -183,7 +183,7 @@ loop {
 }
 ```
 
-Adesso cicliamo per sempre usando `loop` e usiamo `break` per uscire
+Adesso cicliamo per sempre usando `loop` ed usiamo `break` per uscire
 precocemente. Anche eseguire un'istruzione `return` potrebbe servire
 a terminare il ciclo precocemente.
 
@@ -200,13 +200,14 @@ for x in 0..10 {
 
 ## Etichette dei cicli
 
-Si potrebbero anche incontrare situazioni in cui ci sono cicli annidati
+Si potrebbero anche incontrare situazioni in cui ci sono cicli annidati e
 si vuole specificare a quale ciclo si riferisce una particolare istruzione
 `break` o `continue`. Come nella maggior parte degli altri linguaggi,
-di default an'istruzione `break` o `continue` si applicheranno al ciclo
-più interno. Dove si volesse applicare `break` o `continue` a uno dei cicli
-esterni, si possono usare delle etichette. Il seguente codice stamperà
-solamente quando sia `x` che `y` sono dispari:
+di default un `break` o un `continue` si applicheranno al ciclo
+più interno. Dove si volesse applicare `break` o `continue` ad uno dei cicli
+esterni, si possono usare delle etichette per indicare a quale ciclo si vuole
+applicare l'istruzione `break` o `continue`.
+Il seguente codice stamperà solamente quando sia `x` che `y` sono dispari:
 
 ```rust
 'esterno: for x in 0..10 {
