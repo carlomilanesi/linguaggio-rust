@@ -1,7 +1,7 @@
-% Il linguaggio di programmazione Rust
+# Il linguaggio di programmazione Rust (anno 2016)
 
-Questo libro è una traduzione della [documentazione ufficiale in inglese]
-[book-html] del linguaggio Rust. La versione originale di riferimento è la 1.12.0-dev,
+Questo libro è una traduzione della [documentazione ufficiale in inglese][book-html]
+del linguaggio Rust. La versione originale di riferimento è la 1.12.0-dev,
 risalente al 17 luglio 2016.
 Tale documentazione comprende una dettagliata bibliografia in inglese.
 
