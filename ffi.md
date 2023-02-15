@@ -471,7 +471,7 @@ Ecco alcuni esempi di come si può usare questo modello:
 Con OSX, i framework si comportano con la medesima semantica
 delle librerie dinamiche.
 
-# Blocci `unsafe`
+# Blocchi `unsafe`
 
 Alcune operazioni, come dereferenziare i puntatori grezzi o chiamare funzioni
 che sono state marcate `unsafe`, sono consentiti all'interno
